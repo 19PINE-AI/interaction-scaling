@@ -113,7 +113,8 @@ def main():
     print("# Interaction Scaling: Experiment Results")
     print(f"\nGenerated from: {RESULTS_DIR.absolute()}")
 
-    generate_table(RESULTS_DIR / "full_v2" / "humaneval", "HumanEval+ Full (164 problems)")
+    generate_table(RESULTS_DIR / "full_v2" / "humaneval", "HumanEval+ Full (164 problems, with fix)")
+    generate_table(RESULTS_DIR / "full" / "humaneval", "HumanEval+ Full (164 problems, pre-fix)")
     generate_table(RESULTS_DIR / "baselines_v2" / "humaneval", "HumanEval+ (50 problems, with B2)")
     generate_table(RESULTS_DIR / "baselines" / "mbpp", "MBPP+ (50 problems)")
     generate_table(RESULTS_DIR / "baselines" / "humaneval", "HumanEval+ Baselines (50, pre-fix)")
