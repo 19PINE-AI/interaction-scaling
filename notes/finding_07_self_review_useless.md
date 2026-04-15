@@ -1,5 +1,12 @@
 # Finding 07: Self-Review (Type 0) Provides Zero Improvement at 16x Cost
 
+## Note on Evaluation Fix
+With the prompt prefix fix, B2 v2 achieves 100% on the first 50 problems.
+However, B1 v2 also achieves ~100% on these 50 (they're easy). The 3
+failures in old B1/B2 were all NameErrors (evaluation artifacts), not
+differences between B1 and B2. The controlled comparison below uses
+pre-fix data where both B1 and B2 are measured identically.
+
 ## Result
 On 50 HumanEval+ problems (pre-prompt-fix eval):
 
