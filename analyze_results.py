@@ -165,12 +165,19 @@ def main():
         print_summary(df_he50, "HumanEval+ Baselines (50 problems)")
         analyze_improvement(df_he50)
 
-    # HumanEval full (164 problems)
-    he_full_dir = RESULTS_DIR / "full" / "humaneval"
-    if he_full_dir.exists():
-        df_he_full = load_all_results(he_full_dir)
+    # HumanEval full v2 (164 problems, with prompt prefix fix)
+    he_full_v2_dir = RESULTS_DIR / "full_v2" / "humaneval"
+    if he_full_v2_dir.exists():
+        df_he_full = load_all_results(he_full_v2_dir)
         print_summary(df_he_full, "HumanEval+ Full (164 problems)")
         analyze_improvement(df_he_full)
+
+    # HumanEval baselines v2 (50 problems, with fix)
+    he50_v2_dir = RESULTS_DIR / "baselines_v2" / "humaneval"
+    if he50_v2_dir.exists():
+        df_he50_v2 = load_all_results(he50_v2_dir)
+        print_summary(df_he50_v2, "HumanEval+ Baselines v2 (50 problems)")
+        analyze_improvement(df_he50_v2)
 
     # MBPP baselines
     mbpp_dir = RESULTS_DIR / "baselines" / "mbpp"
