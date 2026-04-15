@@ -56,7 +56,11 @@ class ExecutionFeedback(FeedbackProvider):
                 tokens_used=0,
             )
 
-        combined = combine_code_and_tests(code, test_code)
+        # Include prompt prefix for helper function definitions
+        # (e.g., HumanEval/38 defines encode_cyclic in the prompt)
+        prompt = problem.get("prompt", "")
+        full_code = prompt + "\n" + code if prompt else code
+        combined = combine_code_and_tests(full_code, test_code)
 
         with tempfile.NamedTemporaryFile(
             mode="w", suffix=".py", delete=False

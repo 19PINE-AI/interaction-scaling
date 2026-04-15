@@ -163,9 +163,11 @@ class ExperimentRunner:
             elapsed = time.time() - start_time
             usage = self.client.get_usage_summary()
 
-            # Final evaluation
+            # Final evaluation — include prompt prefix for helper definitions
+            # (e.g., HumanEval/38 defines encode_cyclic in the prompt)
+            full_code = problem.prompt + "\n" + result["code"]
             eval_result = self.evaluator.evaluate(
-                result["code"], problem.test_code
+                full_code, problem.test_code
             )
 
             record = {
