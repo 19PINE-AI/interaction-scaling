@@ -1,0 +1,8 @@
+*.pyc
+__pycache__/
+.venv/
+*.swp
+data/
+results/
+.DS_Store
+

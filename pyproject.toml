@@ -1,0 +1,22 @@
+[project]
+name = "interaction-scaling-paper"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "anthropic>=0.95.0",
+    "evalplus>=0.3.1",
+    "matplotlib>=3.10.8",
+    "numpy>=2.4.4",
+    "openai>=2.31.0",
+    "pandas>=3.0.2",
+    "pyyaml>=6.0.3",
+    "seaborn>=0.13.2",
+    "tqdm>=4.67.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0.3",
+    "ruff>=0.15.10",
+]
