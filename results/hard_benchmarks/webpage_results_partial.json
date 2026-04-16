@@ -1,0 +1,18 @@
+[
+  {
+    "task_id": "web_001",
+    "ss_quality": 0.4,
+    "ss_meets": false,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3
+  },
+  {
+    "task_id": "web_003",
+    "ss_quality": 0.75,
+    "ss_meets": false,
+    "rv_quality": 0.75,
+    "rv_meets": false,
+    "rv_iters": 3
+  }
+]

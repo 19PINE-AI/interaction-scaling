@@ -1,58 +1,64 @@
-# Experiment Log — Hard Benchmarks
+# Experiment Log — Hard Benchmarks (Final)
 
-## Complete Results (5 of 6 categories)
+## All Results Across 6 Categories
 
-### 1. Code — SWE-style Bug Fixing (15 tasks, Type 3a)
-| Approach | Pass Rate |
-|----------|-----------|
-| Single-shot | **67%** (10/15) |
-| With execution feedback | **100%** (15/15) |
-| **Delta** | **+33pp** |
+### Summary Table
 
-5 bugs fixed in 2 iterations each. Strongest result across all modalities.
+| Category | Tasks | Feedback Type | Single-shot | Reviewed | Delta |
+|----------|-------|---------------|-------------|----------|-------|
+| **Code (SWE)** | 15 | Type 3a: Execution | 67% pass | **100%** pass | **+33pp** |
+| **Research** | 5 | Type 3d: Factual | 0.76 accuracy | **0.92** accuracy | **+0.16** |
+| **Web pages** | 2* | Type 3b: Visual | 0.57 quality | **0.72** quality | **+0.15** |
+| **Slides** | 5 | Type 3b: Visual | 0.76 quality | **0.85** quality | **+0.09** |
+| **Animations** | 8 | Type 3c: Temporal | 0.29 quality | **0.37** quality | **+0.07** |
+| **Video editing** | 15 | Type 3c: Temporal | — | — | *not run* |
 
-### 2. Deep Research (5 tasks, Type 3d)
-| Approach | Accuracy |
-|----------|----------|
-| Single-shot | **0.76** |
-| With fact-checking | **0.92** |
-| **Delta** | **+0.16** |
+*Web pages: partial results due to API rate limiting
 
-4/5 tasks improved to 1.00 accuracy. research_003 (GDP) unchanged.
+### Detailed Results
 
-### 3. Slides (5 tasks, Type 3b)
-| Approach | Avg Quality |
-|----------|------------|
-| Single-shot | **0.76** |
-| With visual review | **0.85** |
-| **Delta** | **+0.09** |
+#### 1. Code — SWE-style Bug Fixing (15 tasks)
+- **Single-shot: 67%** (10/15 bugs fixed correctly)
+- **With execution feedback: 100%** (15/15, all fixed in ≤2 iterations)
+- Fixed bugs: CSV parser, date ranges, markdown parser, CJK text, wildcard trie
 
-### 4. Animations (8 tasks, Type 3b+3c)
-| Approach | Avg Quality |
-|----------|------------|
-| Single-shot | **0.29** |
-| With frame review | **0.37** |
-| **Delta** | **+0.07** |
+#### 2. Deep Research (5 tasks)
+- **Single-shot: 0.76** accuracy (model confabulates numbers/dates)
+- **With fact-checking: 0.92** accuracy (4/5 tasks improved to 1.00)
+- Unfixed: GDP rankings (too many interconnected facts to verify)
 
-### 5. Web Pages (pending)
-### 6. Video Editing (not yet run)
+#### 3. Web Pages (2 tasks, partial)
+- **Single-shot: 0.57** quality
+- **With visual review: 0.72** quality
+- web_001 (product landing page): 0.40 → 0.70 with review
 
-## Cross-Modal Summary
+#### 4. Slides (5 tasks)
+- **Single-shot: 0.76** quality
+- **With visual review: 0.85** quality
+- slide_002 improved 0.80→0.95, slide_005 improved 0.30→0.60
 
-| Category | Feedback Type | Single-shot | Reviewed | Delta |
-|----------|--------------|-------------|----------|-------|
-| Code (SWE) | Type 3a: Execution | 67% pass | 100% pass | **+33pp** |
-| Research | Type 3d: Factual | 0.76 acc | 0.92 acc | **+0.16** |
-| Slides | Type 3b: Visual | 0.76 qual | 0.85 qual | **+0.09** |
-| Animations | Type 3c: Temporal | 0.29 qual | 0.37 qual | **+0.07** |
+#### 5. Animations (8 tasks)
+- **Single-shot: 0.29** quality
+- **With frame review: 0.37** quality
+- Animation bugs are hardest to fix from frame screenshots alone
 
-## Feedback Actionability Hierarchy (validated)
+### Feedback Actionability Hierarchy (Validated)
+
 ```
-Type 3a (execution) >> Type 3d (factual) > Type 3b (visual) > Type 3c (temporal)
-+33pp                  +0.16               +0.09              +0.07
+Type 3a (execution)  >> Type 3d (factual)  >  Type 3b (visual)  >  Type 3c (temporal)
+      +33pp                 +0.16                 +0.09-0.15            +0.07
+   (exact errors)      (wrong claims)         (spatial issues)    (timing bugs)
 ```
 
-Execution errors are most actionable (exact line, exact failure).
-Factual verification is next (specific wrong claim identified).
-Visual feedback is moderate (shows spatial issues, harder to fix in CSS).
-Temporal frame feedback is weakest (shows timing bugs, hardest to fix).
+This ordering directly validates the paper's grounded feedback framework:
+- **Most actionable**: Execution errors point to exact line and exact failure
+- **Highly actionable**: Factual verification identifies specific wrong claims
+- **Moderately actionable**: Visual screenshots show spatial problems
+- **Least actionable**: Animation frames show temporal issues but diagnosis is hard
+
+### Configuration
+- Model: Claude Sonnet 4 (claude-sonnet-4-20250514)
+- Temperature: 0.0
+- Budget: 500K tokens per problem
+- Max iterations: 5 (code), 3 (visual), 2-3 (research)
+- Date: 2026-04-16
