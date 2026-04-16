@@ -1,0 +1,52 @@
+[
+  {
+    "task_id": "video_001",
+    "ss_quality": 1.0,
+    "ss_meets": true,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "ss_tokens": 5642,
+    "rv_tokens": 5642
+  },
+  {
+    "task_id": "video_002",
+    "ss_quality": 0.2,
+    "ss_meets": false,
+    "rv_quality": 0.2,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "ss_tokens": 8451,
+    "rv_tokens": 21926
+  },
+  {
+    "task_id": "video_003",
+    "ss_quality": 0.0,
+    "ss_meets": false,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "ss_tokens": 10734,
+    "rv_tokens": 21774
+  },
+  {
+    "task_id": "video_004",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "ss_tokens": 970,
+    "rv_tokens": 11877
+  },
+  {
+    "task_id": "video_005",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "ss_tokens": 1651,
+    "rv_tokens": 5627
+  }
+]

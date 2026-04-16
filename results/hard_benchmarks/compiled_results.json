@@ -1,0 +1,633 @@
+{
+  "summaries": [
+    {
+      "category": "Code (SWE-style)",
+      "n": 15,
+      "metric": "pass_rate",
+      "single_shot": "10/15 (67%)",
+      "reviewed": "15/15 (100%)",
+      "ss_value": 0.6666666666666666,
+      "rv_value": 1.0,
+      "delta": "+33pp",
+      "delta_value": 0.3333333333333333,
+      "fixed": 5
+    },
+    {
+      "category": "Deep Research",
+      "n": 5,
+      "metric": "accuracy",
+      "single_shot": "0.76",
+      "reviewed": "0.92",
+      "ss_value": 0.76,
+      "rv_value": 0.9199999999999999,
+      "delta": "+0.16",
+      "delta_value": 0.15999999999999992
+    },
+    {
+      "category": "Web Pages",
+      "n": 2,
+      "metric": "quality",
+      "single_shot": "0.57 (0/2 meets)",
+      "reviewed": "0.72 (0/2 meets)",
+      "ss_value": 0.575,
+      "rv_value": 0.725,
+      "delta": "+0.15",
+      "delta_value": 0.15000000000000002
+    },
+    {
+      "category": "Slides",
+      "n": 10,
+      "metric": "quality",
+      "single_shot": "0.62 (2/10 meets)",
+      "reviewed": "0.51 (2/10 meets)",
+      "ss_value": 0.62,
+      "rv_value": 0.51,
+      "delta": "+-0.11",
+      "delta_value": -0.10999999999999999
+    },
+    {
+      "category": "Animations",
+      "n": 8,
+      "metric": "quality",
+      "single_shot": "0.29 (2/8 meets)",
+      "reviewed": "0.37 (1/8 meets)",
+      "ss_value": 0.29375000000000007,
+      "rv_value": 0.36875,
+      "delta": "+0.07",
+      "delta_value": 0.07499999999999996
+    },
+    {
+      "category": "Video Editing",
+      "n": 5,
+      "metric": "quality",
+      "single_shot": "0.24 (1/5 meets)",
+      "reviewed": "0.58 (2/5 meets)",
+      "ss_value": 0.24,
+      "rv_value": 0.5800000000000001,
+      "delta": "+0.34",
+      "delta_value": 0.3400000000000001
+    }
+  ],
+  "categories": {
+    "animations": [
+      {
+        "task_id": "anim_001",
+        "single_shot_quality": 0.3,
+        "single_shot_meets": false,
+        "single_shot_tokens": 20359,
+        "reviewed_quality": 0.3,
+        "reviewed_meets": false,
+        "reviewed_tokens": 68723,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_002",
+        "single_shot_quality": 0.75,
+        "single_shot_meets": true,
+        "single_shot_tokens": 19105,
+        "reviewed_quality": 0.75,
+        "reviewed_meets": false,
+        "reviewed_tokens": 63599,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_003",
+        "single_shot_quality": 0.0,
+        "single_shot_meets": false,
+        "single_shot_tokens": 15403,
+        "reviewed_quality": 0.0,
+        "reviewed_meets": false,
+        "reviewed_tokens": 54161,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_004",
+        "single_shot_quality": 0.0,
+        "single_shot_meets": false,
+        "single_shot_tokens": 16994,
+        "reviewed_quality": 0.6,
+        "reviewed_meets": false,
+        "reviewed_tokens": 61778,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_005",
+        "single_shot_quality": 0.3,
+        "single_shot_meets": false,
+        "single_shot_tokens": 21525,
+        "reviewed_quality": 0.3,
+        "reviewed_meets": false,
+        "reviewed_tokens": 80003,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_006",
+        "single_shot_quality": 0.1,
+        "single_shot_meets": false,
+        "single_shot_tokens": 19216,
+        "reviewed_quality": 0.1,
+        "reviewed_meets": false,
+        "reviewed_tokens": 67747,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_007",
+        "single_shot_quality": 0.7,
+        "single_shot_meets": true,
+        "single_shot_tokens": 19606,
+        "reviewed_quality": 0.7,
+        "reviewed_meets": true,
+        "reviewed_tokens": 66350,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "anim_008",
+        "single_shot_quality": 0.2,
+        "single_shot_meets": false,
+        "single_shot_tokens": 18092,
+        "reviewed_quality": 0.2,
+        "reviewed_meets": false,
+        "reviewed_tokens": 67863,
+        "reviewed_iters": 3
+      }
+    ],
+    "code_old": [
+      {
+        "task_id": "code_001",
+        "single_shot_passed": false,
+        "single_shot_tokens": 326,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1089,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_002",
+        "single_shot_passed": false,
+        "single_shot_tokens": 457,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1508,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_003",
+        "single_shot_passed": true,
+        "single_shot_tokens": 501,
+        "reviewed_passed": true,
+        "reviewed_tokens": 501,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_004",
+        "single_shot_passed": true,
+        "single_shot_tokens": 406,
+        "reviewed_passed": true,
+        "reviewed_tokens": 406,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_005",
+        "single_shot_passed": true,
+        "single_shot_tokens": 457,
+        "reviewed_passed": true,
+        "reviewed_tokens": 457,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_006",
+        "single_shot_passed": false,
+        "single_shot_tokens": 575,
+        "reviewed_passed": true,
+        "reviewed_tokens": 3406,
+        "reviewed_iters": 3
+      },
+      {
+        "task_id": "code_007",
+        "single_shot_passed": true,
+        "single_shot_tokens": 448,
+        "reviewed_passed": true,
+        "reviewed_tokens": 448,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_008",
+        "single_shot_passed": false,
+        "single_shot_tokens": 427,
+        "reviewed_passed": false,
+        "reviewed_tokens": 4664,
+        "reviewed_iters": 5
+      },
+      {
+        "task_id": "code_009",
+        "single_shot_passed": true,
+        "single_shot_tokens": 914,
+        "reviewed_passed": true,
+        "reviewed_tokens": 840,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_010",
+        "single_shot_passed": true,
+        "single_shot_tokens": 444,
+        "reviewed_passed": true,
+        "reviewed_tokens": 474,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_011",
+        "single_shot_passed": true,
+        "single_shot_tokens": 647,
+        "reviewed_passed": true,
+        "reviewed_tokens": 647,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_012",
+        "single_shot_passed": true,
+        "single_shot_tokens": 712,
+        "reviewed_passed": true,
+        "reviewed_tokens": 728,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_013",
+        "single_shot_passed": false,
+        "single_shot_tokens": 734,
+        "reviewed_passed": true,
+        "reviewed_tokens": 2245,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_014",
+        "single_shot_passed": false,
+        "single_shot_tokens": 603,
+        "reviewed_passed": true,
+        "reviewed_tokens": 2371,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_015",
+        "single_shot_passed": true,
+        "single_shot_tokens": 429,
+        "reviewed_passed": true,
+        "reviewed_tokens": 429,
+        "reviewed_iters": 1
+      }
+    ],
+    "code_swe": [
+      {
+        "task_id": "code_001",
+        "single_shot_passed": false,
+        "single_shot_tokens": 1017,
+        "reviewed_passed": true,
+        "reviewed_tokens": 2224,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_002",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1310,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1427,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_003",
+        "single_shot_passed": false,
+        "single_shot_tokens": 843,
+        "reviewed_passed": true,
+        "reviewed_tokens": 2036,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_004",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1298,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1308,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_005",
+        "single_shot_passed": true,
+        "single_shot_tokens": 812,
+        "reviewed_passed": true,
+        "reviewed_tokens": 812,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_006",
+        "single_shot_passed": true,
+        "single_shot_tokens": 747,
+        "reviewed_passed": true,
+        "reviewed_tokens": 747,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_007",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1217,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1217,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_008",
+        "single_shot_passed": false,
+        "single_shot_tokens": 990,
+        "reviewed_passed": true,
+        "reviewed_tokens": 3070,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_009",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1524,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1524,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_010",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1683,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1683,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_011",
+        "single_shot_passed": false,
+        "single_shot_tokens": 1536,
+        "reviewed_passed": true,
+        "reviewed_tokens": 4286,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_012",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1658,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1658,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_013",
+        "single_shot_passed": false,
+        "single_shot_tokens": 2511,
+        "reviewed_passed": true,
+        "reviewed_tokens": 5945,
+        "reviewed_iters": 2
+      },
+      {
+        "task_id": "code_014",
+        "single_shot_passed": true,
+        "single_shot_tokens": 1322,
+        "reviewed_passed": true,
+        "reviewed_tokens": 1322,
+        "reviewed_iters": 1
+      },
+      {
+        "task_id": "code_015",
+        "single_shot_passed": true,
+        "single_shot_tokens": 2487,
+        "reviewed_passed": true,
+        "reviewed_tokens": 2487,
+        "reviewed_iters": 1
+      }
+    ],
+    "research": [
+      {
+        "task_id": "research_001",
+        "ss_accuracy": 0.8,
+        "ss_meets": true,
+        "ss_tokens": 7580,
+        "rv_accuracy": 1.0,
+        "rv_meets": true,
+        "rv_iters": 2,
+        "rv_tokens": 16497
+      },
+      {
+        "task_id": "research_002",
+        "ss_accuracy": 0.8,
+        "ss_meets": true,
+        "ss_tokens": 7289,
+        "rv_accuracy": 1.0,
+        "rv_meets": true,
+        "rv_iters": 1,
+        "rv_tokens": 7343
+      },
+      {
+        "task_id": "research_003",
+        "ss_accuracy": 0.6,
+        "ss_meets": false,
+        "ss_tokens": 8432,
+        "rv_accuracy": 0.6,
+        "rv_meets": false,
+        "rv_iters": 2,
+        "rv_tokens": 17104
+      },
+      {
+        "task_id": "research_004",
+        "ss_accuracy": 0.8,
+        "ss_meets": true,
+        "ss_tokens": 6749,
+        "rv_accuracy": 1.0,
+        "rv_meets": true,
+        "rv_iters": 2,
+        "rv_tokens": 15095
+      },
+      {
+        "task_id": "research_005",
+        "ss_accuracy": 0.8,
+        "ss_meets": true,
+        "ss_tokens": 7519,
+        "rv_accuracy": 1.0,
+        "rv_meets": true,
+        "rv_iters": 1,
+        "rv_tokens": 7684
+      }
+    ],
+    "slides": [
+      {
+        "task_id": "slide_001",
+        "single_shot_quality": 0.6,
+        "single_shot_meets": false,
+        "single_shot_tokens": 5833,
+        "reviewed_quality": 0.6,
+        "reviewed_meets": false,
+        "reviewed_tokens": 21455,
+        "reviewed_iters": 3,
+        "quality_delta": 0.0
+      },
+      {
+        "task_id": "slide_002",
+        "single_shot_quality": 0.95,
+        "single_shot_meets": true,
+        "single_shot_tokens": 4643,
+        "reviewed_quality": 0.95,
+        "reviewed_meets": true,
+        "reviewed_tokens": 4676,
+        "reviewed_iters": 1,
+        "quality_delta": 0.0
+      },
+      {
+        "task_id": "slide_003",
+        "single_shot_quality": 1.0,
+        "single_shot_meets": true,
+        "single_shot_tokens": 4553,
+        "reviewed_quality": 1.0,
+        "reviewed_meets": true,
+        "reviewed_tokens": 4545,
+        "reviewed_iters": 1,
+        "quality_delta": 0.0
+      },
+      {
+        "task_id": "slide_004",
+        "single_shot_quality": 0.7,
+        "single_shot_meets": false,
+        "single_shot_tokens": 4298,
+        "reviewed_quality": 0.3,
+        "reviewed_meets": false,
+        "reviewed_tokens": 17269,
+        "reviewed_iters": 3,
+        "quality_delta": -0.39999999999999997
+      },
+      {
+        "task_id": "slide_005",
+        "single_shot_quality": 0.6,
+        "single_shot_meets": false,
+        "single_shot_tokens": 5784,
+        "reviewed_quality": 0.3,
+        "reviewed_meets": false,
+        "reviewed_tokens": 26053,
+        "reviewed_iters": 3,
+        "quality_delta": -0.3
+      },
+      {
+        "task_id": "slide_006",
+        "single_shot_quality": 0.4,
+        "single_shot_meets": false,
+        "single_shot_tokens": 5520,
+        "reviewed_quality": 0.6,
+        "reviewed_meets": false,
+        "reviewed_tokens": 19047,
+        "reviewed_iters": 3,
+        "quality_delta": 0.19999999999999996
+      },
+      {
+        "task_id": "slide_007",
+        "single_shot_quality": 0.6,
+        "single_shot_meets": false,
+        "single_shot_tokens": 5709,
+        "reviewed_quality": 0.75,
+        "reviewed_meets": false,
+        "reviewed_tokens": 22100,
+        "reviewed_iters": 3,
+        "quality_delta": 0.15000000000000002
+      },
+      {
+        "task_id": "slide_008",
+        "single_shot_quality": 0.0,
+        "single_shot_meets": false,
+        "single_shot_tokens": 4285,
+        "reviewed_quality": 0.0,
+        "reviewed_meets": false,
+        "reviewed_tokens": 16724,
+        "reviewed_iters": 3,
+        "quality_delta": 0.0
+      },
+      {
+        "task_id": "slide_009",
+        "single_shot_quality": 0.7,
+        "single_shot_meets": false,
+        "single_shot_tokens": 5271,
+        "reviewed_quality": 0.3,
+        "reviewed_meets": false,
+        "reviewed_tokens": 21455,
+        "reviewed_iters": 3,
+        "quality_delta": -0.39999999999999997
+      },
+      {
+        "task_id": "slide_010",
+        "single_shot_quality": 0.65,
+        "single_shot_meets": false,
+        "single_shot_tokens": 6393,
+        "reviewed_quality": 0.3,
+        "reviewed_meets": false,
+        "reviewed_tokens": 26676,
+        "reviewed_iters": 3,
+        "quality_delta": -0.35000000000000003
+      }
+    ],
+    "video": [
+      {
+        "task_id": "video_001",
+        "ss_quality": 1.0,
+        "ss_meets": true,
+        "rv_quality": 1.0,
+        "rv_meets": true,
+        "rv_iters": 1,
+        "ss_tokens": 5642,
+        "rv_tokens": 5642
+      },
+      {
+        "task_id": "video_002",
+        "ss_quality": 0.2,
+        "ss_meets": false,
+        "rv_quality": 0.2,
+        "rv_meets": false,
+        "rv_iters": 3,
+        "ss_tokens": 8451,
+        "rv_tokens": 21926
+      },
+      {
+        "task_id": "video_003",
+        "ss_quality": 0.0,
+        "ss_meets": false,
+        "rv_quality": 1.0,
+        "rv_meets": true,
+        "rv_iters": 2,
+        "ss_tokens": 10734,
+        "rv_tokens": 21774
+      },
+      {
+        "task_id": "video_004",
+        "ss_quality": 0,
+        "ss_meets": false,
+        "rv_quality": 0.7,
+        "rv_meets": false,
+        "rv_iters": 3,
+        "ss_tokens": 970,
+        "rv_tokens": 11877
+      },
+      {
+        "task_id": "video_005",
+        "ss_quality": 0,
+        "ss_meets": false,
+        "rv_quality": 0,
+        "rv_meets": false,
+        "rv_iters": 3,
+        "ss_tokens": 1651,
+        "rv_tokens": 5627
+      }
+    ],
+    "webpages": [
+      {
+        "task_id": "web_001",
+        "ss_quality": 0.4,
+        "ss_meets": false,
+        "rv_quality": 0.7,
+        "rv_meets": false,
+        "rv_iters": 3
+      },
+      {
+        "task_id": "web_003",
+        "ss_quality": 0.75,
+        "ss_meets": false,
+        "rv_quality": 0.75,
+        "rv_meets": false,
+        "rv_iters": 3
+      }
+    ]
+  }
+}
