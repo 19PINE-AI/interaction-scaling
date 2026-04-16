@@ -1,0 +1,167 @@
+[
+  {
+    "task_id": "anim_001",
+    "category": "animations",
+    "ss_quality": 0.2,
+    "ss_meets": false,
+    "ss_tokens": 20150,
+    "rv_quality": 0.2,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 67967
+  },
+  {
+    "task_id": "anim_002",
+    "category": "animations",
+    "ss_quality": 0.75,
+    "ss_meets": false,
+    "ss_tokens": 19033,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 65032
+  },
+  {
+    "task_id": "anim_003",
+    "category": "animations",
+    "ss_quality": 0.7,
+    "ss_meets": false,
+    "ss_tokens": 15530,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 55643
+  },
+  {
+    "task_id": "anim_004",
+    "category": "animations",
+    "ss_quality": 0.0,
+    "ss_meets": false,
+    "ss_tokens": 16887,
+    "rv_quality": 0.85,
+    "rv_meets": true,
+    "rv_iters": 3,
+    "rv_tokens": 58875
+  },
+  {
+    "task_id": "anim_005",
+    "category": "animations",
+    "ss_quality": 0.3,
+    "ss_meets": false,
+    "ss_tokens": 21430,
+    "rv_quality": 0.2,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 79448
+  },
+  {
+    "task_id": "anim_006",
+    "category": "animations",
+    "ss_quality": 0.1,
+    "ss_meets": false,
+    "ss_tokens": 19270,
+    "rv_quality": 0.1,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 68978
+  },
+  {
+    "task_id": "anim_007",
+    "category": "animations",
+    "ss_quality": 0.7,
+    "ss_meets": false,
+    "ss_tokens": 19599,
+    "rv_quality": 0.75,
+    "rv_meets": true,
+    "rv_iters": 3,
+    "rv_tokens": 65348
+  },
+  {
+    "task_id": "anim_008",
+    "category": "animations",
+    "ss_quality": 0.2,
+    "ss_meets": false,
+    "ss_tokens": 18096,
+    "rv_quality": 0.2,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 67984
+  },
+  {
+    "task_id": "anim_009",
+    "category": "animations",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 22956,
+    "rv_quality": 0.75,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 81732
+  },
+  {
+    "task_id": "anim_010",
+    "category": "animations",
+    "ss_quality": 0.85,
+    "ss_meets": true,
+    "ss_tokens": 24004,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 85092
+  },
+  {
+    "task_id": "anim_011",
+    "category": "animations",
+    "ss_quality": 0.75,
+    "ss_meets": false,
+    "ss_tokens": 18972,
+    "rv_quality": 0.75,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 68729
+  },
+  {
+    "task_id": "anim_012",
+    "category": "animations",
+    "ss_quality": 0.3,
+    "ss_meets": false,
+    "ss_tokens": 25968,
+    "rv_quality": 0.85,
+    "rv_meets": true,
+    "rv_iters": 3,
+    "rv_tokens": 84339
+  },
+  {
+    "task_id": "anim_013",
+    "category": "animations",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 21820,
+    "rv_quality": 0.3,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 75658
+  },
+  {
+    "task_id": "anim_014",
+    "category": "animations",
+    "ss_quality": 0.3,
+    "ss_meets": false,
+    "ss_tokens": 24124,
+    "rv_quality": 0.3,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 83666
+  },
+  {
+    "task_id": "anim_015",
+    "category": "animations",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 27987,
+    "rv_quality": 0.6,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 96296
+  }
+]

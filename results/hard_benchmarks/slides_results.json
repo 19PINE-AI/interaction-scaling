@@ -1,0 +1,222 @@
+[
+  {
+    "task_id": "slide_001",
+    "category": "slides",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 5036,
+    "rv_quality": 0.75,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 27939
+  },
+  {
+    "task_id": "slide_002",
+    "category": "slides",
+    "ss_quality": 0.8,
+    "ss_meets": true,
+    "ss_tokens": 4837,
+    "rv_quality": 0.95,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "rv_tokens": 16973
+  },
+  {
+    "task_id": "slide_003",
+    "category": "slides",
+    "ss_quality": 1.0,
+    "ss_meets": true,
+    "ss_tokens": 4618,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 4618
+  },
+  {
+    "task_id": "slide_004",
+    "category": "slides",
+    "ss_quality": 0.95,
+    "ss_meets": true,
+    "ss_tokens": 4295,
+    "rv_quality": 0.95,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 4411
+  },
+  {
+    "task_id": "slide_005",
+    "category": "slides",
+    "ss_quality": 0.7,
+    "ss_meets": false,
+    "ss_tokens": 5833,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 33193
+  },
+  {
+    "task_id": "slide_006",
+    "category": "slides",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 4996,
+    "rv_quality": 0.6,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 27159
+  },
+  {
+    "task_id": "slide_007",
+    "category": "slides",
+    "ss_quality": 0.85,
+    "ss_meets": true,
+    "ss_tokens": 5441,
+    "rv_quality": 0.75,
+    "rv_meets": true,
+    "rv_iters": 3,
+    "rv_tokens": 33461
+  },
+  {
+    "task_id": "slide_008",
+    "category": "slides",
+    "ss_quality": 0.95,
+    "ss_meets": true,
+    "ss_tokens": 4694,
+    "rv_quality": 0.95,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 4716
+  },
+  {
+    "task_id": "slide_009",
+    "category": "slides",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 6080,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 35383
+  },
+  {
+    "task_id": "slide_010",
+    "category": "slides",
+    "ss_quality": 0.7,
+    "ss_meets": false,
+    "ss_tokens": 6635,
+    "rv_quality": 0.6,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 34669
+  },
+  {
+    "task_id": "slide_011",
+    "category": "slides",
+    "ss_quality": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 4648,
+    "rv_quality": 0.6,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 24868
+  },
+  {
+    "task_id": "slide_012",
+    "category": "slides",
+    "ss_quality": 0.7,
+    "ss_meets": false,
+    "ss_tokens": 4482,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 23644
+  },
+  {
+    "task_id": "slide_013",
+    "category": "slides",
+    "ss_quality": 1.0,
+    "ss_meets": true,
+    "ss_tokens": 4037,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 4022
+  },
+  {
+    "task_id": "slide_014",
+    "category": "slides",
+    "ss_quality": 0.3,
+    "ss_meets": false,
+    "ss_tokens": 4316,
+    "rv_quality": 0.3,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 22383
+  },
+  {
+    "task_id": "slide_015",
+    "category": "slides",
+    "ss_quality": 0.4,
+    "ss_meets": false,
+    "ss_tokens": 5413,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 30418
+  },
+  {
+    "task_id": "slide_016",
+    "category": "slides",
+    "ss_quality": 0.95,
+    "ss_meets": true,
+    "ss_tokens": 3785,
+    "rv_quality": 0.95,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 3790
+  },
+  {
+    "task_id": "slide_017",
+    "category": "slides",
+    "ss_quality": 0.3,
+    "ss_meets": false,
+    "ss_tokens": 4204,
+    "rv_quality": 0.3,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 21144
+  },
+  {
+    "task_id": "slide_018",
+    "category": "slides",
+    "ss_quality": 1.0,
+    "ss_meets": true,
+    "ss_tokens": 4173,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 4173
+  },
+  {
+    "task_id": "slide_019",
+    "category": "slides",
+    "ss_quality": 1.0,
+    "ss_meets": true,
+    "ss_tokens": 5659,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 3,
+    "rv_tokens": 32438
+  },
+  {
+    "task_id": "slide_020",
+    "category": "slides",
+    "ss_quality": 1.0,
+    "ss_meets": true,
+    "ss_tokens": 3782,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 3782
+  }
+]

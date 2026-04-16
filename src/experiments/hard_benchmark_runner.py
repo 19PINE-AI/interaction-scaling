@@ -181,13 +181,13 @@ class HardBenchmarkRunner:
             if not use_review:
                 # Single-shot: just render, no review
                 # Do a basic quality assessment
-                quality_score, issues, meets_reqs = self._vlm_review(
+                quality_score, issues, meets_reqs, _suggestions = self._vlm_review(
                     screenshot_b64, requirements, reviewer_model
                 )
                 break
 
             # VLM Review
-            quality_score, issues, meets_reqs = self._vlm_review(
+            quality_score, issues, meets_reqs, suggestions = self._vlm_review(
                 screenshot_b64, requirements, reviewer_model
             )
 
@@ -199,18 +199,32 @@ class HardBenchmarkRunner:
                 break
 
             if i < max_iterations - 1:
-                # Revise with slide-specific prompt
-                feedback = self._format_review_feedback(issues, quality_score, meets_reqs)
+                # Revise with slide-specific prompt + visual context
+                feedback = self._format_review_feedback(
+                    issues, quality_score, meets_reqs, suggestions
+                )
                 revision_msg = REVISION_PROMPT.format(
                     previous_html=current_html, feedback=feedback
                 )
+                # Include the rendered screenshot so the proposer can
+                # see the actual visual problems, not just text descriptions
                 response = self.client.generate(
                     config=self.config.proposer_model,
                     system=SLIDE_SYSTEM_PROMPT,
                     messages=[
                         {"role": "user", "content": prompt},
                         {"role": "assistant", "content": f"```html\n{current_html}\n```"},
-                        {"role": "user", "content": revision_msg},
+                        {"role": "user", "content": [
+                            {
+                                "type": "image",
+                                "source": {
+                                    "type": "base64",
+                                    "media_type": "image/png",
+                                    "data": screenshot_b64,
+                                },
+                            },
+                            {"type": "text", "text": revision_msg},
+                        ]},
                     ],
                 )
                 new_html = extract_code(response.content, "html")
@@ -290,7 +304,7 @@ class HardBenchmarkRunner:
                 break
 
             # VLM review of frames
-            quality_score, issues, meets_reqs = self._vlm_review_animation(
+            quality_score, issues, meets_reqs, suggestions = self._vlm_review_animation(
                 frame_b64s, requirements, frame_times, reviewer_model
             )
 
@@ -301,7 +315,9 @@ class HardBenchmarkRunner:
                 break
 
             if i < max_iterations - 1:
-                feedback = self._format_review_feedback(issues, quality_score, meets_reqs)
+                feedback = self._format_review_feedback(
+                    issues, quality_score, meets_reqs, suggestions
+                )
                 revision_response = self.client.generate(
                     config=self.config.proposer_model,
                     system=ANIMATION_SYSTEM_PROMPT,
@@ -606,7 +622,7 @@ class HardBenchmarkRunner:
         screenshot_b64: str,
         requirements: str,
         model_config: ModelConfig | None = None,
-    ) -> tuple[float, list[dict], bool]:
+    ) -> tuple[float, list[dict], bool, list[str]]:
         """Use VLM to review a single screenshot."""
         config = model_config or ModelConfig.claude_sonnet()
         prompt = VISUAL_REVIEW_PROMPT.format(requirements=requirements)
@@ -638,7 +654,7 @@ class HardBenchmarkRunner:
         requirements: str,
         frame_times: list[int],
         model_config: ModelConfig | None = None,
-    ) -> tuple[float, list[dict], bool]:
+    ) -> tuple[float, list[dict], bool, list[str]]:
         """Use VLM to review animation frames."""
         config = model_config or ModelConfig.claude_sonnet()
 
@@ -685,12 +701,18 @@ class HardBenchmarkRunner:
     @staticmethod
     def _parse_review_json(
         raw: str,
-    ) -> tuple[float, list[dict], bool]:
-        """Parse VLM review JSON response."""
+    ) -> tuple[float, list[dict], bool, list[str]]:
+        """Parse VLM review JSON response.
+
+        Returns (quality_score, issues, meets_requirements, suggestions).
+        """
         raw = raw.strip()
         if raw.startswith("```"):
-            first_nl = raw.index("\n")
-            raw = raw[first_nl + 1:]
+            first_nl = raw.find("\n")
+            if first_nl == -1:
+                raw = raw[3:]
+            else:
+                raw = raw[first_nl + 1:]
             if raw.endswith("```"):
                 raw = raw[:-3].strip()
 
@@ -703,19 +725,23 @@ class HardBenchmarkRunner:
                 try:
                     data = json.loads(raw[start:end])
                 except json.JSONDecodeError:
-                    return 0.5, [], False
+                    return 0.5, [], False, []
             else:
-                return 0.5, [], False
+                return 0.5, [], False, []
 
         return (
             float(data.get("quality_score", 0.5)),
             data.get("issues", []),
             data.get("meets_requirements", False),
+            data.get("suggestions", []),
         )
 
     @staticmethod
     def _format_review_feedback(
-        issues: list[dict], quality_score: float, meets_reqs: bool
+        issues: list[dict],
+        quality_score: float,
+        meets_reqs: bool,
+        suggestions: list[str] | None = None,
     ) -> str:
         """Format review results as feedback for the proposer."""
         parts = [f"Quality score: {quality_score:.0%}"]
@@ -728,10 +754,10 @@ class HardBenchmarkRunner:
                 desc = issue.get("description", "")
                 loc = issue.get("location", issue.get("frame", ""))
                 parts.append(f"  {i}. [{sev}] {desc}" + (f" (at {loc})" if loc else ""))
-        suggestions = issues[0].get("suggestions", []) if issues else []
-        if not suggestions:
-            # Try to get from top-level parsed data
-            pass
+        if suggestions:
+            parts.append("\nSuggested fixes:")
+            for i, s in enumerate(suggestions, 1):
+                parts.append(f"  {i}. {s}")
         return "\n".join(parts)
 
 

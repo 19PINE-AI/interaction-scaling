@@ -1,52 +1,167 @@
 [
   {
     "task_id": "video_001",
-    "ss_quality": 1.0,
-    "ss_meets": true,
-    "rv_quality": 1.0,
-    "rv_meets": true,
-    "rv_iters": 1,
-    "ss_tokens": 5642,
-    "rv_tokens": 5642
-  },
-  {
-    "task_id": "video_002",
-    "ss_quality": 0.2,
+    "category": "video",
+    "ss_quality": 0,
     "ss_meets": false,
-    "rv_quality": 0.2,
-    "rv_meets": false,
-    "rv_iters": 3,
-    "ss_tokens": 8451,
-    "rv_tokens": 21926
-  },
-  {
-    "task_id": "video_003",
-    "ss_quality": 0.0,
-    "ss_meets": false,
+    "ss_tokens": 591,
     "rv_quality": 1.0,
     "rv_meets": true,
     "rv_iters": 2,
-    "ss_tokens": 10734,
-    "rv_tokens": 21774
+    "rv_tokens": 6898
   },
   {
-    "task_id": "video_004",
+    "task_id": "video_002",
+    "category": "video",
     "ss_quality": 0,
     "ss_meets": false,
-    "rv_quality": 0.7,
-    "rv_meets": false,
-    "rv_iters": 3,
-    "ss_tokens": 970,
-    "rv_tokens": 11877
-  },
-  {
-    "task_id": "video_005",
-    "ss_quality": 0,
-    "ss_meets": false,
+    "ss_tokens": 1403,
     "rv_quality": 0,
     "rv_meets": false,
     "rv_iters": 3,
-    "ss_tokens": 1651,
-    "rv_tokens": 5627
+    "rv_tokens": 12043
+  },
+  {
+    "task_id": "video_003",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 510,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 6966
+  },
+  {
+    "task_id": "video_004",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 1207,
+    "rv_quality": 0.7,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 19813
+  },
+  {
+    "task_id": "video_005",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 1340,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 14092
+  },
+  {
+    "task_id": "video_006",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 633,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 14021
+  },
+  {
+    "task_id": "video_007",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 1322,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 10742
+  },
+  {
+    "task_id": "video_008",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 823,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "rv_tokens": 9036
+  },
+  {
+    "task_id": "video_009",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 1147,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 6032
+  },
+  {
+    "task_id": "video_010",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 739,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "rv_tokens": 9010
+  },
+  {
+    "task_id": "video_011",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 1363,
+    "rv_quality": 0.6,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 20533
+  },
+  {
+    "task_id": "video_012",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 878,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 9448
+  },
+  {
+    "task_id": "video_013",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 891,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "rv_tokens": 13687
+  },
+  {
+    "task_id": "video_014",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 1348,
+    "rv_quality": 1.0,
+    "rv_meets": true,
+    "rv_iters": 3,
+    "rv_tokens": 35388
+  },
+  {
+    "task_id": "video_015",
+    "category": "video",
+    "ss_quality": 0,
+    "ss_meets": false,
+    "ss_tokens": 722,
+    "rv_quality": 0,
+    "rv_meets": false,
+    "rv_iters": 3,
+    "rv_tokens": 14584
   }
 ]

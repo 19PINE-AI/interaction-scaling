@@ -8,6 +8,7 @@ from pathlib import Path
 class ModelProvider(Enum):
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    LOCAL = "local"
 
 
 @dataclass
@@ -26,6 +27,14 @@ class ModelConfig:
         )
 
     @staticmethod
+    def claude_opus() -> "ModelConfig":
+        return ModelConfig(
+            provider=ModelProvider.ANTHROPIC,
+            model_id="claude-opus-4-6",
+            max_tokens=8192,
+        )
+
+    @staticmethod
     def claude_haiku() -> "ModelConfig":
         return ModelConfig(
             provider=ModelProvider.ANTHROPIC,
@@ -39,6 +48,24 @@ class ModelConfig:
             provider=ModelProvider.OPENAI,
             model_id="gpt-4.1-2025-04-14",
             max_tokens=8192,
+        )
+
+    @staticmethod
+    def qwen3_8b(model_path: str = "Qwen/Qwen3-8B") -> "ModelConfig":
+        return ModelConfig(
+            provider=ModelProvider.LOCAL,
+            model_id=model_path,
+            max_tokens=4096,
+            temperature=0.7,
+        )
+
+    @staticmethod
+    def gemma4_31b(model_path: str = "google/gemma-4-31B-it") -> "ModelConfig":
+        return ModelConfig(
+            provider=ModelProvider.LOCAL,
+            model_id=model_path,
+            max_tokens=8192,
+            temperature=0.7,
         )
 
 

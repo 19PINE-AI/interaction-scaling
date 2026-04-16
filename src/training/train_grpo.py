@@ -75,22 +75,99 @@ def _code_reward(completion: str, task: dict) -> float:
 
 
 def _visual_reward(completion: str, task: dict) -> float:
-    """Reward for visual tasks: render and VLM quality score."""
-    # Placeholder — requires browser rendering + VLM review
-    # In production, this would render the HTML and score it
-    return 0.5
+    """Reward for visual tasks: render HTML and get VLM quality score."""
+    from src.utils.code_utils import extract_code
+
+    html = extract_code(completion, "html")
+    if not html.strip():
+        return 0.0
+
+    try:
+        from src.rendering.browser import BrowserRenderer
+        renderer = BrowserRenderer()
+        screenshot_bytes = renderer.render_html(html)
+    except Exception:
+        return 0.0
+
+    # VLM review of the rendered screenshot
+    import base64
+    from src.config import ModelConfig
+    from src.utils.llm_client import get_client
+
+    screenshot_b64 = base64.b64encode(screenshot_bytes).decode()
+    requirements = "\n".join(f"- {r}" for r in task.get("requirements", []))
+
+    try:
+        client = get_client()
+        response = client.generate(
+            config=ModelConfig.claude_sonnet(),
+            system="You are a visual quality reviewer. Respond with ONLY valid JSON.",
+            messages=[{
+                "role": "user",
+                "content": [
+                    {
+                        "type": "image",
+                        "source": {
+                            "type": "base64",
+                            "media_type": "image/png",
+                            "data": screenshot_b64,
+                        },
+                    },
+                    {
+                        "type": "text",
+                        "text": (
+                            f"Rate the visual quality of this rendered output.\n"
+                            f"Requirements:\n{requirements}\n\n"
+                            f'Respond with ONLY JSON: {{"quality_score": 0.0-1.0}}'
+                        ),
+                    },
+                ],
+            }],
+        )
+        import json as _json
+        data = _json.loads(response.content.strip())
+        return float(data.get("quality_score", 0.0))
+    except Exception:
+        return 0.0
 
 
 def _video_reward(completion: str, task: dict) -> float:
-    """Reward for video tasks: execute, extract frames, VLM review."""
-    # Placeholder — requires ffmpeg + frame extraction + VLM
-    return 0.5
+    """Reward for video tasks: execute script, extract frames, VLM review."""
+    from src.utils.code_utils import extract_code
+    from src.feedback.type3c_video import VideoFeedback
+
+    code = extract_code(completion, "python")
+    if not code.strip():
+        return 0.0
+
+    try:
+        video_fb = VideoFeedback()
+        problem = {
+            "source_video": task.get("source_video", ""),
+            "output_path": "/tmp/output.mp4",
+            "frame_check_times_s": task.get("frame_check_times_s", [0, 1, 2, 3]),
+            "requirements": "\n".join(task.get("requirements", [])),
+        }
+        result = video_fb.get_feedback(code, problem)
+        return float(result.structured_data.get("quality_score", 0.0))
+    except Exception:
+        return 0.0
 
 
 def _factual_reward(completion: str, task: dict) -> float:
     """Reward for research tasks: claim decomposition + verification."""
-    # Placeholder — requires claim extraction + search verification
-    return 0.5
+    from src.feedback.type3d_factual import FactualVerificationFeedback
+
+    if not completion.strip():
+        return 0.0
+
+    try:
+        fact_fb = FactualVerificationFeedback()
+        problem = {"requirements": task.get("requirements", [])}
+        result = fact_fb.get_feedback(completion, problem)
+        return float(result.structured_data.get("accuracy", 0.0))
+    except Exception:
+        return 0.0
 
 
 def load_training_data(data_path: Path) -> list[dict]:
@@ -180,12 +257,15 @@ def train_sft(config: TrainingConfig, data_path: Path):
     logger.info("SFT training complete. Model saved to %s", config.output_dir + "-sft")
 
 
-def train_grpo(config: TrainingConfig, data_path: Path, task_type: str = "code"):
+def train_grpo(config: TrainingConfig, data_path: Path, tasks_dir: Path | None = None):
     """Stage 2: GRPO training with grounded reward.
 
     The model generates multiple trajectories for each task.
     Each trajectory is scored by the grounded reward function.
     GRPO optimizes the policy using relative rewards within each group.
+
+    Supports multi-task training: the reward function is selected per-example
+    based on the task_type field in the training data.
     """
     from trl import GRPOConfig, GRPOTrainer
 
@@ -205,22 +285,48 @@ def train_grpo(config: TrainingConfig, data_path: Path, task_type: str = "code")
 
     from datasets import Dataset
     dataset = Dataset.from_list([
-        {"prompt": ex["prompt"], "task_id": ex["task_id"]}
+        {"prompt": ex["prompt"], "task_id": ex["task_id"], "task_type": ex["task_type"]}
         for ex in grpo_data
     ])
 
-    # Build reward function
-    task_map = {ex["task_id"]: ex for ex in grpo_data}
-    reward_fn = build_reward_function(task_type)
+    # Build task info map for reward computation
+    # Load actual task definitions if available (for test_code, requirements, etc.)
+    task_info = {}
+    if tasks_dir:
+        tasks_dir = Path(tasks_dir)
+        for task_file in tasks_dir.glob("*/*_tasks.json"):
+            with open(task_file) as f:
+                for t in json.load(f):
+                    task_info[t["task_id"]] = t
+
+    # Map task_type -> reward function
+    reward_fns = {
+        "code": _code_reward,
+        "slide": _visual_reward,
+        "webpage": _visual_reward,
+        "animation": _visual_reward,
+        "video": _video_reward,
+        "research": _factual_reward,
+    }
+
+    # Build a task_id -> task_type mapping from training data
+    task_type_map = {ex["task_id"]: ex["task_type"] for ex in grpo_data}
 
     def reward_function(completions, prompts, **kwargs):
-        """Score each generated trajectory using grounded feedback."""
+        """Score each generated trajectory using grounded feedback.
+
+        Selects the appropriate reward function based on the task type.
+        """
         rewards = []
         for completion, prompt in zip(completions, prompts):
-            # Extract task info from prompt
-            # In production, this would look up the task and run execution
+            # Extract task_id from prompt to look up task type and info
+            task_id = _extract_task_id_from_prompt(prompt, task_type_map)
+            task_type = task_type_map.get(task_id, "code")
+            reward_fn = reward_fns.get(task_type, _code_reward)
+            task = task_info.get(task_id, {})
+
             try:
-                score = reward_fn(completion, {})
+                score = reward_fn(completion, task)
             except Exception:
                 score = 0.0
             rewards.append(score)
@@ -246,7 +352,7 @@ def train_grpo(config: TrainingConfig, data_path: Path, task_type: str = "code")
         model=model,
         args=training_args,
         train_dataset=dataset,
-        reward_funcs=reward_function,
+        reward_func=reward_function,
         tokenizer=tokenizer,
     )
 
@@ -256,19 +362,28 @@ def train_grpo(config: TrainingConfig, data_path: Path, task_type: str = "code")
     logger.info("GRPO training complete. Model saved to %s", config.output_dir + "-grpo")
 
 
+def _extract_task_id_from_prompt(prompt: str, task_type_map: dict) -> str:
+    """Extract task_id from a GRPO prompt by matching against known task IDs."""
+    for task_id in task_type_map:
+        if task_id in prompt:
+            return task_id
+    return ""
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
     config = TrainingConfig()
+    tasks_dir = Path("data/hard_benchmarks")
 
     # Stage 1: SFT
     sft_data = Path("data/training/sft_data.json")
     if sft_data.exists():
         train_sft(config, sft_data)
 
-    # Stage 2: GRPO
+    # Stage 2: GRPO (multi-task with grounded rewards)
     grpo_data = Path("data/training/grpo_data.json")
     if grpo_data.exists():
         # Update model path to use SFT checkpoint
         config.model_name = config.output_dir + "-sft"
-        train_grpo(config, grpo_data, task_type="code")
+        train_grpo(config, grpo_data, tasks_dir=tasks_dir)
