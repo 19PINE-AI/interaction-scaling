@@ -1,38 +1,58 @@
-# Experiment Log
+# Experiment Log — Hard Benchmarks
 
-## 2026-04-16: Hard Benchmark Experiments
+## 2026-04-16: Hard Benchmark Results
 
-### Design Philosophy
-All benchmarks are designed to be **genuinely hard** — tasks where single-shot
-generation produces visible/testable problems that only grounded feedback
-(visual rendering or code execution) can catch. Easy benchmarks like HumanEval+
-(98%+ single-shot) are excluded because they don't demonstrate the value of
-interaction scaling.
+### Completed Results
 
-### Three Benchmark Modalities
+#### 1. Code — SWE-style Bug Fixing (15 tasks, Type 3a execution feedback)
+| Approach | Pass Rate |
+|----------|-----------|
+| Single-shot | **67%** (10/15) |
+| With execution feedback | **100%** (15/15) |
+| **Delta** | **+33pp** |
 
-#### 1. Slide Generation (20 tasks)
-- Dense technical layouts, complex typography, multi-column designs
-- Key failure modes: text overflow, element overlap, alignment issues
-- Grounded feedback: browser rendering → screenshot → VLM review
-- Expected single-shot quality: low (visual issues common with dense content)
+5 bugs fixed, all in exactly 2 iterations:
+- code_001: CSV parser escaped quote state machine
+- code_003: Date range DST boundary comparison
+- code_008: Markdown table pipe-inside-backtick
+- code_011: CJK text wrapping width calculation
+- code_013: Wildcard trie early termination
 
-#### 2. Animation Generation (15 tasks)
-- Physics simulations, UI animations, coordinated multi-element motion
-- Key failure modes: timing bugs, elements escaping viewport, incorrect physics
-- Grounded feedback: multi-frame capture → VLM temporal analysis
-- Expected single-shot quality: low (animation bugs invisible in code)
+**This is the strongest result.** Execution feedback provides precise,
+actionable error messages that the model uses to fix subtle bugs.
 
-#### 3. Code with Subtle Bugs (15 tasks)
-- Off-by-one, numerical precision, data structure edge cases, algorithm bugs
-- Key failure modes: code looks correct but fails specific edge case tests
-- Grounded feedback: execution with targeted test cases
-- Expected single-shot quality: ~40-60% (subtle bugs that self-review misses)
+#### 2. Slides (5 tasks, Type 3b visual feedback)
+| Approach | Avg Quality | Meets Requirements |
+|----------|------------|-------------------|
+| Single-shot | **0.76** | **60%** |
+| With visual review | **0.85** | **60%** |
+| **Delta** | **+0.09** | **+0pp** |
 
-### Experiments Running
-- 10 slide tasks: single-shot vs 3-iteration visual review
-- 8 animation tasks: single-shot vs 3-iteration frame review
-- 15 code tasks: single-shot vs 5-iteration execution feedback
+slide_002 improved from 0.80→0.95, slide_005 from 0.30→0.60.
+Moderate improvement — VLM catches overflow/alignment but fixing CSS is harder.
 
-### Results
-*Pending — experiments in progress*
+#### 3. Animations (8 tasks, Type 3b+3c multi-frame feedback)
+| Approach | Avg Quality | Meets Requirements |
+|----------|------------|-------------------|
+| Single-shot | **0.29** | **25%** |
+| With frame review | **0.37** | **12%** |
+| **Delta** | **+0.07** | **-13pp** |
+
+Weakest result. Animation bugs are hard to diagnose from frame screenshots.
+
+### Pending Results
+- Web page generation (5 tasks): running
+- Deep research (5 tasks): running
+- Video editing (15 tasks): not yet run
+
+### Cross-Modal Summary
+```
+Feedback Actionability vs Improvement:
+
+Code execution:   +33pp  (precise errors → direct fix)
+Slide visual:     +0.09  (spatial issues → CSS fix)
+Animation frames: +0.07  (temporal issues → hard to fix)
+```
+
+The value of interaction scaling is directly proportional to the
+actionability of the feedback signal.
