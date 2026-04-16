@@ -1,0 +1,122 @@
+[
+  {
+    "task_id": "code_001",
+    "single_shot_passed": false,
+    "single_shot_tokens": 1017,
+    "reviewed_passed": true,
+    "reviewed_tokens": 2224,
+    "reviewed_iters": 2
+  },
+  {
+    "task_id": "code_002",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1310,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1427,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_003",
+    "single_shot_passed": false,
+    "single_shot_tokens": 843,
+    "reviewed_passed": true,
+    "reviewed_tokens": 2036,
+    "reviewed_iters": 2
+  },
+  {
+    "task_id": "code_004",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1298,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1308,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_005",
+    "single_shot_passed": true,
+    "single_shot_tokens": 812,
+    "reviewed_passed": true,
+    "reviewed_tokens": 812,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_006",
+    "single_shot_passed": true,
+    "single_shot_tokens": 747,
+    "reviewed_passed": true,
+    "reviewed_tokens": 747,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_007",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1217,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1217,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_008",
+    "single_shot_passed": false,
+    "single_shot_tokens": 990,
+    "reviewed_passed": true,
+    "reviewed_tokens": 3070,
+    "reviewed_iters": 2
+  },
+  {
+    "task_id": "code_009",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1524,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1524,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_010",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1683,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1683,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_011",
+    "single_shot_passed": false,
+    "single_shot_tokens": 1536,
+    "reviewed_passed": true,
+    "reviewed_tokens": 4286,
+    "reviewed_iters": 2
+  },
+  {
+    "task_id": "code_012",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1658,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1658,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_013",
+    "single_shot_passed": false,
+    "single_shot_tokens": 2511,
+    "reviewed_passed": true,
+    "reviewed_tokens": 5945,
+    "reviewed_iters": 2
+  },
+  {
+    "task_id": "code_014",
+    "single_shot_passed": true,
+    "single_shot_tokens": 1322,
+    "reviewed_passed": true,
+    "reviewed_tokens": 1322,
+    "reviewed_iters": 1
+  },
+  {
+    "task_id": "code_015",
+    "single_shot_passed": true,
+    "single_shot_tokens": 2487,
+    "reviewed_passed": true,
+    "reviewed_tokens": 2487,
+    "reviewed_iters": 1
+  }
+]
