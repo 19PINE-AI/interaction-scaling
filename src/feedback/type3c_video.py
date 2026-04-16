@@ -86,12 +86,17 @@ class VideoFeedback(FeedbackProvider):
             script_path = f.name
 
         try:
+            source_video = problem.get("source_video", "")
+            if source_video and Path(source_video).parent.is_dir():
+                cwd = str(Path(source_video).parent)
+            else:
+                cwd = "/tmp"
             result = subprocess.run(
                 ["python", script_path],
                 capture_output=True,
                 text=True,
                 timeout=60,
-                cwd=str(Path(problem.get("source_video", "")).parent or "/tmp"),
+                cwd=cwd,
             )
             if result.returncode != 0:
                 return {"success": False, "error": result.stderr[:3000]}

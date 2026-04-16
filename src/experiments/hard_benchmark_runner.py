@@ -415,14 +415,21 @@ class HardBenchmarkRunner:
 
         description = task["description"]
         requirements = "\n".join(f"- {r}" for r in task.get("requirements", []))
-        source_video = task.get("source_video", "")
+        source_video_name = task.get("source_video", "")
         frame_times = task.get("frame_check_times_s", [0, 1, 2, 3])
+
+        # Resolve source video to absolute path
+        video_data_dir = Path(__file__).resolve().parent.parent.parent / "data" / "hard_benchmarks" / "video"
+        if source_video_name:
+            source_video = str(video_data_dir / source_video_name)
+        else:
+            source_video = ""
 
         video_system = (
             "You are an expert video editor writing Python code using moviepy or ffmpeg.\n"
             "Rules:\n"
             "- Output a complete Python script that performs the video editing\n"
-            "- Use moviepy (from moviepy.editor import *) or subprocess with ffmpeg\n"
+            "- Use moviepy (from moviepy import *) or subprocess with ffmpeg\n"
             "- The script should read from the source video and write to '/tmp/output.mp4'\n"
             "- Handle all edge cases (duration, resolution, codec)\n"
             "- Wrap your code in a ```python code block"
