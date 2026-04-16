@@ -1,0 +1,340 @@
+[
+  {
+    "task_id": "video_001",
+    "description": "Trim source_colors.mp4 to only the green segment (seconds 2-4), producing a 2-second video that is entirely green.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output video must be exactly 2 seconds long",
+      "Every frame must be solid green (no red or blue frames)",
+      "Resolution must remain 1280x720",
+      "Output must be a valid H.264 MP4 file"
+    ],
+    "frame_check_times_s": [0.0, 0.5, 1.0, 1.5],
+    "expected_issues": [
+      "Off-by-one errors in trim points causing red or blue frames to bleed in",
+      "Using stream copy (-c copy) with non-keyframe start causing corrupted initial frames",
+      "Duration being slightly off due to keyframe alignment"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_002",
+    "description": "Reverse source_countdown.mp4 so it counts UP from 1 to 5 instead of down from 5 to 1. The output should show 1, then 2, then 3, then 4, then 5.",
+    "source_video": "source_countdown.mp4",
+    "requirements": [
+      "Output video must be exactly 5 seconds long",
+      "At t=0.5s the displayed number must be '1'",
+      "At t=1.5s the displayed number must be '2'",
+      "At t=2.5s the displayed number must be '3'",
+      "At t=3.5s the displayed number must be '4'",
+      "At t=4.5s the displayed number must be '5'",
+      "Resolution must remain 1280x720"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 4.5],
+    "expected_issues": [
+      "Reversed video plays audio backwards if audio track exists",
+      "Frame interpolation artifacts when reversing compressed video",
+      "Off-by-one in number display due to drawtext expression rounding",
+      "Using moviepy reverse without re-encoding causes seek issues"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_003",
+    "description": "Extract the last 2 seconds of source_colors.mp4 (the blue segment, seconds 3-5) and loop it 3 times to produce a 6-second all-blue video with no visible seams between loops.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output video must be exactly 6 seconds long",
+      "Every frame must be solid blue",
+      "No visible jump, flash, or seam at the 2-second and 4-second loop boundaries",
+      "Resolution must remain 1280x720"
+    ],
+    "frame_check_times_s": [0.5, 1.9, 2.0, 2.1, 3.9, 4.0, 4.1, 5.5],
+    "expected_issues": [
+      "Visible seam/flash at loop points due to re-encoding artifacts",
+      "Incorrect extraction range getting partial green frames",
+      "Concat demuxer creating timestamp discontinuities",
+      "Duration drift causing total length to be slightly off from 6 seconds"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_004",
+    "description": "Speed up source_countdown.mp4 to 2x speed, producing a 2.5-second video where the countdown numbers (5,4,3,2,1) are still clearly readable but pass twice as fast.",
+    "source_video": "source_countdown.mp4",
+    "requirements": [
+      "Output video must be approximately 2.5 seconds long (within 0.1s tolerance)",
+      "All five countdown numbers must appear and be readable",
+      "Numbers must transition at twice the original speed",
+      "Resolution must remain 1280x720",
+      "No frame blending or motion blur artifacts that make numbers unreadable"
+    ],
+    "frame_check_times_s": [0.25, 0.75, 1.25, 1.75, 2.25],
+    "expected_issues": [
+      "Using setpts filter without updating framerate causes dropped frames",
+      "Frame blending making numbers partially transparent or overlapped",
+      "Audio track (if present) not being sped up in sync",
+      "Output duration being slightly wrong due to rounding in PTS manipulation"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_005",
+    "description": "Add a semi-transparent watermark with the text 'DRAFT' rotated 45 degrees diagonally across source_gradient.mp4. The watermark must be visible but not completely obstruct the underlying gradient content.",
+    "source_video": "source_gradient.mp4",
+    "requirements": [
+      "Text 'DRAFT' must be clearly readable in every frame",
+      "Text must be rotated approximately 45 degrees",
+      "Text must be semi-transparent (alpha between 0.3 and 0.7) so the gradient underneath is still visible",
+      "Text must be centered or tiled across the frame",
+      "The underlying gradient pattern must still be discernible through the watermark",
+      "Resolution must remain 1280x720",
+      "Video duration must remain 5 seconds"
+    ],
+    "frame_check_times_s": [0.5, 2.5, 4.5],
+    "expected_issues": [
+      "Text not actually rotated (ffmpeg drawtext rotation syntax is tricky)",
+      "Transparency not working (opaque white text covering content)",
+      "Text positioned outside visible area or clipped at edges",
+      "Using PIL overlay in moviepy but not applying it to every frame",
+      "Font not found errors on different systems"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_006",
+    "description": "Apply a fade-in effect over the first 1 second and a fade-out effect over the last 1 second of source_colors.mp4. The video should start from black, gradually become visible, and end by fading back to black.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "The very first frame (t=0.0s) must be completely or nearly black",
+      "At t=0.5s the frame must be partially visible (dimmed red, not full brightness)",
+      "At t=1.0s the frame must be at full brightness",
+      "Middle frames (t=2.0s to t=3.5s) must be unaffected",
+      "At t=4.5s the frame must be partially visible (dimmed blue)",
+      "The very last frame must be completely or nearly black",
+      "Video duration must remain 5 seconds"
+    ],
+    "frame_check_times_s": [0.0, 0.25, 0.5, 1.0, 2.5, 4.0, 4.5, 4.9],
+    "expected_issues": [
+      "Fade-in applied but fade-out forgotten or vice versa",
+      "Fade duration parameters in wrong units (frames vs seconds)",
+      "Fade applied to wrong time range (e.g., fade-out starting too early)",
+      "Using alpha fade instead of brightness fade, resulting in transparency not darkness"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_007",
+    "description": "Convert source_gradient.mp4 to true grayscale. The output video must have no color information; the R, G, and B channel values of any pixel should be approximately equal.",
+    "source_video": "source_gradient.mp4",
+    "requirements": [
+      "All frames must be grayscale: for any pixel, |R - G|, |R - B|, and |G - B| must each be less than 10",
+      "The luminance gradient pattern should still be visible (bright areas stay bright, dark areas stay dark)",
+      "Resolution must remain 1280x720",
+      "Video duration must remain 5 seconds",
+      "Output must be a valid MP4 file (not a raw YUV stream)"
+    ],
+    "frame_check_times_s": [0.5, 2.5, 4.5],
+    "expected_issues": [
+      "Using hue=s=0 which may not fully desaturate in all colorspaces",
+      "Converting to gray pixel format but then re-encoding to yuv420p without proper mapping",
+      "Moviepy ColorClip vs proper luma conversion producing washed-out results",
+      "Color fringing due to chroma subsampling in yuv420p after grayscale conversion"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_008",
+    "description": "Create a picture-in-picture composition: overlay a 320x180 version of source_countdown.mp4 in the bottom-right corner of source_colors.mp4 (with a 10-pixel margin from edges). Both videos should play simultaneously from their respective starts.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Main video (source_colors.mp4) fills the full 1280x720 frame",
+      "PiP overlay is exactly 320x180 pixels",
+      "PiP is positioned in the bottom-right corner with a 10-pixel margin from the right and bottom edges",
+      "PiP shows source_countdown.mp4 content playing in sync from t=0",
+      "At t=1.0s: main video is red, PiP shows countdown number '4'",
+      "At t=3.0s: main video is green, PiP shows countdown number '2'",
+      "Both videos must play for their full overlapping duration (5 seconds)",
+      "Output resolution must be 1280x720"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 4.5],
+    "expected_issues": [
+      "PiP overlay positioned incorrectly (wrong corner or wrong offset calculation)",
+      "PiP video not scaled to 320x180 (appears at original resolution or wrong aspect ratio)",
+      "PiP video not starting at the same time as main video",
+      "PiP overlay extending beyond frame boundaries and being clipped",
+      "Moviepy CompositeVideoClip vs ffmpeg overlay filter coordinate system confusion"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_009",
+    "description": "Concatenate source_colors.mp4 and source_countdown.mp4 with a 1-second crossfade transition between them. The output should play the colors video, then crossfade into the countdown video over 1 second, then play the remainder of the countdown.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output video must be 9 seconds long (5 + 5 - 1 second overlap)",
+      "First 4 seconds show source_colors.mp4 content only",
+      "Seconds 4.0 to 5.0 show a crossfade blend of both videos",
+      "At t=4.5s the frame should show a visible blend of blue (from colors) and the countdown number",
+      "From t=5.0s onward, only source_countdown.mp4 content is visible",
+      "Both source videos must use their original content (not re-generated)",
+      "Resolution must be 1280x720"
+    ],
+    "frame_check_times_s": [1.0, 3.0, 4.0, 4.25, 4.5, 4.75, 5.0, 7.0],
+    "expected_issues": [
+      "Crossfade producing black frames instead of blended frames",
+      "Crossfade duration being wrong (too short or too long)",
+      "Total duration being 10 seconds (simple concat without overlap) instead of 9",
+      "Audio crossfade not matching video crossfade",
+      "xfade filter offset parameter being miscalculated"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_010",
+    "description": "Create a split-screen video with source_colors.mp4 on the left half and source_countdown.mp4 on the right half, both playing simultaneously. Each half should show its respective video properly scaled to fill 640x720.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output resolution must be 1280x720",
+      "Left half (pixels 0-639) shows source_colors.mp4 content scaled to 640x720",
+      "Right half (pixels 640-1279) shows source_countdown.mp4 content scaled to 640x720",
+      "Both halves play simultaneously from t=0",
+      "At t=1.0s: left half is red, right half shows countdown number '4'",
+      "At t=3.0s: left half is green, right half shows countdown number '2'",
+      "No black bars, letterboxing, or gaps between the two halves",
+      "Video duration must be 5 seconds"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 4.5],
+    "expected_issues": [
+      "Aspect ratio distortion when scaling from 16:9 to non-standard dimensions",
+      "Black bar between the two halves or black border around one half",
+      "One video appearing on top of the other instead of side-by-side",
+      "Videos not synchronized (one starting before the other)",
+      "Pad filter adding unwanted letterboxing"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_011",
+    "description": "Create a 2x2 grid video with four quadrants, each 640x360: top-left is source_colors.mp4, top-right is source_countdown.mp4, bottom-left is source_gradient.mp4, and bottom-right is source_colors.mp4 played in reverse. All four play simultaneously.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output resolution must be 1280x720",
+      "Top-left quadrant (0,0 to 639,359): source_colors.mp4 scaled to 640x360",
+      "Top-right quadrant (640,0 to 1279,359): source_countdown.mp4 scaled to 640x360",
+      "Bottom-left quadrant (0,360 to 639,719): source_gradient.mp4 scaled to 640x360",
+      "Bottom-right quadrant (640,360 to 1279,719): source_colors.mp4 reversed, scaled to 640x360",
+      "All four quadrants must play simultaneously from t=0",
+      "At t=1.0s: TL=red, TR=countdown '4', BL=gradient, BR=blue (reversed starts with blue)",
+      "At t=3.0s: TL=green, TR=countdown '2', BL=gradient, BR=green (reversed middle)",
+      "Video duration must be 5 seconds"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 4.5],
+    "expected_issues": [
+      "Quadrants overlapping or having incorrect positions",
+      "Reversed video in wrong quadrant or not actually reversed",
+      "Scaling artifacts or aspect ratio distortion in individual quadrants",
+      "Complex ffmpeg filtergraph syntax errors with multiple inputs",
+      "Memory issues when loading all four video streams simultaneously in moviepy"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_012",
+    "description": "Add a lower-third title bar to source_colors.mp4: a semi-transparent black bar covering the bottom 20% of the frame, with the white text 'Scene 1' centered horizontally and vertically within that bar.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output resolution must be 1280x720",
+      "A black semi-transparent bar (alpha approximately 0.5) covers y=576 to y=720 (bottom 144 pixels, i.e., 20% of 720)",
+      "White text 'Scene 1' is centered horizontally within the bar",
+      "Text is centered vertically within the bar (approximately at y=648)",
+      "The bar and text are present for the entire 5-second duration",
+      "The underlying video content is partially visible through the bar",
+      "At t=1.0s: red video visible above bar, red partially visible through semi-transparent bar, white text reads 'Scene 1'",
+      "Video duration must remain 5 seconds"
+    ],
+    "frame_check_times_s": [0.5, 2.5, 4.5],
+    "expected_issues": [
+      "Bar is fully opaque instead of semi-transparent",
+      "Bar positioned incorrectly (covering top instead of bottom, or wrong height)",
+      "Text not centered within the bar (aligned to frame center instead of bar center)",
+      "Text too small or too large to be readable",
+      "Semi-transparency implemented incorrectly in ffmpeg (requires overlay with alpha)"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_013",
+    "description": "Generate a silent 5-second video (1280x720, black background) with centered white text showing the current timestamp in MM:SS.ms format (e.g., '00:02.340'), updating every frame to reflect the actual playback time.",
+    "source_video": null,
+    "requirements": [
+      "Output video must be exactly 5 seconds long at a consistent frame rate (24 or 25 or 30 fps)",
+      "Black background, white centered text in every frame",
+      "Timestamp format must be MM:SS.mmm (minutes, seconds, milliseconds) or MM:SS.mm",
+      "At t=0.0s text shows approximately '00:00.000'",
+      "At t=2.5s text shows approximately '00:02.500'",
+      "At t=4.9s text shows approximately '00:04.900'",
+      "The timestamp must change every frame (not be static or update only once per second)",
+      "No audio track, or a silent audio track",
+      "Resolution must be 1280x720"
+    ],
+    "frame_check_times_s": [0.0, 0.5, 1.0, 2.0, 2.5, 3.0, 4.0, 4.9],
+    "expected_issues": [
+      "Timestamp is static (same value every frame) because the time variable was evaluated once, not per-frame",
+      "Timestamp updates only once per second instead of every frame",
+      "Incorrect time format (showing frame numbers instead of seconds)",
+      "Using moviepy TextClip which renders once and does not update per frame",
+      "Millisecond component always showing '000' due to integer division"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_014",
+    "description": "Create a 10-second video that alternates between segments from source_colors.mp4 and black gap frames. Pattern: 2s red, 0.5s black, 2s green, 0.5s black, 2s blue, 0.5s black, then pad remaining time with black to reach exactly 10 seconds. Each color segment should use the corresponding portion of source_colors.mp4.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output video must be exactly 10 seconds long",
+      "t=0.0s to t=2.0s: red (from source_colors.mp4 seconds 0-2)",
+      "t=2.0s to t=2.5s: solid black gap",
+      "t=2.5s to t=4.5s: green (from source_colors.mp4 seconds 2-4)",
+      "t=4.5s to t=5.0s: solid black gap",
+      "t=5.0s to t=6.0s: blue (from source_colors.mp4 seconds 4-5)",
+      "t=6.0s to t=10.0s: solid black padding",
+      "Resolution must be 1280x720",
+      "No audio glitches or pops at segment boundaries"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.0, 2.25, 2.5, 3.5, 4.5, 4.75, 5.5, 7.0, 9.0],
+    "expected_issues": [
+      "Total duration not exactly 10 seconds due to accumulated rounding errors",
+      "Black gaps having wrong duration or being omitted",
+      "Color segments taken from wrong time ranges of source video",
+      "Timestamp arithmetic errors causing overlapping or missing segments",
+      "Concat filter producing timestamp discontinuities visible as frame drops",
+      "Blue segment only being 1 second (source only has 1s of blue) but task asks for 2s"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "video_015",
+    "description": "Take source_countdown.mp4 and add a 1-second freeze-frame at the '3' mark. Specifically, hold the frame at t=2.0s (which shows '3') for an extra 1 second, so the number '3' is displayed for 2 seconds total instead of 1. The resulting video should be 6 seconds long.",
+    "source_video": "source_countdown.mp4",
+    "requirements": [
+      "Output video must be exactly 6 seconds long",
+      "t=0.0s to t=2.0s: plays normally (shows '5' then '4')",
+      "t=2.0s to t=3.0s: shows '3' (first second of '3', from original)",
+      "t=3.0s to t=4.0s: freeze frame still showing '3' (the inserted extra second)",
+      "t=4.0s to t=6.0s: resumes with '2' then '1'",
+      "The freeze must be seamless - no flash, jump, or visual discontinuity at the freeze boundaries",
+      "Resolution must remain 1280x720"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.0, 3.5, 4.0, 4.5, 5.5],
+    "expected_issues": [
+      "Freeze frame inserted at wrong timestamp (holding '4' or '2' instead of '3')",
+      "Freeze frame creating a visible jump or flash at the splice points",
+      "Total duration being wrong (not accounting for the inserted second properly)",
+      "Using tpad or loop filters incorrectly causing the freeze to replace content instead of insert",
+      "Post-freeze content being shifted by wrong amount, cutting off the final '1'"
+    ],
+    "difficulty": "hard"
+  }
+]

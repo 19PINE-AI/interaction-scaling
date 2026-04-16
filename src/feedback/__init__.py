@@ -4,6 +4,8 @@ from src.feedback.type1_cross import CrossModelFeedback
 from src.feedback.type2_static import StaticAnalysisFeedback
 from src.feedback.type3a_execution import ExecutionFeedback
 from src.feedback.type3b_visual import VisualFeedback
+from src.feedback.type3c_video import VideoFeedback
+from src.feedback.type3d_factual import FactualVerificationFeedback
 
 __all__ = [
     "FeedbackProvider",
@@ -14,4 +16,6 @@ __all__ = [
     "StaticAnalysisFeedback",
     "ExecutionFeedback",
     "VisualFeedback",
+    "VideoFeedback",
+    "FactualVerificationFeedback",
 ]
