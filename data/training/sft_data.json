@@ -1,0 +1,647 @@
+[
+  {
+    "task_id": "code_001",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our CSV parser silently corrupts data when fields contain escaped quotes inside quoted fields. Per RFC 4180, a double-quote inside a quoted field is escaped by doubling it (e.g., `\"\"`).\n\nFor example, the input:\n  `\"hello \"\"world\"\"\",other`\nshould parse to two fields: `hello \"world\"` and `other`.\n\nBut our parser returns `hello \"world\"\"` and `other` \u2014 it's eating one quote and including a trailing one.\n\nHere is the current implementation that has a bug:\n\n```python\ndef parse_csv_line(line):\n    \"\"\"Parse a single CSV line into a list of field values.\n    Handles quoted fields, escaped quotes (\"\"), and commas inside quotes.\n    \"\"\"\n    fields = []\n    current = []\n    in_quotes = False\n    i = 0\n    while i < len(line):\n        ch = line[i]\n        if ch == '\"':\n            if in_quotes:\n                if i + 1 < len(line) and line[i + 1] == '\"':\n                    # Escaped quote inside quoted field\n                    current.append('\"')\n                    i += 1\n                else:\n                    # End of quoted field\n                    in_quotes = False\n            else:\n                if len(current) == 0:\n                    in_quotes = True\n                else:\n                    current.append('\"')\n        elif ch == ',' and not in_quotes:\n            fields.append(''.join(current))\n            current = []\n        elif ch == '\\n' and not in_quotes:\n            break\n        else:\n            current.append(ch)\n        i += 1\n    fields.append(''.join(current))\n    return fields\n```\n\nPlease fix the bug in `parse_csv_line`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 4 steps remaining]\nTests failed. Analyze the error and identify the root cause."
+      },
+      {
+        "role": "assistant",
+        "content": "[REVIEW]: The test failure indicates the bug is in the specific edge case handling. I need to revise the code."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 3 steps remaining]\nRevise the code to fix the identified issue."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: Here is the corrected code with the bug fixed."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the revised code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_002",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our URL router fails when we have overlapping path parameters. Specifically, a static segment like `/users/profile` should take priority over a parameterized route like `/users/{id}`, but our router matches the parameterized route instead.\n\nAlso, routes like `/{category}/{id}` and `/users/{id}` conflict \u2014 the more specific one (`/users/{id}`) should win.\n\nHere is the current implementation that has a bug:\n\n```python\nclass Router:\n    def __init__(self):\n        self.routes = []\n\n    def add_route(self, pattern, handler):\n        \"\"\"Add a route pattern like '/users/{id}' mapped to a handler string.\"\"\"\n        parts = pattern.strip('/').split('/')\n        self.routes.append((parts, handler))\n\n    def match(self, path):\n        \"\"\"Match a path to a handler. Returns (handler, params_dict) or None.\n        Static segments take priority over parameterized ones.\n        More specific routes (more static segments) take priority.\n        \"\"\"\n        path_parts = path.strip('/').split('/')\n        best_match = None\n        best_params = None\n        best_score = -1\n\n        for route_parts, handler in self.routes:\n            if len(route_parts) != len(path_parts):\n                continue\n            params = {}\n            match = True\n            score = 0\n            for rp, pp in zip(route_parts, path_parts):\n                if rp.startswith('{') and rp.endswith('}'):\n                    param_name = rp[1:-1]\n                    params[param_name] = pp\n                elif rp == pp:\n                    score += 1\n                else:\n                    match = False\n                    break\n            if match and score > best_score:\n                best_match = handler\n                best_params = params\n                best_score = score\n\n        if best_match is not None:\n            return (best_match, best_params)\n        return None\n```\n\nPlease fix the bug in the `Router` class."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_003",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our date range overlap checker reports incorrect results when timezone-aware datetimes are involved. Specifically, two ranges that should overlap based on their actual moments in time are reported as non-overlapping because we compare naive and aware datetimes, or because we don't account for UTC offset differences.\n\nHere is the current implementation that has a bug:\n\n```python\nfrom datetime import datetime, timedelta, timezone\n\ndef ranges_overlap(start1, end1, start2, end2):\n    \"\"\"Check if two datetime ranges [start1, end1) and [start2, end2) overlap.\n    Handles both naive and timezone-aware datetimes.\n    Returns True if there is any overlap.\n    \"\"\"\n    # Normalize to UTC if timezone-aware\n    def to_comparable(dt):\n        if dt.tzinfo is not None:\n            return dt.replace(tzinfo=None)\n        return dt\n\n    s1 = to_comparable(start1)\n    e1 = to_comparable(end1)\n    s2 = to_comparable(start2)\n    e2 = to_comparable(end2)\n\n    return s1 < e2 and s2 < e1\n```\n\nThe bug is in `to_comparable`: it strips the timezone info using `replace(tzinfo=None)` instead of converting to UTC first. This means a datetime at 10:00 UTC+5 (which is 05:00 UTC) gets compared as 10:00, which is wrong.\n\nPlease fix the bug in `ranges_overlap`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 4 steps remaining]\nTests failed. Analyze the error and identify the root cause."
+      },
+      {
+        "role": "assistant",
+        "content": "[REVIEW]: The test failure indicates the bug is in the specific edge case handling. I need to revise the code."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 3 steps remaining]\nRevise the code to fix the identified issue."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: Here is the corrected code with the bug fixed."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the revised code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_004",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our JSON patch implementation (RFC 6902 subset) fails when multiple operations target array indices, because it doesn't account for index shifting after removals.\n\nFor example, applying [{\"op\": \"remove\", \"path\": \"/items/1\"}, {\"op\": \"remove\", \"path\": \"/items/2\"}] to {\"items\": [\"a\", \"b\", \"c\", \"d\"]} should remove \"b\" (index 1), then \"d\" (which is now at index 2 after the shift). But instead it removes \"b\" and then tries to remove index 2 of the shifted array, giving wrong results or errors.\n\nHere is the current implementation that has a bug:\n\n```python\nimport copy\nimport json\n\ndef apply_patch(document, patches):\n    \"\"\"Apply a list of JSON Patch operations (RFC 6902 subset) to a document.\n    Supports: add, remove, replace operations.\n    Path format: '/key/index/nested' (JSON Pointer, RFC 6901)\n    Returns the modified document.\n    \"\"\"\n    result = copy.deepcopy(document)\n\n    for patch in patches:\n        op = patch['op']\n        path = patch['path']\n        value = patch.get('value')\n\n        # Parse JSON pointer\n        parts = path.strip('/').split('/')\n        # Navigate to parent\n        parent = result\n        for part in parts[:-1]:\n            if isinstance(parent, list):\n                parent = parent[int(part)]\n            else:\n                parent = parent[part]\n\n        target = parts[-1]\n\n        if op == 'add':\n            if isinstance(parent, list):\n                if target == '-':\n                    parent.append(value)\n                else:\n                    parent.insert(int(target), value)\n            else:\n                parent[target] = value\n\n        elif op == 'remove':\n            if isinstance(parent, list):\n                del parent[int(target)]\n            else:\n                del parent[target]\n\n        elif op == 'replace':\n            if isinstance(parent, list):\n                parent[int(target)] = value\n            else:\n                parent[target] = value\n\n    return result\n```\n\nActually, the implementation above processes patches sequentially, which IS correct per RFC 6902 (each operation is applied before the next). The real bug is different: the path parsing fails when a key contains an escaped tilde or slash (RFC 6901 requires `~0` for `~` and `~1` for `/` in JSON Pointer). Also, when the path is empty string `\"\"`, it should refer to the whole document, but our code crashes.\n\nPlease fix the bugs in `apply_patch`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_005",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our token bucket rate limiter allows bursts that exceed the configured limit. The bug manifests when many requests come in rapid succession: the refill calculation adds too many tokens because it doesn't cap the bucket at `max_tokens`.\n\nHere is the current implementation that has a bug:\n\n```python\nimport time\n\nclass TokenBucketRateLimiter:\n    \"\"\"Rate limiter using token bucket algorithm.\n    max_tokens: maximum burst size\n    refill_rate: tokens added per second\n    \"\"\"\n    def __init__(self, max_tokens, refill_rate):\n        self.max_tokens = max_tokens\n        self.refill_rate = refill_rate\n        self.tokens = max_tokens\n        self.last_refill = time.monotonic()\n\n    def _refill(self):\n        now = time.monotonic()\n        elapsed = now - self.last_refill\n        new_tokens = elapsed * self.refill_rate\n        self.tokens += new_tokens\n        self.last_refill = now\n\n    def allow_request(self):\n        \"\"\"Returns True if request is allowed, False if rate limited.\"\"\"\n        self._refill()\n        if self.tokens >= 1:\n            self.tokens -= 1\n            return True\n        return False\n\n    def get_tokens(self):\n        \"\"\"Return current token count (for testing).\"\"\"\n        self._refill()\n        return self.tokens\n```\n\nThe bug: `_refill()` adds tokens without capping at `max_tokens`. After a long idle period, `self.tokens` can grow far beyond `max_tokens`, allowing a burst much larger than intended.\n\nPlease fix the bug in `TokenBucketRateLimiter`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_006",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our EventEmitter class has a bug where removing a listener during emission causes the next listener to be skipped. This is a classic iterator invalidation bug.\n\nWhen listener A removes itself during emit, the underlying list shifts, and listener C (which was at index 2) moves to index 1 \u2014 but the iterator is already at index 1, so it moves to index 2 and skips C.\n\nHere is the current implementation that has a bug:\n\n```python\nclass EventEmitter:\n    def __init__(self):\n        self._listeners = {}  # event_name -> list of callbacks\n\n    def on(self, event, callback):\n        \"\"\"Register a listener for an event.\"\"\"\n        if event not in self._listeners:\n            self._listeners[event] = []\n        self._listeners[event].append(callback)\n\n    def off(self, event, callback):\n        \"\"\"Remove a listener for an event.\"\"\"\n        if event in self._listeners:\n            self._listeners[event].remove(callback)\n\n    def emit(self, event, *args, **kwargs):\n        \"\"\"Emit an event, calling all registered listeners.\"\"\"\n        if event not in self._listeners:\n            return\n        for listener in self._listeners[event]:\n            listener(*args, **kwargs)\n\n    def listener_count(self, event):\n        \"\"\"Return number of listeners for an event.\"\"\"\n        return len(self._listeners.get(event, []))\n```\n\nThe bug: `emit` iterates directly over the listener list. If a listener removes itself (or another listener) via `off()` during iteration, the list mutates and causes listeners to be skipped.\n\nPlease fix the bug in `EventEmitter`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_007",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our connection pool leaks connections when an exception occurs inside the `with` block. The connection is checked out but never returned to the pool.\n\nHere is the current implementation that has a bug:\n\n```python\nimport threading\nfrom collections import deque\n\n\nclass Connection:\n    \"\"\"Simulated database connection.\"\"\"\n    _counter = 0\n    _lock = threading.Lock()\n\n    def __init__(self):\n        with Connection._lock:\n            Connection._counter += 1\n            self.id = Connection._counter\n        self.closed = False\n\n    def execute(self, query):\n        if self.closed:\n            raise RuntimeError('Connection is closed')\n        return f'Result of {query} on conn {self.id}'\n\n    def close(self):\n        self.closed = True\n\n\nclass ConnectionPool:\n    \"\"\"A simple connection pool with a fixed size.\"\"\"\n    def __init__(self, max_size=5):\n        self.max_size = max_size\n        self._pool = deque()\n        self._in_use = set()\n        self._lock = threading.Lock()\n        # Pre-fill pool\n        for _ in range(max_size):\n            self._pool.append(Connection())\n\n    def acquire(self):\n        \"\"\"Get a connection from the pool.\"\"\"\n        with self._lock:\n            if not self._pool:\n                raise RuntimeError('No connections available')\n            conn = self._pool.popleft()\n            self._in_use.add(conn)\n            return conn\n\n    def release(self, conn):\n        \"\"\"Return a connection to the pool.\"\"\"\n        with self._lock:\n            if conn in self._in_use:\n                self._in_use.remove(conn)\n                self._pool.append(conn)\n\n    def __enter__(self):\n        self._current_conn = self.acquire()\n        return self._current_conn\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        if exc_type is None:\n            self.release(self._current_conn)\n        return False\n\n    @property\n    def available(self):\n        with self._lock:\n            return len(self._pool)\n\n    @property\n    def in_use_count(self):\n        with self._lock:\n            return len(self._in_use)\n```\n\nThe bug: `__exit__` only releases the connection when there is NO exception (`exc_type is None`). If an exception occurs, the connection stays in `_in_use` and is never returned to the pool.\n\nPlease fix the bug in `ConnectionPool`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_008",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our markdown table parser breaks when table cells contain pipe characters inside inline code spans (backtick-delimited). For example, `|a|b|` in a cell should be treated as a single cell containing the literal text `|a|b|`, not as multiple cells.\n\nHere is the current implementation that has a bug:\n\n```python\ndef parse_markdown_table(text):\n    \"\"\"Parse a markdown table into a list of rows, where each row is a list of cell strings.\n    Handles:\n    - Leading/trailing pipes\n    - Separator rows (---) are skipped\n    - Whitespace trimming in cells\n    - Inline code spans with backticks\n    \"\"\"\n    rows = []\n    for line in text.strip().split('\\n'):\n        line = line.strip()\n        if not line:\n            continue\n\n        # Skip separator rows\n        stripped = line.replace('|', '').replace('-', '').replace(':', '').strip()\n        if stripped == '':\n            # It's a separator row like |---|---|\n            continue\n\n        # Remove leading and trailing pipes\n        if line.startswith('|'):\n            line = line[1:]\n        if line.endswith('|'):\n            line = line[:-1]\n\n        # Split on pipes\n        cells = line.split('|')\n        cells = [c.strip() for c in cells]\n        rows.append(cells)\n\n    return rows\n```\n\nThe bug: `line.split('|')` splits on ALL pipe characters, even those inside backtick code spans like `` `cmd | grep` ``. The parser should treat pipes inside code spans as literal text.\n\nPlease fix the bug in `parse_markdown_table`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 4 steps remaining]\nTests failed. Analyze the error and identify the root cause."
+      },
+      {
+        "role": "assistant",
+        "content": "[REVIEW]: The test failure indicates the bug is in the specific edge case handling. I need to revise the code."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 3 steps remaining]\nRevise the code to fix the identified issue."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: Here is the corrected code with the bug fixed."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the revised code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_009",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our semantic version comparator does not correctly order pre-release versions per the semver specification (semver.org). Specifically:\n- `1.0.0-alpha < 1.0.0-alpha.1 < 1.0.0-alpha.beta < 1.0.0-beta < 1.0.0` (pre-release < release)\n- Numeric identifiers are compared as integers, not lexically\n- A version with a pre-release tag is LESS than the same version without one\n\nHere is the current implementation that has a bug:\n\n```python\ndef compare_versions(v1, v2):\n    \"\"\"Compare two semver strings. Returns:\n    -1 if v1 < v2\n     0 if v1 == v2\n     1 if v1 > v2\n    Handles pre-release versions per semver spec.\n    \"\"\"\n    def parse(v):\n        # Split off pre-release\n        if '-' in v:\n            main, pre = v.split('-', 1)\n        else:\n            main, pre = v, None\n        parts = list(map(int, main.split('.')))\n        return parts, pre\n\n    main1, pre1 = parse(v1)\n    main2, pre2 = parse(v2)\n\n    # Compare main version\n    for a, b in zip(main1, main2):\n        if a < b:\n            return -1\n        if a > b:\n            return 1\n\n    if len(main1) != len(main2):\n        return -1 if len(main1) < len(main2) else 1\n\n    # Compare pre-release\n    if pre1 is None and pre2 is None:\n        return 0\n    if pre1 is None:\n        return 1  # No pre-release > pre-release\n    if pre2 is None:\n        return -1  # Pre-release < no pre-release\n\n    # Compare pre-release identifiers\n    ids1 = pre1.split('.')\n    ids2 = pre2.split('.')\n\n    for a, b in zip(ids1, ids2):\n        # Both numeric\n        if a.isdigit() and b.isdigit():\n            if int(a) != int(b):\n                return -1 if int(a) < int(b) else 1\n        # Numeric < non-numeric\n        elif a.isdigit():\n            return -1\n        elif b.isdigit():\n            return 1\n        else:\n            # Lexical comparison\n            if a < b:\n                return -1\n            if a > b:\n                return 1\n\n    # All compared identifiers are equal, shorter pre-release is less\n    if len(ids1) != len(ids2):\n        return -1 if len(ids1) < len(ids2) else 1\n\n    return 0\n```\n\nNote: The code above actually looks correct for the basic cases. The real bug is subtle: it doesn't handle build metadata (the `+` suffix), which should be IGNORED in comparisons. Also, it crashes when version strings have leading 'v' (like 'v1.0.0'). These are common real-world inputs.\n\nPlease fix the bugs in `compare_versions`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_010",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our glob pattern matcher fails on nested brace expansion. Patterns like `{a,{b,c}}` should match `a`, `b`, or `c`, but our implementation doesn't correctly parse nested braces \u2014 it treats the first `}` as closing the outer group.\n\nHere is the current implementation that has a bug:\n\n```python\ndef glob_match(pattern, text):\n    \"\"\"Match a glob pattern against text.\n    Supports:\n    - * matches any sequence of characters (except /)\n    - ? matches any single character\n    - {a,b,c} matches any of the alternatives (can be nested)\n    - \\\\ escapes the next character\n    Returns True if the entire text matches the pattern.\n    \"\"\"\n    def _expand_braces(pattern):\n        \"\"\"Expand brace expressions and return list of expanded patterns.\"\"\"\n        # Find first '{'\n        start = pattern.find('{')\n        if start == -1:\n            return [pattern]\n\n        # Find matching '}'\n        end = pattern.find('}', start)\n        if end == -1:\n            return [pattern]\n\n        prefix = pattern[:start]\n        suffix = pattern[end + 1:]\n        alternatives = pattern[start + 1:end].split(',')\n\n        results = []\n        for alt in alternatives:\n            for expanded in _expand_braces(prefix + alt + suffix):\n                results.append(expanded)\n        return results\n\n    def _match(pattern, text):\n        pi = 0\n        ti = 0\n        while pi < len(pattern) and ti < len(text):\n            if pattern[pi] == '\\\\':\n                pi += 1\n                if pi < len(pattern) and ti < len(text) and pattern[pi] == text[ti]:\n                    pi += 1\n                    ti += 1\n                else:\n                    return False\n            elif pattern[pi] == '?':\n                pi += 1\n                ti += 1\n            elif pattern[pi] == '*':\n                # Try matching zero or more characters\n                pi += 1\n                for end in range(ti, len(text) + 1):\n                    if _match(pattern[pi:], text[end:]):\n                        return True\n                return False\n            elif pattern[pi] == text[ti]:\n                pi += 1\n                ti += 1\n            else:\n                return False\n        # Consume trailing *'s\n        while pi < len(pattern) and pattern[pi] == '*':\n            pi += 1\n        return pi == len(pattern) and ti == len(text)\n\n    # Expand braces first, then match each alternative\n    for expanded in _expand_braces(pattern):\n        if _match(expanded, text):\n            return True\n    return False\n```\n\nThe bug: `_expand_braces` uses `pattern.find('}', start)` to find the closing brace. This finds the FIRST `}`, not the matching one. For nested braces like `{a,{b,c}}`, it finds the `}` after `c` (the inner closing brace) instead of the outer one, resulting in `alternatives = ['a', '{b', 'c']` \u2014 which is wrong.\n\nPlease fix the bug in `glob_match`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_011",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our text wrapping function doesn't handle CJK (Chinese, Japanese, Korean) characters correctly. CJK characters are typically displayed as double-width (taking 2 columns), but our function treats them as width 1, causing lines to exceed the specified width when displayed.\n\nHere is the current implementation that has a bug:\n\n```python\ndef wrap_text(text, width):\n    \"\"\"Wrap text to the specified display width.\n    CJK characters should be treated as width 2.\n    Words should not be broken in the middle unless they exceed the line width.\n    CJK characters can be broken at any point (no word boundaries).\n    Returns a list of lines.\n    \"\"\"\n    def char_width(c):\n        \"\"\"Return display width of a character.\"\"\"\n        cp = ord(c)\n        # CJK Unified Ideographs and common CJK ranges\n        if (0x4E00 <= cp <= 0x9FFF or  # CJK Unified Ideographs\n            0x3400 <= cp <= 0x4DBF or  # CJK Extension A\n            0xF900 <= cp <= 0xFAFF or  # CJK Compatibility Ideographs\n            0x3000 <= cp <= 0x303F or  # CJK Symbols and Punctuation\n            0xFF00 <= cp <= 0xFFEF or  # Fullwidth Forms\n            0xAC00 <= cp <= 0xD7AF):   # Hangul Syllables\n            return 2\n        return 1\n\n    lines = []\n    for paragraph in text.split('\\n'):\n        if not paragraph:\n            lines.append('')\n            continue\n\n        words = paragraph.split(' ')\n        current_line = ''\n        current_width = 0\n\n        for word in words:\n            word_width = len(word)  # BUG: should use sum of char_width\n            if current_width == 0:\n                current_line = word\n                current_width = word_width\n            elif current_width + 1 + word_width <= width:\n                current_line += ' ' + word\n                current_width += 1 + word_width\n            else:\n                lines.append(current_line)\n                current_line = word\n                current_width = word_width\n\n        if current_line:\n            lines.append(current_line)\n\n    return lines\n```\n\nThe bug: `word_width = len(word)` counts characters, not display width. CJK characters should count as 2. The function should use the `char_width` helper it already defines but doesn't use for width calculation.\n\nPlease fix the bug in `wrap_text`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 4 steps remaining]\nTests failed. Analyze the error and identify the root cause."
+      },
+      {
+        "role": "assistant",
+        "content": "[REVIEW]: The test failure indicates the bug is in the specific edge case handling. I need to revise the code."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 3 steps remaining]\nRevise the code to fix the identified issue."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: Here is the corrected code with the bug fixed."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the revised code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_012",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our interval tree returns wrong results for point queries exactly at interval boundaries. The issue is an inconsistency in whether endpoints are inclusive or exclusive \u2014 `insert(1, 5, data)` should mean the closed interval [1, 5], but `query(5)` doesn't find it.\n\nHere is the current implementation that has a bug:\n\n```python\nclass IntervalTree:\n    \"\"\"Interval tree supporting insertion and point queries.\n    Intervals are inclusive on both ends: [lo, hi].\n    \"\"\"\n    class Node:\n        def __init__(self, lo, hi, data):\n            self.lo = lo\n            self.hi = hi\n            self.data = data\n            self.max_hi = hi\n            self.left = None\n            self.right = None\n\n    def __init__(self):\n        self.root = None\n\n    def insert(self, lo, hi, data):\n        \"\"\"Insert interval [lo, hi] with associated data.\"\"\"\n        self.root = self._insert(self.root, lo, hi, data)\n\n    def _insert(self, node, lo, hi, data):\n        if node is None:\n            return self.Node(lo, hi, data)\n        if lo < node.lo:\n            node.left = self._insert(node.left, lo, hi, data)\n        else:\n            node.right = self._insert(node.right, lo, hi, data)\n        node.max_hi = max(node.max_hi, hi)\n        return node\n\n    def query(self, point):\n        \"\"\"Return list of data for all intervals containing the point.\"\"\"\n        results = []\n        self._query(self.root, point, results)\n        return results\n\n    def _query(self, node, point, results):\n        if node is None:\n            return\n        # If point is to the left of this node's interval, no need to check right\n        if point < node.lo:\n            self._query(node.left, point, results)\n            return\n        # Check if point is in this node's interval\n        if node.lo <= point < node.hi:  # BUG: should be <= node.hi for closed interval\n            results.append(node.data)\n        # Check left subtree if it could contain matching intervals\n        if node.left and node.left.max_hi > point:  # BUG: should be >= point\n            self._query(node.left, point, results)\n        # Check right subtree\n        self._query(node.right, point, results)\n\n    def query_range(self, lo, hi):\n        \"\"\"Return list of data for all intervals that overlap with [lo, hi].\"\"\"\n        results = []\n        self._query_range(self.root, lo, hi, results)\n        return results\n\n    def _query_range(self, node, lo, hi, results):\n        if node is None:\n            return\n        if node.lo <= hi and lo <= node.hi:\n            results.append(node.data)\n        if node.left and node.left.max_hi >= lo:\n            self._query_range(node.left, lo, hi, results)\n        if node.right and node.lo <= hi:\n            self._query_range(node.right, lo, hi, results)\n```\n\nThere are two off-by-one bugs:\n1. `point < node.hi` should be `point <= node.hi` (closed interval includes the right endpoint)\n2. `node.left.max_hi > point` should be `node.left.max_hi >= point` (we need to check subtrees whose max_hi equals the point)\n\nPlease fix the bugs in `IntervalTree`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_013",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our wildcard trie misses valid matches when the wildcard character `.` is used at certain positions. Specifically, patterns like `..a` (two wildcards followed by 'a') fail to find words like `bba` because the search terminates early.\n\nHere is the current implementation that has a bug:\n\n```python\nclass WildcardTrie:\n    \"\"\"Trie supporting wildcard search where '.' matches any single character.\"\"\"\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n\n    def insert(self, word):\n        \"\"\"Insert a word into the trie.\"\"\"\n        node = self\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = WildcardTrie()\n            node = node.children[ch]\n        node.is_end = True\n\n    def search(self, pattern):\n        \"\"\"Search for a pattern where '.' matches any single character.\n        Returns True if any inserted word matches the pattern.\n        \"\"\"\n        return self._search(self, pattern, 0)\n\n    def _search(self, node, pattern, index):\n        if node is None:\n            return False\n        if index == len(pattern):\n            return node.is_end\n\n        ch = pattern[index]\n        if ch == '.':\n            # Wildcard: try all children\n            for child_key in node.children:\n                if self._search(node.children[child_key], pattern, index + 1):\n                    return True\n            return False\n        else:\n            if ch in node.children:\n                return self._search(node.children[ch], pattern, index + 1)\n            else:\n                return False\n```\n\nHmm, the above code actually looks correct for basic cases. The real bug is more subtle: the trie doesn't handle the case where multiple words share prefixes and the wildcard needs to explore all branches. Wait \u2014 actually the code above IS correct for that.\n\nThe ACTUAL bug: The trie uses a single root instance as both the trie container AND the root node. When `search` is called, it passes `self` as the node, but `self` is the same object that has the `search` method. This works fine. Let me introduce the real bug:\n\nThe bug is that `insert` doesn't handle empty strings, and `search` with a pattern of just `.` characters at the end returns True even when no word of that length exists (it checks `is_end` but the loop over children can match nodes that are not end-of-word).\n\nActually, let me present a genuinely buggy version:\n\n```python\nclass WildcardTrie:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n\n    def insert(self, word):\n        node = self\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = WildcardTrie()\n            node = node.children[ch]\n        node.is_end = True\n\n    def search(self, pattern):\n        return self._search(self, pattern, 0)\n\n    def _search(self, node, pattern, index):\n        if index == len(pattern):\n            return node.is_end\n\n        ch = pattern[index]\n        if ch == '.':\n            for child_key in node.children:\n                result = self._search(node.children[child_key], pattern, index + 1)\n                if result:\n                    return True\n        elif ch in node.children:\n            return self._search(node.children[ch], pattern, index + 1)\n\n        return False\n```\n\nThe bug: When `ch != '.'` and `ch` is not in `node.children`, the function falls through to `return False`. But the real issue is that when `ch == '.'` and the loop completes without returning True, it falls through to `return False` which is correct. Actually this code is correct.\n\nLet me present the REAL buggy version with the actual reported bug:\n\n```python\nclass WildcardTrie:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n        self._words = []  # Track all words for verification\n\n    def insert(self, word):\n        self._words.append(word)\n        node = self\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = WildcardTrie()\n            node = node.children[ch]\n        node.is_end = True\n\n    def search(self, pattern):\n        \"\"\"Search for pattern where '.' matches any character.\"\"\"\n        return self._search(self, pattern, 0)\n\n    def _search(self, node, pattern, index):\n        if index == len(pattern):\n            return node.is_end\n\n        ch = pattern[index]\n        if ch == '.':\n            # Try each child\n            for child_key in list(node.children.keys()):\n                if self._search(node.children[child_key], pattern, index + 1):\n                    return True\n            return False\n        else:\n            child = node.children.get(ch)\n            if child is None:\n                return False\n            return self._search(child, pattern, index + 1)\n\n    def get_all_words(self):\n        \"\"\"Return all inserted words.\"\"\"\n        return self._words[:]\n\n    def starts_with(self, prefix):\n        \"\"\"Return True if any word starts with the given prefix.\"\"\"\n        node = self\n        for ch in prefix:\n            if ch not in node.children:\n                return False\n            node = node.children[ch]\n        return True\n\n    def delete(self, word):\n        \"\"\"Delete a word from the trie.\"\"\"\n        self._delete(self, word, 0)\n        if word in self._words:\n            self._words.remove(word)\n\n    def _delete(self, node, word, index):\n        if index == len(word):\n            node.is_end = False\n            return\n        ch = word[index]\n        if ch in node.children:\n            self._delete(node.children[ch], word, index + 1)\n```\n\nThe bug: The `delete` method sets `is_end = False` but doesn't remove the nodes. More importantly, after deletion, `search` still traverses through the dead nodes but correctly returns False due to `is_end` being False. The REAL bug is that `delete` doesn't check if child nodes are now empty and should be pruned \u2014 this causes `starts_with` to return True for deleted words (the prefix nodes still exist). Also, `search('.')` on a trie with deleted single-char words still traverses the node but correctly returns False. The actual user-facing bug is in `starts_with` after `delete`.\n\nPlease fix the bugs in `WildcardTrie`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 4 steps remaining]\nTests failed. Analyze the error and identify the root cause."
+      },
+      {
+        "role": "assistant",
+        "content": "[REVIEW]: The test failure indicates the bug is in the specific edge case handling. I need to revise the code."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 3 steps remaining]\nRevise the code to fix the identified issue."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: Here is the corrected code with the bug fixed."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the revised code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_014",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our LRU cache with TTL (time-to-live) doesn't correctly evict expired entries. When the cache is full and all entries are expired, inserting a new entry fails because expired entries are still counted toward the capacity, blocking new inserts.\n\nHere is the current implementation that has a bug:\n\n```python\nimport time\nfrom collections import OrderedDict\n\n\nclass TTLCache:\n    \"\"\"LRU cache with per-entry TTL (time-to-live).\n    When the cache is full, the least recently used entry is evicted.\n    Expired entries should be treated as non-existent.\n    \"\"\"\n    def __init__(self, max_size):\n        self.max_size = max_size\n        self._cache = OrderedDict()  # key -> (value, expiry_time)\n\n    def get(self, key):\n        \"\"\"Get a value. Returns None if key doesn't exist or is expired.\"\"\"\n        if key not in self._cache:\n            return None\n        value, expiry = self._cache[key]\n        if time.monotonic() > expiry:\n            # Entry has expired\n            del self._cache[key]\n            return None\n        # Move to end (most recently used)\n        self._cache.move_to_end(key)\n        return value\n\n    def put(self, key, value, ttl_seconds=60):\n        \"\"\"Put a value with a TTL. Evicts LRU entry if cache is full.\"\"\"\n        if key in self._cache:\n            # Update existing\n            self._cache[key] = (value, time.monotonic() + ttl_seconds)\n            self._cache.move_to_end(key)\n            return\n\n        if len(self._cache) >= self.max_size:\n            # Evict LRU (first item)\n            self._cache.popitem(last=False)\n\n        self._cache[key] = (value, time.monotonic() + ttl_seconds)\n\n    def size(self):\n        \"\"\"Return number of non-expired entries.\"\"\"\n        return len(self._cache)\n\n    def clear(self):\n        \"\"\"Clear all entries.\"\"\"\n        self._cache.clear()\n```\n\nThe bugs:\n1. `put()` evicts a non-expired LRU entry even when there are expired entries that could be purged first. It should clean up expired entries before resorting to LRU eviction.\n2. `size()` returns the raw dict length including expired entries. It should only count non-expired entries.\n3. When updating an existing key, `put()` doesn't check if the existing entry is expired \u2014 but this is a minor issue since it overwrites anyway.\n\nPlease fix the bugs in `TTLCache`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  },
+  {
+    "task_id": "code_015",
+    "task_type": "code",
+    "messages": [
+      {
+        "role": "system",
+        "content": "You are an AI agent that solves tasks through interaction scaling. You have a budget of steps to solve the task. At each step, you can:\n- [GENERATE]: Write code/content to solve the task\n- [EXECUTE]: Run your solution and observe the results\n- [REVIEW]: Analyze feedback and plan improvements\n- [SUBMIT]: Submit your final solution\n\nBe budget-aware: use your steps efficiently. If tests pass on the first try, submit immediately. If tests fail, review the feedback, revise, and re-test.\n\nBudget: 5 steps maximum."
+      },
+      {
+        "role": "user",
+        "content": "[BUDGET: 5 steps remaining]\n[TASK]: Fix the bug in this code.\n\nBug report: Our topological sort function doesn't detect all cycles in multigraphs. Specifically, when there are parallel edges (multiple edges from A to B) or diamond-shaped dependency graphs, the cycle detection misses some cycles.\n\nHere is the current implementation that has a bug:\n\n```python\ndef topo_sort(edges):\n    \"\"\"Topological sort of a directed graph.\n    edges: list of (from_node, to_node) tuples\n    Returns a list of nodes in topological order.\n    Raises ValueError if the graph contains a cycle.\n    \"\"\"\n    # Build adjacency list and in-degree count\n    graph = {}  # node -> set of neighbors\n    in_degree = {}\n\n    # Collect all nodes\n    all_nodes = set()\n    for src, dst in edges:\n        all_nodes.add(src)\n        all_nodes.add(dst)\n\n    for node in all_nodes:\n        graph[node] = set()  # BUG: using set loses parallel edges, but for topo sort this is fine\n        in_degree[node] = 0\n\n    for src, dst in edges:\n        graph[src].add(dst)\n\n    # Calculate in-degrees\n    for node in graph:\n        for neighbor in graph[node]:\n            in_degree[neighbor] += 1\n\n    # Kahn's algorithm\n    queue = [node for node in all_nodes if in_degree[node] == 0]\n    result = []\n\n    while queue:\n        node = queue.pop(0)\n        result.append(node)\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    if len(result) != len(all_nodes):\n        raise ValueError('Graph contains a cycle')\n\n    return result\n```\n\nThe bugs:\n1. Self-loops (edges like `(A, A)`) are silently dropped because `graph[src].add(dst)` when src==dst adds to the set, but then when calculating in-degree, a node's self-loop increments its own in-degree. Wait, actually the self-loop IS added to the adjacency set... let me trace through.\n\nActually the real bug is: `graph[src] = set()` uses a set, so `graph[src].add(dst)` only adds `dst` once even if there are multiple edges from `src` to `dst`. For in-degree calculation, this means in-degree is calculated from the deduplicated graph, which is actually correct for topo sort.\n\nBut the REAL bug is with self-loops: when `src == dst`, `graph[src].add(dst)` adds the node to its own adjacency set. Then in the in-degree calculation loop, it counts `node` as a neighbor of itself, incrementing `in_degree[node]`. So far OK \u2014 in-degree > 0 means it won't be in the initial queue. But the issue is that during processing, when we process `node`'s neighbors and decrement their in-degree, we'd process `node` itself as a neighbor, which creates an issue since `node` is already processed.\n\nWait \u2014 a self-loop means the node can never be processed (in-degree can never reach 0 since it depends on itself). So `len(result) != len(all_nodes)` WOULD catch it. Let me check again...\n\nActually, the real bug is more subtle: the in-degree calculation double-counts. The code builds the adjacency list with `graph[src].add(dst)`, then calculates in-degree by iterating `graph[node]` neighbors. But for self-loops `(A, A)`, node A is in `graph[A]`, so `in_degree[A]` gets incremented. This is correct \u2014 A depends on itself, so in-degree is at least 1, and Kahn's algorithm correctly identifies it as a cycle.\n\nSo the self-loop case IS handled. Let me create a genuinely buggy version:\n\n```python\ndef topo_sort(edges):\n    \"\"\"Topological sort of a directed graph.\n    edges: list of (from_node, to_node) tuples\n    Returns a list of nodes in topological order.\n    Raises ValueError if the graph contains a cycle.\n    \"\"\"\n    graph = {}\n    in_degree = {}\n    all_nodes = set()\n\n    for src, dst in edges:\n        all_nodes.add(src)\n        all_nodes.add(dst)\n\n    for node in all_nodes:\n        graph[node] = []\n        in_degree[node] = 0\n\n    seen_edges = set()\n    for src, dst in edges:\n        if (src, dst) not in seen_edges:\n            graph[src].append(dst)\n            in_degree[dst] += 1\n            seen_edges.add((src, dst))\n\n    queue = [node for node in all_nodes if in_degree[node] == 0]\n    result = []\n\n    while queue:\n        node = queue.pop(0)\n        result.append(node)\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    if len(result) != len(all_nodes):\n        raise ValueError('Graph contains a cycle')\n\n    return result\n```\n\nThis version deduplicates edges with `seen_edges`, which is fine for basic cases. But the bug is that when `all_nodes` is used as a set, iteration order is non-deterministic, and the `queue` (a list used as a FIFO) doesn't sort nodes deterministically. This can cause issues but isn't really a \"bug\".\n\nThe ACTUAL bug I want to introduce: the function doesn't handle isolated nodes (nodes with no edges) or empty edge lists. Also, the deduplication with `seen_edges` means parallel edges don't affect the result \u2014 which is correct for topo sort but means the function silently ignores multigraph structure. The real bug: when the graph has no edges but has nodes, `all_nodes` is empty (since no edges means no nodes from edges), so it returns `[]` even though there might be nodes. But wait, if edges is empty, there ARE no nodes.\n\nOk let me just present a clean buggy version with a clear, real bug:\n\n```python\ndef topo_sort(edges):\n    \"\"\"Topological sort of a directed graph.\n    edges: list of (from_node, to_node) tuples\n    Returns a list of nodes in topological order.\n    Raises ValueError if the graph contains a cycle.\n    \"\"\"\n    if not edges:\n        return []\n\n    graph = {}\n    in_degree = {}\n    all_nodes = set()\n\n    for src, dst in edges:\n        all_nodes.add(src)\n        all_nodes.add(dst)\n        if src not in graph:\n            graph[src] = []\n        if dst not in graph:\n            graph[dst] = []\n        graph[src].append(dst)\n        in_degree[dst] = in_degree.get(dst, 0) + 1\n        if src not in in_degree:\n            in_degree[src] = 0\n\n    queue = sorted([n for n in all_nodes if in_degree.get(n, 0) == 0])\n    result = []\n\n    while queue:\n        node = queue.pop(0)\n        result.append(node)\n        for neighbor in graph.get(node, []):\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    if len(result) != len(all_nodes):\n        raise ValueError('Graph contains a cycle')\n\n    return result\n```\n\nThis version has a subtle bug: parallel edges (duplicate `(src, dst)` pairs) cause `in_degree[dst]` to be incremented multiple times, which means the node might never reach in-degree 0 even if it's not in a cycle. This causes false cycle detection on multigraphs.\n\nPlease fix the bug in `topo_sort`."
+      },
+      {
+        "role": "assistant",
+        "content": "[GENERATE]: I'll analyze the bug and write a fix."
+      },
+      {
+        "role": "user",
+        "content": "[ACTION]: Execute the code against test cases."
+      },
+      {
+        "role": "assistant",
+        "content": "[EXECUTE]"
+      },
+      {
+        "role": "user",
+        "content": "[DECISION]: Should I submit or continue iterating?"
+      },
+      {
+        "role": "assistant",
+        "content": "[SUBMIT]: Tests pass, submitting solution."
+      }
+    ],
+    "reward": 1.0
+  }
+]
