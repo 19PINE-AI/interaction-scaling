@@ -8,5 +8,45 @@
     "rv_meets": true,
     "rv_iters": 2,
     "rv_tokens": 16497
+  },
+  {
+    "task_id": "research_002",
+    "ss_accuracy": 0.8,
+    "ss_meets": true,
+    "ss_tokens": 7289,
+    "rv_accuracy": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 7343
+  },
+  {
+    "task_id": "research_003",
+    "ss_accuracy": 0.6,
+    "ss_meets": false,
+    "ss_tokens": 8432,
+    "rv_accuracy": 0.6,
+    "rv_meets": false,
+    "rv_iters": 2,
+    "rv_tokens": 17104
+  },
+  {
+    "task_id": "research_004",
+    "ss_accuracy": 0.8,
+    "ss_meets": true,
+    "ss_tokens": 6749,
+    "rv_accuracy": 1.0,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "rv_tokens": 15095
+  },
+  {
+    "task_id": "research_005",
+    "ss_accuracy": 0.8,
+    "ss_meets": true,
+    "ss_tokens": 7519,
+    "rv_accuracy": 1.0,
+    "rv_meets": true,
+    "rv_iters": 1,
+    "rv_tokens": 7684
   }
 ]
