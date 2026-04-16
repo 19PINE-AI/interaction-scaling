@@ -2,7 +2,8 @@
 __pycache__/
 .venv/
 *.swp
-data/
+data/humaneval/
+data/mbpp/
 results/
 .DS_Store
 

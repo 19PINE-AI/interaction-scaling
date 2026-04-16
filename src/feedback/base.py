@@ -1,10 +1,11 @@
-"""Base types for the feedback hierarchy (Type 0-3).
+"""Base types for the feedback hierarchy (Type 0-3b).
 
 The feedback type hierarchy captures increasing levels of grounding:
     Type 0 (Self-Review):      No grounding -- same model re-reads its output.
     Type 1 (Cross-Model):      No grounding -- different model critiques.
     Type 2 (Static Analysis):  Static grounding -- linters, AST checks.
     Type 3a (Execution):       Dynamic grounding -- run code against tests.
+    Type 3b (Visual):          Visual grounding -- VLM analyses rendered output.
 """
 
 from abc import ABC, abstractmethod
@@ -19,6 +20,7 @@ class FeedbackType(IntEnum):
     CROSS_MODEL = 1
     STATIC_ANALYSIS = 2
     EXECUTION = 3
+    VISUAL = 4
 
 
 @dataclass

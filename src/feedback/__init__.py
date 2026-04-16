@@ -3,6 +3,7 @@ from src.feedback.type0_self import SelfReviewFeedback
 from src.feedback.type1_cross import CrossModelFeedback
 from src.feedback.type2_static import StaticAnalysisFeedback
 from src.feedback.type3a_execution import ExecutionFeedback
+from src.feedback.type3b_visual import VisualFeedback
 
 __all__ = [
     "FeedbackProvider",
@@ -12,4 +13,5 @@ __all__ = [
     "CrossModelFeedback",
     "StaticAnalysisFeedback",
     "ExecutionFeedback",
+    "VisualFeedback",
 ]

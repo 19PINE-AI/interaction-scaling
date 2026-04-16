@@ -1,0 +1,452 @@
+[
+  {
+    "task_id": "slide_001",
+    "description": "Create a single 1920x1080 HTML/CSS slide explaining the Transformer architecture. The slide must include: (1) A title 'Transformer Architecture Overview' at the top in 36px bold font. (2) A diagram section in the center showing the encoder-decoder structure with at least 8 labeled components: Input Embedding, Positional Encoding, Multi-Head Attention, Add & Norm (x2), Feed Forward, Output Embedding, Masked Multi-Head Attention, and Linear + Softmax. Each component should be a labeled box connected by arrows (using CSS borders/lines). (3) Below the diagram, display the attention equation: Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) V. (4) At the bottom, include a comparison table with 3 columns (Model, Parameters, BLEU Score) and 4 rows of data. Everything must be visible within the 1920x1080 viewport with no overflow or scrollbars.",
+    "requirements": [
+      "All 8 architecture components must be visible as labeled boxes within the viewport",
+      "Arrows or connecting lines between components must not overlap text labels",
+      "The attention equation must render correctly with proper superscript for K^T and subscript for d_k",
+      "The comparison table must have visible borders and all cells fully readable",
+      "No horizontal or vertical scrollbar; all content fits in 1920x1080",
+      "Minimum 12px font size for any text element",
+      "At least 8px padding between adjacent boxes in the diagram"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Diagram boxes overlap each other due to insufficient space calculation",
+      "Table gets pushed below the viewport boundary",
+      "Equation renders as plain text without proper super/subscript formatting",
+      "Arrow lines cross through text labels making them unreadable",
+      "Font sizes too small to read when trying to fit everything"
+    ]
+  },
+  {
+    "task_id": "slide_002",
+    "description": "Create a single 1920x1080 HTML/CSS slide showing a complete ML training pipeline. The slide must have: (1) Title 'End-to-End ML Training Pipeline' in 32px bold at the top. (2) Six horizontally arranged pipeline stages, each in a rounded-rectangle box: 'Data Collection', 'Preprocessing', 'Feature Engineering', 'Model Training', 'Evaluation', 'Deployment'. (3) Each stage box must contain 3-4 bullet points in 14px font describing key activities (e.g., Data Collection: web scraping, API ingestion, database queries, data validation). (4) Directional arrows (right-pointing) connecting each stage to the next. (5) Below the pipeline, a placeholder for a convergence graph: a 400x200px bordered rectangle labeled 'Training Loss Curve' with mock axis labels ('Epochs' on x-axis, 'Loss' on y-axis). (6) A footnote at the bottom: 'Pipeline processes ~2M samples/day with 99.7% uptime'.",
+    "requirements": [
+      "All 6 stage boxes must be fully visible with no text truncation in any bullet point",
+      "Stage boxes must be evenly spaced horizontally across the slide width",
+      "Arrows between stages must be clearly visible and not overlap box content",
+      "The convergence graph placeholder must be positioned below the pipeline without overlapping",
+      "Bullet points inside each box must not overflow the box boundaries",
+      "The footnote must be fully visible at the bottom of the slide",
+      "No content extends beyond the 1920x1080 boundary"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Stage boxes overflow horizontally causing right-side boxes to be cut off",
+      "Bullet point text overflows box boundaries when boxes are sized to fit 6 across",
+      "Graph placeholder overlaps with the pipeline row",
+      "Arrows misaligned with box edges due to inconsistent box heights",
+      "Footnote pushed below viewport"
+    ]
+  },
+  {
+    "task_id": "slide_003",
+    "description": "Create a single 1920x1080 HTML/CSS slide with a research comparison table. The table has the title 'State-of-the-Art Comparison on ImageNet' in 28px bold. The table must have 8 rows of model results and 6 columns: Model Name, Top-1 Accuracy (%), Top-5 Accuracy (%), Parameters (M), FLOPs (G), Year. Data rows: (1) ResNet-50, 76.1, 93.0, 25.6, 4.1, 2015; (2) EfficientNet-B7, 84.3, 97.0, 66.3, 37.0, 2019; (3) ViT-Large/16, 85.2, 97.5, 304.0, 190.7, 2020; (4) Swin-Large, 86.4, 97.9, 196.5, 103.9, 2021; (5) ConvNeXt-XL, 87.0, 98.2, 350.0, 60.9, 2022; (6) DINOv2-giant, 86.5, 98.0, 1100.0, 580.0, 2023; (7) EVA-02-Large, 88.1, 98.5, 304.0, 196.0, 2023; (8) InternImage-H, 89.2, 98.8, 1080.0, 540.0, 2023. The best value in each numeric column must be highlighted with a green background (#d4edda). Column headers must have a dark blue background (#1a365d) with white text. Alternating row colors for readability (white and #f8f9fa). A source footnote 'Results compiled from original papers and Papers With Code leaderboard' in 11px italic at the bottom left.",
+    "requirements": [
+      "All 8 data rows and 6 columns must be fully visible without horizontal scrolling",
+      "Column headers must have dark blue (#1a365d) background with white text",
+      "Best values must be highlighted: 89.2 (Top-1), 98.8 (Top-5), 25.6 (Params, lowest is best), 4.1 (FLOPs, lowest is best)",
+      "Alternating row colors must be applied correctly",
+      "All numeric values must be fully readable with no truncation",
+      "Table must be horizontally centered on the slide",
+      "Footnote must be visible and not overlap the table"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Column widths are uneven causing some columns to truncate content",
+      "Highlight colors applied to wrong cells (e.g., highlighting highest params instead of lowest)",
+      "Table extends beyond slide width on smaller calculations",
+      "Header text wraps awkwardly in narrow columns",
+      "Footnote overlaps last table row"
+    ]
+  },
+  {
+    "task_id": "slide_004",
+    "description": "Create a single 1920x1080 HTML/CSS slide titled 'ResNet-101 Architecture Specification' in 30px bold. Show 4 layer groups arranged vertically in a centered column, each as a rounded rectangle (width 700px). Layer groups: (1) 'Conv1 + MaxPool' with details: Input 224x224x3, Output 56x56x64, Kernel 7x7 stride 2 then 3x3 pool stride 2, Params: 9,472. (2) 'Residual Block Group 2' with details: Input 56x56x64, Output 56x56x256, 3 bottleneck blocks, Params: 215,808. (3) 'Residual Block Group 3' with details: Input 56x56x256, Output 28x28x512, 4 bottleneck blocks, Params: 1,219,584. (4) 'Residual Block Group 4' with details: Input 28x28x512, Output 14x14x1024, 23 bottleneck blocks, Params: 26,001,408. Each layer group box must show: layer name (18px bold), input dimensions (left-aligned), output dimensions (right-aligned on the same line as input), activation function 'ReLU' tag, and parameter count (right-aligned, italic). Vertical arrows (downward) connect each layer group. A total parameter count '44.5M total parameters' must appear at the bottom right in 16px bold.",
+    "requirements": [
+      "All 4 layer group boxes must be visible and vertically centered in the slide",
+      "Input and output dimensions must be on the same line within each box, left and right aligned respectively",
+      "Downward arrows between boxes must be centered and not overlap box content",
+      "Parameter counts must be right-aligned within each box",
+      "ReLU tags must be visually distinct (e.g., colored badge)",
+      "Total parameter count visible at bottom right",
+      "Consistent box widths (700px) and horizontal centering"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Layer boxes overflow vertically past 1080px boundary",
+      "Input and output dimensions wrap to separate lines instead of staying on one line",
+      "Arrows misaligned when boxes have different content heights",
+      "ReLU tags overlap with dimension text",
+      "Total parameter count hidden behind or overlapping the last box"
+    ]
+  },
+  {
+    "task_id": "slide_005",
+    "description": "Create a single 1920x1080 HTML/CSS slide displaying algorithm pseudocode. Title: 'Algorithm 1: Proximal Policy Optimization (PPO)' in 26px bold. The pseudocode must have 30 lines with line numbers (1-30), covering: initialization of policy parameters theta, value function parameters phi, and hyperparameters (lines 1-5); outer loop over iterations (line 6); inner loop collecting trajectories using current policy (lines 7-12); computing advantages using GAE (lines 13-18); optimization loop with minibatch updates (lines 19-25); clipped surrogate objective computation and gradient step (lines 26-28); value function update (line 29); end loops (line 30). Use a monospace font for the pseudocode with syntax highlighting: keywords (for, while, if, return) in blue (#2563eb), comments in green (#16a34a), math operators in red (#dc2626). Line numbers in gray (#6b7280) in a separate left column. On the right side of the slide (taking 30% width), display 4 side annotations connected to specific line ranges with thin lines: 'Rollout Phase' pointing to lines 7-12, 'Advantage Estimation' pointing to lines 13-18, 'Policy Update' pointing to lines 19-28, 'Clipping prevents large updates' pointing to line 26.",
+    "requirements": [
+      "All 30 lines of pseudocode must be visible without scrolling",
+      "Line numbers must be left-aligned in a consistent column separate from code",
+      "Syntax highlighting must be correctly applied (keywords blue, comments green, operators red)",
+      "All 4 side annotations must be visible on the right side",
+      "Connecting lines from annotations to their target line ranges must not cross other text",
+      "Monospace font must be used for all pseudocode text",
+      "Font size must be at least 12px for readability"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "30 lines of pseudocode overflow the slide height at readable font sizes",
+      "Annotation connecting lines overlap with pseudocode text",
+      "Line numbers misalign with their corresponding code lines",
+      "Syntax highlighting applied inconsistently or to wrong tokens",
+      "Right-side annotations overflow or get cut off at the slide edge",
+      "Font size reduced to unreadable levels to fit all 30 lines"
+    ]
+  },
+  {
+    "task_id": "slide_006",
+    "description": "Create a single 1920x1080 HTML/CSS slide with a two-column layout. Title: 'Code Walkthrough: Attention Mechanism' in 28px bold at the top. Left column (55% width): a code block with a dark background (#1e1e1e) and light text (#d4d4d4) showing 18 lines of Python-style pseudocode implementing multi-head attention: import statement, class definition, __init__ with 4 parameters (embed_dim, num_heads, dropout, bias), forward method taking query/key/value tensors, reshaping operations, scaled dot-product computation, softmax, dropout, output projection, and return statement. Each line must be numbered. Right column (40% width, with 5% gap): 7 bullet-point explanations in 15px font on a light background, where bullets 2, 4, and 6 have a left-pointing arrow indicator (CSS triangle or arrow character) suggesting they reference specific code lines. Bullet topics: (1) Class inherits from nn.Module, (2) Arrow: head_dim = embed_dim // num_heads, (3) Forward pass accepts Q/K/V, (4) Arrow: Reshape splits embedding into heads, (5) Attention weights via matrix multiplication, (6) Arrow: Softmax normalizes attention scores, (7) Output projection combines heads.",
+    "requirements": [
+      "Left code block must show all 18 lines with line numbers, no horizontal scrolling",
+      "Code block must have dark background with syntax-appropriate coloring",
+      "Right column bullet points must start at the same vertical position as the code block",
+      "Arrow indicators on bullets 2, 4, and 6 must point left toward the code column",
+      "5% gap between columns must be maintained with no overlap",
+      "All text in both columns must be fully readable (no truncation)",
+      "Code font must be monospace; explanation font must be sans-serif"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Code lines wrap due to insufficient column width, breaking line numbering",
+      "Right column bullets misalign vertically with their target code lines",
+      "Arrow indicators overlap with the code block or gap",
+      "Dark code background bleeds into or overlaps the right column",
+      "Unequal column heights cause visual imbalance",
+      "Long code lines cause horizontal overflow in the left column"
+    ]
+  },
+  {
+    "task_id": "slide_007",
+    "description": "Create a single 1920x1080 HTML/CSS slide styled as a dashboard with 4 equal quadrants. Title: 'Q3 2025 Performance Dashboard' in 28px bold centered at the top (taking ~60px height). The remaining space is divided into a 2x2 grid with 10px gaps. Top-left quadrant: 'Revenue by Region' with a bar chart approximation using 5 colored CSS div bars (North America: 340px height blue, Europe: 280px green, Asia: 220px orange, South America: 120px red, Africa: 80px purple) with labels below each bar and y-axis labels (0, 100K, 200K, 300K, 400K) on the left. Top-right quadrant: 'Market Share' with a pie chart approximation using a CSS conic-gradient circle (200px diameter): Product A 45% (#3b82f6), Product B 25% (#10b981), Product C 20% (#f59e0b), Others 10% (#6b7280), with a legend below. Bottom-left quadrant: 'Key Metrics' table with 4 rows and 3 columns (Metric, Current, Change): Revenue $4.2M +12%, Users 1.2M +8%, Churn 3.2% -0.5pp, NPS 72 +5pts. Bottom-right quadrant: 'Executive Summary' with 5 lines of 14px text summarizing quarterly performance. Each quadrant must have a light gray border (#e5e7eb), 16px padding, and a bold quadrant title.",
+    "requirements": [
+      "All 4 quadrants must be exactly equal in size within the available space",
+      "10px gaps between quadrants must be consistent",
+      "Bar chart bars must be proportional to their values and labeled",
+      "Pie chart must use conic-gradient with correct percentage stops",
+      "Pie chart legend must be visible below the chart within the quadrant",
+      "Metrics table must be fully visible with all values and change indicators",
+      "Executive summary text must not overflow its quadrant",
+      "No quadrant content may overlap into another quadrant"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Quadrants are not equal sizes due to content-driven height differences",
+      "Bar chart bars overflow the top-left quadrant vertically",
+      "Pie chart legend gets cut off below the circle",
+      "Conic-gradient percentages don't add up correctly causing visual gaps",
+      "Metrics table text overflows the quadrant on narrow calculations",
+      "10px gaps inconsistent or missing between some quadrants"
+    ]
+  },
+  {
+    "task_id": "slide_008",
+    "description": "Create a single 1920x1080 HTML/CSS slide showing a horizontal timeline. Title: 'Project Roadmap 2024-2025' in 32px bold at the top. A horizontal line spans from left (100px margin) to right (100px margin) at vertical center (~480px from top). On this line, place 8 milestone markers (circles, 16px diameter, alternating colors #3b82f6 and #8b5cf6). Milestones alternate above and below the line to avoid overlap. Above-line milestones (1, 3, 5, 7): (1) 'Jan 2024 / Research Phase / Literature review and hypothesis formulation', (2) 'May 2024 / Data Collection / 50K samples from 12 sources gathered', (3) 'Nov 2024 / Model Training / 3 architectures trained on A100 cluster', (4) 'May 2025 / Production Deploy / Serving 10K requests/sec at p99 < 50ms'. Below-line milestones (2, 4, 6, 8): (1) 'Mar 2024 / Prototype / Initial proof-of-concept with 78% accuracy', (2) 'Aug 2024 / Pilot Launch / Beta testing with 500 internal users', (3) 'Feb 2025 / Paper Submission / Accepted at ICML 2025 with 3 reviews', (4) 'Aug 2025 / Scale-Up / Expanding to 5 regions, 1M daily users'. Each milestone shows date (12px bold), title (14px bold), and description (12px regular) stacked vertically.",
+    "requirements": [
+      "All 8 milestones must be fully visible with no text truncation",
+      "Milestones must alternate above and below the timeline",
+      "Milestone circles must sit exactly on the horizontal line",
+      "No text from adjacent milestones may overlap",
+      "Date, title, and description for each milestone must be clearly readable",
+      "The horizontal timeline must span the full width minus margins",
+      "Above-line milestones must not extend above the slide boundary",
+      "Below-line milestones must not extend below the slide boundary"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Adjacent milestone text blocks overlap horizontally",
+      "Text from above-line milestones extends beyond the top of the slide",
+      "Milestone circles don't align precisely with the horizontal line",
+      "Description text wraps poorly in the narrow space between milestones",
+      "Uneven spacing between milestones on the timeline",
+      "Below-line milestone text gets cut off at the bottom"
+    ]
+  },
+  {
+    "task_id": "slide_009",
+    "description": "Create a single 1920x1080 HTML/CSS slide comparing code before and after refactoring. Title: 'Refactoring: Before vs After' in 28px bold centered. Two code panels side by side, each 880px wide with 20px gap between them. Left panel titled 'Before (Legacy)' with a red-tinted header (#fef2f2 background, #991b1b text). Right panel titled 'After (Refactored)' with a green-tinted header (#f0fdf4 background, #166534 text). Each panel shows 16 lines of monospace code on dark background (#1e1e1e). The 'Before' code shows a messy function with nested if-else (4 levels deep), magic numbers, and no error handling. The 'After' code shows the same logic refactored with early returns, named constants, and try-except. Lines that changed must be highlighted: in the Before panel, lines 4, 7, 9, 11, 13 have a subtle red background (#3b1010). In the After panel, lines 3, 5, 7, 10, 12, 14 have a subtle green background (#103b10). Below both panels, a summary bar spanning full width: '6 code smells removed | Cyclomatic complexity: 12 -> 4 | Test coverage: 45% -> 92%' in 16px on a #f3f4f6 background.",
+    "requirements": [
+      "Both code panels must be exactly 880px wide with 20px gap",
+      "All 16 lines in each panel must be fully visible without scrolling",
+      "Diff highlighting colors must be visually distinct but not overpower text readability",
+      "Panel headers must be clearly distinguishable (red tint vs green tint)",
+      "Code must use monospace font and be syntactically plausible",
+      "Summary bar must be fully visible at the bottom spanning both panels",
+      "Line numbers must be aligned between the two panels for comparison"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Code panels extend beyond slide width (880+880+20 = 1780 plus margins exceed 1920)",
+      "Diff highlighting makes dark-background code unreadable",
+      "Line wrapping in one panel but not the other destroys line-by-line alignment",
+      "Summary bar overlaps with the bottom of the code panels",
+      "Panel headers don't align horizontally",
+      "Monospace font rendering causes inconsistent character widths between panels"
+    ]
+  },
+  {
+    "task_id": "slide_010",
+    "description": "Create a single 1920x1080 HTML/CSS slide showing an organizational chart. Title: 'Engineering Organization' in 30px bold centered at the top. The chart has 4 levels. Level 1 (top): 1 node 'VP of Engineering / Sarah Chen'. Level 2: 3 nodes 'Director of Platform / James Lee', 'Director of ML / Maria Garcia', 'Director of Frontend / Alex Kim'. Level 3: Under Platform: 'Backend Team Lead / Tom Wilson', 'Infra Team Lead / Lisa Park'; Under ML: 'Research Lead / David Brown', 'MLOps Lead / Nina Patel'; Under Frontend: 'Web Lead / Chris Taylor', 'Mobile Lead / Amy Zhang'. Level 4: Under Backend Team Lead: 'Senior Eng / Mike', 'Senior Eng / Sara'; Under Research Lead: 'Research Sci / Ravi'. Each node is a rounded rectangle (min 160px wide, 60px tall) with name in 14px bold and title in 12px regular. Connecting lines (solid gray #9ca3af, 2px) go from parent bottom-center to child top-center. Nodes at the same level must be vertically aligned.",
+    "requirements": [
+      "All 15 nodes must be visible within the slide boundary",
+      "Nodes at the same level must be exactly vertically aligned",
+      "Connecting lines must go from parent bottom-center to child top-center",
+      "No connecting lines may pass through any node",
+      "Node text (name and title) must not overflow the node boundaries",
+      "Minimum 20px horizontal spacing between sibling nodes",
+      "The entire chart must be horizontally centered on the slide"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Level 3 nodes (6 total) overflow horizontally past slide width",
+      "Connecting lines cross through adjacent nodes",
+      "Uneven spacing between sibling groups makes the hierarchy unclear",
+      "Node text overflows for longer names/titles",
+      "Level 4 nodes pushed below the 1080px boundary",
+      "Connecting lines don't align with node center points"
+    ]
+  },
+  {
+    "task_id": "slide_011",
+    "description": "Create a single 1920x1080 HTML/CSS slide demonstrating mixed typography. The slide is divided into 4 horizontal sections. Section 1 (top, ~15% height): Title 'Quarterly Business Review' in 48px bold (#1a1a1a), vertically centered in its section. Section 2 (~10% height): Subtitle 'Financial Performance and Strategic Outlook for Q4 2025' in 24px regular (#4a4a4a), vertically centered. Section 3 (~55% height): Split into left (60%) and right (40%). Left side has body text in 16px regular: two paragraphs (3 lines each) discussing revenue growth and market expansion. Right side has a table with 4 rows and 3 columns (Region, Revenue, Growth) in 14px, with header row styled distinctly. An inline equation in the body text: 'CAGR = (V_final / V_initial)^(1/n) - 1' with proper subscript and superscript formatting. Section 4 (bottom, ~20% height): Three footnotes in 10px italic gray (#888888), each on its own line, with superscript reference numbers matching inline markers in the body text.",
+    "requirements": [
+      "Title must be exactly 48px, subtitle 24px, body 16px, footnotes 10px",
+      "Each section's content must be vertically centered within its allocated height",
+      "The table must be right-aligned within its 40% column and fully readable",
+      "CAGR equation must have proper subscript (final, initial) and superscript (1/n)",
+      "Footnote superscript numbers must match inline references",
+      "No vertical overlap between any two sections",
+      "All content must fit within 1920x1080 without overflow"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Vertical centering within sections is inconsistent or missing",
+      "Table and body text overlap in the split section",
+      "Equation subscripts/superscripts render as plain text",
+      "Section heights don't add up to 1080px causing overflow or gaps",
+      "Footnotes overflow below the slide boundary",
+      "Font size hierarchy is visually inconsistent"
+    ]
+  },
+  {
+    "task_id": "slide_012",
+    "description": "Create a single 1920x1080 HTML/CSS slide with multi-language content. Title in English: 'Global Localization Status' in 32px bold, centered. Below the title, 4 content blocks arranged in a 2x2 grid with 20px gaps. Block 1 (top-left): English section with heading 'English (Primary)' in 18px bold and 4 lines of 14px text: 'Machine learning models require diverse training data. Our platform supports 47 languages with automatic detection. Quality metrics show 94.2% accuracy across all supported languages. The system processes 2.3 million translations daily.' Block 2 (top-right): Chinese section with heading 'Chinese (Simplified)' in 18px bold and text in 14px: '机器学习模型需要多样化的训练数据。我们的平台支持47种语言并具有自动检测功能。质量指标显示所有支持语言的准确率为94.2%。该系统每天处理230万次翻译。' Block 3 (bottom-left): Japanese section with heading 'Japanese' in 18px bold and text in 14px: '機械学習モデルには多様なトレーニングデータが必要です。当社のプラットフォームは47の言語をサポートし、自動検出機能を備えています。品質指標はすべてのサポート言語で94.2%の精度を示しています。' Block 4 (bottom-right): Arabic section with heading 'Arabic' in 18px bold (left-to-right) and body text in 14px with dir='rtl': 'تتطلب نماذج التعلم الآلي بيانات تدريب متنوعة. تدعم منصتنا 47 لغة مع الكشف التلقائي. تظهر مقاييس الجودة دقة 94.2% عبر جميع اللغات المدعومة.' Each block has a 1px border (#e5e7eb), 16px padding, and a subtle background color unique to that block.",
+    "requirements": [
+      "All 4 language blocks must be equal size in the 2x2 grid",
+      "Chinese characters must render correctly without mojibake",
+      "Japanese text must render correctly including kanji and hiragana",
+      "Arabic text block must have dir='rtl' with right-aligned text",
+      "Arabic text must flow right-to-left without breaking the layout of adjacent blocks",
+      "No text in any block may overflow its container",
+      "20px gaps between all blocks must be consistent",
+      "All percentage values (94.2%) must be readable in every language block"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "CJK characters render with incorrect line height causing text overflow",
+      "Arabic RTL text direction breaks the overall grid layout",
+      "Mixed LTR/RTL content causes number formatting issues in Arabic block",
+      "Font fallback for CJK characters causes inconsistent sizing",
+      "Block heights differ due to different text lengths in each language",
+      "Grid alignment breaks when RTL direction propagates to parent elements"
+    ]
+  },
+  {
+    "task_id": "slide_013",
+    "description": "Create a single 1920x1080 HTML/CSS slide with 3 columns of bullet points. Title: 'Feature Comparison Across Product Tiers' in 28px bold centered. Three columns (each ~580px wide with 30px gaps) with headers: 'Basic Plan' (blue header #3b82f6), 'Professional Plan' (purple header #8b5cf6), 'Enterprise Plan' (emerald header #10b981). Column 1 (Basic) has 3 bullet items: 'Up to 5 users', 'Basic analytics dashboard', '10 GB storage'. Column 2 (Professional) has 7 bullet items: 'Up to 50 users', 'Advanced analytics with custom reports', 'Real-time collaboration tools', '100 GB storage with versioning', 'API access with rate limiting (1000 req/min)', 'Priority email support with 24h SLA', 'Custom branding and white-label options'. Column 3 (Enterprise) has 5 bullet items: 'Unlimited users', 'Full analytics suite with ML-powered insights', '1 TB storage with geo-replication', '24/7 phone and chat support with dedicated CSM', 'Custom SLA and on-premise deployment option'. All columns must start at the same vertical position. Each bullet item is in 15px with a colored bullet marker matching the column header color. A bottom banner says 'All plans include SSL, 99.9% uptime SLA, and GDPR compliance' in 13px on a #f3f4f6 background.",
+    "requirements": [
+      "All 3 column headers must be horizontally aligned at the same vertical position",
+      "All bullet lists must start at the same vertical position below their headers",
+      "The longest column (Professional, 7 items) must not overflow the slide",
+      "Shorter columns must not stretch to match the longest column's height",
+      "Each bullet marker must use the column's designated color",
+      "No bullet text may overflow its column width",
+      "Bottom banner must be visible below all columns",
+      "30px gaps between columns must be consistent"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Columns stretch to equal height causing excessive whitespace in Basic column",
+      "Long bullet text in Professional column overflows column width",
+      "Column tops misalign due to different header styling",
+      "Bottom banner overlaps with the longest column's content",
+      "Bullet markers don't use the correct column-specific colors",
+      "Inconsistent gap widths between columns"
+    ]
+  },
+  {
+    "task_id": "slide_014",
+    "description": "Create a single 1920x1080 HTML/CSS slide with dense citations. Title: 'Deep Learning for Natural Language Understanding: A Survey' in 26px bold. Body text in 16px, consisting of 3 paragraphs: Paragraph 1 (4 lines): 'The transformer architecture [Vaswani et al., 2017] revolutionized NLP by introducing self-attention mechanisms. Subsequent work on BERT [Devlin et al., 2019] demonstrated the power of bidirectional pre-training, achieving state-of-the-art results on 11 benchmarks.' Paragraph 2 (4 lines): 'Large language models such as GPT-3 [Brown et al., 2020] showed that scaling model size leads to emergent capabilities. The instruction-following paradigm [Ouyang et al., 2022] further aligned these models with human preferences through RLHF.' Paragraph 3 (3 lines): 'Recent advances in efficient attention [Dao et al., 2022] have reduced the quadratic complexity bottleneck. Constitutional AI methods [Bai et al., 2022] provide new frameworks for safe and helpful AI systems.' Each bracketed citation must be rendered as superscript with a smaller font size (11px). Below the paragraphs, a horizontal rule, then a 'References' section in 14px bold, followed by 6 reference entries in 11px regular: full citations for Vaswani 2017, Devlin 2019, Brown 2020, Ouyang 2022, Dao 2022, and Bai 2022, each on its own line with a hanging indent.",
+    "requirements": [
+      "All 6 inline citations must be rendered as superscript text in 11px",
+      "Superscript citations must not disrupt the line height of body text",
+      "All 3 paragraphs must be fully visible with proper line spacing",
+      "Horizontal rule must visually separate body text from references",
+      "All 6 reference entries must be visible below the horizontal rule",
+      "Reference entries must have hanging indentation (first line flush left, continuation indented)",
+      "All content must fit within 1920x1080 without overflow"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Superscript citations cause uneven line heights in paragraphs",
+      "Reference section overflows below the slide boundary",
+      "Hanging indent not applied correctly to multi-line references",
+      "Superscript text is too small to read or runs into adjacent text",
+      "Horizontal rule overlaps with adjacent content",
+      "Inconsistent spacing between paragraphs and references section"
+    ]
+  },
+  {
+    "task_id": "slide_015",
+    "description": "Create a single 1920x1080 HTML/CSS slide showing mathematical equations. Title: 'Core Equations of Statistical Learning Theory' in 28px bold centered. Display 5 numbered equations, each on its own line, with the equation number right-aligned and the equation centered, with all equals signs vertically aligned. The equations: (1) The loss function: L(theta) = -(1/N) * sum_{i=1}^{N} [y_i log(f(x_i; theta)) + (1 - y_i) log(1 - f(x_i; theta))]. (2) Gradient update: theta_{t+1} = theta_t - eta * nabla_theta L(theta_t). (3) Bias-variance decomposition: E[(y - f_hat(x))^2] = Bias^2(f_hat) + Var(f_hat) + sigma^2. (4) KL divergence: D_{KL}(P || Q) = sum_{x} P(x) log(P(x) / Q(x)). (5) Evidence lower bound: log p(x) >= E_{q(z|x)}[log p(x|z)] - D_{KL}(q(z|x) || p(z)). Use HTML/CSS to render subscripts, superscripts, summation symbols (using large Sigma character), fractions (using CSS flex column layout), and Greek letters (using HTML entities: &theta;, &eta;, &sigma;, &nabla;). Below the equations, a note in 13px italic: 'All equations assume i.i.d. samples from the data distribution P(X, Y).' ",
+    "requirements": [
+      "All 5 equations must be visible and numbered (1)-(5) with right-aligned numbers",
+      "Equals signs in all equations must be vertically aligned",
+      "Greek letters must render correctly (theta, eta, sigma, nabla)",
+      "Subscripts and superscripts must be properly positioned (not inline)",
+      "Summation symbols must be visually larger than surrounding text",
+      "Fractions must use stacked layout (numerator over denominator with a line)",
+      "The footnote must be visible at the bottom",
+      "All mathematical notation must be readable at the rendered size"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Equals sign alignment fails because equations have different left-side widths",
+      "Fractions rendered inline instead of stacked, making them unreadable",
+      "Summation symbols same size as regular text",
+      "Subscript/superscript stacking (e.g., sum with both upper and lower bounds) misaligned",
+      "Greek letters render as entity codes instead of symbols in some browsers",
+      "Equation numbers don't right-align consistently",
+      "Complex equations overflow horizontally"
+    ]
+  },
+  {
+    "task_id": "slide_016",
+    "description": "Create a single 1920x1080 HTML/CSS slide with a gradient background. The background is a linear gradient from #1e3a5f (dark navy) at top-left to #4a90d9 (medium blue) at bottom-right. In the upper-right corner (40px from top, 40px from right), place a logo placeholder: a 80x80px white-bordered square with text 'LOGO' in white 16px bold centered inside. In the center of the slide, place a semi-transparent card (700px wide, 400px tall, background rgba(255,255,255,0.92), border-radius 16px, box-shadow 0 8px 32px rgba(0,0,0,0.3)). Inside the card: a title 'AI-Powered Analytics Platform' in 36px bold #1a1a1a centered, a subtitle 'Transform your data into actionable insights' in 20px regular #4a4a4a centered below the title, a horizontal divider line (#e5e7eb) spanning 80% of the card width centered, then 3 feature points in 16px #333333 with check-mark bullets (using CSS or Unicode checkmarks): 'Real-time data processing at petabyte scale', 'Custom ML models with one-click deployment', 'Enterprise-grade security with SOC 2 compliance'. Below the card (60px gap), white text on the gradient background in 14px: 'www.example.com | contact@example.com | +1 (555) 123-4567'.",
+    "requirements": [
+      "Gradient background must smoothly transition from dark navy to medium blue",
+      "Logo placeholder must be positioned exactly in upper-right corner with specified margins",
+      "Central card must have visible semi-transparency (gradient slightly showing through)",
+      "Card text must have sufficient contrast ratio against the card background (WCAG AA)",
+      "White text below the card must be readable against the gradient background",
+      "Box shadow on the card must be visible",
+      "Check-mark bullets must render correctly (not as empty squares or missing glyphs)",
+      "Card must be horizontally and vertically centered on the slide"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "White text below the card unreadable against lighter portions of the gradient",
+      "Card semi-transparency too low (opaque) or too high (text unreadable through gradient)",
+      "Logo placeholder positioned incorrectly due to confusion between margin and position values",
+      "Gradient direction wrong (top-to-bottom instead of top-left to bottom-right)",
+      "Check-mark characters render as missing-glyph squares",
+      "Box shadow not visible against the dark gradient background",
+      "Card not centered both horizontally and vertically"
+    ]
+  },
+  {
+    "task_id": "slide_017",
+    "description": "Create a single 1920x1080 HTML/CSS slide with text wrapping around an image placeholder. Title: 'Computer Vision in Autonomous Driving' in 30px bold at the top spanning full width. Below the title, an image placeholder: a colored rectangle (#d1d5db background with text 'LiDAR Point Cloud Visualization' centered in 16px #6b7280) that is 60% of the slide width (1152px) and 500px tall, floated to the left with 24px margin on the right and bottom. Text content in 15px regular wraps around the right side of the image: 5 paragraphs discussing object detection, sensor fusion, real-time processing, safety considerations, and regulatory requirements. Each paragraph is 3-4 lines when rendered at the available width. Below the image (after the float clears), a caption 'Figure 1: 3D LiDAR point cloud showing detected objects with bounding boxes. Data collected from Waymo Open Dataset, Scene ID: 10203656353524179475.' in 12px italic, aligned to the left edge of the image placeholder (not the slide left edge). At the very bottom, a thin dark bar (#1f2937) spanning full width with white text listing '© 2025 Autonomous Systems Lab | Stanford University' in 12px centered.",
+    "requirements": [
+      "Image placeholder must be exactly 60% slide width and 500px tall",
+      "Text must flow around the right side of the image, not below it",
+      "24px margins on the right and bottom of the image must be maintained",
+      "Caption must align with the left edge of the image placeholder",
+      "Caption must appear below the image, not beside it",
+      "All 5 paragraphs of text must be fully visible",
+      "Bottom bar must span full width and not overlap any content",
+      "Text wrapping must be clean with no single-word orphan lines"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Float clearing fails causing caption to appear beside the image instead of below",
+      "Text wrapping creates very narrow column on the right making text unreadable",
+      "Caption aligns to slide left edge instead of image left edge",
+      "Bottom bar overlaps with the last paragraph of wrapped text",
+      "Image placeholder and text content overflow below 1080px",
+      "Paragraphs after the float clears don't return to full width"
+    ]
+  },
+  {
+    "task_id": "slide_018",
+    "description": "Create a single 1920x1080 HTML/CSS slide showing 3 feature cards in a static layout that suggests animation. Title: 'Platform Features' in 36px bold centered at top, with subtitle 'Everything you need to scale' in 18px regular #6b7280 below. Three cards arranged horizontally with equal spacing (each card ~520px wide, 480px tall, centered in the slide). Each card has: white background, border-radius 16px, box-shadow 0 4px 24px rgba(0,0,0,0.12), 32px padding. Card 1: An icon placeholder (60x60px circle with #3b82f6 background, containing text '{}' in white 24px bold), title 'API Integration' in 22px bold below the icon, description 'Connect to any data source with our RESTful API. Full OpenAPI 3.0 documentation with interactive sandbox environment.' in 15px regular #4b5563, and a tag at the bottom: 'Developer Favorite' in 12px on a #dbeafe background with #1d4ed8 text, rounded pill shape. Card 2: Icon (circle #10b981, text with a chart-like symbol), title 'Real-Time Analytics', description 'Monitor your metrics as they happen. Sub-second latency dashboards with customizable alerts and anomaly detection.', tag 'Most Popular' on #d1fae5 with #065f46. Card 3: Icon (circle #8b5cf6, text with a shield symbol), title 'Enterprise Security', description 'SOC 2 Type II certified. End-to-end encryption, SSO integration, and role-based access control.', tag 'New' on #ede9fe with #5b21b6. Each card must have a subtle left border (4px solid, matching the icon color). Cards must have visible separation and consistent alignment.",
+    "requirements": [
+      "All 3 cards must be fully visible with equal width and height",
+      "Card spacing must be equal (between cards and from slide edges)",
+      "Icon circles must be perfectly round (equal width and height)",
+      "Box shadows must be visible on all cards",
+      "Left colored border must match each card's icon color",
+      "Tag pills must be positioned consistently at the bottom of each card",
+      "Description text must not overflow the card boundaries",
+      "All cards must be vertically centered as a group in the available space below the title"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Cards overflow horizontally (3 x 520px = 1560px + spacing > 1920px with padding)",
+      "Box shadows get clipped by adjacent cards or container overflow:hidden",
+      "Icon circles render as ovals due to inconsistent width/height or padding",
+      "Left border radius conflicts with card border-radius causing visual artifacts",
+      "Tag pills overflow card bottom when description text is longer than expected",
+      "Cards not vertically aligned due to varying description text lengths"
+    ]
+  },
+  {
+    "task_id": "slide_019",
+    "description": "Create a single 1920x1080 HTML/CSS slide showing a scatter plot built entirely from HTML/CSS (no SVG, no canvas, no images). Title: 'Model Accuracy vs Training Time' in 28px bold centered. The plot area is 1200px wide and 600px tall, centered horizontally, with a 1px solid #d1d5db border. X-axis label: 'Training Time (hours)' in 14px centered below the plot. Y-axis label: 'Accuracy (%)' in 14px, rotated 90 degrees counter-clockwise, to the left of the plot. X-axis tick marks at 0, 10, 20, 30, 40, 50 with grid lines (dashed, #e5e7eb). Y-axis tick marks at 60, 70, 80, 90, 100 with grid lines. Plot 20 data points as colored circles (12px diameter, border-radius 50%): 6 blue dots (#3b82f6) for 'Model A', 7 red dots (#ef4444) for 'Model B', 7 green dots (#22c55e) for 'Model C'. Position each dot using absolute positioning within the plot area at approximate coordinates that suggest: Model A clusters at high accuracy (85-95%) and low training time (5-15h), Model B at medium accuracy (75-85%) and medium time (20-35h), Model C at low accuracy (65-78%) and high time (35-50h). A legend in the top-right corner of the plot area showing the 3 model labels with their color dots.",
+    "requirements": [
+      "All 20 data points must be visible within the plot area",
+      "Data points must be positioned proportionally to the axis scales",
+      "X and Y axis labels must be readable and properly oriented",
+      "Grid lines must align with tick mark values",
+      "Y-axis label must be rotated 90 degrees and not overlap the plot",
+      "Legend must be inside the plot area in the top-right corner",
+      "Legend must show all 3 model names with correctly colored indicators",
+      "Tick mark labels must align with their corresponding grid lines"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Data points positioned outside the plot area due to incorrect coordinate calculation",
+      "Y-axis rotation causes the label to overlap with tick marks or plot area",
+      "Grid lines don't align with tick marks due to pixel rounding",
+      "Legend overlaps with data points in the top-right region",
+      "Data points not proportionally positioned (clustering doesn't match described pattern)",
+      "Axis tick labels misaligned with grid lines",
+      "Plot area extends beyond slide boundaries when adding axes and labels"
+    ]
+  },
+  {
+    "task_id": "slide_020",
+    "description": "Create a single 1920x1080 HTML/CSS presentation title slide. Background: solid white (#ffffff). All content must be vertically centered as a single group in the slide. Content from top to bottom within the centered group: (1) A decorative horizontal rule: 3px solid #2563eb, 200px wide, centered. (2) 40px gap. (3) Title: 'Scaling Laws for Neural Language Models' in 44px bold #111827, centered, with letter-spacing 1px. (4) 16px gap. (5) Subtitle: 'Empirical Analysis of Compute-Optimal Training Strategies' in 22px regular #4b5563, centered. (6) 40px gap. (7) A second decorative rule: 1px solid #d1d5db, 400px wide, centered. (8) 32px gap. (9) Author line: 'Dr. Emily Zhang, Dr. Michael Torres, Dr. Aisha Patel' in 18px regular #374151, centered. (10) 8px gap. (11) Affiliation: 'DeepMind Research | Google Brain | Stanford AI Lab' in 15px regular #6b7280, centered. (12) 8px gap. (13) Date: 'NeurIPS 2025 | December 14, 2025 | Vancouver, BC, Canada' in 14px italic #9ca3af, centered. (14) 40px gap. (15) A third decorative rule: 3px solid #2563eb, 200px wide, centered. The entire group of elements from rule (1) to rule (15) must be vertically centered on the slide as a whole.",
+    "requirements": [
+      "The entire content group must be vertically centered on the 1920x1080 slide",
+      "All text lines must be horizontally centered",
+      "The three decorative rules must be the exact specified widths (200px, 400px, 200px)",
+      "Gaps between elements must match the specified pixel values exactly",
+      "Title must be 44px with 1px letter-spacing",
+      "Font sizes must decrease progressively: 44px, 22px, 18px, 15px, 14px",
+      "Color values must match specifications for each text element",
+      "The top and bottom decorative rules must be visually identical (same width, color, thickness)"
+    ],
+    "difficulty": "hard",
+    "expected_issues": [
+      "Content group not vertically centered (shifted up or down)",
+      "Gaps between elements inconsistent or not matching specifications",
+      "Decorative rules not horizontally centered",
+      "Letter-spacing on title causes it to appear off-center",
+      "Total content height exceeds slide height causing overflow",
+      "Font weight/style (bold, italic, regular) applied inconsistently",
+      "Decorative rules use different widths than specified"
+    ]
+  }
+]

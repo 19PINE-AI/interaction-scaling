@@ -1,0 +1,384 @@
+[
+  {
+    "task_id": "anim_001",
+    "description": "Bouncing ball with realistic gravity, bounce dampening, and a trail effect. The ball drops from the top of the viewport, bounces off the bottom with decreasing bounce height each time, and leaves a fading trail of its previous positions. The ball must remain within the viewport at all times.",
+    "requirements": [
+      "Ball starts at top-center of viewport and falls under simulated gravity (acceleration ~9.8 units/s^2 scaled to pixels)",
+      "Each bounce reduces velocity by 30% (coefficient of restitution 0.7)",
+      "Ball leaves a trail of at least 20 semi-transparent copies that fade from 0.5 to 0 opacity over 500ms",
+      "Ball must never escape the viewport boundaries (top, bottom, left, right)",
+      "Animation runs for at least 5 seconds showing multiple bounces",
+      "Ball is a filled circle with radius 15px and a subtle radial gradient",
+      "Background is dark (#1a1a2e) to make the trail visible"
+    ],
+    "frame_times_ms": [0, 200, 500, 800, 1000, 1500, 2000, 2500, 3000, 4000, 5000],
+    "expected_issues": [
+      "Ball escapes below the viewport floor due to discrete time steps overshooting the boundary",
+      "Trail effect renders as solid line instead of fading dots",
+      "Bounce dampening not applied correctly causing infinite bouncing at full height",
+      "Gravity accumulation error causing ball to accelerate unrealistically",
+      "Ball sticks to the floor instead of coming to rest gracefully"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_002",
+    "description": "Pendulum simulation with a swinging bob, taut string visualization, and a shadow projected below the bob on a ground plane. The pendulum swings back and forth with realistic deceleration due to simulated air resistance.",
+    "requirements": [
+      "Pivot point is at top-center of the viewport",
+      "String length is 250px, rendered as a 2px line from pivot to bob",
+      "Bob is a filled circle of radius 20px with a gradient fill",
+      "Pendulum starts at 45 degrees from vertical and swings with decreasing amplitude",
+      "Shadow is an ellipse on a ground line at the bottom, whose horizontal position tracks the bob and whose size varies with the bob's height (larger when bob is higher)",
+      "String must remain taut at all times (constant length between pivot and bob)",
+      "Animation uses accurate pendulum physics: angular acceleration = -(g/L)*sin(theta) with a small damping term",
+      "Period of oscillation should be approximately 1 second"
+    ],
+    "frame_times_ms": [0, 250, 500, 750, 1000, 1500, 2000, 3000, 4000, 5000],
+    "expected_issues": [
+      "String stretches or detaches from the bob during swing",
+      "Pendulum moves linearly instead of along an arc",
+      "Shadow does not track the bob's horizontal position",
+      "Small-angle approximation used incorrectly causing unrealistic motion at large angles",
+      "Damping is too aggressive or absent, causing immediate stop or perpetual motion"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_003",
+    "description": "Particle explosion effect: clicking anywhere on the page triggers an explosion of 50+ particles that fly outward radially from the click point with randomized velocities, decelerate due to friction, shrink, and fade out over 1.5 seconds.",
+    "requirements": [
+      "Each click spawns at least 50 particles at the click coordinates",
+      "Particles are small circles (3-8px radius, randomized) with random colors from a warm palette (reds, oranges, yellows)",
+      "Particles fly outward in all 360 degrees with randomized initial speeds between 100-400 px/s",
+      "Particles decelerate due to friction (velocity multiplied by 0.97 each frame)",
+      "Particles fade from opacity 1.0 to 0.0 over their 1.5-second lifetime",
+      "Particles shrink to 0 radius by end of lifetime",
+      "Multiple explosions can coexist on screen simultaneously",
+      "Uses canvas element for rendering, running at 60fps via requestAnimationFrame",
+      "Finished particles are removed from memory to prevent leaks"
+    ],
+    "frame_times_ms": [0, 50, 100, 200, 400, 700, 1000, 1500],
+    "expected_issues": [
+      "Particles all move in the same direction instead of radially outward",
+      "Particles cluster together instead of spreading uniformly in all directions",
+      "Fade and shrink are not synchronized with particle lifetime",
+      "Memory leak from particles never being cleaned up, causing slowdown over time",
+      "Particles spawn at (0,0) instead of click coordinates",
+      "All particles have same color instead of randomized palette"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_004",
+    "description": "Water ripple effect: clicking the canvas creates concentric circles that expand outward from the click point with decreasing opacity and increasing radius. Multiple ripple sources should coexist and the circles should render with a water-like blue tint.",
+    "requirements": [
+      "Each click creates a ripple source that emits 5 concentric expanding rings",
+      "Rings expand outward at 80px/s with 60px spacing between consecutive rings",
+      "Each ring starts at opacity 0.8 and fades to 0 by the time it reaches 300px radius",
+      "Rings are rendered as circle outlines (not filled) with 2px stroke width",
+      "Ring color transitions from light blue (#4fc3f7) at center to transparent at max radius",
+      "Multiple ripple sources can be active simultaneously without visual conflicts",
+      "Ripple sources are cleaned up after all their rings have fully faded",
+      "Canvas background is a dark blue gradient (#0d1b2a to #1b263b)",
+      "Animation runs at 60fps using requestAnimationFrame"
+    ],
+    "frame_times_ms": [0, 100, 300, 600, 1000, 1500, 2000, 3000, 4000],
+    "expected_issues": [
+      "Concentric circles overlap with incorrect compositing causing bright spots",
+      "Rings disappear too quickly before reaching full expansion",
+      "New ripple sources erase or interfere with existing ones",
+      "Ring spacing is uniform in time instead of space, causing bunching",
+      "Opacity fade is linear when it should follow the ring's radial distance",
+      "Canvas not cleared between frames causing ghosting"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_005",
+    "description": "Elastic collision simulation: two balls of different masses and colors move toward each other from opposite sides of the screen, collide in the center, and bounce off each other with conservation of momentum and kinetic energy. After collision, they continue to the edges and bounce off the walls.",
+    "requirements": [
+      "Ball A: radius 25px, mass 2 units, red (#e74c3c), starts at left edge moving right at 150px/s",
+      "Ball B: radius 18px, mass 1 unit, blue (#3498db), starts at right edge moving left at 200px/s",
+      "Collision detection based on distance between centers being less than sum of radii",
+      "Post-collision velocities computed using elastic collision formulas preserving momentum and kinetic energy",
+      "Balls bounce off the left and right walls of the viewport",
+      "Display velocity vectors as arrows extending from each ball's center in the direction of motion",
+      "Show a real-time display of total system momentum and total kinetic energy (should remain constant)",
+      "Animation runs for 10 seconds with continuous wall bouncing",
+      "Trail effect: each ball leaves a fading trail of its last 30 positions"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1200, 1400, 1600, 2000, 3000, 5000, 8000, 10000],
+    "expected_issues": [
+      "Balls pass through each other instead of colliding",
+      "Balls stick together after collision and move as one",
+      "Momentum or energy not conserved — displayed values drift over time",
+      "Collision detected multiple times in consecutive frames causing jitter",
+      "Velocity vectors point in wrong direction after collision",
+      "Balls escape through walls due to discrete time step overshooting"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_006",
+    "description": "3D card flip animation: a card with distinct front and back faces rotates 180 degrees around its vertical axis when clicked, revealing the back side. Clicking again flips it back. The flip should have realistic 3D perspective with proper backface handling.",
+    "requirements": [
+      "Card is 300px wide by 400px tall, centered on screen",
+      "Front face: white background with a large spade suit symbol and 'A' in corners (like an Ace of Spades)",
+      "Back face: a repeating diagonal pattern in red and blue on a white background",
+      "Flip animation takes 600ms with ease-in-out timing",
+      "3D perspective applied to parent container (perspective: 1000px)",
+      "Backface of each side must be hidden during the flip (backface-visibility: hidden)",
+      "During the flip, the card should appear to have thickness (subtle edge shadow)",
+      "A slight scale increase to 1.05 at the midpoint of the flip (3D pop effect)",
+      "Card casts a dynamic shadow that moves during the flip",
+      "Clicking during an ongoing flip queues the next flip to start after current one finishes"
+    ],
+    "frame_times_ms": [0, 100, 200, 300, 400, 500, 600, 700, 1300, 1900],
+    "expected_issues": [
+      "Both faces visible simultaneously during the flip (backface-visibility not set)",
+      "Content on the back face appears mirrored/reversed",
+      "3D perspective is missing causing flat 2D scaling instead of rotation",
+      "Card disappears at the 90-degree midpoint where it is edge-on",
+      "Clicking during animation causes glitched state with partial rotation",
+      "Shadow does not update during animation"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_007",
+    "description": "Loading spinner composed of 8 dots arranged in a perfect circle. The dots light up sequentially with a trailing glow that fades across the 3 dots behind the active one, creating a smooth chasing effect.",
+    "requirements": [
+      "8 dots arranged in a circle of radius 40px, centered in the viewport",
+      "Each dot is 12px diameter",
+      "Dots are gray (#444) by default and cyan (#00e5ff) when active",
+      "Active dot rotates clockwise, completing one full revolution in 1 second",
+      "The 3 dots trailing behind the active one show decreasing brightness (opacity 0.7, 0.4, 0.15)",
+      "Each dot has a glow effect (box-shadow) when active that matches its opacity level",
+      "The transition between states is smooth (not instant snap)",
+      "Spinner is centered vertically and horizontally in viewport",
+      "Below the spinner, text reads 'Loading...' with an animated ellipsis (cycling: '.', '..', '...')"
+    ],
+    "frame_times_ms": [0, 125, 250, 375, 500, 625, 750, 875, 1000, 1500, 2000],
+    "expected_issues": [
+      "Dots arranged in a line or grid instead of a circle",
+      "Trailing glow applies to wrong dots (leading instead of trailing)",
+      "All dots light up simultaneously instead of sequentially",
+      "Timing is uneven causing the chase to stutter or skip dots",
+      "Glow effect missing or not scaling with opacity",
+      "Dots are not evenly spaced around the circle"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_008",
+    "description": "Accordion menu with 5 collapsible sections. Clicking a section header expands its content with a smooth height animation while simultaneously collapsing any currently open section. Only one section can be open at a time.",
+    "requirements": [
+      "5 sections with headers: 'About Us', 'Services', 'Portfolio', 'Team', 'Contact'",
+      "Each section's content area contains 3-4 lines of placeholder text",
+      "Expand/collapse animates the height over 400ms with ease-in-out timing",
+      "An arrow icon on each header rotates 180 degrees when its section is open",
+      "Only one section is open at a time — opening one closes any other open section",
+      "The first section starts open by default",
+      "Header background darkens on hover",
+      "Open section header has a distinct left border accent (4px solid #2196F3)",
+      "Content area has padding that is included in the height animation (no jump at end)",
+      "Clicking an already-open section closes it (all sections closed is a valid state)"
+    ],
+    "frame_times_ms": [0, 100, 200, 300, 400, 500, 800, 1200, 1600],
+    "expected_issues": [
+      "Multiple sections can be open simultaneously",
+      "Height animation shows a jump at the start or end (content padding not accounted for)",
+      "Content overflows its container during the collapsing animation",
+      "Arrow rotation is not synchronized with expand/collapse",
+      "Rapid clicking causes sections to get stuck in intermediate states",
+      "Height is hardcoded rather than calculated from actual content"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_009",
+    "description": "Animated progress bar that fills from 0% to 100% over exactly 3 seconds. The bar has a gradient fill, a percentage label that updates in real-time, and a confetti celebration animation when it reaches 100%.",
+    "requirements": [
+      "Progress bar container is 500px wide, 30px tall, centered horizontally near the top third of the page",
+      "Bar fill uses a left-to-right gradient from #4CAF50 to #8BC34A with a subtle animated shimmer effect",
+      "Percentage text is centered on the bar and reads '0%' to '100%', updating every frame",
+      "Text color switches from dark to white when the bar passes 50% fill (for contrast)",
+      "Bar fill takes exactly 3000ms using linear timing",
+      "At 100%, a confetti burst of 80+ small colored rectangles erupts from the bar, falling with gravity and rotation",
+      "Confetti pieces are randomized in color (at least 6 distinct colors), size (4-10px), rotation speed, and horizontal spread",
+      "Confetti falls for 3 seconds then fades out",
+      "A checkmark icon and 'Complete!' text appear above the bar at 100%",
+      "A 'Restart' button appears after completion that resets the entire animation"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2500, 3000, 3100, 3500, 4000, 5000, 6000],
+    "expected_issues": [
+      "Percentage text does not sync with actual bar width",
+      "Bar overshoots 100% width or percentage shows values above 100",
+      "Confetti triggers before bar reaches 100% or does not trigger at all",
+      "Shimmer effect causes visual artifacts or flickers",
+      "Text color switch happens at wrong threshold or not at all",
+      "Restart button does not fully reset state causing doubled confetti on second run"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_010",
+    "description": "Shape morphing animation: a shape smoothly transitions from a circle to a square to a triangle and back to a circle, cycling continuously. Each morph takes 2 seconds (6-second total cycle).",
+    "requirements": [
+      "Shape is rendered on a canvas element, centered in the viewport",
+      "Shape fill is a gradient that rotates slowly (independent of morphing)",
+      "Circle: radius 80px, defined by 64 evenly spaced points",
+      "Square: 160x160px, defined by 4 corners with points distributed along edges (64 total points to match circle)",
+      "Triangle: equilateral with 160px side length, defined by 3 corners with points along edges (64 total)",
+      "Morphing interpolates each of the 64 points from source shape to target shape positions",
+      "Interpolation uses ease-in-out timing (not linear) for organic feel",
+      "Shape has a 3px stroke outline in a darker shade of the fill color",
+      "A label below shows the current transition (e.g., 'Circle -> Square') and a progress percentage",
+      "Animation loops infinitely"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000],
+    "expected_issues": [
+      "Vertices jump abruptly instead of interpolating smoothly between shapes",
+      "Point distribution along shape edges is uneven causing pinching during morph",
+      "Triangle morph collapses because point correspondence is wrong (points not mapped logically between shapes)",
+      "Shape flickers or disappears at transition boundaries between morph stages",
+      "Canvas not cleared properly causing overlapping shapes from previous frames",
+      "Gradient does not rotate or causes visual artifacts"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_011",
+    "description": "Solar system animation: a sun at the center with 4 planets orbiting at different distances and speeds. Each planet has one moon that orbits the planet. Orbits are shown as faint dotted circles.",
+    "requirements": [
+      "Sun: 40px radius, yellow (#FDB813) with a radial glow effect, centered in viewport",
+      "Planet 1 (Mercury): 8px radius, gray (#B0B0B0), orbit radius 80px, orbital period 3s",
+      "Planet 2 (Earth): 12px radius, blue (#4A90D9), orbit radius 140px, orbital period 5s",
+      "Planet 3 (Mars): 10px radius, red (#C1440E), orbit radius 200px, orbital period 7s",
+      "Planet 4 (Jupiter): 18px radius, orange (#C88B3A), orbit radius 280px, orbital period 11s",
+      "Each planet has a moon: 4px radius, white, orbiting its planet at 20px distance with a 1s orbital period",
+      "Orbit paths rendered as faint dotted circles (opacity 0.2)",
+      "Moons must track their parent planet's position as the planet orbits the sun",
+      "All orbits are circular and move counterclockwise",
+      "Planets cast small shadows (dark circle offset slightly from planet) to suggest a light source from the sun",
+      "Canvas renders at 60fps"
+    ],
+    "frame_times_ms": [0, 500, 1000, 2000, 3000, 5000, 7000, 10000, 11000, 15000],
+    "expected_issues": [
+      "Moons orbit around the sun instead of their parent planet",
+      "Moons lose tracking when the parent planet moves, drifting away",
+      "All planets orbit at the same speed despite different period specifications",
+      "Orbit paths are solid lines instead of dotted circles",
+      "Planet sizes are too similar to distinguish",
+      "Z-ordering issues where inner planets render on top of outer planet orbits"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_012",
+    "description": "Typing effect with a blinking cursor. Three different messages are displayed one after another: each message is typed out character by character, pauses, then is deleted character by character before the next message begins. The cycle repeats.",
+    "requirements": [
+      "Messages: 'Hello, I am a creative developer.', 'I build beautiful web experiences.', 'Let us create something amazing together.'",
+      "Typing speed: 70ms per character",
+      "Deletion speed: 40ms per character",
+      "Pause of 1500ms after fully typing a message before deletion begins",
+      "Pause of 500ms after fully deleting before typing next message",
+      "Cursor is a solid vertical bar '|' that blinks (visible 530ms, hidden 530ms) when paused, and stays visible while typing or deleting",
+      "Font: 32px monospace, white text on dark background (#1e1e1e)",
+      "Text container is centered horizontally and vertically",
+      "Text must not wrap mid-animation — container is wide enough for the longest message",
+      "The entire sequence (all 3 messages) cycles infinitely"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 10000, 12000, 15000],
+    "expected_issues": [
+      "Cursor disappears during typing or deletion phases",
+      "Cursor blinks during active typing when it should be solid",
+      "Text wraps to the next line causing layout jumps during typing",
+      "Deletion removes wrong characters or deletes in wrong direction",
+      "Messages don't cycle — stops after the third message",
+      "Timing between type and delete phases is missing, causing jarring transitions"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_013",
+    "description": "Animated bar chart race: 5 named data bars compete for rank over 5 time periods. Every 2 seconds, the bars smoothly animate to new heights and reorder their vertical positions based on the new ranking. Labels and values stay attached to their bars throughout.",
+    "requirements": [
+      "5 bars with labels: 'Alpha' (red), 'Beta' (blue), 'Gamma' (green), 'Delta' (orange), 'Epsilon' (purple)",
+      "Bars are horizontal, extending from the left side",
+      "Bar widths represent values, ranging from 50 to 500 pixels",
+      "Predefined data for 5 time periods with changing values that cause rank reordering",
+      "Every 2 seconds, bars smoothly transition to new widths AND vertically reorder to maintain sorted rank (longest bar on top)",
+      "Width and position transitions take 800ms with ease-in-out timing",
+      "Each bar has its label on the left and its numeric value displayed at the right end of the bar",
+      "A time period indicator shows the current period (e.g., 'Year 2021', 'Year 2022', etc.)",
+      "Bars maintain consistent height (40px) and spacing (10px gap) during reordering",
+      "After the 5th period, the animation loops back to period 1"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2400, 2800, 3200, 4000, 6000, 8000, 10000],
+    "expected_issues": [
+      "Labels detach from their bars during vertical reordering",
+      "Bars overlap or clip through each other during the reorder transition",
+      "Values shown on bars don't update or lag behind the width change",
+      "Rank reordering happens instantly instead of animating smoothly",
+      "Bar widths go negative or exceed container bounds",
+      "Time period label does not update in sync with bar transitions"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_014",
+    "description": "Stick figure walking up a staircase of 6 steps. The figure moves from the bottom-left to the top-right, stepping up onto each step with a simple walking leg animation. The body rises and shifts right in a stair-step pattern.",
+    "requirements": [
+      "Staircase has 6 steps, each 80px wide and 50px tall, rendered in gray (#888) with darker edges",
+      "Stick figure: circle head (15px radius), line body, two line arms, two line legs, total height ~60px",
+      "Figure starts at the bottom of the first step and walks up to the top of the last step",
+      "Walking animation: legs alternate in a simple two-frame walk cycle (front leg forward, back leg back, then swap)",
+      "Leg cycle rate: 4 steps per second (each leg position held for 250ms)",
+      "Figure moves horizontally across each step over 1 second, then steps up to the next level over 0.5 seconds",
+      "During the step-up, the leading leg reaches up to the next step while the body rises",
+      "Figure's feet must align with the step surfaces at all times (no floating or sinking)",
+      "Arms swing opposite to legs (left arm forward when right leg forward)",
+      "Total animation duration: approximately 9 seconds (6 steps with traversal and climbing)"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000],
+    "expected_issues": [
+      "Stick figure floats above or sinks below the step surfaces",
+      "Legs do not alternate properly — both move in the same direction",
+      "Figure teleports between steps instead of smoothly climbing",
+      "Arms and legs move independently from body position",
+      "Figure's horizontal position does not align with step width",
+      "Step-up transition has the figure clip through the step edge"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anim_015",
+    "description": "Day-night cycle animation: the sky transitions through a full day cycle (day, sunset, night, sunrise) over 10 seconds. A sun and moon object move in arcs across the sky. Stars appear during the night phase and fade during day.",
+    "requirements": [
+      "Sky fills the entire viewport as a vertical gradient background",
+      "Day phase (0-2s): sky gradient from #87CEEB (top) to #E0F7FA (bottom), sun is a yellow (#FFD700) circle with rays",
+      "Sunset phase (2-4s): sky transitions to gradient from #FF6B35 (top) to #FFC107 (bottom), sun descends to horizon",
+      "Night phase (4-7s): sky gradient from #0D1B2A (top) to #1B263B (bottom), moon rises as a crescent (white circle with dark circle overlay), 50+ stars twinkle",
+      "Sunrise phase (7-9s): sky transitions from night to gradient from #FF8A65 (top) to #FFCC80 (bottom), moon descends, sun rises",
+      "Return to day (9-10s): sky returns to day gradient, sun resumes position",
+      "Sun/moon follow a smooth arc path (parabolic or sinusoidal) from one horizon to the other",
+      "Stars are small white dots (2-4px) at random positions that fade in during sunset and fade out during sunrise",
+      "At least 5 stars twinkle (oscillate opacity between 0.3 and 1.0 at random rates)",
+      "A ground silhouette (dark hills or cityscape) remains at the bottom throughout",
+      "Animation loops seamlessly"
+    ],
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2500, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 9500, 10000],
+    "expected_issues": [
+      "Sky color transitions jump abruptly instead of smoothly interpolating",
+      "Sun and moon teleport between positions instead of following an arc",
+      "Stars are visible during the day phase",
+      "Moon is rendered as a full circle instead of a crescent",
+      "Ground silhouette changes color with the sky instead of remaining dark",
+      "Loop transition from end back to start causes a visible glitch or color pop",
+      "Sun rays do not rotate or look static"
+    ],
+    "difficulty": "hard"
+  }
+]
