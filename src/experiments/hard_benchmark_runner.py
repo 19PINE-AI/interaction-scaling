@@ -148,16 +148,19 @@ class HardBenchmarkRunner:
         start_time = time.time()
         self.client.reset_counters()
 
-        proposer = ProposerAgent(self.config.proposer_model)
         description = task["description"]
         requirements = "\n".join(f"- {r}" for r in task.get("requirements", []))
-
-        # Initial generation
         prompt = f"{description}\n\nSpecific requirements:\n{requirements}"
-        response = proposer.generate(prompt)
-        current_html = extract_code(response.reasoning, "html")
+
+        # Initial generation with slide-specific system prompt
+        response = self.client.generate(
+            config=self.config.proposer_model,
+            system=SLIDE_SYSTEM_PROMPT,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        current_html = extract_code(response.content, "html")
         if not current_html.strip().startswith("<!") and not current_html.strip().startswith("<html"):
-            current_html = response.reasoning  # fallback
+            current_html = response.content  # fallback
 
         iteration = 1
         quality_score = 0.0
@@ -196,15 +199,21 @@ class HardBenchmarkRunner:
                 break
 
             if i < max_iterations - 1:
-                # Revise
+                # Revise with slide-specific prompt
                 feedback = self._format_review_feedback(issues, quality_score, meets_reqs)
-                context = {
-                    "previous_code": current_html,
-                    "feedback": feedback,
-                    "iteration": i + 1,
-                }
-                response = proposer.generate(prompt, context)
-                new_html = extract_code(response.reasoning, "html")
+                revision_msg = REVISION_PROMPT.format(
+                    previous_html=current_html, feedback=feedback
+                )
+                response = self.client.generate(
+                    config=self.config.proposer_model,
+                    system=SLIDE_SYSTEM_PROMPT,
+                    messages=[
+                        {"role": "user", "content": prompt},
+                        {"role": "assistant", "content": f"```html\n{current_html}\n```"},
+                        {"role": "user", "content": revision_msg},
+                    ],
+                )
+                new_html = extract_code(response.content, "html")
                 if new_html.strip():
                     current_html = new_html
                 iteration = i + 2

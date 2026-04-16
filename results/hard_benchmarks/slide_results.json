@@ -1,0 +1,112 @@
+[
+  {
+    "task_id": "slide_001",
+    "single_shot_quality": 0.6,
+    "single_shot_meets": false,
+    "single_shot_tokens": 5833,
+    "reviewed_quality": 0.6,
+    "reviewed_meets": false,
+    "reviewed_tokens": 21455,
+    "reviewed_iters": 3,
+    "quality_delta": 0.0
+  },
+  {
+    "task_id": "slide_002",
+    "single_shot_quality": 0.95,
+    "single_shot_meets": true,
+    "single_shot_tokens": 4643,
+    "reviewed_quality": 0.95,
+    "reviewed_meets": true,
+    "reviewed_tokens": 4676,
+    "reviewed_iters": 1,
+    "quality_delta": 0.0
+  },
+  {
+    "task_id": "slide_003",
+    "single_shot_quality": 1.0,
+    "single_shot_meets": true,
+    "single_shot_tokens": 4553,
+    "reviewed_quality": 1.0,
+    "reviewed_meets": true,
+    "reviewed_tokens": 4545,
+    "reviewed_iters": 1,
+    "quality_delta": 0.0
+  },
+  {
+    "task_id": "slide_004",
+    "single_shot_quality": 0.7,
+    "single_shot_meets": false,
+    "single_shot_tokens": 4298,
+    "reviewed_quality": 0.3,
+    "reviewed_meets": false,
+    "reviewed_tokens": 17269,
+    "reviewed_iters": 3,
+    "quality_delta": -0.39999999999999997
+  },
+  {
+    "task_id": "slide_005",
+    "single_shot_quality": 0.6,
+    "single_shot_meets": false,
+    "single_shot_tokens": 5784,
+    "reviewed_quality": 0.3,
+    "reviewed_meets": false,
+    "reviewed_tokens": 26053,
+    "reviewed_iters": 3,
+    "quality_delta": -0.3
+  },
+  {
+    "task_id": "slide_006",
+    "single_shot_quality": 0.4,
+    "single_shot_meets": false,
+    "single_shot_tokens": 5520,
+    "reviewed_quality": 0.6,
+    "reviewed_meets": false,
+    "reviewed_tokens": 19047,
+    "reviewed_iters": 3,
+    "quality_delta": 0.19999999999999996
+  },
+  {
+    "task_id": "slide_007",
+    "single_shot_quality": 0.6,
+    "single_shot_meets": false,
+    "single_shot_tokens": 5709,
+    "reviewed_quality": 0.75,
+    "reviewed_meets": false,
+    "reviewed_tokens": 22100,
+    "reviewed_iters": 3,
+    "quality_delta": 0.15000000000000002
+  },
+  {
+    "task_id": "slide_008",
+    "single_shot_quality": 0.0,
+    "single_shot_meets": false,
+    "single_shot_tokens": 4285,
+    "reviewed_quality": 0.0,
+    "reviewed_meets": false,
+    "reviewed_tokens": 16724,
+    "reviewed_iters": 3,
+    "quality_delta": 0.0
+  },
+  {
+    "task_id": "slide_009",
+    "single_shot_quality": 0.7,
+    "single_shot_meets": false,
+    "single_shot_tokens": 5271,
+    "reviewed_quality": 0.3,
+    "reviewed_meets": false,
+    "reviewed_tokens": 21455,
+    "reviewed_iters": 3,
+    "quality_delta": -0.39999999999999997
+  },
+  {
+    "task_id": "slide_010",
+    "single_shot_quality": 0.65,
+    "single_shot_meets": false,
+    "single_shot_tokens": 6393,
+    "reviewed_quality": 0.3,
+    "reviewed_meets": false,
+    "reviewed_tokens": 26676,
+    "reviewed_iters": 3,
+    "quality_delta": -0.35000000000000003
+  }
+]

@@ -4,6 +4,9 @@ __pycache__/
 *.swp
 data/humaneval/
 data/mbpp/
-results/
+results/baselines/
+results/full/
+results/full_v2/
+results/baselines_v2/
 .DS_Store
 

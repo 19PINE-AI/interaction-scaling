@@ -1,0 +1,47 @@
+[
+  {
+    "task_id": "code_001",
+    "description": "Implement a function that finds the leftmost insertion position for a target val",
+    "single_shot_passed": false,
+    "single_shot_tokens": 326,
+    "reviewed_passed": false,
+    "reviewed_tokens": 4289,
+    "reviewed_iters": 5
+  },
+  {
+    "task_id": "code_002",
+    "description": "Implement a sliding window maximum function. Given an array of integers and a wi",
+    "single_shot_passed": false,
+    "single_shot_tokens": 456,
+    "reviewed_passed": false,
+    "reviewed_tokens": 6042,
+    "reviewed_iters": 5
+  },
+  {
+    "task_id": "code_003",
+    "description": "Implement a function that returns elements of a 2D matrix in spiral order (clock",
+    "single_shot_passed": false,
+    "single_shot_tokens": 501,
+    "reviewed_passed": false,
+    "reviewed_tokens": 7397,
+    "reviewed_iters": 5
+  },
+  {
+    "task_id": "code_004",
+    "description": "Implement a function that merges overlapping intervals. Given a list of interval",
+    "single_shot_passed": false,
+    "single_shot_tokens": 395,
+    "reviewed_passed": false,
+    "reviewed_tokens": 5494,
+    "reviewed_iters": 5
+  },
+  {
+    "task_id": "code_005",
+    "description": "Implement the 'next permutation' function. Given a list of integers, rearrange i",
+    "single_shot_passed": false,
+    "single_shot_tokens": 457,
+    "reviewed_passed": false,
+    "reviewed_tokens": 5980,
+    "reviewed_iters": 5
+  }
+]

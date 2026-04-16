@@ -1,0 +1,82 @@
+[
+  {
+    "task_id": "anim_001",
+    "single_shot_quality": 0.3,
+    "single_shot_meets": false,
+    "single_shot_tokens": 20359,
+    "reviewed_quality": 0.3,
+    "reviewed_meets": false,
+    "reviewed_tokens": 68723,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_002",
+    "single_shot_quality": 0.75,
+    "single_shot_meets": true,
+    "single_shot_tokens": 19105,
+    "reviewed_quality": 0.75,
+    "reviewed_meets": false,
+    "reviewed_tokens": 63599,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_003",
+    "single_shot_quality": 0.0,
+    "single_shot_meets": false,
+    "single_shot_tokens": 15403,
+    "reviewed_quality": 0.0,
+    "reviewed_meets": false,
+    "reviewed_tokens": 54161,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_004",
+    "single_shot_quality": 0.0,
+    "single_shot_meets": false,
+    "single_shot_tokens": 16994,
+    "reviewed_quality": 0.6,
+    "reviewed_meets": false,
+    "reviewed_tokens": 61778,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_005",
+    "single_shot_quality": 0.3,
+    "single_shot_meets": false,
+    "single_shot_tokens": 21525,
+    "reviewed_quality": 0.3,
+    "reviewed_meets": false,
+    "reviewed_tokens": 80003,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_006",
+    "single_shot_quality": 0.1,
+    "single_shot_meets": false,
+    "single_shot_tokens": 19216,
+    "reviewed_quality": 0.1,
+    "reviewed_meets": false,
+    "reviewed_tokens": 67747,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_007",
+    "single_shot_quality": 0.7,
+    "single_shot_meets": true,
+    "single_shot_tokens": 19606,
+    "reviewed_quality": 0.7,
+    "reviewed_meets": true,
+    "reviewed_tokens": 66350,
+    "reviewed_iters": 3
+  },
+  {
+    "task_id": "anim_008",
+    "single_shot_quality": 0.2,
+    "single_shot_meets": false,
+    "single_shot_tokens": 18092,
+    "reviewed_quality": 0.2,
+    "reviewed_meets": false,
+    "reviewed_tokens": 67863,
+    "reviewed_iters": 3
+  }
+]
