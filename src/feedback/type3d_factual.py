@@ -57,7 +57,7 @@ class FactualVerificationFeedback(FeedbackProvider):
 
         # Step 2: Verify each claim via web search
         verifications = []
-        for claim in claims[:15]:  # Cap at 15 claims to manage cost
+        for claim in claims[:5]:  # Cap at 5 claims for faster verification
             result = self._verify_claim(claim)
             verifications.append(result)
 

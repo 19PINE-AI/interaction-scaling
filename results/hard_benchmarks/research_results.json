@@ -1,0 +1,12 @@
+[
+  {
+    "task_id": "research_001",
+    "ss_accuracy": 0.8,
+    "ss_meets": true,
+    "ss_tokens": 7580,
+    "rv_accuracy": 1.0,
+    "rv_meets": true,
+    "rv_iters": 2,
+    "rv_tokens": 16497
+  }
+]
