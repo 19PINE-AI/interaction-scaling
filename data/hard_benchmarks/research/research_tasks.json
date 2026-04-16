@@ -1,0 +1,424 @@
+[
+  {
+    "task_id": "research_001",
+    "description": "Write a detailed research report on the top 5 tallest buildings in the world as of 2025. For each building, include its exact height in meters, city and country, year of completion, architectural firm, number of floors, and primary use. The report should be 800-1200 words and include a comparison table.",
+    "requirements": [
+      "Burj Khalifa height must be listed as 828 meters (not 829.8m which includes the antenna in some measurements)",
+      "Merdeka 118 in Kuala Lumpur must be included as the second tallest at 678.9 meters, completed in 2023",
+      "Shanghai Tower must be listed at 632 meters with 128 floors",
+      "Abraj Al-Bait Clock Tower in Mecca must be listed at 601 meters",
+      "Ping An Finance Centre in Shenzhen must be listed at 599.1 meters",
+      "The Jeddah Tower (formerly Kingdom Tower) must NOT be listed as completed since it remains under construction as of 2025",
+      "Lotte World Tower (554.5m) should not appear in the top 5"
+    ],
+    "trap_claims": [
+      "Listing Jeddah Tower as completed or in the top 5 (it remains under construction)",
+      "Stating Burj Khalifa is 829.8m or 830m (confusing total height with roof height)",
+      "Omitting Merdeka 118 and instead listing One World Trade Center or Taipei 101 in the top 5",
+      "Getting Shanghai Tower's floor count wrong (commonly stated as 121 instead of 128)",
+      "Confusing Ping An Finance Centre's height with its original planned height of 660m before the spire was removed"
+    ],
+    "verification_queries": [
+      "tallest buildings in the world 2025 list",
+      "Merdeka 118 height completion date",
+      "Burj Khalifa official height meters",
+      "Jeddah Tower construction status 2025",
+      "Shanghai Tower number of floors height"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_002",
+    "description": "Write a research report on all Nobel Prize winners in Physics from 2020 through 2024. For each year, include the laureates' full names, their nationalities, the specific discovery or contribution cited, and the institutions they were affiliated with at the time of the award. The report should be 1000-1500 words.",
+    "requirements": [
+      "2020: Roger Penrose (black hole formation and general relativity), Reinhard Genzel and Andrea Ghez (supermassive compact object at the center of the Milky Way)",
+      "2021: Syukuro Manabe, Klaus Hasselmann (physical modelling of Earth's climate), and Giorgio Parisi (discovery of interplay of disorder and fluctuations in physical systems)",
+      "2022: Alain Aspect, John Clauser, and Anton Zeilinger for experiments with entangled photons and Bell inequalities",
+      "2023: Pierre Agostini, Ferenc Krausz, and Anne L'Huillier for experimental methods generating attosecond pulses of light",
+      "2024: John Hopfield and Geoffrey Hinton for foundational discoveries enabling machine learning with artificial neural networks",
+      "Anne L'Huillier must be identified as affiliated with Lund University in Sweden"
+    ],
+    "trap_claims": [
+      "Attributing Penrose's 2020 prize to work on Penrose tiles or twistor theory instead of black hole singularity theorems",
+      "Confusing the 2021 prize: claiming Parisi shared the climate modeling portion rather than having a separate cited contribution",
+      "Getting the 2024 prize wrong by listing different laureates or attributing it to quantum computing",
+      "Stating Andrea Ghez was the first woman to win the Physics Nobel (she was the fourth)",
+      "Misattributing Anne L'Huillier's institution as being in France rather than Sweden"
+    ],
+    "verification_queries": [
+      "Nobel Prize Physics 2024 winners",
+      "Nobel Prize Physics 2023 attosecond",
+      "Nobel Prize Physics 2022 laureates Bell inequality",
+      "Nobel Prize Physics 2021 climate Parisi",
+      "Nobel Prize Physics 2020 Penrose Genzel Ghez"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_003",
+    "description": "Write a research report on the 10 largest economies in the world by GDP measured in purchasing power parity (PPP) for 2024, using IMF data. Include the exact GDP figures in trillions of international dollars, year-over-year growth rates, and population for each country. The report should be 1000-1500 words and discuss trends.",
+    "requirements": [
+      "China must be ranked #1 by GDP (PPP), ahead of the United States",
+      "India must be ranked #3, and its GDP (PPP) must be reported in the range of $14-16 trillion",
+      "The United States GDP (PPP) must be in the range of $28-30 trillion",
+      "Japan, Germany, and Russia must all appear in the top 10 but in their correct relative order",
+      "Indonesia must appear in the top 10 by PPP (it ranks higher by PPP than by nominal GDP)",
+      "The report must clearly distinguish PPP rankings from nominal GDP rankings where they differ significantly",
+      "Brazil must appear in the top 10 by PPP"
+    ],
+    "trap_claims": [
+      "Ranking the United States #1 by PPP (it is #1 by nominal but #2 by PPP behind China)",
+      "Omitting Indonesia from the top 10 (it ranks much higher by PPP than nominal)",
+      "Using nominal GDP figures while claiming they are PPP figures",
+      "Placing India at #5 or lower (it has risen to #3 by PPP in recent years)",
+      "Including Canada or Italy in the top 10 PPP list (they fall outside it, replaced by Indonesia and others)"
+    ],
+    "verification_queries": [
+      "IMF GDP PPP rankings 2024 largest economies",
+      "China United States GDP PPP comparison 2024",
+      "India GDP PPP 2024 IMF World Economic Outlook",
+      "Indonesia GDP PPP ranking 2024",
+      "top 10 economies GDP purchasing power parity 2024"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_004",
+    "description": "Write a research report on current world records in athletics for the following events: men's 100m, women's 100m, men's marathon, women's marathon, men's long jump, women's pole vault, and men's shot put. For each record, include the athlete's name, nationality, the exact record, the date it was set, and the location. The report should be 800-1200 words.",
+    "requirements": [
+      "Men's 100m: Usain Bolt, 9.58 seconds, set on August 16, 2009, in Berlin",
+      "Women's 100m: Florence Griffith-Joyner, 10.49 seconds, set on July 16, 1988, in Indianapolis",
+      "Men's marathon: Kelvin Kiptum, 2:00:35, set on October 8, 2023, at the Chicago Marathon",
+      "Men's long jump: Mike Powell, 8.95 meters, set on August 30, 1991, in Tokyo",
+      "Women's pole vault: Armand 'Mondo' Duplantis must NOT be listed here; the women's record holder is Anzhelika Sidorova or a more recent holder",
+      "Men's shot put: Ryan Crouser, 23.56 meters, set on June 18, 2023"
+    ],
+    "trap_claims": [
+      "Stating the men's marathon record as Eliud Kipchoge's 2:01:09 (this was broken by Kelvin Kiptum's 2:00:35 in 2023)",
+      "Citing Kipchoge's sub-2-hour run (1:59:40) as the official world record (it was not ratified as it used pacers and was not open competition)",
+      "Getting Florence Griffith-Joyner's 100m time wrong (commonly misremembered as 10.48 or 10.50)",
+      "Confusing Mike Powell's long jump record (8.95m) with Bob Beamon's (8.90m)",
+      "Citing an outdated men's shot put record predating Crouser's 2023 mark"
+    ],
+    "verification_queries": [
+      "men's 100m world record Usain Bolt",
+      "men's marathon world record 2024 Kelvin Kiptum",
+      "women's 100m world record Florence Griffith-Joyner",
+      "men's long jump world record Mike Powell",
+      "men's shot put world record Ryan Crouser 2023"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_005",
+    "description": "Write a research report on the founding dates, founders, and original names of the top 10 technology companies by market capitalization as of early 2025. Include each company's founding year, all co-founders, original company name (if different), first product, and current CEO. The report should be 1000-1500 words.",
+    "requirements": [
+      "Apple: founded April 1, 1976, by Steve Jobs, Steve Wozniak, and Ronald Wayne (Wayne is often forgotten)",
+      "Microsoft: founded April 4, 1975, by Bill Gates and Paul Allen; current CEO is Satya Nadella",
+      "NVIDIA: founded January 1993 by Jensen Huang, Chris Malachowsky, and Curtis Priem",
+      "Alphabet/Google: Google was founded September 4, 1998, by Larry Page and Sergey Brin; Alphabet was created in 2015 as the parent company",
+      "Amazon: founded July 5, 1994, by Jeff Bezos; originally called Cadabra, Inc.",
+      "Meta/Facebook: founded February 4, 2004, by Mark Zuckerberg, Eduardo Saverin, Andrew McCollum, Dustin Moskovitz, and Chris Hughes",
+      "TSMC: founded in 1987 by Morris Chang in Taiwan"
+    ],
+    "trap_claims": [
+      "Omitting Ronald Wayne as a co-founder of Apple (he is frequently left out despite being one of three original founders)",
+      "Listing NVIDIA's founding year as 1993 but month as something other than January, or missing co-founders Malachowsky and Priem",
+      "Getting Amazon's original name wrong (it was Cadabra, Inc., not Relentless or Amazon from the start)",
+      "Stating Google was founded in 1996 (that was when the research project started; the company was incorporated in 1998)",
+      "Listing only Zuckerberg as founder of Facebook and omitting the other four co-founders"
+    ],
+    "verification_queries": [
+      "Apple founding date co-founders Ronald Wayne",
+      "NVIDIA founding year co-founders Jensen Huang",
+      "Amazon original name Cadabra founding date",
+      "Google founding date 1998 vs 1996 difference",
+      "top 10 tech companies market cap 2025",
+      "TSMC founded Morris Chang year"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_006",
+    "description": "Write a research report on major AI model releases from January 2025 through March 2026. Cover releases from OpenAI, Anthropic, Google DeepMind, Meta, and other significant players. For each model, include the release date, key capabilities, context window size, and notable benchmarks. The report should be 1200-1800 words.",
+    "requirements": [
+      "Must accurately report Claude model releases from Anthropic in this period, including model names and approximate release dates",
+      "Must accurately report GPT model releases from OpenAI in this period",
+      "Must accurately report Gemini model releases from Google DeepMind in this period",
+      "Must not fabricate model names that were never released",
+      "Must not attribute capabilities to models that those models do not have",
+      "Must distinguish between announcements, previews, and general availability dates",
+      "Must cover at least 8 distinct model releases across different companies"
+    ],
+    "trap_claims": [
+      "Fabricating specific model names that sound plausible but were never released (e.g., GPT-5, Claude 4.5 Opus, Gemini 3)",
+      "Getting release dates wrong by several months",
+      "Attributing benchmark scores from one model to another",
+      "Claiming a model was released when it was only announced or rumored",
+      "Confusing capabilities between different model versions from the same company"
+    ],
+    "verification_queries": [
+      "AI model releases 2025 2026 timeline",
+      "Anthropic Claude model releases 2025 2026",
+      "OpenAI GPT model releases 2025",
+      "Google Gemini model releases 2025 2026",
+      "Meta Llama model releases 2025"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_007",
+    "description": "Write a research report on the 2024-2025 NBA season, covering the regular season final standings (top 8 in each conference), the MVP award winner, the NBA Finals matchup and result, the Finals MVP, and key statistical leaders. The report should be 1000-1500 words.",
+    "requirements": [
+      "Must correctly identify the 2024-2025 NBA regular season MVP",
+      "Must correctly identify the 2025 NBA Finals teams and winner",
+      "Must correctly identify the 2025 Finals MVP",
+      "Must list plausible top-8 seeds in both Eastern and Western conferences",
+      "Must correctly name the scoring leader for the 2024-2025 regular season",
+      "Must not confuse 2023-2024 season results with 2024-2025 results"
+    ],
+    "trap_claims": [
+      "Reporting the 2023-2024 season results (Celtics championship, Jokic MVP) as if they were 2024-2025 results",
+      "Fabricating a plausible but incorrect Finals matchup",
+      "Naming the wrong MVP by defaulting to a recent winner",
+      "Getting playoff seedings wrong by relying on preseason predictions rather than actual results",
+      "Confusing the in-season tournament results with the actual NBA Finals"
+    ],
+    "verification_queries": [
+      "2024-2025 NBA season final standings",
+      "2025 NBA Finals winner champion",
+      "2024-2025 NBA MVP award winner",
+      "2025 NBA Finals MVP",
+      "NBA scoring leader 2024-2025 season"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_008",
+    "description": "Write a research report on new features introduced in Python 3.12 and Python 3.13. For each version, list the major new features with their PEP numbers, syntax changes, performance improvements, and deprecations. Include code examples for at least 3 new features. The report should be 1200-1800 words.",
+    "requirements": [
+      "Python 3.12: must mention improved error messages, PEP 695 (Type Parameter Syntax), PEP 701 (f-string improvements), and PEP 709 (comprehension inlining)",
+      "Python 3.12: must mention the removal of distutils (PEP 632)",
+      "Python 3.13: must mention PEP 703 (making the GIL optional / free-threaded mode as experimental)",
+      "Python 3.13: must mention the new interactive interpreter (based on PyPy's) and improved error messages",
+      "Python 3.13: must mention PEP 744 (JIT compiler as experimental)",
+      "Must not attribute features from one version to the other",
+      "Release dates: 3.12 released October 2, 2023; 3.13 released October 7, 2024"
+    ],
+    "trap_claims": [
+      "Attributing PEP 703 (free-threaded/no-GIL) to Python 3.12 instead of 3.13",
+      "Claiming the GIL was fully removed in 3.13 (it was made optionally disablable, not removed)",
+      "Attributing pattern matching (PEP 634) to 3.12 or 3.13 (it was introduced in 3.10)",
+      "Confusing PEP numbers: citing wrong PEP numbers for features",
+      "Claiming the JIT compiler in 3.13 provides significant speedups (it is experimental with minimal impact so far)"
+    ],
+    "verification_queries": [
+      "Python 3.12 new features PEP list",
+      "Python 3.13 new features GIL optional",
+      "Python 3.13 JIT compiler PEP 744",
+      "Python 3.12 release date October 2023",
+      "PEP 695 type parameter syntax Python 3.12"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_009",
+    "description": "Write a research report on the current composition of the United Nations Security Council for 2025, including all 5 permanent members and all 10 non-permanent members. For each non-permanent member, include the year their term began, the year it ends, and the regional group they represent. The report should be 800-1200 words and discuss recent reform proposals.",
+    "requirements": [
+      "Permanent members: United States, United Kingdom, France, Russia, China (these never change)",
+      "Must correctly list the 10 non-permanent members serving in 2025",
+      "Non-permanent members elected for 2025-2026 terms must be distinguished from those serving the final year of 2024-2025 terms",
+      "Must correctly identify the regional group allocation (African, Asia-Pacific, Latin American and Caribbean, Western European and Others, Eastern European)",
+      "Must mention that non-permanent members serve 2-year terms and cannot serve consecutive terms",
+      "Must not list any country that ended its term in December 2024 as a current 2025 member"
+    ],
+    "trap_claims": [
+      "Listing non-permanent members from 2023-2024 terms (like Ecuador, Japan, Malta, Mozambique, Switzerland) as current 2025 members",
+      "Getting the regional group allocations wrong (e.g., placing a Latin American country in the African group)",
+      "Including a permanent member in the non-permanent list or vice versa",
+      "Listing 9 or 11 non-permanent members instead of exactly 10",
+      "Fabricating plausible-sounding but incorrect non-permanent members"
+    ],
+    "verification_queries": [
+      "UN Security Council non-permanent members 2025",
+      "UN Security Council elected members 2025 2026",
+      "UNSC composition 2025 complete list",
+      "UN Security Council members January 2025",
+      "non-permanent members Security Council 2025 regional groups"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_010",
+    "description": "Write a research report on notable space missions launched or achieving major milestones in 2024 and 2025. Cover missions from NASA, ESA, JAXA, ISRO, SpaceX, and CNSA. For each mission, include the launch date, mission objectives, spacecraft name, and current status. The report should be 1200-1800 words.",
+    "requirements": [
+      "Must include the Artemis program status and any Artemis missions in this period",
+      "Must correctly report on the Europa Clipper mission (launched October 2024)",
+      "Must mention JAXA's SLIM lunar lander (landed January 2024) and its inverted landing",
+      "Must correctly describe India's space missions in this period",
+      "Must mention SpaceX Starship test flights and their outcomes",
+      "Must not list cancelled or indefinitely postponed missions as having launched",
+      "Must correctly identify whether missions were crewed or uncrewed"
+    ],
+    "trap_claims": [
+      "Claiming Artemis II or III launched in 2024 or early 2025 (both were delayed beyond original schedules)",
+      "Getting Europa Clipper's launch date wrong or confusing it with the cancelled Europa Lander",
+      "Fabricating missions that sound plausible but did not occur",
+      "Confusing JAXA's SLIM lander outcome (it landed but was inverted, operating intermittently on solar power)",
+      "Getting SpaceX Starship test flight details wrong (e.g., which flights achieved what milestones)"
+    ],
+    "verification_queries": [
+      "space missions launched 2024 2025 list",
+      "Europa Clipper launch date October 2024",
+      "Artemis II III launch date status 2025",
+      "JAXA SLIM lunar lander January 2024 results",
+      "SpaceX Starship test flights 2024 2025 results",
+      "ISRO missions 2024 2025"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_011",
+    "description": "Write a research report comparing the major COVID-19 vaccines: Pfizer-BioNTech (Comirnaty), Moderna (Spikevax), Johnson & Johnson/Janssen, AstraZeneca (Vaxzevria), and Novavax (Nuvaxovid). Include original trial efficacy rates, updated efficacy against variants, dosing schedules, FDA and EMA approval dates, and known side effects. The report should be 1200-1800 words.",
+    "requirements": [
+      "Pfizer-BioNTech original Phase 3 efficacy: 95% (not 94% or 96%)",
+      "Moderna original Phase 3 efficacy: 94.1%",
+      "Johnson & Johnson: single-dose regimen in original trial with 66% overall efficacy (72% in US)",
+      "Johnson & Johnson/Janssen vaccine was effectively discontinued in the US in 2023 and its EUA was revoked",
+      "AstraZeneca voluntarily withdrew Vaxzevria worldwide in May 2024, citing reduced demand and availability of updated vaccines",
+      "Must clearly distinguish original trial efficacy from real-world effectiveness against later variants like Omicron",
+      "Novavax uses a protein subunit platform, not mRNA"
+    ],
+    "trap_claims": [
+      "Stating Pfizer efficacy as 94% or 96% (it was 95% in the original trial)",
+      "Claiming Johnson & Johnson vaccine is still available in the US (it was effectively discontinued)",
+      "Failing to mention AstraZeneca's global withdrawal in 2024",
+      "Confusing original trial efficacy against the wild-type virus with later efficacy against Omicron variants",
+      "Stating Novavax is an mRNA vaccine (it is protein subunit-based)"
+    ],
+    "verification_queries": [
+      "Pfizer BioNTech original trial efficacy percentage",
+      "Moderna original trial efficacy 94.1 percent",
+      "Johnson Johnson Janssen vaccine discontinued US 2023",
+      "AstraZeneca Vaxzevria withdrawn 2024",
+      "Novavax protein subunit vaccine mechanism",
+      "COVID vaccine efficacy Omicron variants comparison"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_012",
+    "description": "Write a research report on the history and current status of nuclear fusion research. Cover key milestones, major facilities (ITER, NIF, JET, EAST, KSTAR, and private companies), record-breaking achievements, and the timeline to commercial fusion power. The report should be 1200-1800 words.",
+    "requirements": [
+      "NIF's December 2022 ignition achievement must be correctly described: 2.05 MJ laser input producing 3.15 MJ fusion output (net energy gain from the fusion reaction, but NOT net gain from the total facility energy)",
+      "ITER location must be stated as Cadarache, France, and its first plasma date must reflect the latest delays (pushed well beyond original 2025 target)",
+      "JET's record-breaking 69 megajoules of fusion energy in 5 seconds (February 2024, its final deuterium-tritium experiment) must be mentioned",
+      "Must distinguish between scientific breakeven (Q>1 at the plasma level) and engineering breakeven (more total energy out than total energy in)",
+      "Must mention at least 2 private fusion companies (e.g., Commonwealth Fusion Systems, TAE Technologies, Helion Energy)",
+      "KSTAR's achievement of maintaining plasma at 100 million degrees for extended durations should be mentioned with approximately correct durations"
+    ],
+    "trap_claims": [
+      "Claiming NIF achieved total facility net energy gain (the lasers required ~300 MJ of electricity to produce the 2.05 MJ laser shot)",
+      "Stating ITER will achieve first plasma in 2025 (it has been delayed significantly beyond this date)",
+      "Confusing JET's final 2024 record (69 MJ in 5 seconds) with its earlier 2022 record (59 MJ)",
+      "Claiming any facility has achieved engineering breakeven or sustained fusion (none have as of 2025)",
+      "Getting KSTAR's plasma duration records significantly wrong"
+    ],
+    "verification_queries": [
+      "NIF ignition December 2022 energy output 3.15 MJ",
+      "ITER first plasma date delay 2025",
+      "JET final experiment February 2024 69 megajoules record",
+      "KSTAR plasma duration record 2024",
+      "private fusion companies Commonwealth Fusion Helion 2025",
+      "scientific vs engineering breakeven fusion"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_013",
+    "description": "Write a research report on the top 10 cryptocurrencies by market capitalization as of early 2025. For each, include the current approximate market cap, consensus mechanism, energy consumption estimate, maximum supply, and year of launch. The report should be 1000-1500 words and include a discussion of environmental impact.",
+    "requirements": [
+      "Bitcoin must be #1 with market cap reflecting its approximate value in early 2025",
+      "Ethereum must be listed as using Proof of Stake (PoS) following the September 2022 Merge, NOT Proof of Work",
+      "Ethereum's energy consumption must reflect the ~99.95% reduction after the Merge",
+      "Bitcoin's maximum supply must be stated as 21 million BTC",
+      "Solana must be included in the top 10 with its correct consensus mechanism (Proof of Stake with Proof of History)",
+      "XRP must be included with Ripple's consensus protocol correctly described (not PoW or PoS, but the XRP Ledger Consensus Protocol)",
+      "BNB (Binance) must use its correct consensus mechanism"
+    ],
+    "trap_claims": [
+      "Listing Ethereum as still using Proof of Work (it switched to PoS in September 2022)",
+      "Stating Bitcoin's maximum supply as 21 billion instead of 21 million",
+      "Describing XRP as using Proof of Work or Proof of Stake (it uses XRPL Consensus Protocol)",
+      "Using severely outdated market cap figures from 2022 bear market levels for 2025 rankings",
+      "Claiming Solana uses pure Proof of Work or failing to mention Proof of History"
+    ],
+    "verification_queries": [
+      "top 10 cryptocurrency market cap 2025",
+      "Ethereum proof of stake merge energy reduction",
+      "Solana consensus mechanism proof of history",
+      "XRP Ripple consensus mechanism XRPL",
+      "Bitcoin maximum supply 21 million",
+      "cryptocurrency rankings market capitalization January 2025"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_014",
+    "description": "Write a research report on global climate agreements, focusing on the Paris Agreement's nationally determined contributions (NDCs). Cover the specific emission reduction targets pledged by the US, EU, China, India, and at least 3 other major emitters. Include updates from COP28 (2023) and COP29 (2024), current emissions vs targets, and the global stocktake results. The report should be 1200-1800 words.",
+    "requirements": [
+      "US NDC under Biden: 50-52% reduction in greenhouse gas emissions below 2005 levels by 2030",
+      "EU NDC: at least 55% net reduction in greenhouse gas emissions by 2030 compared to 1990 levels (Fit for 55 package)",
+      "China's pledge: peak CO2 emissions before 2030 and achieve carbon neutrality by 2060",
+      "India's updated NDC: 45% reduction in emissions intensity of GDP by 2030 from 2005 levels (not absolute reduction), net zero by 2070",
+      "COP28 (Dubai, 2023) must include the first Global Stocktake and the agreement to transition away from fossil fuels",
+      "COP29 (Baku, Azerbaijan, 2024) must be accurately described with its key outcomes including the climate finance goal",
+      "Must distinguish between absolute emission reduction targets and emissions intensity targets"
+    ],
+    "trap_claims": [
+      "Stating China has pledged absolute emission reductions by 2030 (it pledged to peak emissions before 2030, not reduce them)",
+      "Confusing India's emissions intensity target with an absolute reduction target",
+      "Getting COP28 location wrong or mischaracterizing the Global Stocktake outcome",
+      "Stating COP29 was held somewhere other than Baku, Azerbaijan",
+      "Confusing the EU's 55% target baseline year (1990) with the US baseline year (2005)"
+    ],
+    "verification_queries": [
+      "Paris Agreement US NDC 50 52 percent 2030",
+      "EU climate target 55 percent 2030 Fit for 55",
+      "China carbon neutrality 2060 peak emissions 2030",
+      "India NDC emissions intensity 45 percent 2030",
+      "COP28 Dubai 2023 Global Stocktake fossil fuels outcome",
+      "COP29 Baku 2024 outcomes climate finance"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "research_015",
+    "description": "Write a research report on the evolution of smartphone processors from 2020 to 2025, focusing on Apple's A-series and M-series chips and Qualcomm's Snapdragon processors. For each major chip, include the fabrication process node, CPU and GPU architecture, key benchmark scores (Geekbench), and the devices they debuted in. The report should be 1200-1800 words.",
+    "requirements": [
+      "Apple A17 Pro: 3nm TSMC process, debuted in iPhone 15 Pro (2023), first 3nm smartphone chip",
+      "Apple A18 Pro: second-generation 3nm, debuted in iPhone 16 Pro (2024)",
+      "Snapdragon 8 Gen 3: 4nm TSMC process (not Samsung), released late 2023",
+      "Snapdragon 8 Elite (originally rumored as 8 Gen 4): 3nm TSMC process, released late 2024, using Qualcomm Oryon custom CPU cores",
+      "Must correctly identify which chips used TSMC vs Samsung foundry processes",
+      "Apple M1 chip debuted in Mac (November 2020), not in iPhone, and uses a different architecture branch than A-series",
+      "Must note the industry trend of moving from Samsung to TSMC fabrication for Snapdragon chips"
+    ],
+    "trap_claims": [
+      "Stating Snapdragon 8 Gen 3 was fabricated by Samsung (it switched to TSMC 4nm)",
+      "Getting the A17 Pro's process node wrong (calling it 4nm instead of 3nm)",
+      "Calling the Snapdragon 8 Elite the 'Snapdragon 8 Gen 4' (Qualcomm changed the naming scheme)",
+      "Confusing Geekbench single-core and multi-core scores between chip generations",
+      "Stating the Apple A16 used 3nm (it used 4nm; the A17 Pro was the first 3nm)"
+    ],
+    "verification_queries": [
+      "Apple A17 Pro 3nm TSMC specifications",
+      "Apple A18 Pro iPhone 16 Pro specifications",
+      "Snapdragon 8 Gen 3 TSMC 4nm fabrication",
+      "Snapdragon 8 Elite 3nm Oryon CPU 2024",
+      "smartphone processor comparison 2020 2025 evolution",
+      "Apple A16 vs A17 Pro process node difference"
+    ],
+    "difficulty": "hard"
+  }
+]
