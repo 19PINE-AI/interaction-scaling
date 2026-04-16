@@ -402,6 +402,194 @@ class HardBenchmarkRunner:
             wall_time_seconds=elapsed,
         )
 
+    def run_video_task(
+        self,
+        task: dict,
+        use_review: bool = False,
+        max_iterations: int = 1,
+        reviewer_model: ModelConfig | None = None,
+    ) -> HardBenchmarkResult:
+        """Run a single video editing task."""
+        start_time = time.time()
+        self.client.reset_counters()
+
+        description = task["description"]
+        requirements = "\n".join(f"- {r}" for r in task.get("requirements", []))
+        source_video = task.get("source_video", "")
+        frame_times = task.get("frame_check_times_s", [0, 1, 2, 3])
+
+        video_system = (
+            "You are an expert video editor writing Python code using moviepy or ffmpeg.\n"
+            "Rules:\n"
+            "- Output a complete Python script that performs the video editing\n"
+            "- Use moviepy (from moviepy.editor import *) or subprocess with ffmpeg\n"
+            "- The script should read from the source video and write to '/tmp/output.mp4'\n"
+            "- Handle all edge cases (duration, resolution, codec)\n"
+            "- Wrap your code in a ```python code block"
+        )
+
+        prompt = f"{description}\n\nSource video: {source_video}\n\nRequirements:\n{requirements}"
+
+        response = self.client.generate(
+            config=self.config.proposer_model,
+            system=video_system,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        current_code = extract_code(response.content, "python")
+
+        iteration = 1
+        quality_score = 0.0
+        issues = []
+        meets_reqs = False
+
+        from src.feedback.type3c_video import VideoFeedback
+        video_fb = VideoFeedback(reviewer_model)
+
+        for i in range(max_iterations):
+            problem = {
+                "source_video": source_video,
+                "output_path": "/tmp/output.mp4",
+                "frame_check_times_s": frame_times,
+                "requirements": requirements,
+            }
+            fb = video_fb.get_feedback(current_code, problem)
+
+            quality_score = fb.structured_data.get("quality_score", 0)
+            issues = fb.structured_data.get("issues", [])
+            meets_reqs = fb.structured_data.get("meets_requirements", False)
+
+            if not use_review:
+                break
+
+            if meets_reqs and quality_score >= 0.9:
+                break
+
+            if i < max_iterations - 1:
+                feedback_text = fb.content
+                response = self.client.generate(
+                    config=self.config.proposer_model,
+                    system=video_system,
+                    messages=[
+                        {"role": "user", "content": prompt},
+                        {"role": "assistant", "content": f"```python\n{current_code}\n```"},
+                        {"role": "user", "content": (
+                            f"Your video editing code had problems:\n\n{feedback_text}\n\n"
+                            "Fix ALL issues and output the complete corrected Python script."
+                        )},
+                    ],
+                )
+                new_code = extract_code(response.content, "python")
+                if new_code.strip():
+                    current_code = new_code
+                iteration = i + 2
+
+        elapsed = time.time() - start_time
+        usage = self.client.get_usage_summary()
+
+        return HardBenchmarkResult(
+            task_id=task["task_id"],
+            task_type="video",
+            baseline="single_shot" if not use_review else "proposer_reviewer",
+            iterations=iteration,
+            final_code=current_code,
+            quality_score=quality_score,
+            issues_found=issues,
+            meets_requirements=meets_reqs,
+            total_tokens=usage["total_tokens"],
+            wall_time_seconds=elapsed,
+        )
+
+    def run_research_task(
+        self,
+        task: dict,
+        use_review: bool = False,
+        max_iterations: int = 1,
+    ) -> HardBenchmarkResult:
+        """Run a single deep research task with fact-checking feedback."""
+        start_time = time.time()
+        self.client.reset_counters()
+
+        description = task["description"]
+        requirements = task.get("requirements", [])
+        req_text = "\n".join(f"- {r}" for r in requirements)
+
+        research_system = (
+            "You are a research analyst writing factual research reports.\n"
+            "Rules:\n"
+            "- Write a well-structured, factually accurate report\n"
+            "- Include specific numbers, dates, names — be precise\n"
+            "- Cite specific facts rather than generalities\n"
+            "- If unsure about a fact, flag it rather than guessing\n"
+            "- Output your report directly (no code blocks needed)"
+        )
+
+        prompt = f"{description}\n\nThe report must accurately cover:\n{req_text}"
+
+        response = self.client.generate(
+            config=self.config.proposer_model,
+            system=research_system,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        current_report = response.content
+
+        iteration = 1
+        accuracy = 0.0
+        issues = []
+        meets_reqs = False
+
+        from src.feedback.type3d_factual import FactualVerificationFeedback
+        fact_fb = FactualVerificationFeedback()
+
+        for i in range(max_iterations):
+            problem = {"requirements": requirements}
+            fb = fact_fb.get_feedback(current_report, problem)
+
+            accuracy = fb.structured_data.get("accuracy", 0)
+            meets_reqs = fb.structured_data.get("passed", False)
+            verifications = fb.structured_data.get("verifications", [])
+            issues = [
+                v for v in verifications if v.get("verdict") == "contradicted"
+            ]
+
+            if not use_review:
+                break
+
+            if meets_reqs and accuracy >= 0.9:
+                break
+
+            if i < max_iterations - 1:
+                response = self.client.generate(
+                    config=self.config.proposer_model,
+                    system=research_system,
+                    messages=[
+                        {"role": "user", "content": prompt},
+                        {"role": "assistant", "content": current_report},
+                        {"role": "user", "content": (
+                            f"Fact-checking found errors in your report:\n\n{fb.content}\n\n"
+                            "Please rewrite the report correcting ALL factual errors. "
+                            "Be more careful with specific numbers, dates, and names."
+                        )},
+                    ],
+                )
+                current_report = response.content
+                iteration = i + 2
+
+        elapsed = time.time() - start_time
+        usage = self.client.get_usage_summary()
+
+        return HardBenchmarkResult(
+            task_id=task["task_id"],
+            task_type="research",
+            baseline="single_shot" if not use_review else "proposer_reviewer",
+            iterations=iteration,
+            final_code=current_report,
+            quality_score=accuracy,
+            issues_found=issues,
+            meets_requirements=meets_reqs,
+            total_tokens=usage["total_tokens"],
+            wall_time_seconds=elapsed,
+        )
+
     # -------------------------------------------------------------------
     # VLM Review helpers
     # -------------------------------------------------------------------
@@ -547,7 +735,7 @@ def run_hard_benchmarks(
     output_dir: Path | None = None,
 ) -> dict:
     """Run hard benchmark experiments."""
-    task_types = task_types or ["slides", "animations", "code"]
+    task_types = task_types or ["slides", "animations", "code", "webpages", "video", "research"]
     output_dir = output_dir or RESULTS_DIR / "hard_benchmarks"
     output_dir.mkdir(parents=True, exist_ok=True)
 
@@ -561,9 +749,16 @@ def run_hard_benchmarks(
     all_results = {}
 
     for task_type in task_types:
-        task_file = Path(f"data/hard_benchmarks/{task_type}/{task_type.rstrip('s')}_tasks.json")
-        if task_type == "code":
-            task_file = Path("data/hard_benchmarks/code/code_tasks.json")
+        # Map task type to file path
+        file_map = {
+            "slides": "slides/slide_tasks.json",
+            "animations": "animations/animation_tasks.json",
+            "code": "code/code_tasks.json",
+            "webpages": "webpages/webpage_tasks.json",
+            "video": "video/video_tasks.json",
+            "research": "research/research_tasks.json",
+        }
+        task_file = Path(f"data/hard_benchmarks/{file_map.get(task_type, '')}")
 
         if not task_file.exists():
             logger.warning("Task file not found: %s", task_file)
@@ -580,25 +775,26 @@ def run_hard_benchmarks(
         for task in tasks:
             task_id = task["task_id"]
 
-            # Single-shot (no review)
-            if task_type == "slides":
-                r1 = runner.run_slide_task(task, use_review=False, max_iterations=1)
-            elif task_type == "animations":
-                r1 = runner.run_animation_task(task, use_review=False, max_iterations=1)
-            elif task_type == "code":
-                r1 = runner.run_code_task(task, use_review=False, max_iterations=1)
-            else:
+            # Map task type to runner method
+            run_fn = {
+                "slides": runner.run_slide_task,
+                "webpages": runner.run_slide_task,  # Same HTML rendering pipeline
+                "animations": runner.run_animation_task,
+                "code": runner.run_code_task,
+                "video": runner.run_video_task,
+                "research": runner.run_research_task,
+            }.get(task_type)
+
+            if run_fn is None:
+                logger.warning("Unknown task type: %s", task_type)
                 continue
 
+            # Single-shot (no review)
+            r1 = run_fn(task, use_review=False, max_iterations=1)
+
             # With review
-            if task_type == "slides":
-                r2 = runner.run_slide_task(task, use_review=True, max_iterations=max_iterations)
-            elif task_type == "animations":
-                r2 = runner.run_animation_task(task, use_review=True, max_iterations=max_iterations)
-            elif task_type == "code":
-                r2 = runner.run_code_task(task, use_review=True, max_iterations=max_iterations)
-            else:
-                continue
+            review_iters = 5 if task_type in ("code", "research") else max_iterations
+            r2 = run_fn(task, use_review=True, max_iterations=review_iters)
 
             all_results[f"{task_id}_single_shot"] = r1
             all_results[f"{task_id}_reviewed"] = r2

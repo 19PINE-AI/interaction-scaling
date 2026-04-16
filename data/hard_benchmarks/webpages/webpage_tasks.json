@@ -1,0 +1,375 @@
+[
+  {
+    "task_id": "web_001",
+    "description": "Create a product landing page for a fictional SaaS analytics tool called 'InsightFlow'. The page must contain: (1) A full-width hero section with a gradient background (deep blue #1a1a4e to purple #6b21a8), centered headline 'Analytics That Flow', a subtitle paragraph, and two CTA buttons side by side ('Start Free Trial' in white with purple border, 'Watch Demo' solid purple with white text). (2) A 3-column feature cards section with a section title 'Why InsightFlow?', each card having an icon placeholder (64x64 colored circle), heading, and 2-line description. Cards have white background, subtle box-shadow, and 16px border-radius. (3) A pricing table with 3 tiers (Starter $9/mo, Pro $29/mo, Enterprise $99/mo) displayed as cards. The Pro card should be visually elevated with a 'Most Popular' badge, taller height, and a colored border-top. Each pricing card lists 5 features with checkmarks. (4) A footer with 4 columns: Company (4 links), Product (4 links), Resources (4 links), Contact (email, phone, address). Footer background is dark (#111827). All sections have max-width 1200px centered content with appropriate padding.",
+    "requirements": [
+      "Hero gradient must span full viewport width with text centered both horizontally and vertically, minimum height 600px",
+      "CTA buttons must be side-by-side on desktop, stacked vertically on mobile with full width",
+      "Feature cards must display in 3 equal columns on desktop (1920px), stacking to single column on mobile (375px) with 24px gaps",
+      "Pricing cards must align at the top with the Pro card visibly taller and having a colored top border of at least 4px",
+      "The 'Most Popular' badge must be positioned at the top-right corner or top-center of the Pro card and not overlap text",
+      "Footer columns must display as 4 columns on desktop, 2 columns on tablet (768px), and 1 column on mobile (375px)",
+      "All text must be legible: body text at least 16px, headings appropriately larger, sufficient color contrast",
+      "Smooth scroll behavior when navigating between sections via any anchor links",
+      "No horizontal overflow at any viewport size"
+    ],
+    "expected_issues": [
+      "CTA buttons overflow or wrap incorrectly on mobile, losing their intended layout",
+      "Feature cards do not maintain equal heights in the 3-column layout, causing jagged bottom edges",
+      "Pricing 'Most Popular' badge overlaps card content or is clipped by overflow:hidden",
+      "Footer columns do not collapse properly at tablet breakpoint, leaving orphaned single column",
+      "Hero text becomes too large on mobile causing overflow, or too small on desktop losing visual impact",
+      "Pricing card features list misaligns when one card has longer text items"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_002",
+    "description": "Create a blog article page for a technology blog called 'ByteInsight'. The layout requires: (1) A sticky top navigation bar (white, 60px height) with logo text on the left and 4 nav links on the right. On mobile (<768px) the nav links collapse into a hamburger menu icon (3 horizontal lines made with CSS, no SVG) that toggles a vertical dropdown. (2) A left sidebar (260px wide) containing: a 'Table of Contents' with 8 anchor links that highlight the currently visible section, and a 'Related Articles' list with 5 items each having a small thumbnail placeholder (50x50 gray box) and title. The sidebar becomes a horizontal scrollable bar below the hero on mobile. (3) The main article area with: a hero image placeholder (full-width, 400px height, gray with centered text 'Hero Image'), article title (h1), author info row (avatar circle 40px, name, date, read time), the article body with at least 6 sections (h2 headings), two pull quotes floated right (max-width 300px, large italic text with a left colored border), a code block with syntax-colored text and horizontal scroll when content overflows, and an image gallery of 6 images (3x2 grid) that becomes a horizontally scrollable carousel on mobile with visible scroll indicators. (4) Body text must be max-width 720px for comfortable reading line length.",
+    "requirements": [
+      "Hamburger menu icon must be three horizontal lines created purely with CSS, and toggles a dropdown menu on click via JavaScript",
+      "Sidebar Table of Contents links must highlight the currently visible section using IntersectionObserver or scroll-based detection",
+      "Pull quotes must float right of body text on desktop with text wrapping around them, and become full-width block elements on mobile",
+      "Code block must have a dark background (#1e1e1e), monospace font, horizontal scroll for long lines, and at least 3 colors for syntax highlighting",
+      "Image gallery displays as 3x2 grid on desktop and becomes a horizontally scrollable row on mobile with CSS scroll-snap",
+      "Sidebar transforms into a horizontal scrollable bar positioned below the hero on screens narrower than 768px",
+      "Article body text line length must not exceed 720px at any viewport size",
+      "Sticky nav must remain at the top during scroll and appear above all other content (z-index)"
+    ],
+    "expected_issues": [
+      "Hamburger menu animation is missing or the dropdown menu appears behind other elements due to z-index issues",
+      "Pull quotes cause text to overflow their container on tablet-width viewports where space is tight",
+      "Code block horizontal scrolling fails or the code block expands beyond its parent container width",
+      "Image gallery carousel on mobile lacks scroll-snap alignment causing images to stop between items",
+      "Sidebar-to-horizontal-bar transition creates layout jump or overlaps the hero section",
+      "Active Table of Contents highlighting fails to update correctly or highlights multiple items simultaneously"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_003",
+    "description": "Create an analytics dashboard page. The layout requires: (1) A top navigation bar (height 56px, background #1f2937) spanning full width, containing a logo/app name on the left, a search input (240px wide, rounded) in the center, and user avatar circle (32px) with dropdown indicator on the right. (2) A left sidebar (240px wide, background #111827, full viewport height minus nav) containing: 8 navigation items each with an icon placeholder (small colored square 16x16) and label text, a divider line, and 3 more items below. On tablet (<1024px) the sidebar collapses to show only icons (56px wide). On mobile (<768px) the sidebar is hidden and toggled via a hamburger button that appears in the top nav. (3) Main content area containing: a row of 4 metric cards (each showing a label, large number, and a small percentage change with up/down arrow indicator colored green/red), then a full-width chart placeholder (height 400px, light gray background with centered text 'Revenue Chart' and a fake axis with 7 tick marks along the bottom and 5 along the left side drawn with CSS borders), then a data table with 8 columns and 12 rows including a sticky header row. On mobile, the metric cards go to 2x2 grid then stack, and the table gets a horizontal scroll wrapper. (4) All content areas have 24px padding.",
+    "requirements": [
+      "Sidebar must transition smoothly from full (240px with icons+labels) to collapsed (56px icons only) at 1024px breakpoint",
+      "Sidebar must be completely hidden on mobile and revealed via hamburger toggle with a slide-in animation from the left",
+      "Metric cards must display in a single row of 4 on desktop, 2x2 grid on tablet, and single column on mobile",
+      "Each metric card must show a colored percentage indicator (green with up arrow for positive, red with down arrow for negative)",
+      "Chart placeholder must have visible CSS-drawn axis lines with tick marks along bottom (7 ticks) and left side (5 ticks)",
+      "Data table must have a sticky header row that remains visible when scrolling the table body",
+      "Data table must scroll horizontally on mobile without causing the page itself to scroll horizontally",
+      "Search input in the nav must shrink or hide gracefully on smaller viewports without overlapping other nav elements"
+    ],
+    "expected_issues": [
+      "Sidebar collapse transition is not smooth or causes content area width to jump rather than animate",
+      "Mobile hamburger sidebar slides over content but does not have a backdrop overlay, allowing interaction with content behind",
+      "Metric cards at 2x2 grid have inconsistent heights when percentage text wraps on some cards but not others",
+      "Data table sticky header does not work when the table is inside a horizontally scrollable wrapper",
+      "Chart axis tick marks are unevenly spaced or the axis lines do not properly meet at the origin corner",
+      "Search input overlaps the avatar or logo on medium-width viewports between tablet and desktop breakpoints"
+    ],
+    "viewport_sizes": [1920, 1024, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_004",
+    "description": "Create a portfolio page for a designer named 'Alex Chen'. The layout requires: (1) A minimal fixed top bar (background white, slight bottom shadow) with name on left and 3 nav links on right. (2) A short intro section with a large heading 'Selected Works', a 1-line subtitle, and a row of filter tabs ('All', 'Branding', 'Web Design', 'Illustration', 'Photography') that filter the grid items. Active tab has a colored underline. (3) A masonry-style image grid: 12 portfolio items total, each card having a colored placeholder rectangle (use varied aspect ratios: some 1:1, some 4:3, some 3:4, some 16:9) with a hover overlay. The overlay fades in to show a semi-transparent dark layer with the project title (white, 20px bold), category tag (small, uppercase, letterspaced), and a 'View Project' link. The grid should be 3 columns on desktop (1920px) with items fitting together masonry-style (no equal-height rows), 2 columns on tablet (768px), and 1 column on mobile (375px). (4) Cards must maintain their specified aspect ratios at all viewport sizes. (5) The filter tabs must actually work: clicking a tab shows only items matching that category, with a CSS fade transition. 'All' shows everything. (6) Below the grid, a 'Load More' button centered, styled with border and transparent background.",
+    "requirements": [
+      "Grid must achieve a true masonry layout where shorter items fill vertical gaps rather than sitting in equal-height rows",
+      "Each card must maintain its specified aspect ratio using CSS aspect-ratio or padding-bottom technique",
+      "Hover overlay must fade in smoothly (300ms transition) covering the entire card with title, category, and link visible",
+      "Filter tabs must functionally filter grid items with a fade transition when switching categories",
+      "Active filter tab must have a visible colored underline indicator that is clearly distinguishable",
+      "Grid must reflow correctly at all 3 breakpoints (3 columns, 2 columns, 1 column) without gaps or overflow",
+      "On touch devices (mobile), the overlay content should be accessible since hover is not available",
+      "Fixed top bar must not overlap the intro section content (proper top padding/margin on content)"
+    ],
+    "expected_issues": [
+      "Masonry layout falls back to a standard grid with equal-height rows, leaving visible gaps below shorter items",
+      "Hover overlay does not perfectly cover card boundaries, especially on cards with border-radius",
+      "Filter transition causes grid to jump or collapse momentarily before re-laying out visible items",
+      "Aspect ratios are not maintained when the column width changes across breakpoints, causing image distortion",
+      "Mobile cards show no way to access overlay content since there is no hover state on touch devices",
+      "Filter tabs overflow horizontally on mobile without a scroll mechanism, breaking the layout"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_005",
+    "description": "Create an e-commerce category page for 'Urban Threads' clothing store, browsing the 'Jackets' category. Layout: (1) Top bar with logo, search bar (expanding on focus), cart icon with item count badge (red circle, number inside). (2) Breadcrumbs: Home > Men > Outerwear > Jackets. (3) Below breadcrumbs, a 2-part layout: left filter sidebar (260px) and right product grid. (4) Filter sidebar contains: a 'Category' section with 5 checkbox options, a 'Price Range' section with min/max text inputs, a 'Size' section with toggle buttons (XS, S, M, L, XL, XXL) in a flex-wrap grid, a 'Color' section with 8 color circles (each 28px, bordered, named colors), and a 'Rating' section with 5 clickable star rating rows. Sidebar becomes a slide-out drawer on mobile triggered by a 'Filters' button. (5) Product grid: 12 products in 4 columns on desktop, 2 on tablet, 1 on mobile. Each card has: image placeholder (4:5 aspect ratio, light gray), product name, brand name in smaller text, price with optional strikethrough original price, rating display as CSS-only stars (filled = gold, empty = gray, using Unicode star characters or CSS shapes), and a quick 'Add to Cart' button visible on hover (slides up from bottom of card). (6) Pagination at bottom: Previous, page numbers 1-5 with current highlighted, Next. (7) Above the grid, a sort dropdown ('Sort by: Relevance') and results count text.",
+    "requirements": [
+      "Product grid must display exactly 4 columns on desktop, 2 on tablet, and 1 on mobile with consistent gaps",
+      "Star ratings must be implemented without images or icon fonts, using CSS-only techniques (Unicode or clip-path)",
+      "Product cards must show the 'Add to Cart' button sliding up from the bottom on hover with a smooth transition",
+      "Filter sidebar must transform into a slide-out drawer on mobile, triggered by a visible 'Filters' button",
+      "Color filter circles must each be a distinct visible color with a border, and show a check or ring when selected",
+      "Size toggle buttons must visually change state (background/border) when clicked to indicate selection",
+      "Breadcrumbs must show proper separator characters and not wrap awkwardly on mobile",
+      "Product prices with discounts must show original price with strikethrough and sale price in a different color",
+      "Cart icon badge must be a red circle overlapping the top-right of the icon with white number text"
+    ],
+    "expected_issues": [
+      "CSS-only star ratings render inconsistently across the page, with half-stars misaligned or wrong color",
+      "Add to Cart hover animation is jumpy or the button extends beyond the card boundary on transition",
+      "Filter sidebar drawer on mobile has no backdrop overlay or does not lock body scroll when open",
+      "Color circles are too small to tap on mobile or their selected state is not visible enough",
+      "Pagination wraps poorly on mobile with numbers becoming too small or overflowing",
+      "Sort dropdown and results count overlap or stack incorrectly on narrow tablet widths"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_006",
+    "description": "Create a multi-step registration form wizard for a conference called 'DevSummit 2026'. The wizard has 4 steps: (1) Personal Info: first name, last name, email (must validate email format on blur), phone number, job title, company name. (2) Ticket Selection: 3 ticket tiers displayed as selectable cards (General $199, VIP $499, Speaker Free), each card shows 4 included perks, only one can be selected (radio behavior). Below, 3 checkbox add-ons (Workshop Pass +$99, Networking Dinner +$49, Conference T-shirt +$25) with running total displayed. (3) Dietary & Accessibility: dietary restrictions (dropdown: None, Vegetarian, Vegan, Gluten-free, Halal, Kosher, Other with text input appearing when Other is selected), accessibility needs (3 checkboxes: wheelchair access, sign language interpreter, large print materials), special requests (textarea, max 500 chars with live character counter). (4) Review & Confirm: summary of all entered data displayed in organized sections, an agreement checkbox, and a 'Register' button. The progress indicator at top shows all 4 steps as connected circles with labels, filled/colored for completed steps, outlined for current, gray for future. Back and Next buttons at the bottom of each step. Next button must validate the current step before proceeding. If validation fails, highlight invalid fields with red borders and show inline error messages below them.",
+    "requirements": [
+      "Progress indicator must show 4 connected circles with step labels, visually distinguishing completed, current, and future steps",
+      "Email field must validate format on blur and show a red border with an error message for invalid emails",
+      "All required fields must show red border and 'This field is required' message if empty when Next is clicked",
+      "Ticket selection cards must have radio behavior (only one selectable) with clear visual feedback for the selected card",
+      "Running total must update in real time when ticket tier or add-ons change",
+      "Character counter for special requests must show remaining characters and change color (red) when under 50 characters remaining",
+      "Step 4 review must display all previously entered data accurately organized by step",
+      "Back button must preserve all previously entered data when navigating between steps",
+      "The 'Other' dietary text input must appear/disappear smoothly when Other is selected/deselected in the dropdown"
+    ],
+    "expected_issues": [
+      "Progress indicator connecting lines do not align with circles or break at certain viewport widths",
+      "Form validation triggers on page load instead of on interaction, showing errors before user has typed anything",
+      "Ticket card selection state is lost when navigating back from a later step",
+      "Running total calculation has floating-point display errors (e.g., showing $248.00000001)",
+      "Character counter does not update correctly when pasting text or shows negative numbers",
+      "Review step does not properly display all data, especially conditional fields like the Other dietary text input"
+    ],
+    "viewport_sizes": [1920, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_007",
+    "description": "Create a page demonstrating a modal dialog system for a task management app. The page shows a list of 8 task cards in a 2-column grid. Each card has a task title, status pill (colored label: 'To Do' blue, 'In Progress' yellow, 'Done' green), due date, and an 'Edit' button. Clicking 'Edit' opens a modal dialog with: (1) A dark semi-transparent backdrop (rgba(0,0,0,0.5)) covering the full viewport. (2) The modal container (max-width 560px, centered, white background, 24px border-radius, box-shadow) with a header row containing the title 'Edit Task' and an X close button, a form with: task name input, description textarea (4 rows), status dropdown, due date input, priority radio buttons (Low/Medium/High), and a tags input area showing existing tags as pills with X to remove. (3) Footer with Cancel and Save buttons. The modal must: close on clicking the X, close on clicking the backdrop, close on pressing Escape key, NOT close on clicking inside the modal content (event propagation handling), lock body scrolling when open (prevent background page scroll), and on mobile (<768px) the modal must become full-screen (100vw x 100vh, no border-radius, no margin). The modal must have a smooth fade + slide-up entrance animation and reverse on close.",
+    "requirements": [
+      "Modal backdrop must cover the full viewport and be semi-transparent dark overlay",
+      "Clicking the backdrop must close the modal, but clicking inside the modal content must NOT close it",
+      "Pressing the Escape key must close the modal from anywhere on the page",
+      "Body scrolling must be locked when the modal is open (background page must not scroll)",
+      "Modal must have a fade-in plus slide-up entrance animation (at least 200ms duration)",
+      "On mobile (<768px), the modal must expand to full screen with no border-radius and no visible margin/gap",
+      "Tag pills must be removable by clicking their X button, and visually styled as rounded colored pills",
+      "Task cards on the page must display in a 2-column grid on desktop and single column on mobile",
+      "The modal close animation must reverse the entrance (fade-out and slide-down) before removing the modal"
+    ],
+    "expected_issues": [
+      "Click-inside-modal propagates to backdrop, causing the modal to close when interacting with form fields",
+      "Body scroll lock is not applied or is not removed when modal closes, leaving the page unscrollable",
+      "Mobile full-screen modal has a visible gap at the top or bottom due to browser chrome/address bar",
+      "Close animation does not play because the modal is removed from DOM immediately rather than after animation completes",
+      "Tag pills overflow the modal width when there are many tags, without wrapping to a new line",
+      "Escape key listener is not cleaned up, causing errors or unexpected behavior after modal is closed and reopened"
+    ],
+    "viewport_sizes": [1920, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_008",
+    "description": "Create a company website header with a mega-menu dropdown navigation. The nav bar (height 72px, white background, subtle bottom border) contains: logo on the left, 5 top-level nav items ('Products', 'Solutions', 'Developers', 'Pricing', 'Company'), and a 'Sign In' link plus 'Get Started' button on the right. Three of the nav items (Products, Solutions, Company) have mega-menu dropdowns. Each mega-menu spans the full width of the nav (max-width 1200px, centered) and contains 3 named sections arranged in columns, each section having a heading and 4-6 links with small description text under each link. The Products mega-menu additionally has a 'Featured' section on the right with a promotional card (colored background, title, description, CTA link). Behavior: on desktop, menus open on hover with a 150ms delay (debounced, so quick mouse passes don't trigger), close when mouse leaves the menu area with 300ms delay. On mobile (<768px), the entire nav collapses into a hamburger. Clicking hamburger reveals a full-height slide-in panel from the right. In the mobile panel, top-level items with mega-menus show a chevron; clicking expands their children as an accordion. All transitions must be smooth (no instant show/hide).",
+    "requirements": [
+      "Mega-menu must span full nav width with 3 sections in columns, each section having a heading and linked items with descriptions",
+      "Hover-to-open on desktop must have a 150ms debounce delay to prevent accidental triggers",
+      "Mouse-leave must have a 300ms close delay so users can move their cursor from nav item to mega-menu without it closing",
+      "Products mega-menu must include a visually distinct 'Featured' promotional card in addition to the 3 link sections",
+      "Mobile navigation must be a full-height slide-in panel from the right side with smooth transition",
+      "Mobile mega-menu items must expand as accordions within the slide-in panel with chevron rotation indicating open/closed state",
+      "Mega-menu must not extend beyond the viewport edges or cause horizontal scrolling at any size",
+      "All nav item text and mega-menu link text must remain legible with proper sizing and spacing",
+      "Smooth CSS transitions on all open/close actions (no instant visibility toggling)"
+    ],
+    "expected_issues": [
+      "Mega-menu hover zone has a gap between the nav item and the dropdown, causing the menu to close when moving the cursor down",
+      "Hover debounce is not implemented, causing menus to flicker rapidly when moving across nav items",
+      "Mobile slide-in panel does not have a backdrop or a way to close it other than the hamburger button",
+      "Mega-menu sections do not fit properly in 3 columns, with text overflowing or columns being unequal widths",
+      "Mobile accordion animation causes content to jump rather than smoothly expanding",
+      "Featured promotional card in the Products mega-menu overlaps or misaligns with the link columns"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_009",
+    "description": "Create an FAQ page for a fintech company called 'PayVault'. The page has: (1) A header section with the title 'Frequently Asked Questions' centered, and a search/filter input box below (full-width max 600px, centered, with a search icon on the left inside the input, placeholder text 'Search questions...'). As the user types, FAQ items that do not match the query (checked against both question and answer text) fade out and are hidden. (2) FAQ items grouped into 4 categories: 'Account & Security' (5 items), 'Payments & Transfers' (5 items), 'Fees & Limits' (5 items), 'Technical Support' (5 items). Each category has a heading. (3) Each FAQ item is an accordion: clicking the question row expands to reveal the answer with a smooth height animation (not just display:none to display:block, but actual animated height transition). The question row has the question text on the left and a plus/minus icon on the right that rotates or morphs on toggle. (4) Within each category, only one FAQ item can be open at a time (opening a new one closes the previously open one in the same category). However, items in different categories are independent (you can have one open in each category simultaneously). (5) Answers contain varied content: plain paragraphs, a bulleted list, a numbered list, and one answer containing a simple 2-column table. (6) Below all FAQs, a 'Still need help?' section with a contact card containing email and phone.",
+    "requirements": [
+      "Search input must filter FAQ items in real-time as the user types, hiding non-matching items with a fade transition",
+      "Search must match against both question and answer text content (case-insensitive)",
+      "Accordion height animation must be smooth (not instant show/hide), using max-height transition or similar technique",
+      "Plus/minus icon (or chevron) must animate on toggle (rotation or smooth morph transition)",
+      "Within each category, only one item can be open at a time (opening one closes another in same category)",
+      "Items in different categories must be independently openable (one open per category simultaneously is valid)",
+      "FAQ answers must display varied content correctly: paragraphs, bulleted lists, numbered lists, and a table",
+      "Category headings must remain visible even when all items in that category are filtered out by search",
+      "Search input must have a visible search icon positioned inside the input on the left side"
+    ],
+    "expected_issues": [
+      "Smooth height animation fails because max-height is set to an arbitrary large value causing a delayed visual animation",
+      "Search filter removes category headings along with items, making the page structure confusing when partially filtered",
+      "Accordion close animation is instant while open animation is smooth, creating asymmetric behavior",
+      "The single-open-per-category constraint fails: all items can be open simultaneously, or closing works across categories",
+      "Search does not check answer text, only question text, missing relevant results",
+      "Table inside an FAQ answer overflows the accordion container on mobile viewports"
+    ],
+    "viewport_sizes": [1920, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_010",
+    "description": "Create a page featuring a before/after image comparison slider. The page has a centered heading 'Renovation Results' and subheading, then the comparison component, then a brief description paragraph below. The image comparison component: (1) A container (max-width 900px, centered, aspect ratio 16:9) holding two overlapping images. Since we cannot use real images, use two colored gradient rectangles: the 'before' image is a gradient from muted brown (#8B7355) to gray (#888888) with the text 'BEFORE' centered in large white letters, and the 'after' image is a gradient from teal (#0d9488) to blue (#2563eb) with the text 'AFTER' centered. (2) A vertical divider line (2px wide, white) positioned at the slider handle location, spanning the full height of the container. (3) A draggable circular handle (48px diameter, white background, subtle shadow) centered on the divider line vertically. The handle has a left/right arrow icon (CSS triangles or Unicode arrows). (4) The left side of the divider shows the 'before' image and the right side shows the 'after' image, achieved by clipping. Dragging the handle left or right adjusts the clip, revealing more of one image. (5) Must work with mouse drag on desktop and touch drag on mobile. The handle must follow the pointer smoothly without jitter. (6) Labels 'Before' and 'After' appear in the top-left and top-right corners of the container respectively, as small semi-transparent dark pills. (7) On page load, the divider starts at 50%. (8) The container must maintain 16:9 aspect ratio at all viewport widths.",
+    "requirements": [
+      "The comparison container must maintain a 16:9 aspect ratio at all viewport widths using CSS aspect-ratio or padding technique",
+      "The vertical divider line must span the full height of the container and be clearly visible (white, 2px)",
+      "The circular drag handle must be centered on the divider line and have visible left/right arrow indicators",
+      "Dragging with mouse must smoothly move the divider and update the clip region in real-time without jitter or lag",
+      "Touch dragging on mobile must work identically to mouse dragging (touchstart, touchmove, touchend events)",
+      "The 'before' gradient must be visible only to the left of the divider and the 'after' gradient only to the right",
+      "Before/After labels must appear as semi-transparent pills in the top corners of the container",
+      "The divider must start at exactly 50% of the container width on page load",
+      "Dragging must be constrained within the container boundaries (handle cannot go beyond left or right edge)"
+    ],
+    "expected_issues": [
+      "Touch events are not handled, making the slider non-functional on mobile devices",
+      "Dragging causes text selection on the page or the image/container to be dragged instead of the handle",
+      "The clip region calculation is off, creating a visible gap or overlap at the divider position",
+      "Handle jitters or lags behind the cursor due to incorrect offset calculation between mouse position and handle center",
+      "Aspect ratio is not maintained on mobile, causing the container to be too tall or too short",
+      "After releasing the drag, mousemove events are still firing causing the slider to follow the cursor without clicking"
+    ],
+    "viewport_sizes": [1920, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_011",
+    "description": "Create a newspaper-style article layout page for 'The Daily Chronicle'. The page must use CSS columns and advanced typography: (1) A newspaper masthead at top: the title 'THE DAILY CHRONICLE' in large serif font (Georgia or Times New Roman), centered, all caps, letterspaced, with thin horizontal rules above and below. Below, a date line and edition number. (2) The main article area uses CSS multi-column layout: 5 columns on desktop with 20px column-gap and a 1px solid column-rule in light gray. (3) The lead article has: a large headline spanning all 5 columns (column-span: all), a byline, then body text flowing across 3 of the 5 columns. The first paragraph begins with a dropped cap (first letter styled to be 3 lines tall, serif, floated left). (4) A sidebar article occupies the rightmost 2 columns: it has its own headline, byline, and body text. This is achieved by structuring the content so the sidebar content flows into the right columns naturally. (5) A pull quote breaks across the column boundary: a large italic quote with decorative quotation marks above and below, set with a top and bottom border, spanning at least 2 columns (using column-span or break techniques). (6) All body text is justified (text-align: justify) with proper hyphens (hyphens: auto). (7) At least 1200 words of lorem ipsum text total distributed across the articles.",
+    "requirements": [
+      "Page must display 5 CSS columns on desktop (1920px) with visible column-rules between them",
+      "The main headline must span all columns using column-span: all",
+      "The first paragraph must have a dropped cap: first letter 3 lines tall, serif font, properly floated",
+      "All body text must be justified with CSS hyphens enabled for proper word breaking",
+      "A pull quote must visually break or span across the normal column flow with decorative styling",
+      "Masthead must be centered with horizontal rules above and below, using serif font, all caps",
+      "Column-rules must be visible as thin gray lines between each column",
+      "The layout must contain at least 1200 words of body text distributed naturally across columns",
+      "Text must remain readable and not overflow column boundaries"
+    ],
+    "expected_issues": [
+      "CSS column-span:all is not applied correctly causing headline to be confined to a single column",
+      "Dropped cap letter overlaps with adjacent text or does not properly float, disrupting the first paragraph layout",
+      "Pull quote does not span columns as intended because column-span:all creates a full break in the flow",
+      "Justified text has large gaps (rivers of whitespace) due to missing hyphenation support",
+      "5-column layout becomes unreadably narrow at viewport widths below 1400px with no graceful degradation",
+      "Column content distribution is uneven, with some columns significantly shorter than others"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_012",
+    "description": "Create a page displaying a CSS-only pie chart showing a company's revenue breakdown. The page has a centered heading 'Q4 2025 Revenue Breakdown', the pie chart component, and a summary paragraph below. The pie chart: (1) A perfect circle (300px diameter on desktop, scaling down on mobile) divided into 5 colored segments representing: Product Sales 35% (#3b82f6 blue), Subscriptions 25% (#10b981 green), Services 20% (#f59e0b amber), Licensing 12% (#8b5cf6 purple), Other 8% (#ef4444 red). These must total exactly 100%. (2) Built using CSS conic-gradient on a single div (no SVG, no canvas). (3) Each segment has a label line extending outward from the segment's midpoint to a text label showing the category name and percentage (e.g., 'Product Sales 35%'). Labels are positioned around the chart using absolute positioning and CSS transforms. (4) A legend below the chart: horizontal row of items, each with a small colored square and the category label. (5) On hover over a segment area, that segment should visually enlarge slightly (the slice extends outward by about 10px) using CSS transforms or box-shadow tricks. Since conic-gradient is one element, the hover effect can be approximated by overlaying invisible segment-shaped hover zones. (6) A center circle (white, 60% of the chart diameter) creates a donut chart effect, with total revenue text inside ('$4.2M').",
+    "requirements": [
+      "Pie chart must be a perfect circle using conic-gradient with exactly 5 segments totaling 100%",
+      "Segment colors must match specification: blue 35%, green 25%, amber 20%, purple 12%, red 8%",
+      "A white center circle must create a donut effect with '$4.2M' total displayed in the center",
+      "Labels with percentage must be positioned around the chart near each segment's midpoint",
+      "A legend must appear below the chart with colored squares matching each segment",
+      "The chart must scale proportionally on mobile while remaining circular (not elliptical)",
+      "Hover effect must provide visual feedback on at least some of the segments (enlargement or brightness change)",
+      "No external images, SVG, or canvas elements may be used - CSS and HTML only",
+      "All 5 segment labels must be readable and not overlap each other"
+    ],
+    "expected_issues": [
+      "Segment labels overlap each other around the chart, especially for the smaller segments (12% and 8%)",
+      "Conic-gradient segment boundaries have visible aliasing artifacts (jagged edges between colors)",
+      "Hover zones do not align accurately with the visible segments causing incorrect hover feedback",
+      "The center donut hole is not perfectly centered or its size changes relative to the chart on different viewports",
+      "Labels positioned with absolute values are correct at 300px but drift when the chart scales on mobile",
+      "The chart becomes elliptical on mobile due to width/height not scaling uniformly"
+    ],
+    "viewport_sizes": [1920, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_013",
+    "description": "Create a vertical timeline page showing the history of a fictional company 'NovaTech' with 8 milestone events. Layout: (1) Page heading 'Our Journey' centered at top. (2) A vertical timeline: a continuous vertical line (2px, color #d1d5db) centered horizontally on the page. (3) 8 event cards alternate left and right of the timeline. Odd events (1st, 3rd, 5th, 7th) appear on the left, even events on the right. Each card is a white box (max-width 400px) with box-shadow, containing: a year badge (bold, colored), event title (h3), description paragraph (3-4 sentences), and an optional small tag (e.g., 'Product Launch', 'Milestone', 'Expansion'). (4) Each card connects to the timeline via a small horizontal line (20px long) ending at a filled circle dot (16px, colored) sitting on the vertical timeline. (5) The dates/years appear on the opposite side of the card: if the card is on the left, the year also appears right next to the timeline dot on the right side (and vice versa). (6) Cards are evenly spaced vertically (at least 80px gap). (7) On mobile (<768px), all cards stack on the right side of the timeline (timeline shifts to the left edge, 30px from left), with dots on the timeline and connector lines from the timeline to the cards. (8) The timeline line must start at the first dot and end at the last dot, not extending beyond.",
+    "requirements": [
+      "A continuous vertical line must be centered on the page with 8 event dots evenly distributed along it",
+      "Cards must strictly alternate left and right of the timeline on desktop (odd left, even right)",
+      "Each card must connect to its dot on the timeline via a small visible horizontal connector line",
+      "Dots on the timeline must be filled colored circles (16px) centered on the vertical line",
+      "Year labels must appear on the opposite side of the card, adjacent to the timeline dot",
+      "On mobile, the timeline must shift to the left and all cards must appear on the right side",
+      "Cards must have consistent max-width (400px) and be evenly spaced vertically",
+      "The timeline vertical line must start at the first dot and end at the last dot, not extending above or below",
+      "Event tags must be visible as small colored pills/badges within each card"
+    ],
+    "expected_issues": [
+      "Left and right cards are not properly aligned to the center timeline, with visible asymmetry",
+      "Horizontal connector lines do not meet the dots precisely, leaving gaps or overlapping",
+      "Mobile layout still tries to alternate left/right instead of shifting all cards to one side",
+      "Timeline vertical line extends above the first dot and below the last dot, creating orphan line segments",
+      "Year labels on the opposite side of cards collide with the adjacent card's connector line or dot",
+      "Cards at different positions have slightly different distances from the center timeline"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_014",
+    "description": "Create a pricing comparison page for a cloud hosting service called 'CloudPeak'. The page features: (1) A heading 'Choose Your Plan' centered, with a subtitle and an annual/monthly toggle switch (pill-shaped toggle, selecting 'Annual' shows 20% discounted prices with a 'Save 20%' badge). (2) A pricing comparison table displaying 3 plans side by side: Starter ($19/mo or $15/mo annual), Professional ($49/mo or $39/mo annual), Enterprise ($99/mo or $79/mo annual). The Professional plan is highlighted as 'Most Popular' with: a badge at the top, a colored border around the entire column, a slightly different background color (very light blue), and it should be visually elevated (scaled slightly larger or with a stronger shadow). (3) The table has 15 feature rows grouped into 4 categories (Compute: 4 rows, Storage: 4 rows, Support: 4 rows, Security: 3 rows). Each category has a bold group header row. Feature cells contain: checkmarks (green) for included features, X marks (red/gray) for excluded, or specific text values (e.g., '10 GB', 'Unlimited'). (4) The header row with plan names and prices must be sticky (remains visible when scrolling through features). (5) Alternating row striping for readability (light gray on even rows). (6) A CTA button at the bottom of each plan column ('Get Started' for Starter/Enterprise, 'Start Free Trial' for Professional). (7) On mobile, the table should either scroll horizontally or transform into stacked cards, keeping all data accessible.",
+    "requirements": [
+      "Annual/monthly toggle must switch all displayed prices and show/hide the 'Save 20%' badge dynamically",
+      "Professional plan column must be visually distinguished: colored border, light background tint, 'Most Popular' badge, and elevated appearance",
+      "Feature rows must use green checkmarks and red/gray X marks (CSS-only, no images) for included/excluded features",
+      "Table header row with plan names and prices must be sticky during vertical scroll",
+      "Row striping must alternate colors for readability with category group headers in bold",
+      "15 feature rows must be organized under 4 category group headers within the table",
+      "CTA buttons at the bottom of each column must be properly aligned across all 3 plans",
+      "On mobile, all plan data must remain accessible (via horizontal scroll or card transformation)",
+      "Toggle switch must be a pill-shaped element that smoothly slides between Monthly and Annual states"
+    ],
+    "expected_issues": [
+      "Sticky header does not work due to overflow:hidden or overflow:auto on a parent container",
+      "Annual/monthly toggle changes prices but the 'Save 20%' badge does not appear or disappear correctly",
+      "Professional plan highlight column borders do not extend the full height of the table or break at category group headers",
+      "Row striping is disrupted by category group header rows causing two consecutive white or gray rows",
+      "Checkmark and X mark symbols are not vertically centered within their cells, misaligning across the row",
+      "Mobile horizontal scroll causes the sticky header to scroll horizontally with the content but not stick vertically"
+    ],
+    "viewport_sizes": [1920, 768, 375],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "web_015",
+    "description": "Create a page featuring a glassmorphism-styled profile card floating over a vivid, colorful background. (1) The full-page background: a vibrant gradient mesh effect created with multiple overlapping radial-gradient layers. Use at least 4 radial gradients: a large pink/magenta (#ec4899) blob top-left, a purple (#8b5cf6) blob center-right, a blue (#3b82f6) blob bottom-left, and a teal (#14b8a6) blob bottom-right. These create a colorful, blurred, overlapping background. Additionally, add animated floating blobs (3 div elements, each 200-400px, rounded, colored, position:absolute, with CSS keyframe animations that slowly drift around over 15-20 seconds, using opacity 0.5 so they blend). (2) The glassmorphism card (max-width 420px, centered both horizontally and vertically): white background with opacity 0.15, backdrop-filter: blur(20px), border: 1px solid rgba(255,255,255,0.3), border-radius: 24px, box-shadow with a subtle spread. (3) Card content: a circular avatar placeholder (96px, centered, border: 3px solid white, using a gradient fill as placeholder), full name 'Alexandra Rivera' in white bold 24px text, title 'Senior Product Designer' in white/light text, a short bio paragraph (2 sentences, white text 14px, 0.8 opacity). (4) A stats row with 3 metrics evenly distributed: 'Projects' 147, 'Following' 2.4K, 'Followers' 12.8K. Each metric has the number in bold white and the label in smaller lighter text. (5) A row of 4 social icon buttons (circular, 40px, white border, containing a single letter: T, G, D, L for Twitter/GitHub/Dribbble/LinkedIn). Hover on icon buttons adds a white background fill with dark text. (6) Two action buttons side by side below: 'Follow' (solid white, dark text) and 'Message' (transparent with white border and white text).",
+    "requirements": [
+      "Background must have multiple overlapping radial gradients creating a colorful mesh effect with at least 4 distinct color areas",
+      "At least 3 animated floating blob elements must drift slowly using CSS keyframe animations",
+      "Card must use backdrop-filter: blur() creating a visible frosted glass effect against the colorful background",
+      "Card must have semi-transparent white background, subtle white border, and rounded corners (24px radius)",
+      "Avatar must be a 96px circle centered at the top of the card with a visible border",
+      "Stats row must display 3 metrics evenly distributed with bold numbers and lighter labels",
+      "Social icon buttons must be circular with white borders and show a hover fill effect",
+      "Action buttons ('Follow' and 'Message') must be side by side with distinct solid vs. outline styles",
+      "Card must be centered both horizontally and vertically in the viewport at all tested sizes",
+      "All text on the card must be legible against the frosted glass background"
+    ],
+    "expected_issues": [
+      "backdrop-filter: blur has no visible effect because the background behind the card is not colorful enough or is a solid color",
+      "Floating blob animations cause layout overflow creating horizontal scrollbars on the page",
+      "Glass card text is illegible because the white text does not have enough contrast against the semi-transparent white background",
+      "Stats row metrics are not evenly distributed or the numbers and labels misalign vertically",
+      "Social icon hover effect transitions are instant rather than smooth, or the icon letter shifts position on hover",
+      "Card is not perfectly vertically centered, sitting slightly above or below center due to incorrect flexbox or transform usage"
+    ],
+    "viewport_sizes": [1920, 375],
+    "difficulty": "hard"
+  }
+]
