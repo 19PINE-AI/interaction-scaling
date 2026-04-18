@@ -40,6 +40,18 @@ Rules:
 - Use appropriate font sizes (title: 36-48px, body: 16-24px, footnotes: 10-14px)
 - Wrap your complete HTML in a ```html code block"""
 
+WEBPAGE_SYSTEM_PROMPT = """\
+You are an expert web developer creating webpages as single-page HTML files.
+
+Rules:
+- Output a COMPLETE, self-contained HTML file (<!DOCTYPE html> through </html>)
+- Use inline CSS (no external stylesheets)
+- The page is rendered in a 1920px-wide viewport; vertical scrolling is permitted
+- ALL text must be readable — no unintended overlap, clipping, or truncation
+- Preserve the requested sections, visual hierarchy, and alignment
+- Use appropriate font sizes and spacing for a desktop landing page
+- Wrap your complete HTML in a ```html code block"""
+
 ANIMATION_SYSTEM_PROMPT = """\
 You are an expert web developer creating animations as single-page HTML files.
 
@@ -86,23 +98,17 @@ Respond with ONLY a JSON object:
 }}"""
 
 REVISION_PROMPT = """\
-Your previous HTML had visual problems when rendered. Here is the feedback:
-
-## Previous HTML
-```html
-{previous_html}
-```
+Your previous HTML (shown in the prior turn) had issues when rendered.
 
 ## Visual Review Feedback
 {feedback}
 
-Fix ALL the identified issues. Pay special attention to:
-- Text overflow and truncation
-- Element overlap
-- Alignment and spacing
-- Content completeness
+Apply the SMALLEST edit that fixes only the identified issues.
+- Preserve working layout, colors, typography, and content that was NOT mentioned in the feedback
+- Do not refactor, reorganize, or restyle unrelated code
+- Change only the specific elements called out above
 
-Output the COMPLETE fixed HTML in a ```html code block."""
+Output the complete updated HTML in a ```html code block."""
 
 
 @dataclass
@@ -120,6 +126,9 @@ class HardBenchmarkResult:
     total_tokens: int = 0
     wall_time_seconds: float = 0
     screenshots: list[str] = field(default_factory=list)  # base64 encoded
+    full_output: str = ""  # Full LLM output including thinking tokens
+    intermediate_outputs: list[str] = field(default_factory=list)  # All revision outputs
+    interaction_trace: list[dict] = field(default_factory=list)  # Full input/output pairs per step
 
 
 class HardBenchmarkRunner:
@@ -143,33 +152,51 @@ class HardBenchmarkRunner:
         use_review: bool = False,
         max_iterations: int = 1,
         reviewer_model: ModelConfig | None = None,
+        task_type: str = "slide",
     ) -> HardBenchmarkResult:
-        """Run a single slide generation task."""
+        """Run a single slide/webpage generation task.
+
+        ``task_type`` selects the system prompt and result labeling:
+        - "slide":   fixed 1920×1080, no scroll (SLIDE_SYSTEM_PROMPT)
+        - "webpage": 1920px wide, scroll permitted (WEBPAGE_SYSTEM_PROMPT)
+        """
         start_time = time.time()
         self.client.reset_counters()
+
+        system_prompt = (
+            WEBPAGE_SYSTEM_PROMPT if task_type == "webpage" else SLIDE_SYSTEM_PROMPT
+        )
 
         description = task["description"]
         requirements = "\n".join(f"- {r}" for r in task.get("requirements", []))
         prompt = f"{description}\n\nSpecific requirements:\n{requirements}"
 
-        # Initial generation with slide-specific system prompt
+        init_messages = [{"role": "user", "content": prompt}]
         response = self.client.generate(
             config=self.config.proposer_model,
-            system=SLIDE_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": prompt}],
+            system=system_prompt,
+            messages=init_messages,
         )
         current_html = extract_code(response.content, "html")
         if not current_html.strip().startswith("<!") and not current_html.strip().startswith("<html"):
-            current_html = response.content  # fallback
+            current_html = response.content
+
+        trace_steps = [{
+            "step": "generate",
+            "system": system_prompt,
+            "messages": init_messages,
+            "full_output": response.content,
+        }]
 
         iteration = 1
         quality_score = 0.0
         issues = []
         meets_reqs = False
         screenshots_b64 = []
+        best = None  # keep-best: (quality, html, issues, meets, screenshot_b64)
+        prior_reviews: list[dict] = []
 
         for i in range(max_iterations):
-            # Render
             try:
                 screenshot_bytes = self.renderer.render_html(current_html)
                 screenshot_b64 = base64.b64encode(screenshot_bytes).decode()
@@ -179,19 +206,23 @@ class HardBenchmarkRunner:
                 break
 
             if not use_review:
-                # Single-shot: just render, no review
-                # Do a basic quality assessment
                 quality_score, issues, meets_reqs, _suggestions = self._vlm_review(
                     screenshot_b64, requirements, reviewer_model
                 )
+                if best is None or quality_score > best[0]:
+                    best = (quality_score, current_html, issues, meets_reqs, screenshot_b64)
                 break
 
-            # VLM Review
             quality_score, issues, meets_reqs, suggestions = self._vlm_review(
-                screenshot_b64, requirements, reviewer_model
+                screenshot_b64, requirements, reviewer_model,
+                prior_reviews=prior_reviews or None,
             )
+            prior_reviews.append({"quality_score": quality_score, "issues": issues})
 
-            if meets_reqs and quality_score >= 0.9:
+            if best is None or quality_score > best[0]:
+                best = (quality_score, current_html, issues, meets_reqs, screenshot_b64)
+
+            if quality_score >= 0.9:
                 logger.info(
                     "Task %s: quality %.2f after %d iterations, stopping",
                     task["task_id"], quality_score, i + 1,
@@ -199,45 +230,44 @@ class HardBenchmarkRunner:
                 break
 
             if i < max_iterations - 1:
-                # Revise with slide-specific prompt + visual context
                 feedback = self._format_review_feedback(
                     issues, quality_score, meets_reqs, suggestions
                 )
-                revision_msg = REVISION_PROMPT.format(
-                    previous_html=current_html, feedback=feedback
-                )
-                # Include the rendered screenshot so the proposer can
-                # see the actual visual problems, not just text descriptions
+                revision_msg = REVISION_PROMPT.format(feedback=feedback)
+                revision_messages = [
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": f"```html\n{current_html}\n```"},
+                    {"role": "user", "content": revision_msg},
+                ]
                 response = self.client.generate(
                     config=self.config.proposer_model,
-                    system=SLIDE_SYSTEM_PROMPT,
-                    messages=[
-                        {"role": "user", "content": prompt},
-                        {"role": "assistant", "content": f"```html\n{current_html}\n```"},
-                        {"role": "user", "content": [
-                            {
-                                "type": "image",
-                                "source": {
-                                    "type": "base64",
-                                    "media_type": "image/png",
-                                    "data": screenshot_b64,
-                                },
-                            },
-                            {"type": "text", "text": revision_msg},
-                        ]},
-                    ],
+                    system=system_prompt,
+                    messages=revision_messages,
                 )
+                trace_steps.append({
+                    "step": "revise",
+                    "system": system_prompt,
+                    "feedback": feedback,
+                    "messages_text": revision_messages,
+                    "full_output": response.content,
+                })
                 new_html = extract_code(response.content, "html")
                 if new_html.strip():
                     current_html = new_html
                 iteration = i + 2
+
+        # keep-best: return the highest-scoring iteration, not the last
+        if best is not None:
+            quality_score, current_html, issues, meets_reqs, final_screenshot = best
+            if screenshots_b64 and final_screenshot != screenshots_b64[-1]:
+                screenshots_b64.append(final_screenshot)
 
         elapsed = time.time() - start_time
         usage = self.client.get_usage_summary()
 
         result = HardBenchmarkResult(
             task_id=task["task_id"],
-            task_type="slide",
+            task_type=task_type,
             baseline="single_shot" if not use_review else "proposer_reviewer",
             iterations=iteration,
             final_code=current_html,
@@ -246,7 +276,10 @@ class HardBenchmarkRunner:
             meets_requirements=meets_reqs,
             total_tokens=usage["total_tokens"],
             wall_time_seconds=elapsed,
-            screenshots=screenshots_b64[-1:],  # Keep only final screenshot
+            screenshots=screenshots_b64[-1:],
+            full_output=trace_steps[0]["full_output"],
+            intermediate_outputs=[s["full_output"] for s in trace_steps[1:]],
+            interaction_trace=trace_steps,
         )
 
         logger.info(
@@ -260,6 +293,22 @@ class HardBenchmarkRunner:
             elapsed,
         )
         return result
+
+    def run_webpage_task(
+        self,
+        task: dict,
+        use_review: bool = False,
+        max_iterations: int = 1,
+        reviewer_model: ModelConfig | None = None,
+    ) -> HardBenchmarkResult:
+        """Webpage variant — uses WEBPAGE_SYSTEM_PROMPT (scrollable pages)."""
+        return self.run_slide_task(
+            task,
+            use_review=use_review,
+            max_iterations=max_iterations,
+            reviewer_model=reviewer_model,
+            task_type="webpage",
+        )
 
     def run_animation_task(
         self,
@@ -278,21 +327,31 @@ class HardBenchmarkRunner:
         frame_times = task.get("frame_times_ms", [0, 1000, 2000, 3000])
 
         # Use animation system prompt
+        full_prompt = f"{prompt}\n\nRequirements:\n{requirements}"
+        init_messages = [{"role": "user", "content": full_prompt}]
         response = self.client.generate(
             config=self.config.proposer_model,
             system=ANIMATION_SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": f"{prompt}\n\nRequirements:\n{requirements}"}],
+            messages=init_messages,
         )
         current_html = extract_code(response.content, "html")
+
+        trace_steps = [{
+            "step": "generate",
+            "system": ANIMATION_SYSTEM_PROMPT,
+            "messages": init_messages,
+            "full_output": response.content,
+        }]
 
         iteration = 1
         quality_score = 0.0
         issues = []
         meets_reqs = False
-        screenshots_b64 = []
+        screenshots_b64: list[str] = []
+        best = None  # (quality, html, issues, meets, frames)
+        prior_reviews: list[dict] = []
 
         for i in range(max_iterations):
-            # Render multiple frames
             try:
                 frames = self.renderer.render_animation_frames(
                     current_html, frame_times
@@ -303,36 +362,50 @@ class HardBenchmarkRunner:
                 logger.warning("Animation render failed: %s", e)
                 break
 
-            # VLM review of frames
             quality_score, issues, meets_reqs, suggestions = self._vlm_review_animation(
-                frame_b64s, requirements, frame_times, reviewer_model
+                frame_b64s, requirements, frame_times, reviewer_model,
+                prior_reviews=prior_reviews or None,
             )
+            prior_reviews.append({"quality_score": quality_score, "issues": issues})
+
+            if best is None or quality_score > best[0]:
+                best = (quality_score, current_html, issues, meets_reqs, frame_b64s)
 
             if not use_review:
                 break
 
-            if meets_reqs and quality_score >= 0.9:
+            if quality_score >= 0.9:
                 break
 
             if i < max_iterations - 1:
                 feedback = self._format_review_feedback(
                     issues, quality_score, meets_reqs, suggestions
                 )
+                revision_msg = REVISION_PROMPT.format(feedback=feedback)
+                revision_messages = [
+                    {"role": "user", "content": full_prompt},
+                    {"role": "assistant", "content": f"```html\n{current_html}\n```"},
+                    {"role": "user", "content": revision_msg},
+                ]
                 revision_response = self.client.generate(
                     config=self.config.proposer_model,
                     system=ANIMATION_SYSTEM_PROMPT,
-                    messages=[
-                        {"role": "user", "content": f"{prompt}\n\nRequirements:\n{requirements}"},
-                        {"role": "assistant", "content": f"```html\n{current_html}\n```"},
-                        {"role": "user", "content": REVISION_PROMPT.format(
-                            previous_html=current_html, feedback=feedback
-                        )},
-                    ],
+                    messages=revision_messages,
                 )
+                trace_steps.append({
+                    "step": "revise",
+                    "system": ANIMATION_SYSTEM_PROMPT,
+                    "feedback": feedback,
+                    "messages_text": revision_messages,
+                    "full_output": revision_response.content,
+                })
                 new_html = extract_code(revision_response.content, "html")
                 if new_html.strip():
                     current_html = new_html
                 iteration = i + 2
+
+        if best is not None:
+            quality_score, current_html, issues, meets_reqs, screenshots_b64 = best
 
         elapsed = time.time() - start_time
         usage = self.client.get_usage_summary()
@@ -348,7 +421,10 @@ class HardBenchmarkRunner:
             meets_requirements=meets_reqs,
             total_tokens=usage["total_tokens"],
             wall_time_seconds=elapsed,
-            screenshots=screenshots_b64[-1:],
+            screenshots=screenshots_b64[-1:] if screenshots_b64 else [],
+            full_output=trace_steps[0]["full_output"],
+            intermediate_outputs=[s["full_output"] for s in trace_steps[1:]],
+            interaction_trace=trace_steps,
         )
 
     def run_code_task(
@@ -364,22 +440,40 @@ class HardBenchmarkRunner:
         start_time = time.time()
         self.client.reset_counters()
 
-        proposer = ProposerAgent(self.config.proposer_model)
         evaluator = CodeEvaluator()
         exec_feedback = ExecutionFeedback()
 
         description = task["description"]
         test_code = task["test_code"]
 
-        response = proposer.generate(description)
-        current_code = response.code
+        # Use LLM client directly (instead of ProposerAgent) to capture full output
+        init_messages = [{"role": "user", "content": description}]
+        response = self.client.generate(
+            config=self.config.proposer_model,
+            system=CODE_SYSTEM_PROMPT,
+            messages=init_messages,
+        )
+        current_code = extract_code(response.content, "python")
+
+        trace_steps = [{
+            "step": "generate",
+            "system": CODE_SYSTEM_PROMPT,
+            "messages": init_messages,
+            "full_output": response.content,
+        }]
+
         iteration = 1
         passed = False
+        best_code = current_code
+        best_passed = False
+        prior_errors: list[str] = []
 
         for i in range(max_iterations):
-            # Execute
             eval_result = evaluator.evaluate(current_code, test_code)
             passed = eval_result.passed
+
+            if passed and not best_passed:
+                best_code, best_passed = current_code, True
 
             if passed:
                 break
@@ -387,21 +481,47 @@ class HardBenchmarkRunner:
             if not use_review or i >= max_iterations - 1:
                 break
 
-            # Revise with execution feedback
             feedback = f"FAILED: {eval_result.error_message}\n"
             if eval_result.stderr:
                 feedback += f"stderr:\n{eval_result.stderr[:2000]}\n"
             if eval_result.stdout:
                 feedback += f"stdout:\n{eval_result.stdout[:1000]}\n"
 
-            context = {
-                "previous_code": current_code,
+            prior_note = ""
+            if prior_errors:
+                prior_note = (
+                    "\n\nPrior failing errors (if the same error reappears, change your approach "
+                    "— the previous fix did not address the root cause):\n"
+                    + "\n".join(f"- {e}" for e in prior_errors)
+                )
+
+            revision_messages = [
+                {"role": "user", "content": description},
+                {"role": "assistant", "content": f"```python\n{current_code}\n```"},
+                {"role": "user", "content": (
+                    f"Your code failed the tests:\n\n{feedback}{prior_note}\n\n"
+                    "Apply the smallest edit that fixes the specific failure above. "
+                    "Preserve working code paths that were not implicated in the failure."
+                )},
+            ]
+            response = self.client.generate(
+                config=self.config.proposer_model,
+                system=CODE_SYSTEM_PROMPT,
+                messages=revision_messages,
+            )
+            trace_steps.append({
+                "step": "revise",
+                "system": CODE_SYSTEM_PROMPT,
                 "feedback": feedback,
-                "iteration": i + 1,
-            }
-            response = proposer.generate(description, context)
-            current_code = response.code
+                "messages_text": revision_messages,
+                "full_output": response.content,
+            })
+            prior_errors.append((eval_result.error_message or "unknown")[:180])
+            current_code = extract_code(response.content, "python")
             iteration = i + 2
+
+        if best_passed and not passed:
+            current_code, passed = best_code, True
 
         elapsed = time.time() - start_time
         usage = self.client.get_usage_summary()
@@ -416,6 +536,9 @@ class HardBenchmarkRunner:
             meets_requirements=passed,
             total_tokens=usage["total_tokens"],
             wall_time_seconds=elapsed,
+            full_output=trace_steps[0]["full_output"],
+            intermediate_outputs=[s["full_output"] for s in trace_steps[1:]],
+            interaction_trace=trace_steps,
         )
 
     def run_video_task(
@@ -453,17 +576,27 @@ class HardBenchmarkRunner:
 
         prompt = f"{description}\n\nSource video: {source_video}\n\nRequirements:\n{requirements}"
 
+        init_messages = [{"role": "user", "content": prompt}]
         response = self.client.generate(
             config=self.config.proposer_model,
             system=video_system,
-            messages=[{"role": "user", "content": prompt}],
+            messages=init_messages,
         )
         current_code = extract_code(response.content, "python")
+
+        trace_steps = [{
+            "step": "generate",
+            "system": video_system,
+            "messages": init_messages,
+            "full_output": response.content,
+        }]
 
         iteration = 1
         quality_score = 0.0
         issues = []
         meets_reqs = False
+        best = None  # (quality, code, issues, meets)
+        prior_summaries: list[str] = []
 
         from src.feedback.type3c_video import VideoFeedback
         video_fb = VideoFeedback(reviewer_model)
@@ -481,30 +614,58 @@ class HardBenchmarkRunner:
             issues = fb.structured_data.get("issues", [])
             meets_reqs = fb.structured_data.get("meets_requirements", False)
 
+            if best is None or quality_score > best[0]:
+                best = (quality_score, current_code, issues, meets_reqs)
+
             if not use_review:
                 break
 
-            if meets_reqs and quality_score >= 0.9:
+            if quality_score >= 0.9:
                 break
 
             if i < max_iterations - 1:
                 feedback_text = fb.content
+                prior_note = ""
+                if prior_summaries:
+                    prior_note = (
+                        "\n\nPrior attempt summaries (the same issue may be recurring — "
+                        "try a different approach if you see the same feedback again):\n"
+                        + "\n".join(f"- {s}" for s in prior_summaries)
+                    )
+                revision_msg = (
+                    f"Your video editing code had problems:\n\n{feedback_text}{prior_note}\n\n"
+                    "Apply the smallest possible edit that fixes the identified issues. "
+                    "Preserve any parts of the script that were NOT flagged."
+                )
+                revision_messages = [
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": f"```python\n{current_code}\n```"},
+                    {"role": "user", "content": revision_msg},
+                ]
                 response = self.client.generate(
                     config=self.config.proposer_model,
                     system=video_system,
-                    messages=[
-                        {"role": "user", "content": prompt},
-                        {"role": "assistant", "content": f"```python\n{current_code}\n```"},
-                        {"role": "user", "content": (
-                            f"Your video editing code had problems:\n\n{feedback_text}\n\n"
-                            "Fix ALL issues and output the complete corrected Python script."
-                        )},
-                    ],
+                    messages=revision_messages,
+                )
+                trace_steps.append({
+                    "step": "revise",
+                    "system": video_system,
+                    "feedback": feedback_text,
+                    "messages_text": revision_messages,
+                    "full_output": response.content,
+                })
+                prior_summaries.append(
+                    f"iter{i+1} q={quality_score:.0%}: " + "; ".join(
+                        (it.get("description", "") or "")[:100] for it in (issues or [])[:3]
+                    )
                 )
                 new_code = extract_code(response.content, "python")
                 if new_code.strip():
                     current_code = new_code
                 iteration = i + 2
+
+        if best is not None:
+            quality_score, current_code, issues, meets_reqs = best
 
         elapsed = time.time() - start_time
         usage = self.client.get_usage_summary()
@@ -520,6 +681,9 @@ class HardBenchmarkRunner:
             meets_requirements=meets_reqs,
             total_tokens=usage["total_tokens"],
             wall_time_seconds=elapsed,
+            full_output=trace_steps[0]["full_output"],
+            intermediate_outputs=[s["full_output"] for s in trace_steps[1:]],
+            interaction_trace=trace_steps,
         )
 
     def run_research_task(
@@ -548,17 +712,27 @@ class HardBenchmarkRunner:
 
         prompt = f"{description}\n\nThe report must accurately cover:\n{req_text}"
 
+        init_messages = [{"role": "user", "content": prompt}]
         response = self.client.generate(
             config=self.config.proposer_model,
             system=research_system,
-            messages=[{"role": "user", "content": prompt}],
+            messages=init_messages,
         )
         current_report = response.content
+
+        trace_steps = [{
+            "step": "generate",
+            "system": research_system,
+            "messages": init_messages,
+            "full_output": response.content,
+        }]
 
         iteration = 1
         accuracy = 0.0
         issues = []
         meets_reqs = False
+        best = None  # (accuracy, report, issues, meets)
+        prior_summaries: list[str] = []
 
         from src.feedback.type3d_factual import FactualVerificationFeedback
         fact_fb = FactualVerificationFeedback()
@@ -574,28 +748,56 @@ class HardBenchmarkRunner:
                 v for v in verifications if v.get("verdict") == "contradicted"
             ]
 
+            if best is None or accuracy > best[0]:
+                best = (accuracy, current_report, issues, meets_reqs)
+
             if not use_review:
                 break
 
-            if meets_reqs and accuracy >= 0.9:
+            if accuracy >= 0.9:
                 break
 
             if i < max_iterations - 1:
+                prior_note = ""
+                if prior_summaries:
+                    prior_note = (
+                        "\n\nPrior attempts (avoid introducing NEW factual errors — "
+                        "do not invent facts to fix unverifiable ones):\n"
+                        + "\n".join(f"- {s}" for s in prior_summaries)
+                    )
+                revision_msg = (
+                    f"Fact-checking found errors in your report:\n\n{fb.content}{prior_note}\n\n"
+                    "Correct only the specific factual errors listed above. "
+                    "Preserve everything that was NOT flagged. "
+                    "If a fact cannot be verified, remove or hedge it — do not fabricate a replacement."
+                )
+                revision_messages = [
+                    {"role": "user", "content": prompt},
+                    {"role": "assistant", "content": current_report},
+                    {"role": "user", "content": revision_msg},
+                ]
                 response = self.client.generate(
                     config=self.config.proposer_model,
                     system=research_system,
-                    messages=[
-                        {"role": "user", "content": prompt},
-                        {"role": "assistant", "content": current_report},
-                        {"role": "user", "content": (
-                            f"Fact-checking found errors in your report:\n\n{fb.content}\n\n"
-                            "Please rewrite the report correcting ALL factual errors. "
-                            "Be more careful with specific numbers, dates, and names."
-                        )},
-                    ],
+                    messages=revision_messages,
+                )
+                trace_steps.append({
+                    "step": "revise",
+                    "system": research_system,
+                    "feedback": fb.content,
+                    "messages_text": revision_messages,
+                    "full_output": response.content,
+                })
+                prior_summaries.append(
+                    f"iter{i+1} acc={accuracy:.0%}: " + "; ".join(
+                        (v.get("claim", "") or "")[:80] for v in issues[:3]
+                    )
                 )
                 current_report = response.content
                 iteration = i + 2
+
+        if best is not None:
+            accuracy, current_report, issues, meets_reqs = best
 
         elapsed = time.time() - start_time
         usage = self.client.get_usage_summary()
@@ -611,6 +813,9 @@ class HardBenchmarkRunner:
             meets_requirements=meets_reqs,
             total_tokens=usage["total_tokens"],
             wall_time_seconds=elapsed,
+            full_output=trace_steps[0]["full_output"],
+            intermediate_outputs=[s["full_output"] for s in trace_steps[1:]],
+            interaction_trace=trace_steps,
         )
 
     # -------------------------------------------------------------------
@@ -622,10 +827,18 @@ class HardBenchmarkRunner:
         screenshot_b64: str,
         requirements: str,
         model_config: ModelConfig | None = None,
+        prior_reviews: list[dict] | None = None,
     ) -> tuple[float, list[dict], bool, list[str]]:
-        """Use VLM to review a single screenshot."""
+        """Use VLM to review a single screenshot.
+
+        If ``prior_reviews`` is provided, the reviewer is told which issues
+        were previously flagged so it can mark still-present ones and avoid
+        verbatim repetition of fixed-in-this-iteration ones.
+        """
         config = model_config or ModelConfig.claude_sonnet()
         prompt = VISUAL_REVIEW_PROMPT.format(requirements=requirements)
+        if prior_reviews:
+            prompt = self._augment_review_with_history(prompt, prior_reviews)
 
         response = self.client.generate(
             config=config,
@@ -654,6 +867,7 @@ class HardBenchmarkRunner:
         requirements: str,
         frame_times: list[int],
         model_config: ModelConfig | None = None,
+        prior_reviews: list[dict] | None = None,
     ) -> tuple[float, list[dict], bool, list[str]]:
         """Use VLM to review animation frames."""
         config = model_config or ModelConfig.claude_sonnet()
@@ -674,20 +888,36 @@ class HardBenchmarkRunner:
                 "text": f"Frame at t={t}ms",
             })
 
+        n_frames = len(frame_b64s)
+        span_ms = frame_times[-1] - frame_times[0] if n_frames > 1 else 0
         review_prompt = (
-            f"These are frames captured from an animation at different timestamps.\n\n"
+            f"You are given {n_frames} frames captured from an animation, "
+            f"spanning {span_ms}ms (t={frame_times[0]}ms to t={frame_times[-1]}ms). "
+            f"Each frame is labeled with its timestamp. Evaluate the animation as "
+            f"a SEQUENCE across all frames — not only the first frame.\n\n"
             f"Requirements:\n{requirements}\n\n"
             f"Check for:\n"
-            f"1. Visual glitches or rendering artifacts\n"
+            f"1. Visual glitches or rendering artifacts in any frame\n"
             f"2. Elements going out of bounds\n"
-            f"3. Animation timing issues (too fast, too slow, jerky)\n"
+            f"3. Animation timing and motion: do elements change between frames "
+            f"as the requirements describe? Is motion smooth and well-paced?\n"
             f"4. Missing or incorrect visual elements\n"
-            f"5. Temporal coherence (smooth transitions between frames)\n\n"
+            f"5. Temporal coherence (smooth transitions between consecutive frames)\n\n"
+            f"Score primarily on whether the animation satisfies the requirements. "
+            f"If frames are visually similar, consider whether the requirements "
+            f"actually call for motion at those timestamps before penalizing — "
+            f"e.g., a brief static hold between transitions can be intentional. "
+            f"Do not penalize minor per-frame imperfections when the overall "
+            f"behavior matches the spec.\n\n"
             f"Respond with ONLY a JSON object:\n"
             f'{{"issues": [{{"description": "...", "severity": "critical|major|minor", '
             f'"frame": "t=Xms"}}], "quality_score": 0.0-1.0, '
             f'"meets_requirements": true/false, "suggestions": ["..."]}}'
         )
+        if prior_reviews:
+            review_prompt = self._augment_review_with_history(
+                review_prompt, prior_reviews
+            )
         content.append({"type": "text", "text": review_prompt})
 
         response = self.client.generate(
@@ -697,6 +927,26 @@ class HardBenchmarkRunner:
         )
 
         return self._parse_review_json(response.content)
+
+    @staticmethod
+    def _augment_review_with_history(
+        prompt: str, prior_reviews: list[dict]
+    ) -> str:
+        """Prepend prior-iteration feedback so the reviewer can detect repeats."""
+        lines = ["REVIEW HISTORY (earlier attempts at this artifact):"]
+        for i, rev in enumerate(prior_reviews, start=1):
+            q = rev.get("quality_score", 0.0)
+            issues = rev.get("issues", []) or []
+            short = "; ".join(
+                (it.get("description", "") or "")[:120] for it in issues[:5]
+            )
+            lines.append(f"  Attempt {i}: quality={q:.0%} — {short}")
+        lines.append(
+            "\nFor each still-present issue, note that it RECURRED across attempts "
+            "(the proposer's last fix did not resolve it). If the same issue appears "
+            "again, mark it explicitly so the proposer tries a different strategy."
+        )
+        return prompt + "\n\n" + "\n".join(lines)
 
     @staticmethod
     def _parse_review_json(

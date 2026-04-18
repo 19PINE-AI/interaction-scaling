@@ -38,7 +38,7 @@ CATEGORIES = {
     },
     "webpages": {
         "task_file": DATA_DIR / "webpages" / "webpage_tasks.json",
-        "method": "run_slide_task",  # shared HTML pipeline
+        "method": "run_webpage_task",  # same HTML pipeline, webpage system prompt
         "max_iters": 3,
     },
     "animations": {

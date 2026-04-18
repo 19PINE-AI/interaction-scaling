@@ -8,6 +8,7 @@ import base64
 import json
 import logging
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -71,7 +72,7 @@ class VideoFeedback(FeedbackProvider):
         review = self._vlm_review_frames(frames, frame_times, requirements)
 
         return FeedbackResult(
-            feedback_type=FeedbackType.VISUAL,
+            feedback_type=FeedbackType.EXECUTION,
             content=review["content"],
             structured_data=review["structured"],
             tokens_used=review["tokens"],
@@ -80,7 +81,7 @@ class VideoFeedback(FeedbackProvider):
     def _execute_code(self, code: str, problem: dict) -> dict:
         """Execute the video editing Python code."""
         with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".py", delete=False, dir="/tmp"
+            mode="w", suffix=".py", delete=False
         ) as f:
             f.write(code)
             script_path = f.name
@@ -90,9 +91,9 @@ class VideoFeedback(FeedbackProvider):
             if source_video and Path(source_video).parent.is_dir():
                 cwd = str(Path(source_video).parent)
             else:
-                cwd = "/tmp"
+                cwd = tempfile.gettempdir()
             result = subprocess.run(
-                ["python", script_path],
+                [sys.executable, script_path],
                 capture_output=True,
                 text=True,
                 timeout=60,
@@ -161,15 +162,19 @@ class VideoFeedback(FeedbackProvider):
             })
             content.append({"type": "text", "text": f"Frame at t={t:.1f}s"})
 
+        n_frames = len(frames)
+        span_s = (timestamps[-1] - timestamps[0]) if n_frames > 1 else 0
         prompt = (
-            f"These are keyframes extracted from an edited video.\n\n"
+            f"You are given {n_frames} keyframes extracted from an edited video, "
+            f"spanning {span_s:.1f}s (t={timestamps[0]:.1f}s to t={timestamps[-1]:.1f}s). "
+            f"Evaluate the video as a SEQUENCE across all frames.\n\n"
             f"Requirements:\n{requirements}\n\n"
             f"Check for:\n"
-            f"1. Does the video content match the editing requirements?\n"
+            f"1. Does the video content match the editing requirements across the frames?\n"
             f"2. Are transitions smooth (no black frames, glitches)?\n"
-            f"3. Are effects applied correctly (watermarks, fades, PiP)?\n"
-            f"4. Is timing correct (durations, speeds)?\n"
-            f"5. Is visual quality maintained (no artifacts, correct resolution)?\n\n"
+            f"3. Are effects applied correctly (watermarks, fades, PiP) and visible in the frames that should show them?\n"
+            f"4. Is timing correct (durations, speeds) — do frames progress as expected?\n"
+            f"5. Is visual quality maintained throughout (no artifacts, correct resolution)?\n\n"
             f'Respond with ONLY JSON: {{"issues": [{{"description": "...", '
             f'"severity": "critical|major|minor", "frame": "t=Xs"}}], '
             f'"quality_score": 0.0-1.0, "meets_requirements": true/false, '
@@ -187,7 +192,8 @@ class VideoFeedback(FeedbackProvider):
         try:
             raw = response.content.strip()
             if raw.startswith("```"):
-                raw = raw[raw.index("\n") + 1:]
+                nl = raw.find("\n")
+                raw = raw[nl + 1:] if nl != -1 else raw[3:]
                 if raw.endswith("```"):
                     raw = raw[:-3].strip()
             data = json.loads(raw)

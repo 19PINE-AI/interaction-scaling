@@ -20,10 +20,11 @@ def _run_single_task(task, use_review, max_iterations, result_queue):
     from src.experiments.hard_benchmark_runner import HardBenchmarkRunner
     from src.utils import llm_client
 
-    # Fresh client in subprocess
-    api_client = anthropic.Anthropic(timeout=90.0, max_retries=2)
-    llm_client._client = llm_client.LLMClient()
-    llm_client._client._anthropic = api_client
+    # Fresh client in subprocess — use the module's get_client() to
+    # properly initialize the singleton, then replace the underlying
+    # Anthropic transport with custom timeout settings.
+    client = llm_client.get_client()
+    client._anthropic = anthropic.Anthropic(timeout=90.0, max_retries=2)
 
     config = ExperimentConfig(
         name="hard_web", benchmark="hard", budget_tokens=500000
@@ -32,7 +33,7 @@ def _run_single_task(task, use_review, max_iterations, result_queue):
     runner.client = llm_client._client
 
     try:
-        result = runner.run_slide_task(
+        result = runner.run_webpage_task(
             task, use_review=use_review, max_iterations=max_iterations
         )
         result_queue.put({
@@ -74,7 +75,8 @@ def main():
     with open("data/hard_benchmarks/webpages/webpage_tasks.json") as f:
         tasks = json.load(f)
 
-    tasks = tasks[:5]
+    # Run all tasks (previously limited to 5 for testing)
+    # tasks = tasks[:5]
     results = []
 
     for task in tasks:

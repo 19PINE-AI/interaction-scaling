@@ -132,6 +132,7 @@ class BrowserRenderer:
         page = self._new_page(width, height)
         try:
             page.set_content(html, wait_until="networkidle")
+            page.wait_for_timeout(50)
 
             frames: list[bytes] = []
             elapsed_ms = 0
