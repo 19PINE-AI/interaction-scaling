@@ -18,9 +18,62 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 
 logger = logging.getLogger(__name__)
+
+
+def _load_model_for_training(model_name: str):
+    """Load Qwen3-8B in 4-bit with LoRA adapters (QLoRA) to coexist with other GPU jobs.
+
+    If `model_name` points to a saved PEFT adapter directory (has adapter_config.json),
+    load the base Qwen3-8B in 4-bit and apply that adapter as the starting point,
+    keeping the LoRA params trainable. Otherwise train a fresh adapter.
+    """
+    bnb_config = BitsAndBytesConfig(
+        load_in_4bit=True,
+        bnb_4bit_quant_type="nf4",
+        bnb_4bit_compute_dtype=torch.bfloat16,
+        bnb_4bit_use_double_quant=True,
+    )
+
+    adapter_path = Path(model_name)
+    is_adapter = (adapter_path / "adapter_config.json").exists()
+
+    if is_adapter:
+        import json as _json
+        with open(adapter_path / "adapter_config.json") as f:
+            adapter_cfg = _json.load(f)
+        base_name = adapter_cfg.get("base_model_name_or_path", "Qwen/Qwen3-8B")
+        base = AutoModelForCausalLM.from_pretrained(
+            base_name,
+            quantization_config=bnb_config,
+            attn_implementation="kernels-community/flash-attn",
+            device_map={"": 0},
+        )
+        base = prepare_model_for_kbit_training(base, use_gradient_checkpointing=True)
+        from peft import PeftModel
+        model = PeftModel.from_pretrained(base, str(adapter_path), is_trainable=True)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(
+            model_name,
+            quantization_config=bnb_config,
+            attn_implementation="kernels-community/flash-attn",
+            device_map={"": 0},
+        )
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=True)
+        lora_config = LoraConfig(
+            r=16,
+            lora_alpha=32,
+            lora_dropout=0.05,
+            bias="none",
+            task_type="CAUSAL_LM",
+            target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
+        )
+        model = get_peft_model(model, lora_config)
+    model.print_trainable_parameters()
+    return model
 
 
 @dataclass
@@ -31,12 +84,12 @@ class TrainingConfig:
     output_dir: str = "models/qwen3-8b-interaction-scaling"
     learning_rate: float = 1e-6
     num_epochs: int = 3
-    batch_size: int = 4
-    gradient_accumulation_steps: int = 4
-    max_length: int = 4096
+    batch_size: int = 1
+    gradient_accumulation_steps: int = 16
+    max_length: int = 10240
     max_prompt_length: int = 2048
-    max_completion_length: int = 2048
-    num_generations: int = 4  # Group size for GRPO
+    max_completion_length: int = 8192
+    num_generations: int = 8  # Group size for GRPO (typical papers: 8-16)
     beta: float = 0.1  # KL penalty coefficient
     seed: int = 42
 
@@ -211,11 +264,7 @@ def train_sft(config: TrainingConfig, data_path: Path):
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(
-        config.model_name,
-        torch_dtype=torch.bfloat16,
-        device_map="auto",
-    )
+    model = _load_model_for_training(config.model_name)
 
     with open(data_path) as f:
         sft_data = json.load(f)
@@ -236,19 +285,21 @@ def train_sft(config: TrainingConfig, data_path: Path):
         num_train_epochs=config.num_epochs,
         per_device_train_batch_size=config.batch_size,
         gradient_accumulation_steps=config.gradient_accumulation_steps,
-        learning_rate=config.learning_rate,
-        max_seq_length=config.max_length,
+        learning_rate=2e-4,
+        max_length=config.max_length,
         logging_steps=10,
         save_strategy="epoch",
         bf16=True,
         seed=config.seed,
+        gradient_checkpointing=True,
+        warmup_ratio=0.03,
     )
 
     trainer = SFTTrainer(
         model=model,
         args=training_args,
         train_dataset=dataset,
-        tokenizer=tokenizer,
+        processing_class=tokenizer,
     )
 
     logger.info("Starting SFT training...")
@@ -274,11 +325,7 @@ def train_grpo(config: TrainingConfig, data_path: Path, tasks_dir: Path | None =
     if tokenizer.pad_token is None:
         tokenizer.pad_token = tokenizer.eos_token
 
-    model = AutoModelForCausalLM.from_pretrained(
-        config.model_name,
-        torch_dtype=torch.bfloat16,
-        device_map="auto",
-    )
+    model = _load_model_for_training(config.model_name)
 
     with open(data_path) as f:
         grpo_data = json.load(f)
@@ -339,7 +386,6 @@ def train_grpo(config: TrainingConfig, data_path: Path, tasks_dir: Path | None =
         gradient_accumulation_steps=config.gradient_accumulation_steps,
         learning_rate=config.learning_rate,
         max_completion_length=config.max_completion_length,
-        max_prompt_length=config.max_prompt_length,
         num_generations=config.num_generations,
         beta=config.beta,
         logging_steps=10,
@@ -352,8 +398,8 @@ def train_grpo(config: TrainingConfig, data_path: Path, tasks_dir: Path | None =
         model=model,
         args=training_args,
         train_dataset=dataset,
-        reward_func=reward_function,
-        tokenizer=tokenizer,
+        reward_funcs=reward_function,
+        processing_class=tokenizer,
     )
 
     logger.info("Starting GRPO training...")
@@ -371,19 +417,24 @@ def _extract_task_id_from_prompt(prompt: str, task_type_map: dict) -> str:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
+    import os
+    import sys
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 
     config = TrainingConfig()
     tasks_dir = Path("data/hard_benchmarks")
+    stage = os.environ.get("STAGE", sys.argv[1] if len(sys.argv) > 1 else "all")
 
-    # Stage 1: SFT
-    sft_data = Path("data/training/sft_data.json")
-    if sft_data.exists():
-        train_sft(config, sft_data)
+    if stage in ("sft", "all"):
+        sft_data = Path("data/training/sft_data.json")
+        if sft_data.exists():
+            train_sft(config, sft_data)
 
-    # Stage 2: GRPO (multi-task with grounded rewards)
-    grpo_data = Path("data/training/grpo_data.json")
-    if grpo_data.exists():
-        # Update model path to use SFT checkpoint
-        config.model_name = config.output_dir + "-sft"
-        train_grpo(config, grpo_data, tasks_dir=tasks_dir)
+    if stage in ("grpo", "all"):
+        grpo_data = Path("data/training/grpo_data.json")
+        if grpo_data.exists():
+            # Point GRPO at the SFT LoRA adapter dir (base model is loaded inside _load_model_for_training
+            # with the same Qwen3-8B weights; adapter loading is handled by peft.PeftModel.from_pretrained).
+            config.model_name = config.output_dir + "-sft"
+            train_grpo(config, grpo_data, tasks_dir=tasks_dir)
