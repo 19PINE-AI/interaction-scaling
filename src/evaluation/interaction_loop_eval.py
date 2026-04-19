@@ -93,7 +93,8 @@ def load_model(model_id: str, adapter_path: Optional[str]):
     return model, tok
 
 
-def generate(model, tok, messages: list, max_new_tokens: int = 1536) -> str:
+def generate(model, tok, messages: list, max_new_tokens: int = 1536,
+             temperature: float = 0.0, top_p: float = 1.0) -> str:
     try:
         text = tok.apply_chat_template(
             messages, tokenize=False, add_generation_prompt=True, enable_thinking=False
@@ -101,13 +102,14 @@ def generate(model, tok, messages: list, max_new_tokens: int = 1536) -> str:
     except TypeError:
         text = tok.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     inputs = tok(text, return_tensors="pt").to(model.device)
+    do_sample = temperature > 0.0
     with torch.inference_mode():
         out = model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,
-            do_sample=False,
-            temperature=1.0,
-            top_p=1.0,
+            do_sample=do_sample,
+            temperature=temperature if do_sample else 1.0,
+            top_p=top_p,
             pad_token_id=tok.pad_token_id or tok.eos_token_id,
         )
     new_tokens = out[0][inputs["input_ids"].shape[1]:]
@@ -119,7 +121,8 @@ def extract_code(response: str) -> str:
     return matches[-1].strip() if matches else ""
 
 
-def run_task(model, tok, evaluator: CodeEvaluator, task: dict, budget: int) -> dict:
+def run_task(model, tok, evaluator: CodeEvaluator, task: dict, budget: int,
+             temperature: float = 0.0, top_p: float = 1.0) -> dict:
     """Run one task for up to `budget` turns."""
     messages = [
         {"role": "system", "content": system_prompt(budget)},
@@ -129,7 +132,7 @@ def run_task(model, tok, evaluator: CodeEvaluator, task: dict, budget: int) -> d
     passed = False
     for turn_idx in range(budget):
         t0 = time.perf_counter()
-        response = generate(model, tok, messages)
+        response = generate(model, tok, messages, temperature=temperature, top_p=top_p)
         code = extract_code(response)
         if not code:
             turns.append({
@@ -172,26 +175,45 @@ def run_task(model, tok, evaluator: CodeEvaluator, task: dict, budget: int) -> d
 
 
 def evaluate_checkpoint(label: str, base: str, adapter: Optional[str],
-                        tasks: list, budgets: list) -> dict:
-    logger.info("Loading %s: base=%s adapter=%s", label, base, adapter)
+                        tasks: list, budgets: list,
+                        temperature: float = 0.0, top_p: float = 1.0,
+                        num_samples: int = 1) -> dict:
+    logger.info("Loading %s: base=%s adapter=%s T=%.2f k=%d",
+                label, base, adapter, temperature, num_samples)
     model, tok = load_model(base, adapter)
     evaluator = CodeEvaluator()
     per_budget = {}
     for N in budgets:
         logger.info("  Running %s @ budget=%d", label, N)
         results = []
-        passed = 0
+        sample_pass_total = 0
+        any_pass_tasks = 0
         for task in tasks:
-            rec = run_task(model, tok, evaluator, task, N)
-            if rec["passed"]:
-                passed += 1
-            results.append(rec)
-            logger.info("    %s N=%d %s: %s (turns=%d)", label, N, task["task_id"],
-                        "PASS" if rec["passed"] else "FAIL", rec["turns_used"])
+            samples = []
+            task_any_pass = False
+            for s in range(num_samples):
+                rec = run_task(model, tok, evaluator, task, N,
+                               temperature=temperature, top_p=top_p)
+                rec["sample"] = s
+                samples.append(rec)
+                if rec["passed"]:
+                    sample_pass_total += 1
+                    task_any_pass = True
+                logger.info("    %s N=%d %s sample=%d: %s (turns=%d)",
+                            label, N, task["task_id"], s,
+                            "PASS" if rec["passed"] else "FAIL", rec["turns_used"])
+            if task_any_pass:
+                any_pass_tasks += 1
+            results.append({"task_id": task["task_id"], "samples": samples,
+                            "any_pass": task_any_pass})
+        total_trials = len(tasks) * num_samples
         per_budget[str(N)] = {
-            "passed": passed,
-            "total": len(tasks),
-            "pass_rate": passed / len(tasks),
+            "passed": sample_pass_total,
+            "total_trials": total_trials,
+            "num_tasks": len(tasks),
+            "num_samples": num_samples,
+            "mean_pass_rate": sample_pass_total / total_trials,
+            "pass_at_k_rate": any_pass_tasks / len(tasks),
             "results": results,
         }
     del model, tok
@@ -208,6 +230,11 @@ def main():
     parser.add_argument("--base-model", default="Qwen/Qwen3-8B")
     parser.add_argument("--sft-adapter", default="models/qwen3-8b-interaction-scaling-sft")
     parser.add_argument("--grpo-adapter", default="models/qwen3-8b-interaction-scaling-grpo")
+    parser.add_argument("--temperature", type=float, default=0.0,
+                        help="Sampling temperature. 0 = greedy.")
+    parser.add_argument("--top-p", type=float, default=1.0)
+    parser.add_argument("--num-samples", type=int, default=1,
+                        help="Independent samples per (task, budget). Only meaningful with temperature>0.")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
@@ -225,7 +252,11 @@ def main():
     for label in args.checkpoints:
         base, adapter = adapters[label]
         try:
-            all_results[label] = evaluate_checkpoint(label, base, adapter, tasks, args.budgets)
+            all_results[label] = evaluate_checkpoint(
+                label, base, adapter, tasks, args.budgets,
+                temperature=args.temperature, top_p=args.top_p,
+                num_samples=args.num_samples,
+            )
         except Exception as e:
             logger.exception("Eval failed for %s", label)
             all_results[label] = {"label": label, "error": str(e)}
@@ -241,7 +272,7 @@ def main():
         if "per_budget" not in r:
             print(f"{label:<8} | ERROR")
             continue
-        row = [f"{r['per_budget'][str(N)]['pass_rate']:.1%}" for N in args.budgets]
+        row = [f"{r['per_budget'][str(N)]['mean_pass_rate']:.1%}" for N in args.budgets]
         print(f"{label:<8} | " + " | ".join(f"{c:>4}" for c in row))
 
 
