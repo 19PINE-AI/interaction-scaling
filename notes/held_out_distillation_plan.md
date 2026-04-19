@@ -22,6 +22,8 @@ Two paths, in order of preference:
 
 **(a) Curated handwrite (~60 tasks).** Use the held-out taxonomy to seed fresh instances: if the held-out has "CSV parser escape-quote bug," we hand-author "CSV parser multi-line field bug" and "TSV parser tab-in-quoted-field bug" — same failure mode family, different surface.
 
+Held-out set drafted as `data/hard_benchmarks/code/code_tasks_heldout.json` (15 tasks, 2026-04-19): INI parser with quoted values, HTTP obs-fold continuation, shell-arg tokenizer, query-string repeated keys, natural sort, CIDR overlap, skip list multiset, counting Bloom filter remove, segment tree lazy propagation, custom-comparator min-heap, Huffman decoder bit-length bounds, ring buffer overwrite semantics, grapheme-aware truncate (ZWJ/RI/VS), cron step-range parser, HTTP content negotiation q-values. All 15 validated via `scripts/validate_heldout_tasks.py` — each buggy implementation actually fails its tests.
+
 **(b) Teacher-generated augmentation (+30–40 tasks).** Prompt Claude Sonnet with the held-out taxonomy minus the specific instances, ask it to generate new bug-in-function tasks with test harnesses, then manually review and dedupe against held-out. This is cheap but needs human review for distinctness.
 
 Target: 80 tasks across 6–8 bug-family buckets (≥8 per bucket).
@@ -42,7 +44,7 @@ Output files:
 
 Reuse the existing QLoRA + GRPO pipeline on Qwen3-8B:
 - SFT: 3 epochs, same hyperparameters as before.
-- GRPO: 3+ epochs, `max_completion_length=3072` (up from 2048 — 89% of prior rollouts were clipped), `num_generations=2`, grounded reward only (deterministic `test_code` pass/fail).
+- GRPO: 3 epochs, `max_completion_length=8192` (up from 2048 — 89% of prior rollouts were clipped; 8192 is the typical value in DeepSeek-R1 and Open-R1 papers), `num_generations=8` (up from 2 — 2 gives a one-sample baseline so advantages are noise; 8 is the stable floor, scale to 16 if VRAM allows), `max_length=10240` (prompt+completion), grounded reward only (deterministic `test_code` pass/fail for code).
 
 New adapter paths:
 - `models/qwen3-8b-interaction-scaling-sft-heldout/`
