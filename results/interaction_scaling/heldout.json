@@ -1,0 +1,4036 @@
+{
+  "base": {
+    "label": "base",
+    "per_budget": {
+      "1": {
+        "passed": 6,
+        "total": 15,
+        "pass_rate": 0.4,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.87
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1421,
+                "code_len": 1407,
+                "gen_s": 7.93
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.39
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 837,
+                "code_len": 823,
+                "gen_s": 5.76
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.86
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.82
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "RecursionError: maximum recursion depth exceeded in comparison",
+                "response_len": 2503,
+                "code_len": 2489,
+                "gen_s": 17.88
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1196,
+                "code_len": 1182,
+                "gen_s": 8.25
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1537,
+                "code_len": 1523,
+                "gen_s": 14.2
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1975,
+                "code_len": 1961,
+                "gen_s": 13.58
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1248,
+                "code_len": 1234,
+                "gen_s": 8.41
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1145,
+                "code_len": 1131,
+                "gen_s": 7.6
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1705,
+                "code_len": 1691,
+                "gen_s": 12.22
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1571,
+                "code_len": 1557,
+                "gen_s": 11.14
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1499,
+                "code_len": 1485,
+                "gen_s": 10.62
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "passed": 6,
+        "total": 15,
+        "pass_rate": 0.4,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.45
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.67
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1421,
+                "code_len": 1407,
+                "gen_s": 7.83
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1868,
+                "code_len": 1854,
+                "gen_s": 9.57
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.21
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.19
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 837,
+                "code_len": 823,
+                "gen_s": 5.73
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.84
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.91
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.81
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.84
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2972,
+                "code_len": 2958,
+                "gen_s": 20.42
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2855,
+                "code_len": 2841,
+                "gen_s": 19.87
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1244,
+                "code_len": 1230,
+                "gen_s": 8.37
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1537,
+                "code_len": 1523,
+                "gen_s": 13.99
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1975,
+                "code_len": 1961,
+                "gen_s": 13.7
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1248,
+                "code_len": 1234,
+                "gen_s": 8.35
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1145,
+                "code_len": 1131,
+                "gen_s": 7.58
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "NameError: undefined name referenced",
+                "response_len": 1544,
+                "code_len": 1530,
+                "gen_s": 10.12
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1540,
+                "code_len": 1526,
+                "gen_s": 10.21
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1030,
+                "code_len": 1016,
+                "gen_s": 8.13
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1512,
+                "code_len": 956,
+                "gen_s": 10.55
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1496,
+                "code_len": 1482,
+                "gen_s": 10.37
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1496,
+                "code_len": 1482,
+                "gen_s": 10.47
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "passed": 6,
+        "total": 15,
+        "pass_rate": 0.4,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.44
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.44
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.46
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1421,
+                "code_len": 1407,
+                "gen_s": 7.7
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1814,
+                "code_len": 1800,
+                "gen_s": 9.32
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1859,
+                "code_len": 1845,
+                "gen_s": 9.75
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.41
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.45
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.59
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 729,
+                "code_len": 715,
+                "gen_s": 5.11
+              },
+              {
+                "turn": 2,
+                "passed": true,
+                "error": null,
+                "response_len": 990,
+                "code_len": 976,
+                "gen_s": 6.55
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.9
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.88
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.96
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.9
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.76
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.74
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "RecursionError: maximum recursion depth exceeded in comparison",
+                "response_len": 2503,
+                "code_len": 2489,
+                "gen_s": 17.67
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2495,
+                "code_len": 2481,
+                "gen_s": 17.76
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2495,
+                "code_len": 2481,
+                "gen_s": 17.92
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1220,
+                "code_len": 1206,
+                "gen_s": 8.22
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1537,
+                "code_len": 1523,
+                "gen_s": 14.16
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1975,
+                "code_len": 1961,
+                "gen_s": 13.69
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1248,
+                "code_len": 1234,
+                "gen_s": 8.35
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1141,
+                "code_len": 1127,
+                "gen_s": 7.64
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 2417,
+                "gen_s": 41.85
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1038,
+                "code_len": 1024,
+                "gen_s": 7.92
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1748,
+                "code_len": 1146,
+                "gen_s": 12.82
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1775,
+                "code_len": 1174,
+                "gen_s": 12.81
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1499,
+                "code_len": 1485,
+                "gen_s": 10.45
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1499,
+                "code_len": 1485,
+                "gen_s": 10.44
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1766,
+                "code_len": 1752,
+                "gen_s": 11.9
+              }
+            ]
+          }
+        ]
+      },
+      "5": {
+        "passed": 7,
+        "total": 15,
+        "pass_rate": 0.4666666666666667,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.45
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.39
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 551,
+                "code_len": 537,
+                "gen_s": 4.39
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1110,
+                "code_len": 527,
+                "gen_s": 7.51
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1032,
+                "code_len": 527,
+                "gen_s": 6.99
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1421,
+                "code_len": 1407,
+                "gen_s": 7.61
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1814,
+                "code_len": 1800,
+                "gen_s": 9.11
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1859,
+                "code_len": 1845,
+                "gen_s": 9.56
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1859,
+                "code_len": 1845,
+                "gen_s": 9.67
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2191,
+                "code_len": 1845,
+                "gen_s": 11.0
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.05
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.23
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.17
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2400,
+                "code_len": 2386,
+                "gen_s": 14.16
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2773,
+                "code_len": 2386,
+                "gen_s": 16.04
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 729,
+                "code_len": 715,
+                "gen_s": 4.96
+              },
+              {
+                "turn": 2,
+                "passed": true,
+                "error": null,
+                "response_len": 990,
+                "code_len": 976,
+                "gen_s": 6.47
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.81
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.86
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 416,
+                "code_len": 402,
+                "gen_s": 2.83
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 799,
+                "code_len": 477,
+                "gen_s": 5.0
+              },
+              {
+                "turn": 5,
+                "passed": true,
+                "error": null,
+                "response_len": 888,
+                "code_len": 549,
+                "gen_s": 5.28
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.68
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.64
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 580,
+                "code_len": 566,
+                "gen_s": 5.75
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 584,
+                "code_len": 570,
+                "gen_s": 5.79
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 584,
+                "code_len": 570,
+                "gen_s": 5.85
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "RecursionError: maximum recursion depth exceeded in comparison",
+                "response_len": 2503,
+                "code_len": 2489,
+                "gen_s": 17.49
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2495,
+                "code_len": 2481,
+                "gen_s": 17.41
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2485,
+                "code_len": 2471,
+                "gen_s": 17.46
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2485,
+                "code_len": 2471,
+                "gen_s": 17.56
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2939,
+                "code_len": 2531,
+                "gen_s": 20.61
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1220,
+                "code_len": 1206,
+                "gen_s": 8.39
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1537,
+                "code_len": 1523,
+                "gen_s": 14.23
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1975,
+                "code_len": 1961,
+                "gen_s": 13.5
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1248,
+                "code_len": 1234,
+                "gen_s": 8.25
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1145,
+                "code_len": 1131,
+                "gen_s": 7.52
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1705,
+                "code_len": 1691,
+                "gen_s": 12.11
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2026,
+                "code_len": 2012,
+                "gen_s": 13.63
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2026,
+                "code_len": 2012,
+                "gen_s": 13.68
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2026,
+                "code_len": 2012,
+                "gen_s": 13.67
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "ModuleNotFoundError: No module named 'grapheme'",
+                "response_len": 959,
+                "code_len": 276,
+                "gen_s": 5.78
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1038,
+                "code_len": 1024,
+                "gen_s": 7.93
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1658,
+                "code_len": 1066,
+                "gen_s": 11.88
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1735,
+                "code_len": 1024,
+                "gen_s": 12.88
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1658,
+                "code_len": 1066,
+                "gen_s": 11.94
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1735,
+                "code_len": 1024,
+                "gen_s": 13.06
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1499,
+                "code_len": 1485,
+                "gen_s": 10.5
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1499,
+                "code_len": 1485,
+                "gen_s": 10.41
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2316,
+                "code_len": 2302,
+                "gen_s": 14.81
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2191,
+                "code_len": 2177,
+                "gen_s": 13.98
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2191,
+                "code_len": 2177,
+                "gen_s": 13.93
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "sft": {
+    "label": "sft",
+    "per_budget": {
+      "1": {
+        "passed": 4,
+        "total": 15,
+        "pass_rate": 0.26666666666666666,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 914,
+                "code_len": 888,
+                "gen_s": 10.35
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1103,
+                "code_len": 1077,
+                "gen_s": 10.98
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "Execution timed out after 15 seconds",
+                "response_len": 2778,
+                "code_len": 2764,
+                "gen_s": 38.83
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.63
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.18
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 590,
+                "code_len": 564,
+                "gen_s": 9.57
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2313,
+                "code_len": 2259,
+                "gen_s": 27.01
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1697,
+                "code_len": 1683,
+                "gen_s": 18.02
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2509,
+                "code_len": 2495,
+                "gen_s": 32.02
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2040,
+                "code_len": 2026,
+                "gen_s": 22.39
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1251,
+                "code_len": 1237,
+                "gen_s": 13.89
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1193,
+                "code_len": 1179,
+                "gen_s": 12.82
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1709,
+                "code_len": 1695,
+                "gen_s": 20.55
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1144,
+                "code_len": 1130,
+                "gen_s": 14.52
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2047,
+                "code_len": 1993,
+                "gen_s": 23.52
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "passed": 3,
+        "total": 15,
+        "pass_rate": 0.2,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1425,
+                "code_len": 1399,
+                "gen_s": 15.03
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 274,
+                "gen_s": 2.51
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1103,
+                "code_len": 1077,
+                "gen_s": 10.77
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 401,
+                "gen_s": 3.55
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 65,
+                "gen_s": 0.75
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.89
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 284,
+                "gen_s": 2.61
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 486,
+                "code_len": 460,
+                "gen_s": 5.22
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 741,
+                "code_len": 460,
+                "gen_s": 7.8
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 590,
+                "code_len": 564,
+                "gen_s": 9.6
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 355,
+                "gen_s": 3.23
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2312,
+                "code_len": 2259,
+                "gen_s": 27.82
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 378,
+                "gen_s": 3.36
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1426,
+                "code_len": 1400,
+                "gen_s": 15.51
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2384,
+                "code_len": 2358,
+                "gen_s": 31.52
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1890,
+                "code_len": 1864,
+                "gen_s": 21.67
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 64,
+                "gen_s": 0.76
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1137,
+                "code_len": 1111,
+                "gen_s": 12.65
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1666,
+                "code_len": 1111,
+                "gen_s": 17.01
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1748,
+                "code_len": 1722,
+                "gen_s": 19.54
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 2258,
+                "gen_s": 18.93
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1112,
+                "code_len": 1059,
+                "gen_s": 14.16
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 260,
+                "gen_s": 2.46
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1834,
+                "code_len": 1781,
+                "gen_s": 20.89
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2053,
+                "code_len": 1781,
+                "gen_s": 22.8
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "passed": 4,
+        "total": 15,
+        "pass_rate": 0.26666666666666666,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1041,
+                "code_len": 1015,
+                "gen_s": 11.74
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 233,
+                "gen_s": 2.07
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "Execution timed out after 15 seconds",
+                "response_len": 2016,
+                "code_len": 1990,
+                "gen_s": 33.65
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 42,
+                "gen_s": 0.54
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2222,
+                "code_len": 2168,
+                "gen_s": 22.02
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 321,
+                "gen_s": 3.12
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.91
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 396,
+                "gen_s": 4.08
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.35
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 720,
+                "code_len": 459,
+                "gen_s": 7.72
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 723,
+                "code_len": 459,
+                "gen_s": 7.91
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 590,
+                "code_len": 564,
+                "gen_s": 9.78
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 363,
+                "gen_s": 3.34
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2313,
+                "code_len": 2259,
+                "gen_s": 27.42
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2912,
+                "code_len": 2259,
+                "gen_s": 33.86
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2283,
+                "code_len": 2259,
+                "gen_s": 27.44
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1450,
+                "code_len": 1424,
+                "gen_s": 15.67
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2626,
+                "code_len": 2600,
+                "gen_s": 33.19
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1762,
+                "code_len": 1736,
+                "gen_s": 20.65
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1260,
+                "code_len": 1234,
+                "gen_s": 13.64
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1137,
+                "code_len": 1111,
+                "gen_s": 12.39
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1555,
+                "code_len": 1111,
+                "gen_s": 15.78
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1135,
+                "code_len": 1111,
+                "gen_s": 12.44
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1748,
+                "code_len": 1722,
+                "gen_s": 19.03
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 334,
+                "gen_s": 3.57
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1113,
+                "code_len": 1059,
+                "gen_s": 13.89
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 379,
+                "gen_s": 3.25
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1669,
+                "code_len": 1615,
+                "gen_s": 19.22
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 346,
+                "gen_s": 3.36
+              }
+            ]
+          }
+        ]
+      },
+      "5": {
+        "passed": 4,
+        "total": 15,
+        "pass_rate": 0.26666666666666666,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1289,
+                "code_len": 1263,
+                "gen_s": 14.1
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 270,
+                "gen_s": 2.54
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1854,
+                "code_len": 1828,
+                "gen_s": 16.73
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 309,
+                "gen_s": 2.66
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2295,
+                "code_len": 2241,
+                "gen_s": 21.66
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 355,
+                "gen_s": 3.88
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 11.16
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 311,
+                "gen_s": 3.62
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.31
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 720,
+                "code_len": 459,
+                "gen_s": 7.84
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 723,
+                "code_len": 459,
+                "gen_s": 7.65
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 723,
+                "code_len": 459,
+                "gen_s": 7.65
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 26,
+                "gen_s": 0.45
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 590,
+                "code_len": 564,
+                "gen_s": 9.39
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 307,
+                "gen_s": 2.79
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2313,
+                "code_len": 2259,
+                "gen_s": 26.85
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 558,
+                "gen_s": 5.53
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1426,
+                "code_len": 1400,
+                "gen_s": 15.52
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2611,
+                "code_len": 2585,
+                "gen_s": 32.86
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1890,
+                "code_len": 1864,
+                "gen_s": 22.15
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1251,
+                "code_len": 1237,
+                "gen_s": 13.87
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1137,
+                "code_len": 1111,
+                "gen_s": 12.54
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 437,
+                "gen_s": 4.75
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1748,
+                "code_len": 1722,
+                "gen_s": 19.15
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 1359,
+                "gen_s": 11.89
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1113,
+                "code_len": 1059,
+                "gen_s": 14.01
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 6289,
+                "gen_s": 68.02
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1807,
+                "code_len": 1753,
+                "gen_s": 21.01
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 340,
+                "gen_s": 3.39
+              }
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "grpo": {
+    "label": "grpo",
+    "per_budget": {
+      "1": {
+        "passed": 5,
+        "total": 15,
+        "pass_rate": 0.3333333333333333,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 914,
+                "code_len": 888,
+                "gen_s": 10.54
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1103,
+                "code_len": 1077,
+                "gen_s": 10.67
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "Execution timed out after 15 seconds",
+                "response_len": 2778,
+                "code_len": 2764,
+                "gen_s": 38.87
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.85
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.24
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 590,
+                "code_len": 564,
+                "gen_s": 9.5
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2313,
+                "code_len": 2259,
+                "gen_s": 27.63
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1697,
+                "code_len": 1683,
+                "gen_s": 17.84
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2509,
+                "code_len": 2495,
+                "gen_s": 32.02
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1750,
+                "code_len": 1736,
+                "gen_s": 20.48
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1251,
+                "code_len": 1237,
+                "gen_s": 13.65
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 1,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1197,
+                "code_len": 1183,
+                "gen_s": 12.9
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1974,
+                "code_len": 1960,
+                "gen_s": 25.21
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1144,
+                "code_len": 1130,
+                "gen_s": 14.56
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 1,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1728,
+                "code_len": 1674,
+                "gen_s": 19.46
+              }
+            ]
+          }
+        ]
+      },
+      "2": {
+        "passed": 3,
+        "total": 15,
+        "pass_rate": 0.2,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1041,
+                "code_len": 1015,
+                "gen_s": 11.66
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 325,
+                "gen_s": 2.92
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1103,
+                "code_len": 1077,
+                "gen_s": 10.82
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 179,
+                "gen_s": 1.75
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 65,
+                "gen_s": 0.76
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.81
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 311,
+                "gen_s": 3.35
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.19
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 253,
+                "gen_s": 2.64
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 603,
+                "code_len": 577,
+                "gen_s": 9.67
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 291,
+                "gen_s": 2.63
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2312,
+                "code_len": 2259,
+                "gen_s": 27.0
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 378,
+                "gen_s": 3.42
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1450,
+                "code_len": 1424,
+                "gen_s": 15.86
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2626,
+                "code_len": 2600,
+                "gen_s": 33.61
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 2,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1890,
+                "code_len": 1864,
+                "gen_s": 21.45
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 45,
+                "gen_s": 0.51
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1137,
+                "code_len": 1111,
+                "gen_s": 12.45
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1597,
+                "code_len": 1111,
+                "gen_s": 17.05
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1599,
+                "code_len": 1573,
+                "gen_s": 18.06
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 1989,
+                "gen_s": 17.24
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1112,
+                "code_len": 1059,
+                "gen_s": 14.1
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 357,
+                "gen_s": 3.39
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 2,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1755,
+                "code_len": 1702,
+                "gen_s": 19.81
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2047,
+                "code_len": 1702,
+                "gen_s": 22.48
+              }
+            ]
+          }
+        ]
+      },
+      "3": {
+        "passed": 4,
+        "total": 15,
+        "pass_rate": 0.26666666666666666,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1121,
+                "code_len": 1095,
+                "gen_s": 12.41
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 950,
+                "gen_s": 8.29
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1046,
+                "code_len": 1020,
+                "gen_s": 9.64
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 424,
+                "gen_s": 3.98
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2010,
+                "code_len": 1984,
+                "gen_s": 19.94
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2632,
+                "code_len": 2049,
+                "gen_s": 24.54
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 26,
+                "gen_s": 0.48
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.75
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 186,
+                "gen_s": 1.69
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.34
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 251,
+                "gen_s": 2.63
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 590,
+                "code_len": 564,
+                "gen_s": 9.53
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 291,
+                "gen_s": 2.66
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2313,
+                "code_len": 2259,
+                "gen_s": 27.3
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2599,
+                "code_len": 2259,
+                "gen_s": 29.93
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2283,
+                "code_len": 2259,
+                "gen_s": 27.46
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1450,
+                "code_len": 1424,
+                "gen_s": 15.91
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2626,
+                "code_len": 2600,
+                "gen_s": 33.58
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1890,
+                "code_len": 1864,
+                "gen_s": 21.72
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 3,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1260,
+                "code_len": 1234,
+                "gen_s": 13.77
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1137,
+                "code_len": 1111,
+                "gen_s": 12.63
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1479,
+                "code_len": 1111,
+                "gen_s": 15.67
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1135,
+                "code_len": 1111,
+                "gen_s": 12.65
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1627,
+                "code_len": 1601,
+                "gen_s": 18.51
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 334,
+                "gen_s": 2.72
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1113,
+                "code_len": 1059,
+                "gen_s": 14.14
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 787,
+                "gen_s": 8.38
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 3,
+            "passed": false,
+            "turns_used": 3,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1728,
+                "code_len": 1674,
+                "gen_s": 19.8
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2005,
+                "code_len": 1674,
+                "gen_s": 22.1
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2007,
+                "code_len": 1674,
+                "gen_s": 22.12
+              }
+            ]
+          }
+        ]
+      },
+      "5": {
+        "passed": 5,
+        "total": 15,
+        "pass_rate": 0.3333333333333333,
+        "results": [
+          {
+            "task_id": "code_h001",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1041,
+                "code_len": 1015,
+                "gen_s": 11.76
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 323,
+                "gen_s": 2.92
+              }
+            ]
+          },
+          {
+            "task_id": "code_h002",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1103,
+                "code_len": 1077,
+                "gen_s": 10.85
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 179,
+                "gen_s": 1.76
+              }
+            ]
+          },
+          {
+            "task_id": "code_h003",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2278,
+                "code_len": 2224,
+                "gen_s": 22.52
+              }
+            ]
+          },
+          {
+            "task_id": "code_h004",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1005,
+                "code_len": 979,
+                "gen_s": 10.91
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 311,
+                "gen_s": 3.44
+              }
+            ]
+          },
+          {
+            "task_id": "code_h005",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 485,
+                "code_len": 459,
+                "gen_s": 5.29
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 251,
+                "gen_s": 2.69
+              }
+            ]
+          },
+          {
+            "task_id": "code_h006",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 603,
+                "code_len": 577,
+                "gen_s": 9.86
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 291,
+                "gen_s": 2.72
+              }
+            ]
+          },
+          {
+            "task_id": "code_h007",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2313,
+                "code_len": 2259,
+                "gen_s": 27.45
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 576,
+                "gen_s": 5.73
+              }
+            ]
+          },
+          {
+            "task_id": "code_h008",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1450,
+                "code_len": 1424,
+                "gen_s": 15.83
+              }
+            ]
+          },
+          {
+            "task_id": "code_h009",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 2631,
+                "code_len": 2605,
+                "gen_s": 33.7
+              }
+            ]
+          },
+          {
+            "task_id": "code_h010",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1750,
+                "code_len": 1736,
+                "gen_s": 21.14
+              }
+            ]
+          },
+          {
+            "task_id": "code_h011",
+            "budget": 5,
+            "passed": true,
+            "turns_used": 1,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": true,
+                "error": null,
+                "response_len": 1260,
+                "code_len": 1234,
+                "gen_s": 14.9
+              }
+            ]
+          },
+          {
+            "task_id": "code_h012",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1137,
+                "code_len": 1111,
+                "gen_s": 12.57
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 437,
+                "gen_s": 4.82
+              }
+            ]
+          },
+          {
+            "task_id": "code_h013",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1748,
+                "code_len": 1722,
+                "gen_s": 19.31
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 7509,
+                "gen_s": 70.43
+              }
+            ]
+          },
+          {
+            "task_id": "code_h014",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 2,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1113,
+                "code_len": 1059,
+                "gen_s": 14.49
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 289,
+                "gen_s": 2.57
+              }
+            ]
+          },
+          {
+            "task_id": "code_h015",
+            "budget": 5,
+            "passed": false,
+            "turns_used": 5,
+            "turns": [
+              {
+                "turn": 1,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1728,
+                "code_len": 1674,
+                "gen_s": 22.01
+              },
+              {
+                "turn": 2,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 2049,
+                "code_len": 1674,
+                "gen_s": 24.01
+              },
+              {
+                "turn": 3,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1933,
+                "code_len": 1674,
+                "gen_s": 22.32
+              },
+              {
+                "turn": 4,
+                "passed": false,
+                "error": "AssertionError: one or more test assertions failed",
+                "response_len": 1933,
+                "code_len": 1674,
+                "gen_s": 22.08
+              },
+              {
+                "turn": 5,
+                "passed": false,
+                "error": "no_code_block",
+                "response_len": 27,
+                "gen_s": 0.6
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}

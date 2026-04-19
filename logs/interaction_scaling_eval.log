@@ -1,0 +1,258 @@
+2026-04-19 03:57:14,294 INFO Loaded 15 tasks from data/hard_benchmarks/code/code_tasks_heldout.json
+2026-04-19 03:57:14,294 INFO Loading base: base=Qwen/Qwen3-8B adapter=None
+2026-04-19 03:57:14,413 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-04-19 03:57:14,414 WARNING Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+2026-04-19 03:57:14,421 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 03:57:14,546 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:14,553 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-04-19 03:57:14,647 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-04-19 03:57:14,740 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-04-19 03:57:15,177 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+2026-04-19 03:57:15,257 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:15,263 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 03:57:15,466 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:15,472 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 03:57:17,900 INFO HTTP Request: HEAD https://huggingface.co/kernels-community/flash-attn/resolve/main/kernel-status.toml "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:17,981 INFO HTTP Request: HEAD https://huggingface.co/kernels-community/flash-attn2/resolve/main/kernel-status.toml "HTTP/1.1 404 Not Found"
+2026-04-19 03:57:18,066 INFO HTTP Request: GET https://huggingface.co/api/models/kernels-community/flash-attn/tree/main/build?recursive=false&expand=false "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:18,147 INFO HTTP Request: GET https://huggingface.co/api/models/kernels-community/flash-attn2/tree/main/build?recursive=false&expand=false "HTTP/1.1 200 OK"
+2026-04-19 03:57:18,226 INFO HTTP Request: GET https://huggingface.co/api/models/kernels-community/flash-attn/revision/main "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:18,315 INFO HTTP Request: GET https://huggingface.co/api/models/kernels-community/flash-attn2/revision/main "HTTP/1.1 200 OK"
+Fetching 22 files:   0%|          | 0/22 [00:00<?, ?it/s]Fetching 22 files: 100%|██████████| 22/22 [00:00<00:00, 62516.73it/s]
+Loading weights:   0%|          | 0/399 [00:00<?, ?it/s]Loading weights:   0%|          | 1/399 [00:00<00:51,  7.80it/s]Loading weights:   1%|          | 2/399 [00:00<00:57,  6.92it/s]Loading weights:   4%|▍         | 16/399 [00:00<00:07, 54.70it/s]Loading weights:  10%|▉         | 39/399 [00:00<00:03, 110.47it/s]Loading weights:  16%|█▋        | 65/399 [00:00<00:02, 156.25it/s]Loading weights:  22%|██▏       | 89/399 [00:00<00:01, 182.24it/s]Loading weights:  29%|██▊       | 114/399 [00:00<00:01, 202.29it/s]Loading weights:  34%|███▍      | 137/399 [00:00<00:01, 207.88it/s]Loading weights:  40%|████      | 160/399 [00:01<00:01, 212.33it/s]Loading weights:  48%|████▊     | 191/399 [00:01<00:00, 237.58it/s]Loading weights:  54%|█████▍    | 216/399 [00:01<00:00, 235.88it/s]Loading weights:  62%|██████▏   | 246/399 [00:01<00:00, 249.99it/s]Loading weights:  68%|██████▊   | 272/399 [00:01<00:00, 246.91it/s]Loading weights:  75%|███████▌  | 301/399 [00:01<00:00, 256.87it/s]Loading weights:  82%|████████▏ | 327/399 [00:01<00:00, 256.68it/s]Loading weights:  89%|████████▉ | 356/399 [00:01<00:00, 263.45it/s]Loading weights:  96%|█████████▌| 383/399 [00:01<00:00, 258.15it/s]Loading weights: 100%|██████████| 399/399 [00:01<00:00, 208.68it/s]
+2026-04-19 03:57:20,727 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 03:57:20,740 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/generation_config.json "HTTP/1.1 200 OK"
+2026-04-19 03:57:20,746 INFO   Running base @ budget=1
+The following generation flags are not valid and may be ignored: ['top_k']. Set `TRANSFORMERS_VERBOSITY=info` for more details.
+2026-04-19 03:57:25,611 INFO     base N=1 code_h001: FAIL (turns=1)
+2026-04-19 03:57:33,540 INFO     base N=1 code_h002: FAIL (turns=1)
+2026-04-19 03:57:47,934 INFO     base N=1 code_h003: FAIL (turns=1)
+2026-04-19 03:57:53,696 INFO     base N=1 code_h004: PASS (turns=1)
+2026-04-19 03:57:56,559 INFO     base N=1 code_h005: FAIL (turns=1)
+2026-04-19 03:58:02,380 INFO     base N=1 code_h006: FAIL (turns=1)
+2026-04-19 03:58:20,264 INFO     base N=1 code_h007: FAIL (turns=1)
+2026-04-19 03:58:28,517 INFO     base N=1 code_h008: PASS (turns=1)
+2026-04-19 03:58:42,715 INFO     base N=1 code_h009: PASS (turns=1)
+2026-04-19 03:58:56,291 INFO     base N=1 code_h010: PASS (turns=1)
+2026-04-19 03:59:04,698 INFO     base N=1 code_h011: PASS (turns=1)
+2026-04-19 03:59:12,295 INFO     base N=1 code_h012: PASS (turns=1)
+2026-04-19 03:59:24,514 INFO     base N=1 code_h013: FAIL (turns=1)
+2026-04-19 03:59:35,652 INFO     base N=1 code_h014: FAIL (turns=1)
+2026-04-19 03:59:46,270 INFO     base N=1 code_h015: FAIL (turns=1)
+2026-04-19 03:59:46,271 INFO   Running base @ budget=2
+2026-04-19 03:59:55,393 INFO     base N=2 code_h001: FAIL (turns=2)
+2026-04-19 04:00:12,798 INFO     base N=2 code_h002: FAIL (turns=2)
+2026-04-19 04:00:41,202 INFO     base N=2 code_h003: FAIL (turns=2)
+2026-04-19 04:00:46,927 INFO     base N=2 code_h004: PASS (turns=1)
+2026-04-19 04:00:52,674 INFO     base N=2 code_h005: FAIL (turns=2)
+2026-04-19 04:01:04,324 INFO     base N=2 code_h006: FAIL (turns=2)
+2026-04-19 04:01:44,619 INFO     base N=2 code_h007: FAIL (turns=2)
+2026-04-19 04:01:52,990 INFO     base N=2 code_h008: PASS (turns=1)
+2026-04-19 04:02:06,986 INFO     base N=2 code_h009: PASS (turns=1)
+2026-04-19 04:02:20,690 INFO     base N=2 code_h010: PASS (turns=1)
+2026-04-19 04:02:29,042 INFO     base N=2 code_h011: PASS (turns=1)
+2026-04-19 04:02:36,624 INFO     base N=2 code_h012: PASS (turns=1)
+2026-04-19 04:02:56,953 INFO     base N=2 code_h013: FAIL (turns=2)
+2026-04-19 04:03:15,631 INFO     base N=2 code_h014: FAIL (turns=2)
+2026-04-19 04:03:36,465 INFO     base N=2 code_h015: FAIL (turns=2)
+2026-04-19 04:03:36,465 INFO   Running base @ budget=3
+2026-04-19 04:03:49,800 INFO     base N=3 code_h001: FAIL (turns=3)
+2026-04-19 04:04:16,568 INFO     base N=3 code_h002: FAIL (turns=3)
+2026-04-19 04:05:00,013 INFO     base N=3 code_h003: FAIL (turns=3)
+2026-04-19 04:05:11,677 INFO     base N=3 code_h004: PASS (turns=2)
+2026-04-19 04:05:20,412 INFO     base N=3 code_h005: FAIL (turns=3)
+2026-04-19 04:05:37,815 INFO     base N=3 code_h006: FAIL (turns=3)
+2026-04-19 04:06:31,157 INFO     base N=3 code_h007: FAIL (turns=3)
+2026-04-19 04:06:39,376 INFO     base N=3 code_h008: PASS (turns=1)
+2026-04-19 04:06:53,538 INFO     base N=3 code_h009: PASS (turns=1)
+2026-04-19 04:07:07,226 INFO     base N=3 code_h010: PASS (turns=1)
+2026-04-19 04:07:15,577 INFO     base N=3 code_h011: PASS (turns=1)
+2026-04-19 04:07:23,222 INFO     base N=3 code_h012: PASS (turns=1)
+2026-04-19 04:08:05,073 INFO     base N=3 code_h013: FAIL (turns=1)
+2026-04-19 04:08:38,623 INFO     base N=3 code_h014: FAIL (turns=3)
+2026-04-19 04:09:11,413 INFO     base N=3 code_h015: FAIL (turns=3)
+2026-04-19 04:09:11,413 INFO   Running base @ budget=5
+2026-04-19 04:09:39,149 INFO     base N=5 code_h001: FAIL (turns=5)
+2026-04-19 04:10:26,105 INFO     base N=5 code_h002: FAIL (turns=5)
+2026-04-19 04:11:38,769 INFO     base N=5 code_h003: FAIL (turns=5)
+2026-04-19 04:11:50,198 INFO     base N=5 code_h004: PASS (turns=2)
+2026-04-19 04:12:08,975 INFO     base N=5 code_h005: PASS (turns=5)
+2026-04-19 04:12:37,683 INFO     base N=5 code_h006: FAIL (turns=5)
+2026-04-19 04:14:08,211 INFO     base N=5 code_h007: FAIL (turns=5)
+2026-04-19 04:14:16,605 INFO     base N=5 code_h008: PASS (turns=1)
+2026-04-19 04:14:30,832 INFO     base N=5 code_h009: PASS (turns=1)
+2026-04-19 04:14:44,337 INFO     base N=5 code_h010: PASS (turns=1)
+2026-04-19 04:14:52,586 INFO     base N=5 code_h011: PASS (turns=1)
+2026-04-19 04:15:00,102 INFO     base N=5 code_h012: PASS (turns=1)
+2026-04-19 04:15:58,969 INFO     base N=5 code_h013: FAIL (turns=5)
+2026-04-19 04:16:56,658 INFO     base N=5 code_h014: FAIL (turns=5)
+2026-04-19 04:18:00,295 INFO     base N=5 code_h015: FAIL (turns=5)
+2026-04-19 04:18:00,314 INFO Loading sft: base=Qwen/Qwen3-8B adapter=models/qwen3-8b-interaction-scaling-sft
+2026-04-19 04:18:00,405 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:18:00,411 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 04:18:00,540 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:18:00,545 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-04-19 04:18:00,626 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-04-19 04:18:00,713 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-04-19 04:18:01,076 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+2026-04-19 04:18:01,158 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:18:01,165 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 04:18:01,252 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:18:01,260 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/399 [00:00<?, ?it/s]Loading weights:   0%|          | 1/399 [00:00<00:42,  9.31it/s]Loading weights:   1%|          | 2/399 [00:00<00:44,  8.89it/s]Loading weights:   7%|▋         | 28/399 [00:00<00:03, 112.88it/s]Loading weights:  15%|█▍        | 59/399 [00:00<00:01, 185.19it/s]Loading weights:  22%|██▏       | 89/399 [00:00<00:01, 222.73it/s]Loading weights:  29%|██▉       | 116/399 [00:00<00:01, 235.51it/s]Loading weights:  37%|███▋      | 148/399 [00:00<00:00, 260.85it/s]Loading weights:  45%|████▌     | 180/399 [00:00<00:00, 278.43it/s]Loading weights:  53%|█████▎    | 210/399 [00:00<00:00, 284.58it/s]Loading weights:  60%|█████▉    | 239/399 [00:01<00:00, 283.46it/s]Loading weights:  67%|██████▋   | 269/399 [00:01<00:00, 286.51it/s]Loading weights:  75%|███████▌  | 301/399 [00:01<00:00, 296.41it/s]Loading weights:  83%|████████▎ | 331/399 [00:01<00:00, 297.00it/s]Loading weights:  90%|█████████ | 361/399 [00:01<00:00, 289.50it/s]Loading weights:  98%|█████████▊| 391/399 [00:01<00:00, 282.00it/s]Loading weights: 100%|██████████| 399/399 [00:01<00:00, 252.61it/s]
+2026-04-19 04:18:03,237 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:18:03,244 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/generation_config.json "HTTP/1.1 200 OK"
+2026-04-19 04:18:03,647 INFO   Running sft @ budget=1
+2026-04-19 04:18:13,994 INFO     sft N=1 code_h001: FAIL (turns=1)
+2026-04-19 04:18:24,976 INFO     sft N=1 code_h002: FAIL (turns=1)
+2026-04-19 04:19:03,806 WARNING Execution timed out after 15 s for /tmp/tmp5bhmilhv.py
+2026-04-19 04:19:03,806 INFO     sft N=1 code_h003: FAIL (turns=1)
+2026-04-19 04:19:14,436 INFO     sft N=1 code_h004: FAIL (turns=1)
+2026-04-19 04:19:19,613 INFO     sft N=1 code_h005: FAIL (turns=1)
+2026-04-19 04:19:29,182 INFO     sft N=1 code_h006: FAIL (turns=1)
+2026-04-19 04:19:56,187 INFO     sft N=1 code_h007: FAIL (turns=1)
+2026-04-19 04:20:14,208 INFO     sft N=1 code_h008: PASS (turns=1)
+2026-04-19 04:20:46,227 INFO     sft N=1 code_h009: PASS (turns=1)
+2026-04-19 04:21:08,620 INFO     sft N=1 code_h010: FAIL (turns=1)
+2026-04-19 04:21:22,506 INFO     sft N=1 code_h011: PASS (turns=1)
+2026-04-19 04:21:35,326 INFO     sft N=1 code_h012: PASS (turns=1)
+2026-04-19 04:21:55,881 INFO     sft N=1 code_h013: FAIL (turns=1)
+2026-04-19 04:22:10,405 INFO     sft N=1 code_h014: FAIL (turns=1)
+2026-04-19 04:22:33,925 INFO     sft N=1 code_h015: FAIL (turns=1)
+2026-04-19 04:22:33,925 INFO   Running sft @ budget=2
+2026-04-19 04:22:51,464 INFO     sft N=2 code_h001: FAIL (turns=2)
+2026-04-19 04:23:05,781 INFO     sft N=2 code_h002: FAIL (turns=2)
+2026-04-19 04:23:06,535 INFO     sft N=2 code_h003: FAIL (turns=1)
+2026-04-19 04:23:20,028 INFO     sft N=2 code_h004: FAIL (turns=2)
+2026-04-19 04:23:33,048 INFO     sft N=2 code_h005: FAIL (turns=2)
+2026-04-19 04:23:45,878 INFO     sft N=2 code_h006: FAIL (turns=2)
+2026-04-19 04:24:17,056 INFO     sft N=2 code_h007: FAIL (turns=2)
+2026-04-19 04:24:32,568 INFO     sft N=2 code_h008: PASS (turns=1)
+2026-04-19 04:25:04,091 INFO     sft N=2 code_h009: PASS (turns=1)
+2026-04-19 04:25:25,764 INFO     sft N=2 code_h010: PASS (turns=1)
+2026-04-19 04:25:26,525 INFO     sft N=2 code_h011: FAIL (turns=1)
+2026-04-19 04:25:56,186 INFO     sft N=2 code_h012: FAIL (turns=2)
+2026-04-19 04:26:34,665 INFO     sft N=2 code_h013: FAIL (turns=2)
+2026-04-19 04:26:51,287 INFO     sft N=2 code_h014: FAIL (turns=2)
+2026-04-19 04:27:34,979 INFO     sft N=2 code_h015: FAIL (turns=2)
+2026-04-19 04:27:34,979 INFO   Running sft @ budget=3
+2026-04-19 04:27:48,788 INFO     sft N=3 code_h001: FAIL (turns=2)
+2026-04-19 04:28:22,433 WARNING Execution timed out after 15 s for /tmp/tmp48jvls_7.py
+2026-04-19 04:28:22,970 INFO     sft N=3 code_h002: FAIL (turns=2)
+2026-04-19 04:28:48,113 INFO     sft N=3 code_h003: FAIL (turns=2)
+2026-04-19 04:29:03,099 INFO     sft N=3 code_h004: FAIL (turns=2)
+2026-04-19 04:29:24,075 INFO     sft N=3 code_h005: FAIL (turns=3)
+2026-04-19 04:29:37,192 INFO     sft N=3 code_h006: FAIL (turns=2)
+2026-04-19 04:31:05,913 INFO     sft N=3 code_h007: FAIL (turns=3)
+2026-04-19 04:31:21,584 INFO     sft N=3 code_h008: PASS (turns=1)
+2026-04-19 04:31:54,770 INFO     sft N=3 code_h009: PASS (turns=1)
+2026-04-19 04:32:15,422 INFO     sft N=3 code_h010: PASS (turns=1)
+2026-04-19 04:32:29,059 INFO     sft N=3 code_h011: PASS (turns=1)
+2026-04-19 04:33:09,672 INFO     sft N=3 code_h012: FAIL (turns=3)
+2026-04-19 04:33:32,273 INFO     sft N=3 code_h013: FAIL (turns=2)
+2026-04-19 04:33:49,414 INFO     sft N=3 code_h014: FAIL (turns=2)
+2026-04-19 04:34:11,997 INFO     sft N=3 code_h015: FAIL (turns=2)
+2026-04-19 04:34:11,997 INFO   Running sft @ budget=5
+2026-04-19 04:34:28,633 INFO     sft N=5 code_h001: FAIL (turns=2)
+2026-04-19 04:34:48,027 INFO     sft N=5 code_h002: FAIL (turns=2)
+2026-04-19 04:35:13,571 INFO     sft N=5 code_h003: FAIL (turns=2)
+2026-04-19 04:35:28,349 INFO     sft N=5 code_h004: FAIL (turns=2)
+2026-04-19 04:35:57,251 INFO     sft N=5 code_h005: FAIL (turns=5)
+2026-04-19 04:36:09,437 INFO     sft N=5 code_h006: FAIL (turns=2)
+2026-04-19 04:36:41,821 INFO     sft N=5 code_h007: FAIL (turns=2)
+2026-04-19 04:36:57,341 INFO     sft N=5 code_h008: PASS (turns=1)
+2026-04-19 04:37:30,198 INFO     sft N=5 code_h009: PASS (turns=1)
+2026-04-19 04:37:52,347 INFO     sft N=5 code_h010: PASS (turns=1)
+2026-04-19 04:38:06,217 INFO     sft N=5 code_h011: PASS (turns=1)
+2026-04-19 04:38:23,513 INFO     sft N=5 code_h012: FAIL (turns=2)
+2026-04-19 04:38:54,556 INFO     sft N=5 code_h013: FAIL (turns=2)
+2026-04-19 04:40:16,589 INFO     sft N=5 code_h014: FAIL (turns=2)
+2026-04-19 04:40:40,992 INFO     sft N=5 code_h015: FAIL (turns=2)
+2026-04-19 04:40:41,014 INFO Loading grpo: base=Qwen/Qwen3-8B adapter=models/qwen3-8b-interaction-scaling-grpo
+2026-04-19 04:40:41,101 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:40:41,108 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 04:40:41,192 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/tokenizer_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:40:41,199 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/tokenizer_config.json "HTTP/1.1 200 OK"
+2026-04-19 04:40:41,279 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main/additional_chat_templates?recursive=false&expand=false "HTTP/1.1 404 Not Found"
+2026-04-19 04:40:41,363 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B/tree/main?recursive=true&expand=false "HTTP/1.1 200 OK"
+2026-04-19 04:40:41,742 INFO HTTP Request: GET https://huggingface.co/api/models/Qwen/Qwen3-8B "HTTP/1.1 200 OK"
+2026-04-19 04:40:41,823 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:40:41,828 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+2026-04-19 04:40:41,911 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:40:41,916 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/config.json "HTTP/1.1 200 OK"
+Loading weights:   0%|          | 0/399 [00:00<?, ?it/s]Loading weights:   0%|          | 1/399 [00:00<00:47,  8.40it/s]Loading weights:   1%|          | 2/399 [00:00<00:48,  8.19it/s]Loading weights:   7%|▋         | 27/399 [00:00<00:03, 104.37it/s]Loading weights:  14%|█▍        | 56/399 [00:00<00:02, 169.94it/s]Loading weights:  21%|██        | 82/399 [00:00<00:01, 200.38it/s]Loading weights:  29%|██▊       | 114/399 [00:00<00:01, 232.89it/s]Loading weights:  36%|███▌      | 144/399 [00:00<00:01, 251.25it/s]Loading weights:  43%|████▎     | 171/399 [00:00<00:00, 251.45it/s]Loading weights:  51%|█████     | 203/399 [00:00<00:00, 268.90it/s]Loading weights:  59%|█████▉    | 235/399 [00:01<00:00, 281.96it/s]Loading weights:  66%|██████▌   | 264/399 [00:01<00:00, 280.41it/s]Loading weights:  73%|███████▎  | 293/399 [00:01<00:00, 277.32it/s]Loading weights:  81%|████████  | 324/399 [00:01<00:00, 285.32it/s]Loading weights:  89%|████████▉ | 356/399 [00:01<00:00, 291.90it/s]Loading weights:  97%|█████████▋| 386/399 [00:01<00:00, 288.25it/s]Loading weights: 100%|██████████| 399/399 [00:01<00:00, 242.60it/s]
+2026-04-19 04:40:43,952 INFO HTTP Request: HEAD https://huggingface.co/Qwen/Qwen3-8B/resolve/main/generation_config.json "HTTP/1.1 307 Temporary Redirect"
+2026-04-19 04:40:43,957 INFO HTTP Request: HEAD https://huggingface.co/api/resolve-cache/models/Qwen/Qwen3-8B/b968826d9c46dd6066d109eabc6255188de91218/generation_config.json "HTTP/1.1 200 OK"
+2026-04-19 04:40:44,437 INFO   Running grpo @ budget=1
+2026-04-19 04:40:54,975 INFO     grpo N=1 code_h001: FAIL (turns=1)
+2026-04-19 04:41:05,650 INFO     grpo N=1 code_h002: FAIL (turns=1)
+2026-04-19 04:41:44,516 WARNING Execution timed out after 15 s for /tmp/tmpddb9wth4.py
+2026-04-19 04:41:44,516 INFO     grpo N=1 code_h003: FAIL (turns=1)
+2026-04-19 04:41:55,362 INFO     grpo N=1 code_h004: FAIL (turns=1)
+2026-04-19 04:42:00,598 INFO     grpo N=1 code_h005: FAIL (turns=1)
+2026-04-19 04:42:10,096 INFO     grpo N=1 code_h006: FAIL (turns=1)
+2026-04-19 04:42:37,729 INFO     grpo N=1 code_h007: FAIL (turns=1)
+2026-04-19 04:42:55,573 INFO     grpo N=1 code_h008: PASS (turns=1)
+2026-04-19 04:43:27,595 INFO     grpo N=1 code_h009: PASS (turns=1)
+2026-04-19 04:43:48,074 INFO     grpo N=1 code_h010: PASS (turns=1)
+2026-04-19 04:44:01,719 INFO     grpo N=1 code_h011: PASS (turns=1)
+2026-04-19 04:44:14,624 INFO     grpo N=1 code_h012: PASS (turns=1)
+2026-04-19 04:44:39,834 INFO     grpo N=1 code_h013: FAIL (turns=1)
+2026-04-19 04:44:54,391 INFO     grpo N=1 code_h014: FAIL (turns=1)
+2026-04-19 04:45:13,850 INFO     grpo N=1 code_h015: FAIL (turns=1)
+2026-04-19 04:45:13,851 INFO   Running grpo @ budget=2
+2026-04-19 04:45:28,432 INFO     grpo N=2 code_h001: FAIL (turns=2)
+2026-04-19 04:45:41,009 INFO     grpo N=2 code_h002: FAIL (turns=2)
+2026-04-19 04:45:41,766 INFO     grpo N=2 code_h003: FAIL (turns=1)
+2026-04-19 04:45:55,920 INFO     grpo N=2 code_h004: FAIL (turns=2)
+2026-04-19 04:46:03,753 INFO     grpo N=2 code_h005: FAIL (turns=2)
+2026-04-19 04:46:16,055 INFO     grpo N=2 code_h006: FAIL (turns=2)
+2026-04-19 04:46:46,469 INFO     grpo N=2 code_h007: FAIL (turns=2)
+2026-04-19 04:47:02,330 INFO     grpo N=2 code_h008: PASS (turns=1)
+2026-04-19 04:47:35,940 INFO     grpo N=2 code_h009: PASS (turns=1)
+2026-04-19 04:47:57,387 INFO     grpo N=2 code_h010: PASS (turns=1)
+2026-04-19 04:47:57,902 INFO     grpo N=2 code_h011: FAIL (turns=1)
+2026-04-19 04:48:27,404 INFO     grpo N=2 code_h012: FAIL (turns=2)
+2026-04-19 04:49:02,704 INFO     grpo N=2 code_h013: FAIL (turns=2)
+2026-04-19 04:49:20,197 INFO     grpo N=2 code_h014: FAIL (turns=2)
+2026-04-19 04:50:02,489 INFO     grpo N=2 code_h015: FAIL (turns=2)
+2026-04-19 04:50:02,489 INFO   Running grpo @ budget=3
+2026-04-19 04:50:23,190 INFO     grpo N=3 code_h001: FAIL (turns=2)
+2026-04-19 04:50:36,802 INFO     grpo N=3 code_h002: FAIL (turns=2)
+2026-04-19 04:51:21,769 INFO     grpo N=3 code_h003: FAIL (turns=3)
+2026-04-19 04:51:34,212 INFO     grpo N=3 code_h004: FAIL (turns=2)
+2026-04-19 04:51:42,178 INFO     grpo N=3 code_h005: FAIL (turns=2)
+2026-04-19 04:51:54,361 INFO     grpo N=3 code_h006: FAIL (turns=2)
+2026-04-19 04:53:19,053 INFO     grpo N=3 code_h007: FAIL (turns=3)
+2026-04-19 04:53:34,966 INFO     grpo N=3 code_h008: PASS (turns=1)
+2026-04-19 04:54:08,545 INFO     grpo N=3 code_h009: PASS (turns=1)
+2026-04-19 04:54:30,266 INFO     grpo N=3 code_h010: PASS (turns=1)
+2026-04-19 04:54:44,040 INFO     grpo N=3 code_h011: PASS (turns=1)
+2026-04-19 04:55:24,992 INFO     grpo N=3 code_h012: FAIL (turns=3)
+2026-04-19 04:55:46,220 INFO     grpo N=3 code_h013: FAIL (turns=2)
+2026-04-19 04:56:08,738 INFO     grpo N=3 code_h014: FAIL (turns=2)
+2026-04-19 04:57:12,771 INFO     grpo N=3 code_h015: FAIL (turns=3)
+2026-04-19 04:57:12,771 INFO   Running grpo @ budget=5
+2026-04-19 04:57:27,456 INFO     grpo N=5 code_h001: FAIL (turns=2)
+2026-04-19 04:57:40,066 INFO     grpo N=5 code_h002: FAIL (turns=2)
+2026-04-19 04:58:02,588 INFO     grpo N=5 code_h003: PASS (turns=1)
+2026-04-19 04:58:16,941 INFO     grpo N=5 code_h004: FAIL (turns=2)
+2026-04-19 04:58:24,925 INFO     grpo N=5 code_h005: FAIL (turns=2)
+2026-04-19 04:58:37,508 INFO     grpo N=5 code_h006: FAIL (turns=2)
+2026-04-19 04:59:10,689 INFO     grpo N=5 code_h007: FAIL (turns=2)
+2026-04-19 04:59:26,521 INFO     grpo N=5 code_h008: PASS (turns=1)
+2026-04-19 05:00:00,221 INFO     grpo N=5 code_h009: PASS (turns=1)
+2026-04-19 05:00:21,361 INFO     grpo N=5 code_h010: PASS (turns=1)
+2026-04-19 05:00:36,266 INFO     grpo N=5 code_h011: PASS (turns=1)
+2026-04-19 05:00:53,659 INFO     grpo N=5 code_h012: FAIL (turns=2)
+2026-04-19 05:02:23,401 INFO     grpo N=5 code_h013: FAIL (turns=2)
+2026-04-19 05:02:40,463 INFO     grpo N=5 code_h014: FAIL (turns=2)
+2026-04-19 05:04:11,482 INFO     grpo N=5 code_h015: FAIL (turns=5)
+
+=== Interaction-Scaling Summary ===
+Model    | N= 1 | N= 2 | N= 3 | N= 5
+------------------------------------------
+base     | 40.0% | 40.0% | 40.0% | 46.7%
+sft      | 26.7% | 20.0% | 26.7% | 26.7%
+grpo     | 33.3% | 20.0% | 26.7% | 33.3%
