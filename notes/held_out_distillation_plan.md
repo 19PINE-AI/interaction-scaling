@@ -44,7 +44,7 @@ Output files:
 
 Reuse the existing QLoRA + GRPO pipeline on Qwen3-8B:
 - SFT: 3 epochs, same hyperparameters as before.
-- GRPO: 3 epochs, `max_completion_length=8192` (up from 2048 — 89% of prior rollouts were clipped; 8192 is the typical value in DeepSeek-R1 and Open-R1 papers), `num_generations=8` (up from 2 — 2 gives a one-sample baseline so advantages are noise; 8 is the stable floor, scale to 16 if VRAM allows), `max_length=10240` (prompt+completion), grounded reward only (deterministic `test_code` pass/fail for code).
+- GRPO: 1 epoch, `max_completion_length=4096` (up from 2048; 8192 was attempted but projected to 14 days wall-time on single RTX Pro 6000 — 4096 still gives 2× headroom for a config fix study), `num_generations=8` (up from 2 — 2 gives a one-sample baseline so advantages are noise; 8 is the stable floor), `max_length=6144` (prompt+completion), grounded reward only (deterministic `test_code` pass/fail for code). If 4096 also clips >50% of rollouts we will escalate to a longer run; otherwise this is apples-to-apples with v1 on the config fix alone.
 
 New adapter paths:
 - `models/qwen3-8b-interaction-scaling-sft-heldout/`

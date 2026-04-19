@@ -28,7 +28,7 @@ Three conclusions:
 
 Three contributing factors, in order of how sure we are:
 
-a. **GRPO was starved.** 2048 token completion length clipped 89% of rollouts; `num_generations=2` gave a one-sample baseline so advantages were almost pure noise; 79 steps over 1 epoch. Any signal from the reward function was drowned out. Fix is already staged (`src/training/train_grpo.py`: 8192 / 8 / 3) and a v2 run launched 2026-04-19 05:04.
+a. **GRPO was starved.** 2048 token completion length clipped 89% of rollouts; `num_generations=2` gave a one-sample baseline so advantages were almost pure noise; 79 steps over 1 epoch. Any signal from the reward function was drowned out. Fix staged in `src/training/train_grpo.py`; initial 8192/8/3 attempt at 05:04 aborted after 2 steps (21 min/step → 14-day projection) and relaunched at 06:41 with 4096/8/1 (~2.4 day projection). Apples-to-apples with v1 on the config fix, 2× headroom on clipping.
 
 b. **SFT memorised the 15 training tasks.** 970 trajectories across only 15 distinct tasks means an average 65 trajectories per task. The model learned to produce the exact text of each task's solution. On held-out tasks the learned surface patterns don't apply; the student reverts to something worse than the base model because the finetune has shifted its behaviour away from general coding toward a narrow template.
 

@@ -83,12 +83,12 @@ class TrainingConfig:
     model_name: str = "Qwen/Qwen3-8B"
     output_dir: str = "models/qwen3-8b-interaction-scaling"
     learning_rate: float = 1e-6
-    num_epochs: int = 3
+    num_epochs: int = 1
     batch_size: int = 1
     gradient_accumulation_steps: int = 16
-    max_length: int = 10240
+    max_length: int = 6144
     max_prompt_length: int = 2048
-    max_completion_length: int = 8192
+    max_completion_length: int = 4096
     num_generations: int = 8  # Group size for GRPO (typical papers: 8-16)
     beta: float = 0.1  # KL penalty coefficient
     seed: int = 42
