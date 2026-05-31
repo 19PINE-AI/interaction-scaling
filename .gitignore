@@ -42,3 +42,6 @@ data/training/heldout_phase5*.json
 
 # Eval results
 results/
+
+# Claude runtime locks
+.claude/scheduled_tasks.lock

@@ -1,0 +1,350 @@
+[
+  {
+    "task_id": "vhard_001",
+    "description": "From source_colors.mp4 (red 0-2s, green 2-4s, blue 4-5s), build ONE 6.0-second video by concatenating three processed segments in EXACTLY this order: (1) the GREEN segment sped up to 2x so it lasts 1.0s; (2) the RED segment played in REVERSE at normal speed (2.0s); (3) the BLUE segment looped 3 times (3.0s). Output 1280x720, 25fps constant frame rate, H.264.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 6.0 seconds (within one frame, +-0.04s)",
+      "From 0.0s to 1.0s the frame is solid green",
+      "From 1.0s to 3.0s the frame is solid red",
+      "From 3.0s to 6.0s the frame is solid blue",
+      "The three segments are joined with NO black frames or gaps between them",
+      "The green portion is sped up (the whole green content plays within the 1.0s, it is not a frozen still)",
+      "The order of colors is green, then red, then blue (no other order)",
+      "Resolution is exactly 1280x720",
+      "Playback is smooth with no frozen or stuttering frames at the segment boundaries",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 5.5],
+    "expected_issues": [
+      "Forgetting to reset PTS after reverse/concat -> frozen or out-of-order frames",
+      "Speeding up green by trimming instead of changing PTS",
+      "Black frames inserted at concat boundaries",
+      "Total duration off because loop count or speed factor is wrong"
+    ]
+  },
+  {
+    "task_id": "vhard_002",
+    "description": "Take source_countdown.mp4 (counts DOWN 5,4,3,2,1, one digit per second) and produce a video that counts UP 1,2,3,4,5 AND is sped up to play in exactly 2.5 seconds total. Every digit must remain clearly legible and appear in ascending order.",
+    "source_video": "source_countdown.mp4",
+    "requirements": [
+      "Total duration is exactly 2.5 seconds (within one frame)",
+      "The digits appear in ascending order: 1, then 2, then 3, then 4, then 5",
+      "The very first digit shown is 1 and the very last digit shown is 5",
+      "All five digits (1,2,3,4,5) are visible at some point",
+      "Each digit is fully legible (not smeared, blurred away, or skipped)",
+      "Each digit occupies roughly equal screen time (about 0.5s each)",
+      "Playback is smooth with no frozen or stuttering frames (timestamps correctly reset after reversing)",
+      "Resolution is exactly 1280x720",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.25, 0.75, 1.25, 1.75, 2.25],
+    "expected_issues": [
+      "Naive reverse leaves stale PTS -> player freezes on first/last frame",
+      "Speed change applied to frames but not duration (or vice versa)",
+      "Digits skipped because frames dropped during retime",
+      "Off-by-one so it still ends on a wrong digit"
+    ]
+  },
+  {
+    "task_id": "vhard_003",
+    "description": "Concatenate the RED (0-2s), GREEN (2-4s) and BLUE (4-5s) segments of source_colors.mp4 with a 0.5-second crossfade dissolve between consecutive segments (red->green and green->blue). During each crossfade BOTH colors must be visibly blended (not a hard cut). The two 0.5s overlaps shorten the total.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 4.0 seconds (5s of content minus two 0.5s overlaps), within one frame",
+      "The video begins on solid red",
+      "The video ends on solid blue",
+      "A red-to-green crossfade is visible: at its midpoint a true blend of red and green (yellowish/olive) appears, not an instant cut",
+      "A green-to-blue crossfade is visible: at its midpoint a true blend of green and blue (teal/cyan) appears, not an instant cut",
+      "The color order over time is red, then green, then blue",
+      "There are NO black or fully-transparent frames during either transition",
+      "Resolution is exactly 1280x720",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.2, 1.75, 2.5, 3.25, 3.9],
+    "expected_issues": [
+      "Crossfade implemented as a hard cut (no real alpha blend)",
+      "Fading through black instead of cross-dissolving between the two colors",
+      "Duration wrong because overlap not subtracted",
+      "xfade offset miscomputed so transition lands in the wrong place"
+    ]
+  },
+  {
+    "task_id": "vhard_004",
+    "description": "Convert source_gradient.mp4 to TRUE grayscale and simultaneously slow it to half speed (so it lasts 10.0s). The result must contain no color information whatsoever, motion must be visibly slowed and smooth, and dimensions must stay 1280x720.",
+    "source_video": "source_gradient.mp4",
+    "requirements": [
+      "Total duration is exactly 10.0 seconds (within one frame)",
+      "Every frame is grayscale: no hue is visible anywhere (R, G and B are equal at every pixel)",
+      "The original gradient/structure is still visible as shades of gray (not a flat gray screen)",
+      "Motion is visibly slowed to half speed and remains smooth (no stutter or frame freezing)",
+      "Brightness ordering is preserved (lighter areas stay lighter, darker stay darker)",
+      "Resolution is exactly 1280x720",
+      "No color fringing or chroma artifacts at edges",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [1.0, 3.0, 5.0, 7.0, 9.0],
+    "expected_issues": [
+      "Desaturating in RGB but leaving residual chroma in yuv420p (chroma planes not neutral 128)",
+      "Slowing video PTS but not re-timing, causing stutter",
+      "Half-speed math wrong (e.g. doubling fps instead of doubling duration)"
+    ]
+  },
+  {
+    "task_id": "vhard_005",
+    "description": "Create a 2x2 grid (1280x720 total, each quadrant 640x360) playing simultaneously for 5.0s: top-left = source_colors.mp4, top-right = source_countdown.mp4, bottom-left = source_colors.mp4 REVERSED, bottom-right = source_gradient.mp4. All four must play their motion at the same time, scaled to fit their quadrant with correct aspect.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output resolution is exactly 1280x720",
+      "Total duration is exactly 5.0 seconds (within one frame)",
+      "There are four distinct quadrants, each exactly 640x360, tiled 2x2 with no gaps or overlap",
+      "Top-left shows the color sequence going red->green->blue over time",
+      "Top-right shows the countdown digits 5,4,3,2,1",
+      "Bottom-left shows the colors in REVERSED order blue->green->red over time",
+      "Bottom-right shows the gradient",
+      "All four quadrants animate simultaneously (motion visible in all four throughout, none frozen)",
+      "Each source keeps its aspect ratio without gross distortion",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 4.5],
+    "expected_issues": [
+      "Quadrants frozen because only the first frame is tiled",
+      "Reversed quadrant not actually reversed",
+      "Wrong quadrant sizes / overlap / black gutters",
+      "Streams of different length cause one quadrant to freeze early"
+    ]
+  },
+  {
+    "task_id": "vhard_006",
+    "description": "Add a semi-transparent 'DRAFT' watermark, rotated 45 degrees, centered diagonally across source_gradient.mp4, present in EVERY frame. The watermark must be clearly readable yet let the underlying video show through, and the video must otherwise be unchanged (same 5.0s, 1280x720, same motion).",
+    "source_video": "source_gradient.mp4",
+    "requirements": [
+      "The text 'DRAFT' is visible in every sampled frame across the whole clip",
+      "The watermark is rotated approximately 45 degrees (diagonal, not horizontal)",
+      "The watermark is semi-transparent: the underlying gradient is still visible through/around the letters",
+      "The watermark is roughly centered on the frame",
+      "The underlying video still animates normally beneath the watermark (motion preserved)",
+      "Total duration is exactly 5.0 seconds (within one frame)",
+      "Resolution is exactly 1280x720",
+      "The text reads exactly 'DRAFT' (correct spelling, not mirrored or garbled)",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.2, 1.5, 2.5, 3.5, 4.8],
+    "expected_issues": [
+      "Watermark only on the first frame (drawtext applied to a still)",
+      "Watermark fully opaque (covers the video) or invisible (alpha too low)",
+      "Not rotated, or rotated text clipped at the edges",
+      "Text mirrored because rotation applied incorrectly"
+    ]
+  },
+  {
+    "task_id": "vhard_007",
+    "description": "Build a 'boomerang' from the GREEN segment of source_colors.mp4 (original seconds 2-4): play it forward then immediately backward, seamlessly, for a total of exactly 4.0 seconds, then apply a 0.5s fade-in at the start and a 0.5s fade-out (to black) at the end.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 4.0 seconds (within one frame)",
+      "The frame is essentially green throughout the middle of the clip",
+      "The clip starts black and fades IN to green over the first ~0.5s",
+      "The clip fades OUT to black over the last ~0.5s and ends black",
+      "The forward-then-reverse motion is seamless at the turnaround point (no jump, gap, or duplicated long freeze)",
+      "Full brightness (no fade) is present in the middle of the clip",
+      "Resolution is exactly 1280x720",
+      "Playback is smooth with no stutter",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.0, 0.5, 2.0, 3.5, 4.0],
+    "expected_issues": [
+      "Turnaround duplicates a frame causing a visible hitch",
+      "Fades applied before boomerang so they land in the wrong place",
+      "Total duration wrong (forgot the reversed half or the fade timing)",
+      "End not actually black"
+    ]
+  },
+  {
+    "task_id": "vhard_008",
+    "description": "Apply a speed RAMP to source_countdown.mp4: play the first half (original 0-2.5s) at 0.5x (slow motion) and the second half (original 2.5-5s) at 2x (fast). Concatenate seamlessly. The digits must remain in their original DOWN order 5,4,3,2,1 and stay legible.",
+    "source_video": "source_countdown.mp4",
+    "requirements": [
+      "Total duration is exactly 6.25 seconds (2.5/0.5 + 2.5/2 = 5.0 + 1.25), within two frames",
+      "The first portion is visibly slow motion (digits 5 and 4 linger)",
+      "The second portion is visibly fast (digits 2 and 1 go by quickly)",
+      "The digits appear in the original descending order 5,4,3,2,1",
+      "All five digits are visible and legible",
+      "The transition from slow to fast is seamless (no black frame or freeze at the join)",
+      "Resolution is exactly 1280x720",
+      "Playback is smooth (timestamps monotonic, no stutter)",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.5, 2.0, 4.0, 5.0, 6.0],
+    "expected_issues": [
+      "Only one speed applied to the whole clip",
+      "PTS not reset between the two retimed halves -> freeze at join",
+      "Duration math wrong",
+      "Digits dropped during the 2x section"
+    ]
+  },
+  {
+    "task_id": "vhard_009",
+    "description": "Picture-in-picture with motion in BOTH layers: main = source_gradient.mp4 full-frame (1280x720), inset = source_countdown.mp4 scaled to 320x180 placed in the TOP-LEFT corner with a 20px margin and a 3px white border. Both must animate for the full 5.0s; the inset must not be frozen.",
+    "source_video": "source_gradient.mp4",
+    "requirements": [
+      "Output resolution is exactly 1280x720",
+      "Total duration is exactly 5.0 seconds (within one frame)",
+      "The full-frame background shows the animating gradient",
+      "A smaller inset is in the TOP-LEFT corner (not another corner)",
+      "The inset is approximately 320x180 in size",
+      "The inset shows the countdown digits and they change over time (inset is NOT a frozen still)",
+      "The inset has a visible thin white border",
+      "There is a small margin (~20px) between the inset and the top-left edges",
+      "The background gradient continues animating behind/around the inset",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 3.5, 4.5],
+    "expected_issues": [
+      "Inset frozen on first frame",
+      "Inset placed in wrong corner or wrong size",
+      "Missing border or margin",
+      "Background frozen while only inset plays"
+    ]
+  },
+  {
+    "task_id": "vhard_010",
+    "description": "Insert a 1.0-second freeze-frame into source_countdown.mp4 exactly when the digit '3' is shown (hold the frame at original t=2.0s for 1 second), then continue normally. Total duration becomes exactly 6.0s and every original digit still appears in order.",
+    "source_video": "source_countdown.mp4",
+    "requirements": [
+      "Total duration is exactly 6.0 seconds (original 5.0s + 1.0s freeze), within one frame",
+      "There is a ~1.0s span where the frame is completely frozen on the digit '3'",
+      "Before the freeze the digits 5 then 4 are shown in order",
+      "After the freeze the digits 2 then 1 are shown in order",
+      "The frozen frame is identical for its whole 1.0s duration (no drift or motion)",
+      "Outside the freeze, playback runs at normal speed and is smooth",
+      "The digit shown during the freeze is '3' (not 2 or 4)",
+      "Resolution is exactly 1280x720",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.5, 1.5, 2.5, 4.5, 5.5],
+    "expected_issues": [
+      "Freeze placed at the wrong timestamp (wrong digit)",
+      "Freeze not actually frozen (slow motion instead)",
+      "Total duration wrong",
+      "Digits after the freeze out of order due to bad concat"
+    ]
+  },
+  {
+    "task_id": "vhard_011",
+    "description": "Create a 10.0-second strobe/gap video from the RED segment of source_colors.mp4 (original 0-2s): alternate 0.5s of red footage with 0.5s of solid black, starting with red, for exactly 10 red blocks and 10 black blocks (20 blocks total). The red footage should advance (not restart) across blocks where possible.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 10.0 seconds (within two frames)",
+      "The video alternates strictly between solid-red spans and solid-black spans",
+      "The video STARTS with a red span (first ~0.5s is red)",
+      "Each colored span is red (no green or blue ever appears)",
+      "Each red span lasts approximately 0.5s and each black span approximately 0.5s",
+      "There are 10 red spans and 10 black spans (20 alternating blocks)",
+      "Transitions between red and black are hard cuts (no crossfade)",
+      "Resolution is exactly 1280x720",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.25, 0.75, 1.25, 5.25, 9.75],
+    "expected_issues": [
+      "Wrong number of blocks / wrong total duration",
+      "Starts on black instead of red",
+      "Green or blue leaks in because the trim window is wrong",
+      "Block lengths uneven due to fps rounding"
+    ]
+  },
+  {
+    "task_id": "vhard_012",
+    "description": "Make a horizontal split-screen (1280x720): LEFT half = source_colors.mp4 playing forward, RIGHT half = the SAME source_colors.mp4 playing in reverse, perfectly synchronized so left and right are time-mirrored. Each half is 640x720 (center-cropped horizontally from the 1280-wide source). Duration 5.0s.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Output resolution is exactly 1280x720",
+      "Total duration is exactly 5.0 seconds (within one frame)",
+      "The left half and right half are clearly separate (a vertical split down the middle)",
+      "The left half shows colors in forward order red->green->blue over time",
+      "The right half shows colors in reverse order blue->green->red over time",
+      "At t=0 the left half is red and the right half is blue",
+      "At t=5 the left half is blue and the right half is red",
+      "Both halves animate simultaneously and stay in sync (time-mirrored)",
+      "Each half is 640px wide (center area of the source, not squashed to half width)",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.2, 1.5, 2.5, 3.5, 4.8],
+    "expected_issues": [
+      "Right half not actually reversed",
+      "Halves squashed (whole 1280 scaled to 640) instead of cropped",
+      "Left/right desynchronized",
+      "Wrong colors at the endpoints"
+    ]
+  },
+  {
+    "task_id": "vhard_013",
+    "description": "Concatenate all three sources in order source_colors.mp4 -> source_countdown.mp4 -> source_gradient.mp4 (15s of content) with a 1.0-second crossfade between consecutive clips. Account for the two 1.0s overlaps so total is exactly 13.0s. Normalize all to 1280x720, 25fps. Audio is irrelevant (sources are silent).",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 13.0 seconds (15s minus two 1.0s overlaps), within two frames",
+      "The content order is: colors clip, then countdown clip, then gradient clip",
+      "A 1.0s crossfade is visible between the colors clip and the countdown clip (blended, not a hard cut)",
+      "A 1.0s crossfade is visible between the countdown clip and the gradient clip (blended, not a hard cut)",
+      "The clip begins with the colors content (red) and ends with the gradient content",
+      "There are no black frames at the joins (cross-dissolve, not fade-through-black)",
+      "Resolution is exactly 1280x720 throughout",
+      "Playback is continuous and smooth across both joins",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.5, 4.5, 5.5, 9.5, 12.5],
+    "expected_issues": [
+      "Duration wrong because overlaps not subtracted",
+      "Crossfade rendered as hard cut or fade-through-black",
+      "Resolution/fps mismatch between clips breaks the concat",
+      "Clip order wrong"
+    ]
+  },
+  {
+    "task_id": "vhard_014",
+    "description": "From source_colors.mp4, extract ONLY the 25 frames of the GREEN segment frame-accurately (original frames 50 through 74 inclusive, i.e. seconds 2.0-3.0), then play them at 2x with a simultaneous zoom from 100% to 150% (slow push-in centered). Output exactly 0.5s, 1280x720.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 0.5 seconds (within one frame)",
+      "Every frame is green (no red or blue frames bled in from neighbouring segments)",
+      "A continuous zoom-in (push-in) is visible: the content scales up over the clip, centered",
+      "The zoom is smooth (gradual, not a single jump)",
+      "The end of the clip is more zoomed-in than the start",
+      "Output resolution stays exactly 1280x720 (the zoom does not change the canvas size)",
+      "No black borders appear as a result of the zoom",
+      "Playback is smooth with no stutter",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.0, 0.15, 0.25, 0.4, 0.49],
+    "expected_issues": [
+      "Off-by-one trim bleeds red or blue frames in",
+      "Zoom introduces black padding or shifts off-center",
+      "2x speed implemented by dropping to a still",
+      "Canvas size changes with the zoom"
+    ]
+  },
+  {
+    "task_id": "vhard_015",
+    "description": "Create a lower-third title card over the BLUE segment of source_colors.mp4 (original 4-5s, 1s of footage) looped to 3.0s total: a semi-transparent black bar across the bottom 20% of the frame, with two lines of white text - line 1 'Interaction Scaling' in bold and line 2 'Video Editing Benchmark' smaller - both fully inside the bar and left-aligned with padding. The blue footage loops beneath.",
+    "source_video": "source_colors.mp4",
+    "requirements": [
+      "Total duration is exactly 3.0 seconds (1s blue looped 3 times), within one frame",
+      "The background is blue throughout (the looped blue segment)",
+      "A semi-transparent black bar covers the bottom ~20% of the frame (blue shows through it slightly)",
+      "The text 'Interaction Scaling' is visible and correctly spelled on the first line",
+      "The text 'Video Editing Benchmark' is visible and correctly spelled on the second line",
+      "The first line is bold and larger than the second line",
+      "Both text lines are fully inside the bar (not clipped at the bottom edge) and left-aligned with padding",
+      "The lower-third is present for the entire duration (every sampled frame)",
+      "Resolution is exactly 1280x720",
+      "The output is a single valid, playable MP4 video"
+    ],
+    "frame_check_times_s": [0.2, 0.9, 1.5, 2.1, 2.9],
+    "expected_issues": [
+      "Text clipped by the bar or running off the frame",
+      "Bar fully opaque or fully transparent",
+      "Loop produces a visible hitch or wrong total duration",
+      "Both lines same size / not bold"
+    ]
+  }
+]

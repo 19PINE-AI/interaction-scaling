@@ -39,6 +39,11 @@ CATEGORIES = {
         "method": "run_slide_task",
         "max_iters": 3,
     },
+    "slides_hard": {
+        "task_file": DATA_DIR / "slides" / "slide_tasks_hard.json",
+        "method": "run_slide_task",
+        "max_iters": 3,
+    },
     "webpages": {
         "task_file": DATA_DIR / "webpages" / "webpage_tasks.json",
         "method": "run_webpage_task",
@@ -50,6 +55,17 @@ CATEGORIES = {
         "max_iters": 3,
     },
     "video": {
+        "task_file": DATA_DIR / "video" / "video_tasks.json",
+        "method": "run_video_task",
+        "max_iters": 3,
+    },
+    "video_hard": {
+        "task_file": DATA_DIR / "video" / "video_tasks_hard.json",
+        "method": "run_video_task",
+        "max_iters": 3,
+    },
+    "video_fixed": {
+        # original video suite, regenerated in the fixed env (moviepy present)
         "task_file": DATA_DIR / "video" / "video_tasks.json",
         "method": "run_video_task",
         "max_iters": 3,
