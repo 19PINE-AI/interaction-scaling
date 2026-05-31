@@ -175,6 +175,7 @@ def main():
         run_exp2(
             benchmark_name=args.benchmark,
             num_problems=args.num_problems,
+            budget_levels=[args.budget] if args.budget else None,
         )
 
     if args.experiment in ("exp5", "all"):

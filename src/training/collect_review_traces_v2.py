@@ -45,25 +45,36 @@ logger = logging.getLogger(__name__)
 MODEL = "claude-sonnet-4-6"
 MAX_TOKENS = 2500
 
-VOICE_SYSTEM = """You are producing short assistant-voice text pieces that will be stitched into a single agentic turn where an AI coding assistant reviews and revises its own code before submitting.
+VOICE_SYSTEM = """You are producing five short assistant-voice text pieces that represent five successive moments in an engineer's internal monologue while solving a coding task. Each piece captures a DIFFERENT point in time — the engineer's knowledge state shifts between them.
 
-You will receive a bug-fix task, an assistant's draft solution, and (if the draft failed) the real execution output. You produce the narration pieces the assistant would emit around its tool calls.
+Timeline of moments:
+
+  [1] PREAMBLE — Engineer has just read the task and is about to write their first attempt. They are CONFIDENT. They DO NOT yet know that any bug exists. They have not executed anything. They must NOT describe this as a 'fix' or reference any bug, because from their perspective this is just a normal implementation. Phrases like 'the fix is straightforward', 'the bug is in X', 'the issue is Y' are FORBIDDEN here — the engineer does not yet know of any problem.
+
+  [2] BEFORE_EXEC — They have just written the code. Still confident. Preparing to run the tests as a sanity check before submitting.
+
+  [3] DIAGNOSIS — Only populated if the execution FAILED. They have just seen the test failure. They read the stderr, identify the specific flaw in their draft, and articulate it. First-person reaction ('I see that...', 'The issue is...'). If the draft passed, write an empty string.
+
+  [4] REVISION_PREAMBLE — Only populated if draft failed. They are about to write the corrected version. A brief lead-in ('Here is the fix:', 'Let me apply the correction:'). Do not include code. If draft passed, write an empty string.
+
+  [5] CONFIRM — After the final (passing) tests, a short submit line.
 
 Reply with ONE JSON object (no prose, no fences), with these fields — all short, first-person, natural assistant voice, NO headings, NO lists, NO markdown:
 
 {
-  "preamble": "<1-3 sentences introducing the first-pass solution. End with a colon or 'Here's my implementation:'. DO NOT include the code block itself — just the lead-in text.>",
-  "before_exec": "<1-2 sentences in the assistant's voice saying that before submitting they'd like to verify by running the tests. Vary the phrasing — don't always start with 'Let me'.>",
-  "diagnosis": "<Only used if the draft failed. 2-4 sentences explaining what went wrong based on the actual error output, identifying the specific bug in the draft. First-person ('I see that...', 'The issue is...'). Be concrete: name the actual test that failed and the line of buggy logic. If the draft passed, write an empty string.>",
-  "revision_preamble": "<Only if draft failed. 1-2 sentences introducing the corrected version ('Here is the fix:', 'Let me apply the correction:', etc.). DO NOT include the code.>",
-  "confirm": "<1-2 sentences confirming the final (passing) result and submitting. Vary phrasing across samples.>"
+  "preamble": "<1-3 sentences describing the engineer's approach to the task as if they are implementing it fresh — no awareness of any bug. End with a colon or phrase like 'Here's my implementation:'. Do NOT include the code block.>",
+  "before_exec": "<1-2 sentences preparing to run the tests to verify correctness.>",
+  "diagnosis": "<2-4 sentences diagnosing the specific bug after seeing the failure, or empty string if tests passed.>",
+  "revision_preamble": "<1-2 sentences introducing the corrected version, or empty string if tests passed.>",
+  "confirm": "<1-2 sentences submitting the final passing solution.>"
 }
 
-Rules:
-- All text is first-person assistant voice, no headings, no bullet lists.
-- Never quote code blocks inside these fields — the stitcher inserts them separately.
-- Never reference 'stage A' / 'stage B' / 'the reviewer' — the student must see this as a single unified voice.
-- If draft_passed=true: set diagnosis=\"\" and revision_preamble=\"\". Confirm should read like 'No issues — submitting.'
+Hard rules:
+- All text is first-person assistant voice, no headings, no bullet lists, no markdown.
+- Never quote code blocks inside these fields — the stitcher inserts code separately.
+- Never reference 'stage A' / 'stage B' / 'the reviewer' / 'the draft' / 'the revision' — the student reads this as one continuous voice.
+- If draft_passed=true: set diagnosis=\"\" AND revision_preamble=\"\". Confirm can be 'No issues — submitting' or similar.
+- The PREAMBLE must NEVER reference a bug, fix, issue, correction, or mistake. Those words are only allowed in diagnosis/revision_preamble/confirm-after-fix.
 - Return only the JSON object."""
 
 

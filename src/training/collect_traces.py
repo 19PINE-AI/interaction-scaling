@@ -18,10 +18,31 @@ solutions by imitating real solutions, not by imitating meta-descriptions.
 
 import json
 import logging
+import re
 from dataclasses import dataclass, field
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
+
+
+def convert_thinking_format(text: str, target: str = "qwen3") -> str:
+    """Convert thinking tokens between model formats.
+
+    Gemma 4 uses <|think|>...<|/think|> while Qwen3 uses <think>...</think>.
+    This converts between formats to ensure SFT data matches the target model.
+    """
+    if target == "qwen3":
+        # Gemma 4 → Qwen3
+        text = text.replace("<|think|>", "<think>")
+        text = text.replace("<|/think|>", "</think>")
+        # Also handle the single-token thinking marker variant
+        text = re.sub(r"<\|startofthought\|>", "<think>", text)
+        text = re.sub(r"<\|endofthought\|>", "</think>", text)
+    elif target == "gemma4":
+        # Qwen3 → Gemma 4
+        text = text.replace("<think>", "<|think|>")
+        text = text.replace("</think>", "<|/think|>")
+    return text
 
 
 @dataclass
@@ -864,6 +885,11 @@ def collect_all_traces(results_dir: Path) -> list[InteractionTrace]:
                 logger.info("Loading augmentation file: %s", run_file.name)
                 all_traces.extend(collector_fn(tasks_path, run_file, **kwargs))
 
+            # On-policy run files (e.g., code_onpolicy_run1.json) from local models
+            for run_file in sorted(results_dir.glob(f"{aug_prefix}_onpolicy_run*.json")):
+                logger.info("Loading on-policy file: %s", run_file.name)
+                all_traces.extend(collector_fn(tasks_path, run_file, **kwargs))
+
     # Code traces
     _collect_with_augmentation(
         data_dir / "code" / "code_tasks.json",
@@ -921,6 +947,92 @@ def collect_all_traces(results_dir: Path) -> list[InteractionTrace]:
     return all_traces
 
 
+def collect_onpolicy_sft_data(
+    results_dir: Path,
+    min_quality: float = 0.5,
+    target_model: str = "qwen3",
+) -> list[dict]:
+    """Convert on-policy result files (with interaction_trace) into SFT data.
+
+    These files contain full input/output pairs with thinking tokens from
+    local models (Gemma 4 31B or Qwen3-8B). This produces richer SFT data
+    than the abstract InteractionTrace format because it preserves:
+    - Full system prompts used
+    - Complete model outputs including <think> reasoning
+    - Exact message history at each revision step
+    - Grounded feedback text
+    """
+    sft_examples = []
+
+    for onpolicy_file in sorted(results_dir.glob("*_onpolicy_run*.json")):
+        logger.info("Processing on-policy file: %s", onpolicy_file.name)
+        with open(onpolicy_file) as f:
+            results = json.load(f)
+
+        for entry in results:
+            # Use reviewed trace if quality is good enough, else single-shot
+            for prefix, label in [("rv", "reviewed"), ("ss", "single_shot")]:
+                quality = entry.get(f"{prefix}_quality")
+                if quality is None or quality < min_quality:
+                    continue
+
+                trace = entry.get(f"{prefix}_interaction_trace", [])
+                if not trace:
+                    continue
+
+                # Build SFT messages from the interaction trace
+                messages = []
+                for step in trace:
+                    system = step.get("system", "")
+                    full_output = step.get("full_output", "")
+
+                    # Convert thinking format to target model
+                    full_output = convert_thinking_format(full_output, target_model)
+
+                    if step["step"] == "generate":
+                        # Initial generation: system + user prompt → assistant response
+                        if system and not messages:
+                            messages.append({"role": "system", "content": system})
+                        for msg in step.get("messages", []):
+                            # Strip images from multimodal messages
+                            content = msg.get("content", "")
+                            if isinstance(content, list):
+                                text_parts = [p["text"] for p in content
+                                             if isinstance(p, dict) and p.get("type") == "text"]
+                                content = "\n".join(text_parts)
+                            messages.append({"role": msg["role"], "content": content})
+                        messages.append({"role": "assistant", "content": full_output})
+
+                    elif step["step"] == "revise":
+                        # Revision: feedback context → revised response
+                        # Use messages_text which has images stripped already
+                        msgs_text = step.get("messages_text", [])
+                        if msgs_text:
+                            # Add the revision user message (last one in messages_text)
+                            last_msg = msgs_text[-1]
+                            content = last_msg.get("content", "")
+                            if isinstance(content, list):
+                                text_parts = [p["text"] for p in content
+                                             if isinstance(p, dict) and p.get("type") == "text"]
+                                content = "\n".join(text_parts)
+                            messages.append({"role": "user", "content": content})
+                        messages.append({"role": "assistant", "content": full_output})
+
+                sft_examples.append({
+                    "task_id": entry["task_id"],
+                    "task_type": entry["category"],
+                    "messages": messages,
+                    "reward": quality,
+                    "source": "onpolicy",
+                    "model": entry.get("model", "unknown"),
+                    "baseline": label,
+                })
+
+    logger.info("Collected %d on-policy SFT examples (min_quality=%.1f)",
+                len(sft_examples), min_quality)
+    return sft_examples
+
+
 def save_training_data(
     traces: list[InteractionTrace],
     output_dir: Path,
@@ -930,6 +1042,13 @@ def save_training_data(
 
     sft_data = traces_to_sft_format(traces, min_reward=0.5)
     grpo_data = traces_to_grpo_format(traces)
+
+    # Also collect on-policy SFT data from local model traces
+    results_dir = Path("results/hard_benchmarks")
+    onpolicy_sft = collect_onpolicy_sft_data(results_dir, min_quality=0.5)
+    if onpolicy_sft:
+        logger.info("Adding %d on-policy SFT examples to training data", len(onpolicy_sft))
+        sft_data.extend(onpolicy_sft)
 
     with open(output_dir / "sft_data.json", "w") as f:
         json.dump(sft_data, f, indent=2)

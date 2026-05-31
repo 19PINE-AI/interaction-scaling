@@ -10,3 +10,35 @@ results/full_v2/
 results/baselines_v2/
 .DS_Store
 
+# Large artifacts / generated outputs (not for version control)
+models/
+backup/
+frames/
+website/
+logs/
+*.log
+texput.log
+
+# Generated images
+*.png
+data/training/agentic_images/
+data/training/agentic_images_compact/
+data/training/agentic_images_pilot/
+data/training/agentic_images_v2/
+data/training/vl_sft_images/
+data/training/vl_rft_images/
+
+# Large training data dumps and traces
+data/training/agentic_traces*.json
+data/training/agentic_sft*.jsonl
+data/training/agentic_pilot.json
+data/training/vl_*.json
+data/training/vl_*.jsonl
+data/training/review_traces_*.json
+data/training/sft_review_*.json
+data/training/rft_tasks*.json
+data/training/code_tasks_v2*.json
+data/training/heldout_phase5*.json
+
+# Eval results
+results/

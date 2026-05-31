@@ -1,4 +1,4 @@
-# Think, Do, and Review: Interaction Scaling for LLM Agents
+# Agents that check their work: interaction scaling through environmental feedback
 
 ## Research Plan
 
@@ -6,11 +6,13 @@
 
 ## 1. Core Thesis
 
-Current test-time scaling research focuses on **reasoning scaling** — generating longer chains of thought, sampling more candidates, or searching over reasoning trees. These approaches scale compute within the LLM's own token space, operating on the same fixed information available at generation time.
+Current test-time scaling research focuses on **reasoning scaling** — generating longer chains of thought, sampling more candidates, or searching over reasoning trees. These approaches scale compute within the LLM's own token space, operating on the same fixed information available at generation time. Models that can only reason cannot reliably check their own work: without a ground-truth signal from outside the weights, self-critique has no anchor.
 
-We propose **Interaction Scaling** — a fundamentally different dimension of test-time compute where agents improve their outputs by iteratively interacting with the external world: executing code and observing test results, rendering artifacts and obtaining visual feedback, verifying claims against external sources. Each interaction cycle introduces **externally grounded information** — information that is both new to the agent and reliable because it originates from outside the model's own weights — breaking the information-theoretic ceiling that limits reasoning-only scaling.
+We propose **Interaction Scaling** — a fundamentally different dimension of test-time compute where agents improve their outputs by iteratively interacting with an external environment: executing code and observing test results, rendering artifacts and obtaining visual feedback, verifying claims against external sources. Each interaction cycle introduces **environmental feedback** — information new to the agent and reliable because it originates outside the model's weights — breaking the information-theoretic ceiling that limits reasoning-only scaling. An agent that checks its work is an agent that queries its environment, not one that talks to itself.
 
-The **proposer-reviewer** architecture is an effective primitive for interaction scaling. The proposer generates artifacts; the reviewer grounds its evaluation in external feedback (execution results, visual rendering, fact verification) and provides structured improvement signals. We formalize and systematically study how to allocate a fixed compute budget across three phases — proposal (think), execution (do), and review — and demonstrate that budget-aware interaction scaling consistently outperforms both reasoning scaling and naive (budget-unaware) interaction scaling across code generation, web page generation, slide generation, video editing, and deep research tasks.
+The **proposer-reviewer** architecture is an effective primitive for interaction scaling. The proposer generates artifacts; the reviewer grounds its evaluation in environmental feedback (execution results, visual rendering, fact verification) and provides structured improvement signals. We formalize and systematically study how to allocate a fixed compute budget across three phases — proposal (think), execution (do), and review — and demonstrate that budget-aware interaction scaling consistently outperforms both reasoning scaling and naive (budget-unaware) interaction scaling across code generation, web page generation, slide generation, video editing, and deep research tasks.
+
+Finally, we ask whether this externally scaffolded behavior can be **internalized**: can a small student model, distilled from multi-turn teacher trajectories, learn to check its own work at inference time? We evaluate on strictly held-out tasks and find that distillation transfers the *format* of interaction scaling (budget-aware output, structured self-critique) but that the *gains* are bounded by the quality of the environmental feedback signal — interaction scaling distills only as well as the environment that provided it.
 
 ---
 
@@ -97,6 +99,23 @@ Prior work studies individual modalities in isolation. We demonstrate that the p
 5. **Deep research** — factual verification feedback (Type 3d): independent fact-checking of each claim via search engine and knowledge base queries
 
 The same architecture (proposer generates → environment provides grounded feedback → reviewer analyzes and structures feedback → proposer revises) applies across all five tasks. We measure whether the grounded feedback framework's predictions hold uniformly across modalities.
+
+### Contribution 5: Internalizing Interaction Scaling via Distillation
+
+Contributions 1–4 treat the agent loop as external scaffolding wrapped around a frozen model. We ask whether the scaffolding can be absorbed: can a small student (Qwen3-8B) distilled from multi-turn teacher trajectories (Claude Sonnet 4) learn to *check its own work* without an explicit outer loop?
+
+We use a two-stage recipe:
+1. **SFT on teacher trajectories.** Collect successful `[GENERATE] → [EXECUTE] → [REVIEW] → [SUBMIT]` traces from the teacher running the proposer-reviewer architecture on the training-split tasks. Fine-tune the student with QLoRA on these trajectories.
+2. **GRPO with grounded rewards.** Apply Group Relative Policy Optimization with the same environmental feedback that served as the teacher's reviewer signal (test execution for code, VLM scoring for visual tasks, fact-check retrieval for research).
+
+**Evaluation is strictly held-out.** The training-split tasks are disjoint from the Phase 1 benchmark tasks used for evaluation — same categories and difficulty, different instances. This isolates *learned behavior* from *memorization* and lets us answer:
+
+- Does the student's one-shot pass rate exceed the base model's? (Does SFT transfer the priors and format?)
+- Does the student's own interaction curve (pass rate vs. budget N=1,2,3,5) have positive slope? (Has it internalized when to iterate, not just how?)
+- How much of the teacher's multi-turn ceiling does the student recover at matched budget? (Distillation efficiency.)
+- Does GRPO improve over SFT, or does weak reward signal cause policy drift away from correct SFT answers? (Pathology that we observe on an in-distribution pilot.)
+
+The claim is not that one-shot inference replaces multi-turn agents — a one-shot model has no test suite at inference. The claim is that interaction scaling has a *distillable component* (priors, format, self-critique habits) and a *non-distillable component* (the feedback itself), and that the ceiling of internalization is set by the quality of the environmental signal the teacher had access to.
 
 ---
 
@@ -403,11 +422,12 @@ This validates the grounded feedback framework as a predictive theory, not just 
 
 ## 7. Paper Outline
 
-1. **Introduction** (1.5 pages) — Problem, gap, thesis, contributions
+1. **Introduction** (1.5 pages) — Problem, gap, thesis, contributions. Frames the paper as: agents that check their work do so by querying an environment, and that environmental feedback loop both drives test-time scaling and is partly distillable into a student model.
 2. **Background and Related Work** (2 pages)
    - 2.1 Test-time scaling: reasoning, sampling, and interaction
    - 2.2 Self-correction, multi-agent debate, and their limitations
    - 2.3 Environment feedback in prior work (RLEF, WebGen-Agent, CRITIC, deep research)
+   - 2.4 Agent distillation and on-policy RL (trajectory-level SFT, GRPO, budget-conditioning)
 3. **The Grounded Feedback Framework** (1.5 pages)
    - 3.1 Feedback taxonomy (Type 0/1/2/3)
    - 3.2 Information-theoretic analysis (graphical model, DPI argument)
@@ -416,20 +436,33 @@ This validates the grounded feedback framework as a predictive theory, not just 
    - 4.1 Architecture (proposer, environment, reviewer)
    - 4.2 Budget definition and allocation strategies
    - 4.3 Cross-modal instantiation (code, web, slides, video, research)
-5. **Experiments** (3 pages)
+5. **Experiments: Scaling with External Scaffolding** (2.5 pages)
    - 5.1 Feedback type ablation (validates framework)
    - 5.2 Scaling curves by dimension (validates interaction scaling)
    - 5.3 Budget allocation optimization (validates budget awareness)
    - 5.4 Cross-modal generalization (validates universality)
    - 5.5 Verification gap analysis
-6. **Analysis and Discussion** (1 page)
-   - 6.1 When does interaction scaling fail?
-   - 6.2 The value of architectural separation (single-agent loop vs. proposer-reviewer)
-   - 6.3 Connection to human work patterns
-7. **Conclusion** (0.5 page)
-8. **Appendix** — Ablation studies, prompt templates, custom benchmark details, compute costs
+6. **From Scaffolding to Capability: Distillation and Internalization** (2 pages)
+   - 6.1 Training setup: teacher-student distillation with held-out splits
+     - Training split: 60–100 new bug-fix tasks per modality, disjoint from evaluation
+     - Teacher: frontier model running the Section 4 proposer-reviewer loop
+     - Student: Qwen3-8B with QLoRA, SFT on teacher trajectories, then GRPO with grounded rewards
+   - 6.2 Evaluation matrix: {base, SFT, GRPO, teacher} × {N=1, 2, 3, 5 interaction turns} on the held-out benchmark
+   - 6.3 Four quantitative questions
+     - Does the student's one-shot pass rate exceed the base model's? (Priors + format)
+     - Does the student's interaction curve have positive slope? (Policy, not just format)
+     - How much of the teacher's multi-turn performance does the student recover at matched budget? (Distillation efficiency)
+     - Does GRPO improve over SFT or cause policy drift under weak reward signal?
+   - 6.4 What distills and what doesn't — the bounded-internalization result
+7. **Analysis and Discussion** (1 page)
+   - 7.1 When does interaction scaling fail? (Noisy feedback channels, unverifiable tasks, saturated budgets)
+   - 7.2 The value of architectural separation (single-agent loop vs. proposer-reviewer)
+   - 7.3 Why some scaling distills and some doesn't — environment signal quality as the load-bearing variable
+   - 7.4 Connection to human work patterns (drafting, testing, revising)
+8. **Conclusion** (0.5 page)
+9. **Appendix** — Ablation studies, prompt templates, custom benchmark details, distillation hyperparameters, held-out-split construction, compute costs
 
-Target: 9 pages + references + appendix (standard top-venue format).
+Target: 10 pages + references + appendix.
 
 ---
 

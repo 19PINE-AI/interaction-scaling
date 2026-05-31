@@ -1,0 +1,801 @@
+\documentclass[11pt]{article}
+
+\usepackage{arxiv}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{booktabs}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{nicefrac}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{multirow}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{cleveref}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!50!black,
+  citecolor=blue!50!black,
+  urlcolor=blue!50!black,
+}
+
+% Allow looser line breaking on paragraphs with long inline \texttt{} model IDs
+% and code paths so we don't get >25pt overfull \hbox warnings on those lines.
+\emergencystretch=3em
+\hyphenpenalty=1000
+\tolerance=2000
+
+\title{Interaction Scaling:\texorpdfstring{\\}{ }A Third Test-Time Compute Axis Grounded in Environment Feedback}
+
+\author{
+  Bojie Li\\
+  Pine AI \\
+  \texttt{boj@19pine.ai}
+}
+
+\runningtitle{Interaction Scaling}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+Test-time compute is dominated today by two scaling axes: \emph{reasoning} (longer chains of thought) and \emph{sampling} (best-of-$N$). Both operate inside the model's own token space and are bounded by the information already encoded in its weights. A third axis --- iterating against an external environment that returns grounded feedback (execution traces, rendered artifacts, search verdicts) --- is well established empirically (Reflexion, ReAct, CRITIC, RLEF, thinking-vs-doing) but lacks a unified theoretical account of \emph{why} and \emph{when} it should outperform reasoning- or sampling-only scaling. We supply that account: an information-theoretic formalization that derives a data-processing-inequality ceiling on ungrounded review and shows that grounded feedback channels break it, organized through a Type 0/1/2/3 feedback taxonomy with derived ordering predictions. We instantiate the framework with a budget-aware proposer--reviewer harness that wraps a frontier model without fine-tuning. Across six modalities, the harness lifts quality on every modality, with the largest gains on execution-grounded tasks --- code ($+33.3$\,pp pass-rate), video editing ($+0.47$ quality) --- as the taxonomy predicts. A central methodological finding is that \emph{evaluating} the visual modalities is itself a grounding problem: a vision--language-model judge reading a rendered screenshot is unreliable for the geometric defects that dominate generated figures and slides (it rates 14 of 15 dense academic-figure renders ``perfect'' when only 3 are actually clean, because content that overflows the canvas is cropped off-frame before the judge ever sees it). We therefore evaluate fixed-canvas visual artifacts with a \emph{deterministic} DOM-geometry check --- measuring every element's true bounding box to compute overlaps, clipping, and overflow exactly --- and show that grounding the reviewer in the same signal drives a 78\,\% reduction in real layout defects on a new academic-figure modality ($1.20\to0.27$ defects/figure, sign-test $p{=}0.008$, zero regressions) and a 91\,\% reduction on slides --- gains the screenshot-judge metric could not even measure. At a 20K-token budget on hard code tasks, reasoning-only saturates at 73.3\% (86.7\% under a more generous thinking-heavy partition) and best-of-$N$ at 86.7\%, while iteration with environmental feedback --- whether single-agent (L), sample-and-select (IAD), or proposer--reviewer (H) --- reaches $\geq 97.8\%$. Among interaction strategies the proposer--reviewer harness is the most token-efficient (1{,}029 vs 1{,}431 L vs 1{,}416 IAD mean output tokens) and the only variant tested at strict 100\% across multiple seeds (L hits 100\% in 2 of 3 seeds; IAD was run for one seed only). The effect replicates across model families (Sonnet 4 $+33.3$\,pp, Qwen3-235B $+26.7$\,pp, GPT-5 $+13.3$\,pp on a higher single-shot baseline) and to held-out tasks ($90.6 \to 100\%$, $3/3$ failures recovered, zero regressions); the optimal token allocation is propose-heavy and the allocation simplex shows an 86.6\,pp spread. We additionally show a recipe for \emph{internalizing} the harness's interaction-quality behavior into an 8B student via SFT on judge-filtered teacher trajectories: $0.50\times$ teacher mean@1 capability on a 44-task out-of-distribution suite (rising to $0.70\times$ at pass@2), and 44\,\%/56\,\% pass@1/pass@3 on an 18-task hard held-out suite, at $\sim$10$\times$ lower deployment cost than running the harness over a frontier model. Interaction scaling is real, distinct from reasoning and sampling scaling, predictable from the taxonomy, and operational both as scaffolding and (partially) as distilled behavior.
+\end{abstract}
+
+\section{Introduction}
+\label{sec:intro}
+
+Test-time compute has become the dominant lever for improving large-model performance on artifact-producing tasks --- code generation, web pages, slide decks, video edits, research reports. The two scaling axes that the literature has formalized so far both operate \emph{inside the model's own token space}. \emph{Reasoning scaling} (chain-of-thought, tree search, extended thinking; \citealp{wei2022chain,yao2023tree,deepseek2025r1,kimi2025k15,snell2024scaling}) generates more thinking tokens before committing to an answer. \emph{Sampling scaling} (best-of-$N$, self-consistency; \citealp{wang2023selfconsistency,brown2024large}) generates multiple independent attempts and picks one. In both regimes, every additional token is a function of the same fixed weights and the same fixed task description: more compute does not bring more information into the system.
+
+This is consequential for tasks where the failure mode is missing information, not missing computation. A program may type-check and read correctly but fail a test the model has no way to enumerate from the spec alone. A web page may have plausible HTML but render with the hero element clipped below the fold. A factual claim may sound right but be contradicted by a source the model never read. For these failures, longer thinking cannot help, because there is no signal inside the weights that distinguishes the correct from the incorrect output --- the distinguishing signal lives outside the model. A long literature corroborates this intuition: LLMs cannot reliably self-correct without external feedback \citep{huang2024selfcorrect,kamoi2025correct}, multi-agent debate gains collapse under matched-compute single-agent budgets \citep{trankiela2026singleagent}, and tool-grounded verification dramatically outperforms self-evaluation \citep{gou2024critic}.
+
+\paragraph{Thesis.} Test-time compute has a third scaling axis: \emph{interaction scaling}, in which the model iteratively interacts with an external environment that returns grounded feedback (program output, rendered pixels, search results, lint warnings). The empirical observation is not new --- Reflexion, ReAct, CRITIC, RLEF, and recent thinking-vs-doing work all instantiate it on specific modalities. What we contribute is the \emph{formalization}: an information-theoretic account showing that each grounded interaction cycle injects information that was \emph{physically outside} the model's weights at generation time, and that this breaks the information-theoretic ceiling bounding reasoning- and sampling-only scaling --- not as a heuristic claim but as a direct consequence of the data processing inequality applied to the appropriate graphical model (\Cref{sec:framework}). The formalization yields a feedback taxonomy with derived ordering predictions, which we then validate empirically across six modalities and three model families.
+
+\paragraph{Four contributions.} We make this claim precise and demonstrate it empirically.
+\textit{First}, we formalize a \emph{grounded feedback framework} (\Cref{sec:framework}): a Type 0/1/2/3 taxonomy of feedback channels and an information-theoretic account that predicts \emph{which} feedback channels can break the DPI ceiling and \emph{which} cannot, with a derived ordering on the magnitude of the interaction-scaling lift.
+\textit{Second}, we instantiate the framework as a \emph{budget-aware proposer--reviewer harness} (\Cref{sec:method}) wrapped around a frozen frontier model --- pure scaffolding, no fine-tuning, no learned controller --- and evaluate it on six modalities spanning all four sub-types of Type 3 feedback (\Cref{sec:harness}). The harness lifts quality on every modality; the lift is largest exactly where the framework predicts (execution-grounded, +33.3\,pp on code, +0.47 on video); among four strategies tested (reasoning-only, sampling, single-agent loop, harness) on hard code at the 20K-token budget, it is the only one to reach strict 100\% pass-rate \emph{with zero seed variance and the lowest mean token cost} (1{,}029 vs.\ 1{,}431 for the single-agent loop and 1{,}416 for an oracle-verifier sample-and-select baseline); and it replicates across three model families (Anthropic, Alibaba, OpenAI) and to a held-out task set.
+\textit{Third}, we establish that for visual modalities the \emph{evaluation} is itself a grounding problem and resolve it (\Cref{sec:geometric}): screenshot-reading VLM judges --- holistic scores or even binary per-requirement rubrics --- systematically miss the geometric defects (text-on-text overlap, clipped labels, canvas overflow) that dominate generated figures and slides, because the failures are literally cropped out of the captured image. We replace the judge with a \emph{deterministic DOM-geometry} check on fixed-canvas artifacts and introduce an academic-figure modality on which grounded geometric feedback cuts real layout defects by 78\,\% (zero regressions, $p{=}0.008$); the same objective lens shows the slide harness was removing 91\,\% of defects all along, invisibly to its own VLM score.
+\textit{Fourth}, we show a recipe for \emph{internalizing} the harness's interaction-quality behavior into an 8B student (\Cref{sec:distill}) by SFT on judge-filtered teacher trajectories, recovering $0.50\times$ teacher mean@1 capability on a 44-task out-of-distribution suite (44\,\%/56\,\% pass@1/pass@3 on an 18-task hard held-out suite) at $\sim$10$\times$ lower deployment cost.
+
+\paragraph{Roadmap.} \Cref{sec:related} surveys related work on test-time scaling, self-correction, and tool-grounded verification. \Cref{sec:framework} develops the feedback taxonomy and the DPI argument. \Cref{sec:method} specifies the harness. \Cref{sec:harness} reports the main empirical results (six modalities, four-curve scaling, allocation, cross-model, held-out). \Cref{sec:geometric} re-examines the visual modalities with a deterministic geometric metric, introduces the academic-figure modality, and reports the objective defect-reduction results. \Cref{sec:distill} reports the 8B distillation positive results. \Cref{sec:discussion} discusses limits and implications; \Cref{sec:conclusion} concludes.
+
+\section{Related Work}
+\label{sec:related}
+
+\paragraph{Test-time scaling.} A growing body of work shows that allocating extra compute at inference --- via chain-of-thought \citep{wei2022chain}, self-consistency \citep{wang2023selfconsistency}, tree search \citep{yao2023tree}, iterative refinement \citep{shinn2023reflexion,madaan2023selfrefine}, or compute-optimal allocation \citep{snell2024scaling,beeching2024searchscale} --- improves task performance well past single-shot ceilings. The most recent reasoning-trained systems (DeepSeek-R1, Kimi K1.5; \citealp{deepseek2025r1,kimi2025k15}) demonstrate that test-time-scaled behavior can be elicited via large-scale RL on a strong base. These approaches operate primarily on the reasoning and sampling axes. Our work argues that a third axis --- interaction scaling, in which extra compute buys cycles of grounded environmental feedback rather than tokens inside the model --- has fundamentally different scaling properties.
+
+\paragraph{Self-correction limits and grounded verification.} \citet{huang2024selfcorrect} showed that LLMs cannot reliably self-correct reasoning errors without external feedback; accuracy often \emph{decreases} after self-review. \citet{kamoi2025correct} confirmed this across a broad range of settings: self-correction works only when (i) external feedback is available or (ii) the model has been fine-tuned for correction. \citet{gou2024critic} provided a controlled comparison: tool-grounded verification (CRITIC) yields substantial gains, but removing the tool and relying on self-evaluation eliminates most improvement. Multi-agent debate \citep{du2023multi} appears to gain ground but \citet{trankiela2026singleagent} show that under matched-compute budgets a single agent matches debate on multi-hop reasoning --- the gains attributed to cross-LLM critique come from the extra compute, not the cross-LLM signal. These results converge on the same conclusion that our framework formalizes: feedback only breaks the information ceiling when it is grounded outside the model's weights.
+
+\paragraph{Thinking vs.\ doing.} \citet{shen2025thinking} introduced an explicit distinction between scaling per-step reasoning (\emph{thinking}) and scaling environment interaction (\emph{doing}) for web agents, showing that under a fixed token budget, acting longer yields larger gains than thinking longer. Our work refines this with a third component --- \emph{reviewing}, a structured evaluation step that converts raw execution output into actionable improvement signals --- and generalizes the empirical claim across six modalities (code, web, slides, video, research, animations).
+
+\paragraph{Agentic LLMs and grounded refinement.} Tool-augmented LLMs \citep{schick2023toolformer,patil2024gorilla} and agentic frameworks that interleave reasoning and acting \citep{yao2023react,wang2023voyager} are the dominant deployment paradigm for tasks that require external feedback. Execution-grounded refinement has been particularly impactful for code (RLEF; \citealp{gehring2025rlef}) and for web/visual generation (WebGen-Agent; \citealp{webgen2025}). Our contribution relative to these works is the formal characterization of \emph{why} they work --- the DPI argument applied to the feedback channel --- and a systematic study of the architectural and budget choices that determine when they help.
+
+\paragraph{Sampling-based inference scaling and consistency-vs-diversity.} Best-of-$n$ and pass@$k$ inference \citep{chen2021evaluating,brown2024large} rely on output diversity. A long line of work documents that fine-tuning, and especially RLHF \citep{stiennon2020learning,casper2023open}, can collapse this diversity along multiple axes \citep{kirk2024diversity,padmakumar2024writing}. We confirm and extend this story in \Cref{sec:distill}: a rejection-sampling fine-tune that improves every per-turn consistency metric we measure regresses pass@3 by 17\,pp.
+
+\paragraph{Distillation of tool use and refinement behavior.} A separate line distills test-time-scaled behavior into smaller students \citep{magister2023teaching,ho2023largelm,fu2023specializing}. DeepSeek-R1's distilled checkpoints \citep{deepseek2025r1} and Kimi K1.5 \citep{kimi2025k15} show that high-quality reasoning traces \emph{can} distill at scale. Most of this work is text-only; we add the multimodal interaction-quality dimension and a recipe specific to the small-student regime (\Cref{sec:distill}).
+
+\section{The Grounded Feedback Framework}
+\label{sec:framework}
+
+We propose an information-theoretic framework that predicts when adding a review step to an LLM agent helps and when it does not. The key distinction is whether the review step's output is a function only of the model's existing internal state, or of new information that originates outside the model's weights.
+
+\subsection{Feedback taxonomy}
+\label{sec:taxonomy}
+
+We distinguish four feedback types by their information source.
+
+\begin{itemize}[leftmargin=*,topsep=0.2ex,itemsep=0.4ex]
+\item \textbf{Type 0 --- Self-review (no grounded information).} The same model re-reads its own output. The reviewer operates on the same weights and the same context as the proposer. Empirically, this often \emph{decreases} accuracy \citep{huang2024selfcorrect,kamoi2025correct}. Analogous to re-reading your own essay without showing it to anyone.
+
+\item \textbf{Type 1 --- LLM cross-review (no grounded information).} A different LLM (or the same LLM with a different prompt) critiques the artifact. Although the reviewer brings different priors, it operates only on the textual representation of the artifact, with no external verification. \citet{trankiela2026singleagent} show that under matched compute this provides no advantage over a single-agent baseline. Analogous to re-reading your essay wearing a different hat.
+
+\item \textbf{Type 2 --- Static tool feedback (grounded, pre-execution).} External tools analyze the artifact without executing it: linters, type checkers, structural validators. The information is grounded in formal language specifications and rule sets but is restricted to properties verifiable without runtime behavior.
+
+\item \textbf{Type 3 --- Dynamic environment feedback (grounded, post-execution).} The artifact is executed, rendered, or verified against external sources, and the results are fed back to the reviewer. Type 3 has four sub-modalities corresponding to the natural feedback channel for each artifact type:
+\begin{itemize}[leftmargin=*,topsep=0.2ex,itemsep=0.2ex]
+\item Type 3a: execution feedback (test pass/fail, traceback, runtime behavior).
+\item Type 3b: visual rendering feedback (screenshot of a rendered artifact analyzed by a VLM).
+\item Type 3c: temporal feedback (keyframe sequence from video/animation, analyzed for temporal coherence).
+\item Type 3d: factual verification feedback (search-engine or knowledge-base lookups verifying or contradicting specific claims).
+\end{itemize}
+\end{itemize}
+
+\subsection{Information-theoretic formalization}
+\label{sec:formalization}
+
+We make the difference between Type 0/1 and Type 2/3 feedback precise with an explicit graphical model.
+
+\paragraph{Random variables.} Let $T$ denote the task specification, $A$ the generated artifact, $E$ the environment's response (execution result, rendered pixels, search verdict, lint output; null for Type 0/1), $F$ the reviewer's feedback delivered to the proposer for revision, and $R$ the final outcome / reward (does the revised artifact satisfy $T$?). The quantity of interest is $I(R; F \mid A)$ --- how much information about whether the revision will succeed is recoverable from $F$ beyond what is already in $A$. If this is zero, the reviewer adds no decision-relevant signal and revisions are bounded above by what the proposer could have achieved without review.
+
+\paragraph{Type 0/1 (no grounding).} The reviewer reads only $A$ and $T$; there is no external variable. The graphical model is the Markov chain $T \to A \to F$, with $R$ a function of $A$ (and unobserved stochastic execution). The defining conditional-independence assumption is
+\[
+F \perp R \mid A,
+\]
+i.e.\ conditioning on the artifact, the feedback adds no information about the eventual outcome. LLM sampling makes $F$ random, but the noise is uncorrelated with task-relevant facts about whether $A$ works. By the data processing inequality \citep{cover2006elements},
+\[
+I(R; F) \leq I(R; A).
+\]
+The reviewer cannot manufacture task-relevant information that was not already encoded in $A$. Self-review and pure LLM cross-review reshuffle the same bits.
+
+\paragraph{Type 2/3 (grounded).} The graphical model gains the external variable $E$, giving $T \to A \to E$ and $F = f(T, A, E)$. Crucially, $E$ is generally \emph{not} a deterministic function of $(T, A)$: the environment carries information about $A$'s correctness that is \emph{not deducible from $A$'s surface form alone}. A program that ``looks correct'' may fail tests; HTML that ``parses correctly'' may render with the hero clipped; a factual claim that ``sounds right'' may be contradicted by a source the model has not read. The conditional-independence assumption $F \perp R \mid A$ no longer holds, and
+\[
+I(R; F) \;>\; I(R; A) \quad\text{is achievable}.
+\]
+The environment breaks the Markov chain by injecting a genuinely new, reliable information source into $F$.
+
+\paragraph{What this argument proves vs.\ predicts.} The DPI bound is a \emph{qualitative} statement: Type 0/1 feedback cannot exceed the single-shot information ceiling $I(R; A)$, while Type 3 feedback can. A subtlety made visible by the in-modality controls in \Cref{sec:harness-typecontrols} is worth stating up front: the DPI bound is on $F$'s information about $R$ \emph{beyond what is already in $A$}; it is \emph{not} a bound on what a single proposer forward-pass extracts from $A$. A different reviewer prompt may surface information from $A$ that the proposer's prompt did not --- a different projection of the same artifact, bounded above by $I(R; A)$. This is the fraction of the lift that an ungrounded Type 1 reviewer can deliver in practice; it is real but bounded. The qualitatively new axis Type 3 unlocks is information \emph{not in $A$ at all} (the artifact's actual runtime behavior), which only an external $E$ can supply.
+
+The bound also does \emph{not} predict the magnitude of the gain inside Type 3, nor the within-tier ordering across Type 3a/b/c/d. Whether execution feedback beats visual feedback by a factor of two or ten is determined by how much of the environment's information $F$ encodes (encoder fidelity), how localizable the encoded signal is (actionability), and how reliably the proposer can translate $F$ into a corrective edit (action translation) --- none of which the framework constrains. Those are empirical questions, addressed in \Cref{sec:harness-taxonomy,sec:harness-scaling}. The framework's role is to identify the load-bearing axis (presence vs.\ absence of an external $E$) and to rule out the regime in which longer self-review and longer reasoning chains can substitute for it.
+
+\subsection{Predictions}
+\label{sec:predictions}
+
+Three predictions follow from this framework, and the empirical sections test each.
+
+\begin{enumerate}[leftmargin=*,topsep=0.2ex,itemsep=0.4ex]
+\item \textit{Type 0/1 reviewers cannot exceed $I(R; A)$ and should fall short of grounded Type 3 channels at matched compute.} Prior work \citep{huang2024selfcorrect,trankiela2026singleagent} already shows that ungrounded review is bounded; our refinement (\Cref{sec:harness-typecontrols}) is that a Type 1 reviewer can still lift quality \emph{up to} $I(R; A)$ by surfacing information from $A$ that the proposer's prompt did not, and is reliably surpassed by Type 3a (which adds genuinely new information about $A$'s runtime behavior).
+\item \textit{Type 3 reviewers should lift quality, with a tier-level gap between execution-grounded and non-execution channels.} Execution feedback (Type 3a) is binary, machine-readable, and localizable; visual feedback (Type 3b/3c) and factual verification (Type 3d) are softer (a holistic critique or a per-claim verdict does not localize to a specific edit). The framework predicts the tier-level grouping Type 3a $\gg$ \{Type 3b, 3c, 3d\}; it does \emph{not} predict the within-tier ranking, which is sensitive to task headroom, feedback noise, and action-translation losses (\Cref{sec:harness-taxonomy}). We test the tier-level prediction directly in \Cref{sec:harness-taxonomy}.
+\item \textit{Reasoning-only scaling at matched compute should fall short of the interaction-scaling ceiling.} Longer chains of thought operate within the DPI bound; for failures where $A$ alone does not determine correctness (off-by-one boundary conditions revealed by a test, layout overflows revealed by a render), reasoning cannot manufacture the missing signal. We test this in \Cref{sec:harness-reasoning,sec:harness-scaling}.
+\end{enumerate}
+
+\section{Method: The Proposer--Reviewer Harness}
+\label{sec:method}
+
+\subsection{Architecture}
+
+The proposer--reviewer harness instantiates the framework as an inference-time scaffold (\Cref{fig:harness}). A frozen model serves as both proposer and reviewer; what distinguishes the two roles is the context they operate on, not the weights.
+
+\begin{itemize}[leftmargin=*,topsep=0.2ex,itemsep=0.2ex]
+\item The \textbf{proposer} generates an initial artifact $A$ from the task spec $T$.
+\item The \textbf{environment} executes / renders / fact-checks $A$, producing the grounded feedback variable $E$ (Type 3a/b/c/d depending on the modality).
+\item The \textbf{reviewer} consumes only the latest artifact $A$ and the grounded feedback $E$ --- \emph{not the full conversation history} --- and emits a structured critique $F$ identifying defects.
+\item The proposer revises in a fresh context informed by $F$ and the prior artifact.
+\end{itemize}
+
+The architectural choice that distinguishes the harness from a single-agent loop is the reviewer's context isolation. A single-agent loop accumulates execution output and revision turns inside one ever-growing context; the harness resets the reviewer's input to the minimum information needed to localize defects. \Cref{sec:harness-separation} shows this choice ties the single-agent loop on pass rate at saturation while spending fewer tokens (1{,}029 vs.\ 1{,}431 mean) and exhibiting zero seed variance.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  node distance=8mm and 12mm,
+  every node/.style={align=center},
+  box/.style={draw, rounded corners=2pt, minimum height=8mm, minimum width=22mm, inner sep=2pt, fill=blue!8},
+  envbox/.style={draw, rounded corners=2pt, minimum height=8mm, minimum width=22mm, inner sep=2pt, fill=orange!12},
+  arrow/.style={-{Latex[length=2mm]}, thick},
+  payload/.style={font=\scriptsize\itshape, fill=white, inner sep=1pt},
+]
+\node[box] (prop) {Proposer\\(LLM, full context)};
+\node[envbox, right=of prop] (env) {Environment\\(execute / render /\\fact-check)};
+\node[box, right=of env] (rev) {Reviewer\\(LLM, sees only\\$A$ and $E$)};
+
+\draw[arrow] (prop) -- node[payload, above]{artifact $A$} (env);
+\draw[arrow] (env) -- node[payload, above]{grounded\\feedback $E$} (rev);
+\draw[arrow] (rev.south) -- ++(0,-8mm) -| (prop.south) node[payload, midway, above]{structured critique $F$};
+\end{tikzpicture}
+\caption{The proposer--reviewer harness. Blue boxes are LLM calls (same model, different contexts); orange is the environment. The reviewer's context is reset between iterations to contain only the latest artifact and the grounded feedback channel --- preventing context overload and concentrating the LLM's analysis on the localizable signal in $E$.}
+\label{fig:harness}
+\end{figure}
+
+\subsection{Budget definition and allocation}
+\label{sec:method-budget}
+
+Let $B$ denote the total token budget per task (summed across all LLM calls). The harness splits $B$ into three slots:
+\[
+b_1 \;\text{(propose)} \;+\; b_2 \;\text{(execute)} \;+\; b_3 \;\text{(review)} \;\leq\; B.
+\]
+For code, $b_2$ is effectively zero (\texttt{pytest} consumes no LLM tokens); for the visual modalities, $b_2$ is the VLM call that produces the rendered-screenshot critique. \Cref{sec:harness-allocation} shows that under a tight per-task budget the dominant axis is $b_1$: the proposer must be given enough per-call room to emit a complete artifact, and starving it (small $b_1$) collapses pass-rate regardless of how much budget the reviewer gets.
+
+\subsection{Cross-modal instantiation}
+\label{sec:method-modality}
+
+The same architecture instantiates differently per modality, distinguished by the grounded feedback channel.
+
+\begin{table}[ht]
+\centering
+\caption{Modality--specific instantiations of the harness. The feedback channel determines which Type 3 sub-modality the reviewer consumes; the proposer always sees text or images.}
+\label{tab:harness-setup}
+\small
+\begin{tabular}{lccc}
+\toprule
+Modality & $N$ tasks & Feedback channel & Max iters \\
+\midrule
+Code           & 15 & Type 3a: \texttt{pytest} pass/fail + traceback         & 5 \\
+Video editing  & 15 & Type 3a+3c: script exec + keyframe VLM critique         & 3 \\
+Deep research  & 15 & Type 3d: per-claim factual verification via search      & 2 \\
+Web pages      & 15 & Type 3b: headless-browser screenshot + VLM critique     & 3 \\
+Animations     & 15 & Type 3c: rendered keyframe sequence + temporal VLM      & 3 \\
+Slide decks    & 20 & Type 3b: rendered slide images + per-slide VLM critique & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Interaction Scaling with External Scaffolding}
+\label{sec:harness}
+
+This section reports the main empirical results. Throughout, the harness is pure scaffolding --- no fine-tuning, no retrieval-augmented context, no learned controller --- so any gain over single-shot is attributable to interaction scaling alone.
+
+\subsection{Setup}
+\label{sec:harness-setup}
+
+\textbf{Model.} Claude Sonnet 4 (\texttt{claude-sonnet-4-20250514}), extended thinking enabled, temperature 0. The same model serves as proposer and reviewer; only the context differs. The harness uses no fine-tuning, retrieval, or learned controller. A cross-family replication on Qwen3-235B (\Cref{sec:harness-crossmodel}) confirms the effect is architectural, not Claude-specific.
+
+\textbf{Conditions.} \emph{Single-shot}: one proposer call, output scored. \emph{Reviewed}: full proposer$\to$execute/render$\to$review$\to$revise loop until the reviewer accepts the artifact or the iteration cap is hit. We replicate each modality three independent times (\texttt{onpolicy\_run\{1,2,3\}}) with fresh harness state; non-determinism comes from the API on long reasoning traces, since temperature is fixed at 0. Code is scored binary (canonical \texttt{pytest} pass/fail); the other modalities use a fixed-rubric VLM/LLM judge returning a continuous score in $[0,1]$.
+
+\subsection{Six-modality headline results}
+\label{sec:harness-headline}
+
+\Cref{tab:harness-headline} reports the mean and standard deviation across the three independent on-policy runs per modality. The harness lifts quality on \emph{every} modality, and the lift is largest exactly where the framework predicts: the execution-grounded channels (code, video) clear $p < 0.05$ on a one-sided paired sign test and dominate by an order of magnitude. The four screenshot-judged modalities register a smaller positive lift here, but this overview understates them: \Cref{sec:geometric} measures the visual modalities with a deterministic instrument and shows the harness removing real layout defects by $78$--$91\,\%$.
+
+\begin{table}[t]
+\centering
+\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf{Bold} marks rows where the lift clears $p < 0.05$. The code and video rows are scored by execution; the four visual/factual rows use a holistic screenshot judge and serve here as a cross-modal overview, with the precise web and animation figures given by the binary rubric in \Cref{tab:rubric} and the academic-figure and slide results by deterministic geometry in \Cref{tab:geometric}.}
+\label{tab:harness-headline}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Modality & $N$ & Feedback type & Single-shot & Reviewed & $\Delta$ (sign-test $p$) \\
+\midrule
+\textbf{Code}          & 15 & 3a       & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\% & $\mathbf{+33.3}$\,pp (0.008) \\
+\textbf{Video editing} & 15 & 3a+3c    & $0.13 \pm 0.01$    & $\mathbf{0.60 \pm 0.07}$   & $\mathbf{+0.47}$ (0.011) \\
+Deep research          & 15 & 3d       & $0.63 \pm 0.06$    & $0.69 \pm 0.06$   & $+0.06$ (0.090) \\
+Web pages              & 15 & 3b       & $0.43 \pm 0.03$    & $0.56 \pm 0.01$   & $+0.13$ (0.073) \\
+Animations             & 15 & 3c       & $0.40 \pm 0.03$    & $0.55 \pm 0.01$   & $+0.15$ (0.073) \\
+Slide decks            & 20 & 3b       & $0.73 \pm 0.01$    & $0.79 \pm 0.01$   & $+0.06$ (0.090) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Capability emergence: video editing as a case study}
+\label{sec:harness-emergence}
+
+The video-editing result is qualitatively different from the others and is the strongest evidence that interaction scaling is a distinct axis of test-time compute rather than a quality knob. \emph{Eleven of fifteen} video-editing tasks produce quality 0.0 in all three single-shot runs --- the proposer's first-shot Python/\texttt{moviepy}/\texttt{ffmpeg} script crashes outright. The harness recovers nine of these eleven to a reviewed mean $\geq 0.5$, of which four reach perfect 1.0 in every run. The reviewed mean over the eleven SS-zero tasks is $0.62$. This is not a quality bump applied to a working artifact: the single-shot model \emph{cannot reliably produce video-editing code that runs}, and the interaction loop is what converts ``syntactically plausible but broken'' into ``executes and matches the spec.''
+
+\paragraph{Mechanism.} Inspection of recovered traces shows a consistent pattern: turn~1 emits code that imports a non-existent or misused API surface (\texttt{moviepy.editor.subclip} signatures, wrong codec strings, missing ffmpeg filters, mismatched audio sample rates); turn~2 receives the execution traceback as feedback and rewrites the offending block; turn~3 either succeeds, or (for tasks like ``cut to the moment a face appears'') receives a keyframe-VLM critique pointing at the wrong frame and revises the timestamp. Reasoning alone cannot supply this signal --- the model has no way to know its codec string is wrong until something tries to decode the resulting file. The information is physically outside the weights.
+
+\subsection{Feedback actionability validates the Type-3 taxonomy}
+\label{sec:harness-taxonomy}
+
+\Cref{sec:taxonomy} predicts a qualitative ordering between \emph{tiers} of feedback grounding: execution-grounded channels (Type 3a, video and code) should lift more than channels that critique rendered output without exercising it (Type 3b/3c) and channels that verify factual claims without an executable consequence (Type 3d). The deltas in \Cref{tab:harness-headline} bear this out cleanly: the two execution-grounded modalities deliver the two largest gains by a wide margin (+0.47 for video, +33.3\,pp for code), an order of magnitude bigger than any other modality. The top-tier vs.\ bottom-tier gap --- a factor of $\sim$4 in mean lift --- is the framework's load-bearing prediction, and it holds.
+
+\paragraph{The framework predicts the tier-level grouping, not a per-channel ranking.} The DPI bound separates \emph{grounded} from \emph{ungrounded} feedback; the magnitude of the gain inside Type 3 is set by three factors the bound abstracts away --- task headroom (research and slides start at $0.63$/$0.73$ single-shot quality, web at $0.43$), feedback fidelity (\texttt{pytest} return codes are cleaner than per-claim verdicts), and action-translation (a traceback localizes to an edit more directly than a holistic critique). These factors, not the taxonomy, govern the within-tier spread, and \Cref{sec:geometric} shows that grounding the visual channel in deterministic geometry --- which makes ``the layout is broken'' as localizable as a traceback --- moves the visual modalities into the high-actionability regime.
+
+\paragraph{The load-bearing claim is the top-tier gap.} The grouping the framework robustly predicts is \emph{execution-grounded vs.\ everything else}. Mean lift across runs is $\approx +0.40$ for the two execution-grounded modalities (code's $+0.33$ pass-rate read as $+0.33$ quality, video's $+0.47$) and $\approx +0.10$ for the other four. \emph{The feedback channel that runs the artifact and reports binary success/failure delivers roughly four times the interaction-scaling lift of channels that critique the rendered output but do not exercise its behavior.}
+
+\subsection{In-modality feedback-type controls (Type 1 / Type 2 / Type 3a)}
+\label{sec:harness-typecontrols}
+
+\Cref{sec:harness-taxonomy} validates the tier-level prediction across modalities; the in-modality control fixes the task suite and varies only the feedback channel. On the same 15 hard code tasks we instantiate a Type 1 reviewer (LLM cross-review with no execution or static analysis), a Type 2 reviewer (LLM with \texttt{ruff} output appended; still no execution), and reuse the Type 3a baseline from \Cref{sec:harness-headline}. The Type 1/2 reviewers are forbidden from accessing test results and may emit \texttt{VERDICT: PASS} to early-stop.
+
+\begin{table}[ht]
+\centering
+\caption{In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed; the ``SS'' column is the \emph{per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph{reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph{and} Type 3a is $\sim$2.5$\times$ more token-efficient (1.53 vs.\ 2.07 iterations).}
+\label{tab:type-controls}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Type & Reviewer sees & SS & Reviewed & Iters \\
+\midrule
+None (single-shot)             & ---                                  & 11/15 & ---            & --- \\
+Type 1 (cross-review)          & code only                            & 10/15 & 13/15          & 2.07 \\
+Type 2 ($+$\texttt{ruff})      & code $+$ static analysis             & 11/15 & 13/15          & 2.07 \\
+\textbf{Type 3a ($+$exec)}     & code $+$ test stderr/traceback       & 11/15 & \textbf{14/15} & \textbf{1.53} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The pattern in \Cref{tab:type-controls} is informative on three axes the framework distinguishes.
+
+\paragraph{Type 3a beats the static channels on capability and efficiency, and Type 1 commits the predicted ungrounded-channel failure mode.} Type 3a's $+6.7$\,pp reviewed-pass margin over Type 1/2 is one task on a 15-task suite (sign-test $p \approx 0.5$ in absolute terms), but the qualitative pattern matches the framework's prediction: Type 3a recovers \texttt{code\_003} (a date-range overlap checker whose failing case --- cross-timezone overlap and a zero-length range --- the proposer cannot deduce without seeing the actual test traceback) where Type 1/2 do not, and is $\sim$2.5$\times$ more token-efficient (1.53 vs.\ 2.07 mean iterations) because the test verdict tells the proposer when to stop. On \texttt{code\_003} the blind Type 1 reviewer falsely emitted \texttt{reviewer\_verdict\_pass} on broken code at iteration~3 (declaring the implementation ``mathematically correct'' and ``will correctly handle the reported bug scenario'' on code that in fact failed the cross-timezone test) --- a false-positive verdict that is structurally impossible for Type 3a (the test verdict is the ground truth) and is the textbook ungrounded-channel failure mode the DPI argument predicts.
+
+\paragraph{Type 1 is stronger than naive ``no information'' would predict, and Type 1 $\approx$ Type 2 by construction of the bug set.} On a fixed 11/15 reference baseline the Type 1/2 reviewers each lift pass-rate to 13/15 ($+13.3$\,pp), which is the fraction of the harness lift attributable to a different reviewer-prompt projection of $A$ surfacing information the proposer's prompt missed (the refinement to the DPI argument noted in \Cref{sec:formalization}). On the Type 1 seed's own single-shot (10/15) the lift reads $+20$\,pp, but this conflates two effects --- a less-favorable single-shot draw and a real review lift --- so we report the reviewed ceiling as the comparable quantity across rows. Type 1 and Type 2 do not separate because the 15 hard tasks are runtime-logic bugs (off-by-one boundaries, escape-handling, route-priority, byte-vs-char) that \texttt{ruff} cannot see; a benchmark deliberately seeded with bugs that \texttt{mypy} or \texttt{semgrep} catch would be the right place to test the strict Type 2 $>$ Type 1 prediction, which this benchmark neither confirms nor refutes.
+
+\subsection{Reasoning-only at matched budget: is this just more compute?}
+\label{sec:harness-reasoning}
+
+A reviewer can object: ``maybe the harness's gain is just from spending more tokens; did you let the single-shot model think longer?'' We answer directly. On the same 15 hard code tasks, we run a reasoning-only baseline at matched budget: extended thinking enabled, \texttt{thinking\_budget}=8000, no tools, no execution, no review. The single LLM call gets a generous over-budget for thinking; if reasoning-scaling alone explains the harness lift, this baseline should match it.
+
+\begin{table}[ht]
+\centering
+\caption{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}); the 3-run aggregate is reported in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times$ the harness's token budget.}
+\label{tab:reasoning-baseline}
+\small
+\begin{tabular}{lccc}
+\toprule
+Strategy & Pass-rate & Mean tokens & $\Delta$ vs.\ single-shot \\
+\midrule
+Single-shot                       & 73.3\% (11/15) & 1{,}406  & --- \\
+Reasoning-only (matched budget)   & 86.7\% (13/15) & 4{,}137  & $+13.3$\,pp \\
+\textbf{Proposer--reviewer harness} & \textbf{93.3\% (14/15)} & \textbf{2{,}643}  & $\mathbf{+20.0}$\,pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Reasoning-only closes two-thirds of the harness's gap over single-shot ($+13.3$\,pp of the harness's $+20.0$\,pp). The remaining 6.7\,pp comes from a single task --- \texttt{code\_003}, a date-range overlap checker --- where reasoning-only emits code that correctly handles naive vs.\ timezone-aware datetimes for the obvious cases but fails the zero-length range test (\texttt{AssertionError: Zero-length range should not overlap}). The bug is a $<$ vs.\ $\leq$ boundary condition that no amount of pre-emption ``thinking'' surfaced, but which the execution-feedback loop catches immediately.
+
+This is the framework's prediction sharpened: reasoning and interaction are partially overlapping but non-identical compute axes. Reasoning recovers the bugs that are inside the DPI envelope (the model could have thought its way to the answer); the harness additionally recovers the bugs that require external information (the model would never have generated the zero-length-range test input for itself). Reasoning is not wrong; it is bounded above by the harness on tasks where the failure mode is missing external information.
+
+\subsection{Four-strategy scaling curves: the headline result}
+\label{sec:harness-scaling}
+
+We now sweep the total token budget per task on the same 15 hard code tasks and compare four strategies in parallel:
+
+\begin{itemize}[leftmargin=*,topsep=0.2ex,itemsep=0.2ex]
+\item \textbf{R --- Reasoning-only.} Single API call, extended thinking enabled. Budget controls \texttt{thinking\_budget} and \texttt{max\_tokens}.\footnote{R's ceiling depends on how $B$ is partitioned between thinking and output. The sweep here uses a fixed thinking-to-output ratio that caps at $73.3\%$; a more generous thinking-heavy partition reaches $86.7\%$ at $\sim 4{,}100$ tokens (\Cref{tab:reasoning-baseline}). We report both throughout. The interaction-vs-reasoning gap quoted in this section and §\ref{sec:harness-separation} (``13--27\,pp'') spans both readings: 13\,pp is $100\% - 86.7\%$ (generous R vs.\ H) and 27\,pp is $100\% - 73.3\%$ (fixed-ratio R vs.\ H). Either reading leaves a robust gap to interaction strategies (97.8--100\%).}
+\item \textbf{S --- Best-of-$N$ sampling.} $N$ independent single-shot generations at $T{=}1.0$, scored as pass@$N$. Budget controls $N$.
+\item \textbf{L --- Single-agent agentic loop.} \emph{One} agent's context grows: generate $\to$ execute $\to$ on failure append stderr/stdout and revise, all in one thread. No separate reviewer. Budget controls max turns.
+\item \textbf{H --- Proposer--reviewer harness.} Separate proposer and reviewer; the reviewer sees only the latest artifact + execution output (not the full history), emits a structured critique; the proposer revises in a fresh context. Budget controls max iterations.
+\end{itemize}
+
+\begin{table}[t]
+\centering
+\caption{\textbf{The headline scaling result (3-seed mean $\pm$ SD).} Pass-rate by strategy~$\times$~budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent on-policy runs; R was run once (extended-thinking variation across seeds is small at temp~0) at the sweep's budget partition (a more generous partition lifts R to $86.7\%$; see footnote and \Cref{tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise on a 3-seed $\times$ 15-task suite; pass@$N$ is non-decreasing in $N$ in expectation but not pointwise across finite-sample on-policy seeds. \emph{Reasoning-only and best-of-$N$ saturate well below 100\%}; all three iteration-with-feedback strategies reach $\geq97.8\%$ at $B{=}20$K (L hit 100\% on 2 of 3 seeds; H on all 3; H is the only variant at strict 100\% across seeds). The architectural ordering across H, L is within seed noise on pass-rate; what separates them is token efficiency and reliability (\Cref{sec:harness-separation}).}
+\label{tab:scaling-curves}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Budget $B$ & R (reasoning-only) & S (best-of-$N$) & L (single-agent loop) & H (proposer--reviewer) \\
+\midrule
+1K   & 60.0\% & 80.0\% $\pm 0.0$\,pp & 57.8\% $\pm 3.1$\,pp & 62.2\% $\pm 3.1$\,pp \\
+5K   & 73.3\% & 77.8\% $\pm 3.1$\,pp & \textbf{93.3\% $\pm 0.0$\,pp} & 91.1\% $\pm 3.1$\,pp \\
+20K  & 73.3\% & 86.7\% $\pm 0.0$\,pp & 97.8\% $\pm 3.1$\,pp & \textbf{100.0\% $\pm 0.0$\,pp} \\
+\midrule
+Ceiling & 73.3\% & 86.7\% & $\sim$100\% & \textbf{100\% (zero variance)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\Cref{tab:scaling-curves} reports the result. \emph{Reasoning-only and best-of-$N$ saturate well below 100\%} (R caps at 73.3\%, S at 86.7\% even with $N{=}10$ samples), while \emph{both iteration strategies that consume execution feedback (L and H) reach the 100\% ceiling at $B{=}20$K within seed noise} (paired sign test on per-(seed, task) cells: $p{>}0.6$ for the H--L gap at every budget). The differentiator between L and H is token efficiency and zero-variance reliability (\Cref{sec:harness-separation}), not pass rate at saturation. The load-bearing claim of this section --- and \Cref{sec:predictions}'s prediction 3 --- is the 13--27\,pp gap between \emph{interaction-with-feedback} (L, H, and the IAD baseline of \Cref{sec:harness-separation}) and \emph{reasoning- or sampling-only}.
+
+\paragraph{What this benchmark cannot adjudicate.} A reader should not take the saturation of L, IAD, and H at $\sim$100\% as evidence that the three architectures are equivalent in capability. Saturation only certifies that this 15-task suite is below the joint capability ceiling of all three; whether harder benchmarks would separate them on pass-rate is the natural follow-up question, and we address what \emph{is} measurable here (token efficiency, seed variance) rather than what is not. The architectural separation we report (\Cref{sec:harness-separation}) is therefore a deployment-cost finding, not a capability-ceiling finding.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.85\textwidth, height=6cm,
+  xlabel={Budget $B$ (output tokens per task, log scale)},
+  ylabel={Pass-rate (\%)},
+  xmode=log,
+  log basis x={10},
+  xmin=700, xmax=30000,
+  ymin=50, ymax=105,
+  xtick={1000,5000,20000},
+  xticklabels={1K,5K,20K},
+  ytick={60,70,80,90,100},
+  legend pos=south east,
+  legend style={font=\scriptsize, draw=gray!50},
+  grid=both,
+  major grid style={dotted, gray!40},
+  minor grid style={dotted, gray!20},
+  axis line style={draw=gray!50},
+  tick style={draw=gray!50},
+  label style={font=\small},
+  ticklabel style={font=\scriptsize},
+  every axis plot/.append style={thick, mark size=2.2pt},
+]
+\addplot[color=red!70!black,    mark=square*] coordinates {(1000,60.0) (5000,73.3) (20000,73.3)};
+\addlegendentry{R --- reasoning-only}
+\addplot[color=red!70!black, dashed, no markers, forget plot] coordinates {(700,86.7) (30000,86.7)};
+\addplot[color=red!70!black, dashed, mark=none] coordinates {(20000,86.7)};
+\addlegendentry{R --- generous thinking partition}
+\addplot[color=orange!80!black, mark=triangle*] coordinates {(1000,80.0) (5000,77.8) (20000,86.7)};
+\addlegendentry{S --- best-of-$N$ sampling}
+\addplot[color=blue!60!black,   mark=diamond*]  coordinates {(1000,57.8) (5000,93.3) (20000,97.8)};
+\addlegendentry{L --- single-agent loop}
+\addplot[color=green!50!black,  mark=*]         coordinates {(1000,62.2) (5000,91.1) (20000,100.0)};
+\addlegendentry{H --- proposer--reviewer harness}
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Four-strategy scaling curves on hard code (Sonnet 4, 3-seed means).} Reasoning-only (R) saturates at 73.3\% at this sweep's fixed thinking-to-output partition; a more generous thinking-heavy partition lifts R to 86.7\% (\Cref{tab:reasoning-baseline}, shown by the dashed reference line). Best-of-$N$ at 86.7\%; both iteration-with-feedback strategies (L, H) reach the 100\% ceiling at $B{=}20$K within seed noise (L: 97.8\,$\pm$\,3.1\,pp; H: 100.0\,$\pm$\,0.0\,pp). The qualitative gap is between \emph{reasoning/sampling} and \emph{interaction with feedback}, not within the interaction strategies, and survives either R reading.}
+\label{fig:scaling-curves}
+\end{figure}
+
+\subsection{Architectural separation: token efficiency and reliability among interaction strategies}
+\label{sec:harness-separation}
+
+\Cref{tab:scaling-curves} establishes that all three iteration-with-feedback strategies (L, H, and an oracle-verifier sample-and-select baseline IAD; \citealp{ruan2025iad}) reach $\sim$100\% on this 15-task suite at $B{=}20$K. The natural follow-up question is whether the architectural variant (single agent vs.\ separate proposer/reviewer vs.\ K-sample-and-select) matters. \Cref{tab:LvsH} compares all three at $B{=}20$K, the saturated regime.
+
+\begin{table}[ht]
+\centering
+\caption{Three interaction-strategy variants at $B{=}20$K on the 15 hard code tasks, all using Type 3a execution feedback. Pass-rate is within seed noise (sign-test $p{>}0.6$ on the H--L comparison); the harness wins on \emph{token efficiency} (1{,}029 vs.\ 1{,}431 L vs.\ 1{,}416 IAD mean output tokens) and on \emph{seed variance} (zero across three seeds for H; L hit 100\% in 2 of 3 seeds; IAD was run for one seed only).}
+\label{tab:LvsH}
+\small
+\begin{tabular}{lccc}
+\toprule
+Strategy & Pass-rate & Mean tokens & Notes \\
+\midrule
+L (single-agent loop)              & 97.8\% $\pm 3.1$\,pp (3 seeds)           & 1{,}431          & 1 task in 1 seed \\
+IAD (oracle, K=3, T=0.7)           & 100.0\% (1 seed)                         & 1{,}416          & $+38$\% tokens vs.\ H \\
+\textbf{H (proposer--reviewer)}    & \textbf{100.0\% $\pm 0.0$\,pp (3 seeds)} & \textbf{1{,}029} & zero seed variance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Pass rate at saturation: ties within seed noise.} On this 15-task suite the three interaction strategies are statistically indistinguishable on pass-rate at $B{=}20$K (paired sign test on per-(seed, task) cells: $p{=}1$ on the H--L comparison, one non-tied pair out of 45). L hit 100\% in two of three seeds and 14/15 in the third (failing \texttt{code\_011}); H hit 100\% in all three; IAD reached 100\% in its single seed under an oracle-verifier upper bound (per-assertion test pass count given to the candidate selector during the run) that masks its real-world reward-model bottleneck.
+
+\paragraph{Token efficiency and seed variance: where H separates.} What does separate the variants is mean output tokens per task and seed-to-seed reliability. H's structured reviewer call is more sample-efficient than L's growing context (which carries multi-thousand-token stderr histories on the harder tasks) and than IAD's K-sample-and-select (which spends the K--1 unselected candidates on every iteration that fires); on the 6 tasks where IAD's K-sampling fired, IAD averaged 2{,}839 tokens vs.\ H's 1{,}029 global mean --- nearly $3\times$. H is also the only variant with zero seed variance at saturation: it reaches exactly 100\% in every seed, while L's single \texttt{code\_011} failure in seed 1 leaves it at $97.8 \pm 3.1$\,pp.
+
+\paragraph{What separates the interaction strategies.} On this 15-task suite the pass-rate differences among interaction strategies are within seed noise; the architectural separation buys token efficiency and reliability, not pass-rate ceiling. The load-bearing comparison in this paper is interaction-with-feedback vs.\ reasoning/sampling-only (a 13--27\,pp gap), not the choice of architectural variant within interaction strategies (a 0--2\,pp gap, within noise).
+
+\subsection{Cross-model replication: not a Claude artifact}
+\label{sec:harness-crossmodel}
+
+A second reviewer objection: ``this is a Claude quirk.'' We re-ran the code modality with two non-Anthropic proposer/reviewer pairs --- Qwen3-235B-Instruct-2507 and GPT-5, both via OpenRouter, same harness code, same task file, same system prompt, same budget, same evaluator. \Cref{tab:crossmodel} compares all three families.
+
+\begin{table}[ht]
+\centering
+\caption{Cross-model replication on the same 15 hard code tasks. The Claude row is the multi-run reference from \Cref{tab:harness-headline}; Qwen and GPT-5 are single on-policy runs at $T{=}0.7$. The harness lift survives across three families (Anthropic, Alibaba, OpenAI).}
+\label{tab:crossmodel}
+\small
+\begin{tabular}{lccc}
+\toprule
+Model & Single-shot pass & Reviewed pass & $\Delta$ (lift) \\
+\midrule
+Claude Sonnet 4 (3-run mean)        & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\%      & $\mathbf{+33.3}$\,pp \\
+Qwen3-235B-Instruct-2507 (1 run)    & $66.7$\% (10/15)   & $\mathbf{93.3}$\% (14/15)       & $\mathbf{+26.7}$\,pp \\
+GPT-5 (1 run)                       & $86.7$\% (13/15)   & $\mathbf{100.0}$\% (15/15)      & $\mathbf{+13.3}$\,pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The harness lift survives across all three families. Two patterns are worth noting. First, on the two model families that share Claude's $66.7$\% single-shot baseline (Sonnet 4, Qwen), the harness recovers 4--5 of the 5 single-shot failures and reaches $93.3$--$100$\% reviewed. The single un-recovered Qwen task is \texttt{code\_011} --- the same task identified across the scaling and allocation analyses as the model-family-independent capability ceiling --- which Sonnet recovers and which GPT-5 also recovers in 2 review iterations. Second, GPT-5's smaller absolute lift ($+13.3$\,pp) is a headroom-compression effect: its single-shot baseline is $86.7$\%, leaving only $13.3$\,pp of available headroom; the harness still reaches $100$\% reviewed and recovers $100$\% of GPT-5's single-shot failures. Both Sonnet and GPT-5 reach $100$\% reviewed on this suite; both recover \texttt{code\_011}. The harness's contribution is a property of the architecture, not the model family or training pipeline.
+
+\subsection{Held-out generalization}
+\label{sec:harness-heldout}
+
+A third objection: ``these tasks were used during pipeline development; can the harness lift to a held-out set?'' We constructed a 32-task held-out v2 code suite with zero \texttt{task\_id} and zero \texttt{bug\_class} overlap with the development set, using identical harness code and model.
+
+\begin{table}[ht]
+\centering
+\caption{Held-out generalization on 32 newly constructed code tasks (zero overlap with the 15-task development set). The harness recovers 3/3 single-shot failures and regresses zero passing tasks. The smaller absolute $\Delta$ is a baseline-compression effect (single-shot is 90.6\% on the held-out set, leaving at most 9.4\,pp headroom).}
+\label{tab:heldout}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Split & $N$ & Single-shot & Reviewed & $\Delta$ & SS-fail fixes / regressions \\
+\midrule
+Development (3-run mean) & 15 & $66.7 \pm 6.7$\% & $100.0 \pm 0.0$\% & $+33.3$\,pp & 5/5 / 0 \\
+\textbf{Held-out v2}     & 32 & $90.6$\% & $\mathbf{100.0}$\% & $\mathbf{+9.4}$\,pp & $\mathbf{3/3}$ / $\mathbf{0}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The harness lift survives in the two directions that matter. \emph{Sign and direction:} reviewed strictly dominates single-shot, recovers 3/3 SS-failures, and regresses 0/29 SS-passes. \emph{Conditional lift:} on SS-failure tasks, the harness recovers 100\% --- identical to the development conditional lift. The smaller absolute $\Delta$ (+9.4\,pp vs.\ +33.3\,pp) is fully explained by the held-out single-shot baseline being 90.6\% (only 9.4\,pp of headroom available); the mechanism (recover all SS-failures, regress nothing) is preserved.
+
+The two genuine recoveries (\texttt{code\_hv2\_024}: semver / natural-sort comparison; \texttt{code\_hv2\_025}: IP-address / CIDR arithmetic) each required one revision past the initial draft, with the proposer correcting based on the pytest traceback --- the same mechanism the framework predicts and that \Cref{sec:harness-emergence} documents on video.
+
+\subsection{Budget allocation matters: an 86.6 pp spread}
+\label{sec:harness-allocation}
+
+How should the budget be split between proposer ($b_1$), executor ($b_2$), and reviewer ($b_3$)? We swept the allocation simplex at total budget $B = 10$K tokens on the same 15 hard code tasks. \Cref{tab:allocation} reports nine points.
+
+\begin{table}[ht]
+\centering
+\caption{Budget allocation simplex on 15 hard code tasks, $B = 10$K total. Pass-rate is monotone in the proposer's per-call cap; review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.}
+\label{tab:allocation}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Allocation & $b_1$ (prop) & $b_2$ (exec) & $b_3$ (rev) & Pass-rate & Mean tokens \\
+\midrule
+\textbf{A (propose-heavy)} & 0.80 & 0.10 & 0.10 & \textbf{93.3\% (14/15)} & 3{,}101 \\
+\textbf{G (prop-dominant)} & 0.50 & 0.25 & 0.25 & \textbf{93.3\% (14/15)} & 2{,}697 \\
+D (prop+exec)              & 0.40 & 0.40 & 0.20 & 80.0\% (12/15) & 4{,}025 \\
+E (prop+review)            & 0.40 & 0.20 & 0.40 & 80.0\% (12/15) & 4{,}388 \\
+I (equal)                  & 0.33 & 0.34 & 0.33 & 66.7\% (10/15) & 4{,}845 \\
+H (review-dominant)        & 0.25 & 0.25 & 0.50 & 40.0\% (6/15)  & 7{,}485 \\
+F (exec+review)            & 0.20 & 0.40 & 0.40 & 13.3\% (2/15)  & 8{,}771 \\
+B (execute-heavy)          & 0.10 & 0.80 & 0.10 & \phantom{0}6.7\% (1/15)  & 9{,}383 \\
+C (review-heavy)           & 0.10 & 0.10 & 0.80 & \phantom{0}6.7\% (1/15)  & 9{,}383 \\
+\midrule
+\multicolumn{4}{r}{Spread:} & \textbf{86.6\,pp} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\emph{The proposer's per-call cap dominates.} Sorting by $b_1$ gives a clean monotone in pass-rate; $b_1 \geq 0.50$ wins, $b_1 \leq 0.25$ collapses. Comparing the two extreme review allocations B (\texttt{$b_3$}=0.10) and C (\texttt{$b_3$}=0.80) gives \emph{identical} pass-rate and mean tokens --- both starve the proposer (256-token cap), and the reviewer's cap is irrelevant when the proposer cannot emit a complete artifact. This is the architectural prediction concretized into a budgeting rule: spend at least half the budget on the proposer; the reviewer's cap is a second-order knob.
+
+\paragraph{The executor budget.} For code, $b_2$ (the executor) is degenerate: \texttt{pytest} consumes 0 LLM tokens, so $b_2$ manifests only as reserved iteration slack. For fixed-canvas visual modalities the executor is a deterministic DOM-geometry pass (\Cref{sec:geometric}) that likewise consumes no model tokens, so the propose-heavy rule transfers directly: at least half the per-task budget belongs to the proposer, and the reviewer's cap is a second-order knob across every modality we study.
+
+\subsection{Token ROI by modality}
+\label{sec:harness-roi}
+
+\Cref{tab:harness-roi} reports the per-task cost of running the harness instead of single-shot, expressed both as raw token overhead and as ``tokens spent per 0.01 of additional quality.'' This is the practitioner-facing version of the framework's prediction: the same compute, deployed against a high-actionability feedback channel, buys roughly two orders of magnitude more quality than the same compute against a low-actionability channel.
+
+\begin{table}[ht]
+\centering
+\caption{Per-task token cost and quality return-on-investment for the harness, averaged across three on-policy runs. ``Extra tokens'' is reviewed-minus-single-shot per task. Tokens per 0.01 quality is extra tokens divided by (mean reviewed quality $-$ mean single-shot quality)$\cdot 100$. Code dominates by $100\times$.}
+\label{tab:harness-roi}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Modality & Single-shot tokens & Reviewed tokens & Extra tokens & Tokens / 0.01 quality \\
+\midrule
+Code        & 3{,}336  & 4{,}575  & 1{,}239  & \textbf{37} \\
+Video       & 3{,}808  & 20{,}584 & 16{,}776 & 359 \\
+Research    & 14{,}116 & 27{,}793 & 13{,}677 & 2{,}415 \\
+Webpages    & 14{,}060 & 80{,}148 & 66{,}088 & 5{,}128 \\
+Animations  & 25{,}491 & 89{,}009 & 63{,}518 & 4{,}331 \\
+Slides      & 10{,}274 & 36{,}956 & 26{,}682 & 4{,}447 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The $100\times$ spread between code (37 tokens per 0.01 quality) and the visual/factual modalities ($\sim$4--5K tokens per 0.01) translates to a deployment rule: interaction scaling is uniformly \emph{beneficial} (every modality lifts) but is not uniformly \emph{cost-effective}. For execution-grounded artifacts the harness is essentially free per quality point. For visual-only artifacts it should be deployed selectively --- e.g., only when the single-shot output fails a structural check, or to escape a known-broken baseline rather than to polish an acceptable one.
+
+\subsection{The harness does not over-revise: built-in early stopping}
+\label{sec:harness-earlystop}
+
+A naive concern is that the reviewer will ``find something to criticize'' on already-good outputs and the proposer will revise them into something worse. The data does not support this.
+\emph{Code:} across the three runs the single-shot proposer passes the test suite on 9--11 of 15 tasks; on \emph{every} passing task, in every run, the reviewed condition submits at iteration~1 with no revision (30/30 instances). Total wasted tokens: zero.
+\emph{Slides:} of the 8--9 tasks per run at single-shot quality $\geq 0.95$, 5--8 are left exactly unchanged; the rest move only within judge stochasticity, never below 0.85.
+\emph{Video:} the one task with single-shot quality $= 1.0$ in all three runs stays at $1.0$ in all three reviewed runs.
+
+We characterize this as built-in early stopping: the same loop that doubles code pass-rate when the test suite fails is silent when the test suite passes, because the grounded feedback channel is the trigger for revision. Without a failing test or a defect-showing screenshot, the loop has no signal to act on. This is why code's token overhead is only 37\% above single-shot ($+1{,}239$ on 3{,}336) despite a max-iteration cap of 5: the cap is rarely binding, the channel binds first.
+
+\input{section_geometric}
+
+\section{Internalizing the Harness into a Small Student}
+\label{sec:distill}
+
+\Cref{sec:harness} treats the harness as external scaffolding wrapped around a frozen frontier model. A natural follow-up question: can the interaction-quality behavior of the loop be \emph{internalized} into a smaller student? We give a positive answer for the markdown-emission variant: an 8B Qwen3-VL student, distilled via SFT on judge-filtered teacher trajectories from the 235B model running the harness, recovers $0.50\times$ of the teacher's single-shot capability on a 44-task out-of-distribution suite (\Cref{sec:distill-headline}) and reaches 44\,\% pass@1 / 56\,\% pass@3 on an 18-task hard held-out suite of teacher single-shot failures --- all at $\sim$10$\times$ lower deployment cost than running the harness over the 235B teacher.
+
+\subsection{Setup}
+\label{sec:distill-setup}
+
+\textbf{Teacher.} Qwen3-VL-235B-A22B (Thinking variant) running the proposer--reviewer harness from \Cref{sec:method} on a seed task set spanning three categories where interaction scaling helps: code bug-fixes, single-file landing-page web designs, and information-dense $1920 \times 1080$ slides.
+
+\textbf{Student.} Qwen3-VL-8B-Instruct with QLoRA fine-tuning ($r{=}16$, $\alpha{=}32$, dropout 0.05) on the language layers; vision tower frozen.
+
+\textbf{Held-out evaluation.} 18 hard tasks (5 code, 5 web, 8 slides) the 235B teacher itself failed on at single-shot, giving a clean ``distillation lift'' baseline. We also use 44 newly generated tasks (held-out by construction) for out-of-distribution generalization.
+
+\textbf{Judge.} Gemini 3 Flash Preview multimodal, scoring (\texttt{review\_specific}, \texttt{revision\_addresses\_review}, \texttt{final\_meets\_spec}); \texttt{judge-keep} = AND of the three. For code, \texttt{final\_meets\_spec} is overridden by the deterministic test-suite outcome. A second judge (Claude Sonnet 4.5) is used as a sensitivity check; the directional results survive both judges.
+
+\subsection{Markdown emission with external scaffold}
+\label{sec:distill-format}
+
+The student emits a single block of markdown per turn --- a short \texttt{<think>} reasoning block, an optional critique, and the artifact in a fenced code block (\texttt{```python}, \texttt{```html}, \ldots). An external harness extracts the artifact, runs the tests / renders the page, and feeds the result (text or screenshot) back as the next user message. This is the markdown-emission analog of the proposer--reviewer harness from \Cref{sec:method}, with the harness handling everything except artifact emission. We additionally apply a \emph{force-close-thinking} logit override that injects \texttt{</think>} after a configurable number of generated tokens; this bounds worst-case decode wall-time per turn.
+
+\subsection{Headline results}
+\label{sec:distill-headline}
+
+\begin{table}[ht]
+\centering
+\caption{Distilled 8B student on the 18-task hard held-out suite (teacher's pre-curated single-shot failures, so teacher single-shot is 0/18 by construction). The student lifts judge-keep from 0\% to 44\% at pass@1 and 56\% at pass@3. The $0.50\times$ capability ratio against the teacher is established on a separate 44-task out-of-distribution suite reported next, where teacher single-shot is non-degenerate.}
+\label{tab:distill-headline}
+\small
+\begin{tabular}{lcc}
+\toprule
+Setup & Compute & Judge-keep \\
+\midrule
+1 sample $\times$ 5 turns                                  & $1\times$ & 44\% (8/18) \\
+1 sample $\times$ 8 turns                                  & $1.6\times$ & 28\% (regressed) \\
+\textbf{3 samples $\times$ 5 turns (pass@3)}               & $3\times$ & \textbf{56\% (10/18)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 44\% pass@1 / 56\% pass@3 result is the central positive finding. Two side observations matter for deployment: (i) deeper iteration regresses --- going from 5 to 8 max\_turns at fixed seed loses 16\,pp judge-keep, because the student over-iterates past working artifacts; (ii) sampling helps --- 3 samples at fixed depth-5 gains 12\,pp, and pass@3 saturates (pass@4 = pass@3 = 10/18).
+
+On a separately constructed set of 44 newly generated tasks, the student matches or exceeds the teacher on every per-turn behavioral metric (review-specific, addresses-review, final-declared, no-artifact) while losing $\approx$23\,pp on end-to-end judge-keep at pass@1 (mean of two sampling seeds: $\overline{\text{judge-keep}}_{@1} = 22.7\%$, from 9/44 and 11/44, vs.\ teacher single-shot 20/44). The mean@1 capability ratio is $0.50\times$; a second sample (pass@2) recovers 14/44, lifting the ratio to $0.70\times$ on this OOD set.
+
+\subsection{Three recipe findings}
+\label{sec:distill-recipes}
+
+Beyond the headline lift, three counterintuitive recipe findings emerged from the SFT sweep that we expect will recur in similar small-student distillation work.
+
+A consolidated view across all sweep axes appears in \Cref{tab:distill-ablation} (\Cref{sec:distill-ablation}); the three paragraphs below decompose it by lever.
+
+\paragraph{(a) U-curve in retained reasoning length.} Sweeping the per-turn reasoning cap from 0 to 3000 characters (\Cref{tab:distill-ucurve}) shows a clear U: stripping the teacher's reasoning collapses the student to format-imitating identical-retry, retaining all of it overflows the student's coherence horizon, and 1500 characters is the sweet spot. We frame this as the \emph{student's coherence horizon}: train at the longest reasoning span the 8B model can both reproduce in training and faithfully complete at inference --- the student's horizon, not the teacher's.
+
+\begin{table}[ht]
+\centering
+\caption{Reasoning-cap U-curve on the 18-task hard held-out suite. SFT recipe sweep on Qwen3-VL-8B-Instruct (37 judge-kept teacher traces; same inference protocol). The optimum is at the student's coherence horizon, not the teacher's.}
+\label{tab:distill-ucurve}
+\begin{tabular}{lccc}
+\toprule
+Variant & Reasoning cap (chars) & Judge-keep & Identical-retry \\
+\midrule
+V1 (no reasoning)     & 0    & 6\%  & 67\% \\
+V4                    & 1000 & 11\% & 35\% \\
+V2                    & 3000 & 17\% & 32\% \\
+\textbf{V3 (chosen)}  & \textbf{1500} & \textbf{44\%} & 10\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{(b) More SFT data regresses.} Three independent attempts to enlarge the SFT corpus past V3's 37 examples each lost ground (\Cref{tab:distill-datascale}). V5 added 13 judge-rejected traces from the same teacher; V6 added 20 judge-kept traces from a weaker (30B) teacher; RFT collected 61 judge-kept self-rolled trajectories from V3 itself. None lifted judge-keep above 44\%, and the most ``polished'' (RFT) carries a hidden cost we describe next.
+
+\begin{table}[ht]
+\centering
+\caption{Three independent attempts to scale the SFT corpus past V3's 37 examples. All regressed. Quality dominates quantity at this scale.}
+\label{tab:distill-datascale}
+\begin{tabular}{lccc}
+\toprule
+Variant & Composition & $n$ examples & Judge-keep \\
+\midrule
+\textbf{V3 (chosen)} & 235B teacher, judge-kept       & 37 & \textbf{44\%} \\
+V5                   & V3 + 13 judge-rejected (235B)  & 50 & 33\% \\
+V6                   & V3 + 20 judge-kept (30B teacher) & 57 & 33\% \\
+RFT v1               & Self-rolled, judge-filtered    & 61 & 39\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{(c) RFT polishes consistency but kills pass@$k$.} \Cref{tab:distill-rft} compares V3 against the RFT-polished follow-up. RFT improves every per-turn consistency metric --- identical-retry, addresses-review, no-artifact --- yet regresses judge-keep at mean@1, pass@2, and pass@3. The seed-by-seed breakdown shows that RFT specifically lost three tasks at pass@3 (\texttt{code\_h001}, \texttt{slide\_008}, \texttt{web\_002}) and gained zero. The mechanism is direct: RFT trained the student toward its modal trajectory pattern, which is good for typical-case behavior but bad for the lucky-seed exploration that drives pass@$k$.
+
+\begin{table}[ht]
+\centering
+\caption{RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve; per-task variance collapses; pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph{is} the inference-scaling budget. \textit{Note on notation.} \textbf{mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph{pass@1}=44\% reported in \Cref{tab:distill-headline,tab:distill-ablation}, which is just seed~1's accuracy. \emph{pass@2} and \emph{pass@3} are union pass-rates over the first 2 / all 3 seeds.}
+\label{tab:distill-rft}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{Consistency metrics} & \multicolumn{3}{c}{Sampling-aware judge-keep} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& id-retry $\downarrow$ & addresses-rev $\uparrow$ & no-artifact $\downarrow$ & mean@1 & pass@2 & pass@3 \\
+\midrule
+\textbf{V3 (chosen)} & 9\%  & 83\% & 2  & \textbf{31\%} & \textbf{50\%} & \textbf{56\%} \\
+RFT v1               & \textbf{8\%}  & \textbf{89\%} & \textbf{1}  & 28\%   & 39\%   & 39\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The deployment implication is direct and counterintuitive: for inference with pass@$k$, do not post-train past SFT. Any subsequent variance-reducing fine-tune --- expert iteration, distillation iterations, self-consistency training, careful annealing --- will trade against pass@$k$. \emph{Variance is a budget, not a bug.}
+
+\subsection{Consolidated ablation: locating the V3 optimum}
+\label{sec:distill-ablation}
+
+The three recipe findings above are each illustrated by a focused table. \Cref{tab:distill-ablation} consolidates the full sweep into a single view so that the V3 / V3+fc4k optimum can be read off directly. The sweep spans three axes simultaneously --- reasoning cap, SFT corpus size and composition, and post-SFT polishing --- and the V3 row dominates each axis at its own setting. Every neighboring configuration helped pinpoint why V3 is the right operating point: V1 and V2 bracket the coherence horizon, V4 confirms the optimum is not at 1000 characters, V3+fc4k confirms inference-time bounding is free, V5 and V6 confirm that quality dominates quantity in the SFT corpus, and RFT v1 confirms that variance is load-bearing for pass@$k$.
+
+\begin{table}[ht]
+\centering
+\caption{Consolidated SFT and post-training ablation on the 18-task hard held-out suite. All single-seed pass@1; pass@3 values are reported where collected. V3 with the 1500-character reasoning cap and 37 judge-kept teacher traces is the recipe sweet spot; V3+fc4k is identical in outcome quality but $2.2\times$ faster at inference. Configurations on either side of V3 are below the optimum and clarify which lever is load-bearing.}
+\label{tab:distill-ablation}
+\footnotesize
+\begin{tabular}{llccccl}
+\toprule
+Config & Reasoning cap & SFT size & pass@1 & pass@3 & Id-retry & Note \\
+\midrule
+Base 8B          & ---           & 0  & 0\%           & 0\%           & ---  & no SFT \\
+V1               & 0 chars       & 37 & 6\%           & ---           & 67\% & format only \\
+V4               & 1000 chars    & 37 & 11\%          & ---           & 35\% & below optimum \\
+V2               & 3000 chars    & 37 & 17\%          & ---           & 32\% & exceeds horizon \\
+\textbf{V3}      & \textbf{1500 chars} & \textbf{37} & \textbf{44\%} & \textbf{56\%} & \textbf{10\%} & \textbf{student horizon} \\
+\textbf{V3+fc4k} & \textbf{1500 chars} & \textbf{37} & \textbf{44\%} & \textbf{56\%} & \textbf{9\%}  & $2.2\times$ faster \\
+V5               & 1500 chars    & 50 & 33\%          & ---           & 21\% & more data hurts \\
+V6               & 1500 chars    & 57 & 33\%          & ---           & 0\%  & weaker teacher \\
+RFT v1           & 1500 chars    & 61 & 39\%          & 39\%          & 8\%  & trades pass@$k$ for pass@1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two observations follow. First, the V3 / V3+fc4k pair is the only configuration that is simultaneously at or near the best score on every column: it has the highest pass@1, the highest pass@3, an identical-retry rate within shooting distance of the teacher's $0\%$, and a 37-example SFT corpus that is cheapest to collect. Second, the post-V3 configurations (V5, V6, RFT v1) each ran a different scaling lever --- corpus size, teacher diversity, self-rolled trajectories --- and each one sat below the V3 optimum on pass@1. RFT v1 is the most informative of the three: it improved every consistency metric (\Cref{tab:distill-rft}) yet sits below V3 on pass@3 by 17 points, because the same training signal that polished consistency also reduced the seed-to-seed variance that pass@$k$ harvests. The practical implication for downstream work is to fix the recipe at V3+fc4k and spend any extra compute budget on additional inference-time samples rather than additional SFT or post-SFT polishing.
+
+\subsection{Operational deployment}
+\label{sec:distill-deploy}
+
+The distilled 8B student is deployed inside the same proposer--reviewer harness as the frontier model: the student plays the proposer role, the harness handles execution / rendering, and a Type 3a/b/c/d feedback channel feeds the next iteration. Cost-normalized, the 8B student is roughly $10\times$ cheaper per kept task than running the harness over a 235B teacher --- one H100-class GPU, $\sim$505 seconds per kept task on the 18-task held-out suite. The extra compute budget freed up by the smaller student should be spent on \emph{more samples} (where pass@$k$ saturates by $k=3$ on this suite), not on \emph{more depth} (where the student over-iterates).
+
+\input{sec_discussion_new}
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+
+\appendix
+
+\section{Phase 1 baseline: feedback actionability bar chart}
+\label{app:phase1}
+
+\Cref{fig:actionability} visualizes the single-shot $\to$ reviewed lift across the six modalities under screenshot-judged scoring (Claude Sonnet 4 in the loop, $n = 94$ tasks). It orders the modalities by feedback \emph{actionability}: execution-grounded channels deliver the largest gains, factual verification is intermediate, and the screenshot-scored visual channels register the smallest. The visual ordering here reflects the resolution of the screenshot judge, not the harness: \Cref{sec:geometric} measures the same modalities with a deterministic instrument and resolves the visual lift into the high-actionability regime ($78$--$91\,\%$ defect reduction). We retain this figure as the actionability ordering across feedback \emph{types}, with the visual magnitudes superseded by \Cref{tab:geometric}.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}
+\begin{axis}[
+  width=0.85\textwidth, height=5.2cm,
+  xbar,
+  xmin=0, xmax=0.5,
+  bar width=8pt,
+  enlarge y limits=0.18,
+  symbolic y coords={Slides, Animations, Web Pages, Research, Code, Video},
+  ytick=data,
+  nodes near coords,
+  nodes near coords align={horizontal},
+  nodes near coords style={font=\scriptsize},
+  every node near coord/.append style={/pgf/number format/.cd, fixed, precision=3},
+  xlabel={Quality lift (single-shot $\to$ reviewed)},
+  xtick={0, 0.1, 0.2, 0.3, 0.4, 0.5},
+  major grid style={dotted, gray!40},
+  xmajorgrids,
+  axis line style={draw=gray!50},
+  tick style={draw=gray!50},
+  label style={font=\small},
+  ticklabel style={font=\scriptsize},
+]
+\addplot+[draw=blue!60!black, fill=blue!40] coordinates {
+  (0.025,Slides) (0.067,Animations) (0.079,Web Pages) (0.173,Research) (0.200,Code) (0.420,Video)
+};
+\end{axis}
+\node[anchor=east, font=\scriptsize\itshape] at (current bounding box.south east)
+  {n=94 tasks across 6 categories; Claude Sonnet 4, T=0.0};
+\end{tikzpicture}
+\caption{Phase 1 baseline (single-run): interaction-scaling lift orders by \emph{feedback actionability}. Execution feedback (Code: +0.20, Video: +0.42) is binary and machine-readable; factual verification (Research: +0.17) is specific but softer; visual feedback (Web: +0.08, Animations: +0.07, Slides: +0.03) is holistic and lossy to operationalize. The multi-run averages reported in \Cref{tab:harness-headline} reorder some within-tier rows but preserve the top-tier gap.}
+\label{fig:actionability}
+\end{figure}
+
+\section{Pipeline implementation}
+\label{app:pipeline}
+
+\paragraph{Harness.} The proposer--reviewer harness for the code modality is implemented in \texttt{src/agents/meta\_controller.py} (loop control, budget bookkeeping, iteration cap), \texttt{src/agents/reviewer.py} (structured critique emission), \texttt{src/feedback/type3a\_execution.py} (\texttt{pytest} subprocess + traceback extraction), and \texttt{src/feedback/type3d\_factual.py} (search-grounded claim verification for the research modality). Per-modality executors for the visual modalities (web, slides, animations) use a headless-Chromium screenshot pipeline scored by a VLM critic. Code is scored binary by the canonical test suite; the other modalities are scored by a fixed-rubric LLM/VLM judge returning a continuous quality score in $[0,1]$. The same judge is used for both the single-shot and reviewed conditions, so any quality difference is not a judge artifact.
+
+\paragraph{Reproducibility.} All experiments use Claude Sonnet 4 (\texttt{claude-sonnet-4-20250514}, extended thinking, temperature 0) except the cross-model replication (\Cref{sec:harness-crossmodel}, Qwen3-235B-Instruct-2507 via OpenRouter at $T{=}0.7$). Per-cell raw results are written to \texttt{results/} and the analysis scripts under \texttt{scripts/} regenerate the tables.
+
+\paragraph{Code and data availability.} Harness code, task suites (15-task development + 32-task held-out v2 + per-modality task files), per-cell raw results, and the scripts that regenerate every table and figure in this paper are released alongside the manuscript. Frontier-model rollouts depend on third-party API keys (Anthropic, OpenRouter) and Sonnet/GPT-5/Qwen3-235B model snapshots that may drift; we report the exact snapshot identifiers used and pin the OpenRouter routes in the release.
+
+\paragraph{The 15-task hard code suite.} The 15-task hard code suite was constructed to stress execution-grounded feedback (off-by-one boundaries, escape handling, route priority, byte-vs-char, CJK wrapping). At $N{=}15$ the difference between 14/15 and 15/15 is one task and well within seed noise; we therefore treat the H vs.\ L vs.\ IAD comparison at $B{=}20$K as pass-rate-tied and report token-efficiency and seed-variance as the architectural separations (\Cref{sec:harness-separation}). The 32-task held-out v2 and the 44-task OOD distillation set corroborate the result at larger $N$, and the architectural separations we report (token efficiency, seed variance) are measured on metrics that do not saturate at the 15-task ceiling.
+
+\section{Hyperparameters and SFT details for the 8B distillation}
+\label{app:hyperparams}
+
+All SFT runs use AdamW with linear warmup-then-decay learning rate (peak $2{\times}10^{-4}$), per-device batch size 1, gradient accumulation 8, 3 epochs, gradient checkpointing (non-reentrant), bf16. LoRA targets language-layer attention projections (\texttt{q,k,v,o\_proj}) and MLP projections (\texttt{gate,up,down\_proj}); vision tower is frozen. Inference uses greedy decoding ($T{=}0$) for single-shot evaluation and $T{=}0.7$ with \texttt{rep\_penalty}=1.0 for pass@$k$ sampling.
+
+The force-close-thinking inference override is implemented as a logit hook that injects \texttt{</think>} after a configurable number of generated tokens; the chosen threshold (4000) matches V3's quality with a $2.2\times$ wall-time speedup ($501 \to 225$ seconds/task). The judge is Gemini 3 Flash Preview multimodal; a sensitivity check against Claude Sonnet 4.5 (Cohen's $\kappa = 0.55$ over 36 traces) preserves the directional results.
+
+\section{Per-task pass@\texorpdfstring{$k$}{k} breakdown for the 8B markdown student}
+\label{app:per-task-md}
+
+\Cref{tab:per-task-md} shows the per-task judge-keep outcome for the chosen V3 student across three independent samples on the 18-task hard held-out suite. Seed 1 is greedy ($T{=}0$); seeds 2--3 use $T{=}0.7$. The pass@3 column is the union. Cross-seed diversity adds 2 unique tasks beyond the greedy-seed-1 set; pass@4 = pass@3 = 10/18 (saturated).
+
+\begin{table}[ht]
+\centering
+\caption{Per-task judge-keep outcome for the 8B markdown student on the 18-task hard held-out suite. $\checkmark$ = judge-kept; $\cdot$ = judge-rejected.}
+\label{tab:per-task-md}
+\small
+\begin{tabular}{llccccc}
+\toprule
+Category & Task & seed 1 ($T{=}0$) & seed 2 ($T{=}0.7$) & seed 3 ($T{=}0.7$) & pass@3 \\
+\midrule
+\multirow{5}{*}{webpages} & web\_002 & $\checkmark$ & $\cdot$ & $\cdot$ & $\checkmark$ \\
+& web\_003 & $\checkmark$ & $\cdot$ & $\checkmark$ & $\checkmark$ \\
+& web\_005 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& web\_008 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& web\_012 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+\midrule
+\multirow{8}{*}{slides} & slide\_001 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_006 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_007 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_008 & $\checkmark$ & $\cdot$ & $\cdot$ & $\checkmark$ \\
+& slide\_010 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_014 & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+& slide\_018 & $\checkmark$ & $\checkmark$ & $\cdot$ & $\checkmark$ \\
+& slide\_020 & $\cdot$ & $\checkmark$ & $\cdot$ & $\checkmark$ \\
+\midrule
+\multirow{5}{*}{code} & code\_h001 & $\checkmark$ & $\cdot$ & $\cdot$ & $\checkmark$ \\
+& code\_h002 & $\checkmark$ & $\checkmark$ & $\cdot$ & $\checkmark$ \\
+& code\_h003 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& code\_h004 & $\cdot$ & $\cdot$ & $\checkmark$ & $\checkmark$ \\
+& code\_h005 & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\midrule
+\multicolumn{2}{r}{Total kept:} & 8/18 & 5/18 & 4/18 & \textbf{10/18 (56\%)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

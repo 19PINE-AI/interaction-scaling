@@ -33,8 +33,10 @@ class LLMClient:
     def __init__(self):
         self._anthropic: anthropic.Anthropic | None = None
         self._openai: openai.OpenAI | None = None
+        self._openrouter: openai.OpenAI | None = None
         self._local_model = None
         self._local_tokenizer = None
+        self._vllm_model = None
         self.total_input_tokens = 0
         self.total_output_tokens = 0
         self.call_count = 0
@@ -51,6 +53,16 @@ class LLMClient:
             self._openai = openai.OpenAI()
         return self._openai
 
+    @property
+    def openrouter_client(self) -> openai.OpenAI:
+        if self._openrouter is None:
+            import os
+            self._openrouter = openai.OpenAI(
+                base_url="https://openrouter.ai/api/v1",
+                api_key=os.environ["OPENROUTER_API_KEY"],
+            )
+        return self._openrouter
+
     def generate(
         self,
         config: ModelConfig,
@@ -65,6 +77,8 @@ class LLMClient:
             response = self._call_anthropic(config, system, messages, temp)
         elif config.provider == ModelProvider.OPENAI:
             response = self._call_openai(config, system, messages, temp)
+        elif config.provider == ModelProvider.OPENROUTER:
+            response = self._call_openrouter(config, system, messages, temp)
         elif config.provider == ModelProvider.LOCAL:
             response = self._call_local(config, system, messages, temp)
         else:
@@ -91,17 +105,37 @@ class LLMClient:
         messages: list[dict],
         temperature: float,
     ) -> LLMResponse:
-        response = self.anthropic_client.messages.create(
+        kwargs = dict(
             model=config.model_id,
             max_tokens=config.max_tokens,
-            temperature=temperature,
             system=system,
             messages=messages,
         )
+
+        # Enable extended thinking for distillation
+        if config.use_thinking:
+            kwargs["thinking"] = {
+                "type": "enabled",
+                "budget_tokens": config.thinking_budget,
+            }
+            kwargs["temperature"] = 1.0  # required for extended thinking
+        else:
+            kwargs["temperature"] = temperature
+
+        response = self.anthropic_client.messages.create(**kwargs)
+
+        thinking = ""
         content = ""
         for block in response.content:
-            if block.type == "text":
+            if block.type == "thinking":
+                thinking += block.thinking
+            elif block.type == "text":
                 content += block.text
+
+        # Wrap thinking in <think> tags for SFT training data
+        if thinking:
+            content = f"<think>\n{thinking}\n</think>\n{content}"
+
         return LLMResponse(
             content=content,
             input_tokens=response.usage.input_tokens,
@@ -136,23 +170,79 @@ class LLMClient:
             stop_reason=choice.finish_reason,
         )
 
+    def _call_openrouter(
+        self,
+        config: ModelConfig,
+        system: str,
+        messages: list[dict],
+        temperature: float,
+    ) -> LLMResponse:
+        """Call OpenRouter API using raw httpx (bypasses slow Pydantic parsing)."""
+        import os
+        import httpx
+
+        oai_messages = [{"role": "system", "content": system}]
+        for msg in messages:
+            content = msg.get("content", "")
+            if isinstance(content, list):
+                text_parts = [p["text"] for p in content
+                             if isinstance(p, dict) and p.get("type") == "text"]
+                content = "\n".join(text_parts) if text_parts else ""
+            oai_messages.append({"role": msg["role"], "content": content})
+
+        payload = {
+            "model": config.model_id,
+            "temperature": temperature,
+            "messages": oai_messages,
+        }
+        if config.max_tokens > 0:
+            payload["max_tokens"] = config.max_tokens
+
+        resp = httpx.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {os.environ['OPENROUTER_API_KEY']}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=300.0,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        choice = data["choices"][0]
+        content = choice["message"].get("content") or ""
+        reasoning = choice["message"].get("reasoning") or ""
+        if reasoning:
+            content = f"<think>\n{reasoning}\n</think>\n{content}"
+
+        usage = data.get("usage", {})
+        return LLMResponse(
+            content=content,
+            input_tokens=usage.get("prompt_tokens", 0),
+            output_tokens=usage.get("completion_tokens", 0),
+            model=config.model_id,
+            stop_reason=choice.get("finish_reason"),
+        )
+
     def _load_local_model(self, model_id: str):
-        """Load a local model with transformers (lazy init)."""
-        if self._local_model is not None and self._local_tokenizer is not None:
+        """Load a local model with vLLM for fast inference (lazy init)."""
+        if self._vllm_model is not None and self._local_tokenizer is not None:
             return
-        import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
-        logger.info("Loading local model: %s", model_id)
+        from vllm import LLM
+        from transformers import AutoTokenizer
+        logger.info("Loading local model with vLLM: %s", model_id)
         self._local_tokenizer = AutoTokenizer.from_pretrained(model_id)
         if self._local_tokenizer.pad_token is None:
             self._local_tokenizer.pad_token = self._local_tokenizer.eos_token
-        self._local_model = AutoModelForCausalLM.from_pretrained(
-            model_id,
-            torch_dtype=torch.bfloat16,
-            device_map="auto",
+        self._vllm_model = LLM(
+            model=model_id,
+            dtype="bfloat16",
+            max_model_len=8192,
+            gpu_memory_utilization=0.95,
+            trust_remote_code=True,
         )
-        self._local_model.eval()
-        logger.info("Local model loaded on %s", self._local_model.device)
+        logger.info("Local model loaded with vLLM: %s", model_id)
 
     def _call_local(
         self,
@@ -161,15 +251,15 @@ class LLMClient:
         messages: list[dict],
         temperature: float,
     ) -> LLMResponse:
-        """Generate using a local transformers model (e.g. Qwen3-8B).
+        """Generate using vLLM for fast local inference.
 
         Preserves <think>...</think> tokens in the output so SFT data
         includes the model's reasoning traces.
         """
-        import torch
+        from vllm import SamplingParams
         self._load_local_model(config.model_id)
 
-        # Build chat messages in Qwen format
+        # Build chat messages
         chat_messages = [{"role": "system", "content": system}]
         for msg in messages:
             # Handle multimodal messages (skip image content for local model)
@@ -188,41 +278,41 @@ class LLMClient:
                 enable_thinking=True,
             )
         except TypeError:
-            # Fallback if enable_thinking not supported
             text = self._local_tokenizer.apply_chat_template(
                 chat_messages,
                 tokenize=False,
                 add_generation_prompt=True,
             )
-        inputs = self._local_tokenizer(text, return_tensors="pt").to(self._local_model.device)
-        input_len = inputs["input_ids"].shape[1]
 
-        with torch.no_grad():
-            outputs = self._local_model.generate(
-                **inputs,
-                max_new_tokens=config.max_tokens,
-                temperature=max(temperature, 0.01),  # avoid 0.0 for sampling
-                do_sample=temperature > 0,
-                top_p=0.95,
-                pad_token_id=self._local_tokenizer.pad_token_id,
-            )
+        input_ids = self._local_tokenizer.encode(text)
+        input_len = len(input_ids)
 
-        output_ids = outputs[0][input_len:]
-        # Decode full output including <think> tags
-        content = self._local_tokenizer.decode(output_ids, skip_special_tokens=False)
-        # Clean up EOS tokens but keep <think> tags
-        for special in [self._local_tokenizer.eos_token, "<|im_end|>", "<|endoftext|>"]:
+        sampling_params = SamplingParams(
+            max_tokens=config.max_tokens,
+            temperature=max(temperature, 0.01),
+            top_p=0.95,
+        )
+
+        outputs = self._vllm_model.generate(
+            prompts=[text],
+            sampling_params=sampling_params,
+        )
+
+        generated_text = outputs[0].outputs[0].text
+        output_len = len(outputs[0].outputs[0].token_ids)
+
+        # Clean up EOS tokens but keep <think>/<|think|> tags
+        for special in [self._local_tokenizer.eos_token, "<|im_end|>", "<|endoftext|>", "<end_of_turn>"]:
             if special:
-                content = content.replace(special, "")
-        content = content.strip()
+                generated_text = generated_text.replace(special, "")
+        content = generated_text.strip()
 
-        output_len = len(output_ids)
         return LLMResponse(
             content=content,
             input_tokens=input_len,
             output_tokens=output_len,
             model=config.model_id,
-            stop_reason="stop",
+            stop_reason=outputs[0].outputs[0].finish_reason,
         )
 
     def reset_counters(self):

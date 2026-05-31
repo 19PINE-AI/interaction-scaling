@@ -1,0 +1,257 @@
+[
+  {
+    "task_id": "diagram_001",
+    "category": "neural_architecture",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG only) that draws a VERY dense Transformer encoder-decoder architecture diagram with TWO unrolled encoder layers and TWO unrolled decoder layers shown explicitly (not collapsed). Title 'Transformer (Encoder-Decoder, 2 Layers Unrolled)' at top in 32px bold. Two parallel vertical stacks side by side packed into the height. LEFT 'Encoder' stack, bottom to top: 'Input Embedding', 'Positional Encoding', then for EACH of Encoder Layer 1 and Encoder Layer 2 the sublayers 'Multi-Head Self-Attention', 'Add & Norm (1)', 'Feed Forward', 'Add & Norm (2)' (8 boxes across 2 layers, each layer wrapped in a labelled 'Encoder Layer k' container). RIGHT 'Decoder' stack, bottom to top: 'Output Embedding', 'Positional Encoding', then for EACH of Decoder Layer 1 and Decoder Layer 2 the sublayers 'Masked Multi-Head Attention', 'Add & Norm (1)', 'Encoder-Decoder Cross-Attention', 'Add & Norm (2)', 'Feed Forward', 'Add & Norm (3)' (12 boxes across 2 layers, each layer wrapped in a labelled 'Decoder Layer k' container). Above the decoder stack 'Linear', 'Softmax', 'Output Probabilities'. That is ~40 labelled boxes total plus 4 layer containers. From the top of the encoder stack draw FOUR labelled cross-attention arrows (Keys-to-L1, Values-to-L1, Keys-to-L2, Values-to-L2) routing rightward into BOTH decoder layers' 'Encoder-Decoder Cross-Attention' boxes; these long horizontal arrows must cross the gap without passing through other boxes and their 4 labels must not collide. Draw residual skip arcs on the OUTER side of each stack: 4 on the encoder's left (one per Add&Norm), 6 on the decoder's right. Each box is a labelled rectangle; the two stacks share the same baseline grid so corresponding rows align.",
+    "requirements": [
+      "All ~40 sublayer boxes (10 encoder + 16 decoder + Linear + Softmax + Output Probabilities + 4 layer containers) are visible within the 1920x1080 viewport with no clipping at any edge",
+      "No two sublayer boxes overlap each other",
+      "Every box label text is fully contained inside its rectangle with no overflow past the box edges",
+      "All encoder sublayer boxes have equal vertical gaps between adjacent boxes, and likewise all decoder sublayer boxes have equal vertical gaps",
+      "The 4 layer containers each fully enclose their wrapped sublayers without any sublayer crossing the container border",
+      "All FOUR labelled cross-attention arrows run from the encoder top into the correct decoder layer 'Encoder-Decoder Cross-Attention' boxes and none passes through any other sublayer box",
+      "The residual skip arcs (4 on encoder left, 6 on decoder right) do not pass through or overlap any sublayer box and do not overlap each other",
+      "The four cross-attention arrow labels do not overlap each other or any box",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_002",
+    "category": "system_architecture",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) for a VERY dense microservices system architecture diagram titled 'E-Commerce Platform Architecture' (32px bold, top). FIVE horizontal tiers, each a labelled band, tightly packed. Tier 1 'Client Layer': 5 boxes (Web App, Mobile App, Admin Portal, Partner API Client, IoT Device). Tier 2 'Edge Layer': 4 boxes (CDN, Load Balancer, API Gateway, WAF). Tier 3 'Services Layer': 14 boxes (Auth, User Profile, Catalog, Search, Cart, Order, Payment, Shipping, Inventory, Notification, Review, Recommendation, Pricing, Fraud). Tier 4 'Messaging Layer': 3 boxes (Kafka, RabbitMQ, EventBridge). Tier 5 'Data Layer': 8 stores (Postgres, MySQL, Redis, Elasticsearch, Cassandra, MongoDB, S3, Snowflake). Draw arrows: every client box to the Load Balancer; Load Balancer to API Gateway; API Gateway to ALL 14 services; AND these cross-service arrows that must route without passing through unrelated boxes: Order->Payment, Order->Shipping, Order->Cart, Order->Inventory, Order->Fraud, Search->Catalog, Search->Recommendation, Auth->User Profile, Payment->Fraud, Pricing->Catalog, Cart->Inventory, Recommendation->Review. Each service connects to at least one data store (14 service-to-store arrows, e.g. Auth->Redis, User Profile->Postgres, Catalog->MySQL, Search->Elasticsearch, Cart->Redis, Order->Postgres, Payment->Postgres, Shipping->Cassandra, Inventory->MongoDB, Notification->Kafka, Review->MongoDB, Recommendation->Cassandra, Pricing->Snowflake, Fraud->Snowflake) and at least 4 services emit to the Messaging Layer (Order->Kafka, Payment->RabbitMQ, Notification->EventBridge, Inventory->Kafka). That is 34 boxes and 45+ arrows.",
+    "requirements": [
+      "All five tier labels (Client Layer, Edge Layer, Services Layer, Messaging Layer, Data Layer) are visible and not overlapping any box",
+      "All 5 client boxes, 4 edge boxes, 14 service boxes, 3 messaging boxes, and 8 data stores (34 elements) are visible within the viewport with no clipping",
+      "The 14 service boxes are evenly spaced horizontally within the services tier with equal gaps",
+      "Every box label is fully contained inside its box with no text overflow",
+      "No two boxes overlap each other, and tiers are vertically separated so boxes from different tiers do not overlap",
+      "Every one of the 12 inter-service arrows is present and does not pass through any box that is not its endpoint",
+      "Each of the 14 services has at least one arrow to a data store, and these service-to-data arrows do not cross through unrelated service boxes",
+      "Arrowheads do not land on top of label text",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole diagram fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_003",
+    "category": "flowchart",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a dense algorithm flowchart titled 'Quicksort with Median-of-Three + Merge Sort Fallback' (32px bold, top). Use standard shapes: rounded 'Start'/'End' terminators, rectangles for processes, diamonds for decisions, parallelograms for I/O. Flow: Start -> 'Read array A[0..n-1]' (I/O) -> 'call sort(A, 0, n-1)' -> decision 'lo < hi?'. If NO -> 'return (base case)' -> End. If YES -> decision 'hi-lo < 16?'. If YES -> 'insertionSort(A, lo, hi)' -> 'return' -> End. If NO -> decision 'depth > 2*log2(n)?'. If YES -> 'mergeSort(A, lo, hi) [fallback]' -> 'return' -> End. If NO -> 'mid=(lo+hi)/2' -> 'median-of-three(A[lo],A[mid],A[hi])' -> 'pivot = median; swap to A[hi]' -> 'i=lo-1, j=lo' -> decision 'j < hi?'. If YES -> decision 'A[j] <= pivot?'. If A[j]<=pivot YES -> 'i++; swap A[i],A[j]' -> 'j++' -> loop back to 'j < hi?'. If NO -> 'j++' -> loop back to 'j < hi?'. If 'j < hi?' is NO -> 'swap A[i+1], A[hi]' -> 'p = i+1' -> 'sort(A, lo, p-1)' -> 'sort(A, p+1, hi)' -> decision 'recursion done?'. If NO -> loop back to 'lo < hi?'. If YES -> 'copy back to A' (I/O) -> 'return' -> End. There are 22+ nodes, 6 decision diamonds, and at least 4 loop-back arrows (two short inner-loop backs to 'j < hi?', one recursion back to 'lo < hi?', plus the partition return). Every decision branch must be labelled 'Yes' or 'No' beside its outgoing arrow. Pack the chart so the inner partition loop and the recursion back-edge cross the main top-to-bottom flow.",
+    "requirements": [
+      "Start/End use rounded terminators, the 6 decisions use diamonds, I/O steps use parallelograms, and processes use rectangles",
+      "All 22+ nodes are visible within the viewport with no clipping at any edge",
+      "No two nodes overlap each other",
+      "Every node label is fully contained inside its shape with no text overflow",
+      "Each decision diamond has exactly two outgoing arrows, each labelled 'Yes' or 'No'",
+      "The Yes/No edge labels do not overlap any node or any other edge label",
+      "All 4+ loop-back arrows return to the correct decision/node and do not pass through any unrelated node",
+      "Arrowheads do not land on node text and edges do not overlap each other where they can be routed apart",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole flowchart fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_004",
+    "category": "transformer_block",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing TWO stacked Transformer blocks in detail, titled 'Transformer Encoder Block (Internals)' (32px bold, top). Inside an outer 'N x 6' rounded container, stack these sublayers vertically from bottom to top: 'Input Embedding + Positional Encoding', 'LayerNorm (pre)', 'Q/K/V Projection (3 linears)', 'Scaled Dot-Product Attention', 'Concat Heads', 'Output Projection', 'Add (residual 1)', 'LayerNorm', 'Linear 512->2048', 'GeLU', 'Linear 2048->512', 'Add (residual 2)', 'Output'. That is 13 sublayer boxes inside the container. Draw two residual (skip) arrows on the LEFT side: one from before 'Q/K/V Projection' into 'Add (residual 1)', one from before 'Linear 512->2048' into 'Add (residual 2)'; these must route around the left without crossing any box. On the RIGHT, place a vertical stack of 3 small annotation boxes: 'h = 8 heads', 'd_model = 512', 'd_ff = 2048'. From the 'Scaled Dot-Product Attention' box, draw a small self-loop-style branch showing the softmax(QK^T/sqrt(d))V formula in a callout box on the right that connects back with a thin arrow.",
+    "requirements": [
+      "All 13 stacked sublayer boxes are visible inside the outer 'N x 6' container with no clipping",
+      "The outer container fully encloses all 13 sublayers without any sublayer crossing its border",
+      "Every sublayer label is fully contained inside its box with no text overflow",
+      "Adjacent sublayer boxes are connected by vertical forward arrows and have equal vertical gaps",
+      "The two residual skip arrows run along the left side and do not pass through any sublayer box",
+      "The two residual arrows connect to the correct 'Add (residual 1)' and 'Add (residual 2)' boxes",
+      "The 3 right-side annotation boxes and the formula callout box are visible and do not overlap the outer container, each other, or any arrow",
+      "The thin arrow from 'Scaled Dot-Product Attention' to the formula callout does not pass through any other box",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole diagram fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_005",
+    "category": "data_pipeline_dag",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a VERY dense data-pipeline DAG titled 'Feature Engineering DAG' (32px bold, top). Nodes (ellipses, 26 total): 'raw_events', 'user_table', 'item_table', 'geo_table', 'clickstream', 'sessionize', 'dedup', 'parse_ua', 'geo_enrich', 'join_user', 'join_item', 'join_geo', 'agg_hourly', 'agg_daily', 'agg_weekly', 'agg_monthly', 'window_7d', 'window_30d', 'feature_join', 'feature_select', 'normalize', 'feature_store', 'train_split', 'val_split', 'test_split', 'training_set'. Directed edges (34+): raw_events->sessionize, raw_events->dedup, raw_events->parse_ua, clickstream->sessionize, clickstream->dedup, sessionize->join_user, dedup->join_user, user_table->join_user, sessionize->join_item, item_table->join_item, parse_ua->join_item, geo_table->geo_enrich, geo_enrich->join_geo, join_user->join_geo, join_user->agg_hourly, join_user->agg_daily, join_item->agg_daily, join_geo->agg_daily, agg_hourly->agg_weekly, agg_daily->agg_weekly, agg_daily->agg_monthly, agg_weekly->window_7d, agg_monthly->window_30d, agg_daily->feature_join, agg_weekly->feature_join, join_item->feature_join, window_7d->feature_join, window_30d->feature_join, feature_join->feature_select, feature_select->normalize, normalize->feature_store, feature_store->train_split, feature_store->val_split, feature_store->test_split, train_split->training_set, val_split->training_set, test_split->training_set. Lay out left-to-right in topological order across at least 8 columns so all arrows point rightward; this forces MANY long-range crossing edges that skip multiple columns (e.g. raw_events->parse_ua, join_item->feature_join, agg_daily->feature_join). Color source nodes (raw_events, user_table, item_table, geo_table, clickstream) green and the sink (training_set) blue; add a legend in a corner.",
+    "requirements": [
+      "All 26 DAG nodes are visible as ellipses within the viewport with no clipping",
+      "Nodes are laid out left-to-right across at least 8 columns so that every directed edge points rightward (no backward-pointing arrows)",
+      "No two node ellipses overlap each other",
+      "Every node label is fully contained inside its ellipse with no text overflow",
+      "All 34+ directed edges are present and each has a visible arrowhead at its target",
+      "Edges do not pass through any node ellipse that is not their endpoint (including all long-range skip edges)",
+      "The 5 source nodes are colored green and the sink node is colored blue as specified",
+      "The legend is visible and does not overlap any node or edge",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole DAG fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_006",
+    "category": "state_machine",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a VERY dense finite state machine titled 'TCP Connection State Machine (Full)' (32px bold, top). States (circles, 22 total): CLOSED, LISTEN, SYN_SENT, SYN_RCVD, ESTABLISHED, FIN_WAIT_1, FIN_WAIT_2, CLOSING, TIME_WAIT, CLOSE_WAIT, LAST_ACK, plus duplicate-half states for a simultaneous-close peer: CLOSED_B, LISTEN_B, SYN_SENT_B, SYN_RCVD_B, ESTABLISHED_B, FIN_WAIT_1_B, CLOSE_WAIT_B, LAST_ACK_B, CLOSING_B, TIME_WAIT_B, CLOSED_FINAL. Transitions with edge labels (34+): CLOSED->LISTEN 'passive open', CLOSED->SYN_SENT 'active open', LISTEN->SYN_RCVD 'recv SYN/send SYN+ACK', LISTEN->SYN_SENT 'send SYN', SYN_SENT->SYN_RCVD 'recv SYN/send ACK', SYN_SENT->ESTABLISHED 'recv SYN+ACK/send ACK', SYN_RCVD->ESTABLISHED 'recv ACK', ESTABLISHED->FIN_WAIT_1 'close/send FIN', FIN_WAIT_1->FIN_WAIT_2 'recv ACK', FIN_WAIT_1->CLOSING 'recv FIN/send ACK', FIN_WAIT_2->TIME_WAIT 'recv FIN/send ACK', CLOSING->TIME_WAIT 'recv ACK', TIME_WAIT->CLOSED_FINAL '2MSL timeout', ESTABLISHED->CLOSE_WAIT 'recv FIN/send ACK', CLOSE_WAIT->LAST_ACK 'close/send FIN', LAST_ACK->CLOSED_FINAL 'recv ACK', SYN_RCVD->FIN_WAIT_1 'close/send FIN', SYN_SENT->CLOSED 'timeout', plus a fully mirrored set for the _B peer states (CLOSED_B->LISTEN_B 'passive open', CLOSED_B->SYN_SENT_B 'active open', LISTEN_B->SYN_RCVD_B 'recv SYN/send SYN+ACK', SYN_SENT_B->ESTABLISHED_B 'recv SYN+ACK/send ACK', SYN_RCVD_B->ESTABLISHED_B 'recv ACK', ESTABLISHED_B->CLOSE_WAIT_B 'recv FIN/send ACK', CLOSE_WAIT_B->LAST_ACK_B 'close/send FIN', LAST_ACK_B->CLOSED_FINAL 'recv ACK', ESTABLISHED_B->FIN_WAIT_1_B 'close/send FIN', FIN_WAIT_1_B->CLOSING_B 'recv FIN/send ACK', CLOSING_B->TIME_WAIT_B 'recv ACK', TIME_WAIT_B->CLOSED_FINAL '2MSL timeout'), plus three cross arrows ESTABLISHED->ESTABLISHED_B 'simultaneous open', SYN_SENT->CLOSED 'timeout', SYN_SENT_B->CLOSED_B 'timeout'. Several long backward arrows must route around without passing through other states. Mark CLOSED and CLOSED_B as start states each with an incoming arrow from nowhere. At least two self-loops: ESTABLISHED->ESTABLISHED 'recv data/send ACK' and ESTABLISHED_B->ESTABLISHED_B 'recv data/send ACK'.",
+    "requirements": [
+      "All 22 states are visible as circles within the viewport with no clipping",
+      "No two state circles overlap each other",
+      "Every state name is fully contained inside its circle with no text overflow",
+      "All 34+ labelled transitions are present with visible arrowheads at their targets",
+      "Both ESTABLISHED self-loops are drawn as loops returning to the same circle and are labelled",
+      "Each transition edge label is readable and does not overlap any state circle",
+      "Transition edge labels do not overlap one another",
+      "Edges do not pass through any state circle that is not their endpoint (including the long backward and cross-peer arrows)",
+      "Both CLOSED start states are marked with an incoming arrow originating from no other state, and no element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole state machine fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_007",
+    "category": "gantt_timeline",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a dense project Gantt chart titled 'ML Project Timeline' (32px bold, top). A horizontal time axis spans 12 months (Jan..Dec) with evenly spaced gridlines and month labels. FOURTEEN task rows grouped into 3 phases (with phase sub-headers 'Research', 'Build', 'Launch'), each row a labelled horizontal bar spanning its months, with a duration label printed on or beside each bar: 'Literature Review' (Jan-Feb), 'Data Collection' (Jan-Mar), 'Labeling' (Feb-Apr), 'EDA' (Mar-Apr), 'Model v1' (Apr-Jun), 'Eval v1' (Jun-Jul), 'Feature Eng' (May-Jul), 'Model v2' (Jul-Sep), 'Eval v2' (Sep-Oct), 'Infra Setup' (Jun-Aug), 'Integration' (Aug-Oct), 'Load Testing' (Oct-Nov), 'Deployment' (Oct-Dec), 'Monitoring' (Nov-Dec). Several bars overlap in time (same months, different rows) which stresses vertical packing. Draw 3 dependency arrows between bars: end of 'Data Collection'->start of 'Model v1', end of 'Model v1'->start of 'Eval v1', end of 'Integration'->start of 'Deployment'.",
+    "requirements": [
+      "The 12 month labels (Jan..Dec) are evenly spaced along the time axis and all visible",
+      "All 14 task rows are visible with their left-side labels fully readable and not clipped",
+      "The 3 phase sub-headers (Research, Build, Launch) are visible and do not overlap any bar or label",
+      "Each task bar starts and ends at the correct month gridlines for its stated span",
+      "Task bars do not vertically overlap each other (each of the 14 rows is on its own horizontal track)",
+      "Row label text and per-bar duration labels do not overlap the bars of other rows, the axis, or each other",
+      "The time-axis gridlines are evenly spaced and do not overlap the month labels",
+      "All 14 bars stay within the horizontal bounds of the time axis (no bar extends past Dec or before Jan), and the 3 dependency arrows connect the correct bars without passing through unrelated bars",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole Gantt chart fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_008",
+    "category": "er_diagram",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a dense entity-relationship diagram titled 'Blog Database Schema' (32px bold, top). SEVEN entity boxes, each with a header and an attribute list (PK in bold, FKs italic): USER (id, name, email, password_hash, created_at, role), POST (id, user_id, title, slug, body, status, published_at), COMMENT (id, post_id, user_id, parent_id, body, created_at), TAG (id, name, slug), POST_TAG (post_id, tag_id), CATEGORY (id, name, parent_id), MEDIA (id, post_id, url, type, alt_text). Relationship lines with crow's-foot cardinality labels (10 relationships): USER 1--* POST, POST 1--* COMMENT, USER 1--* COMMENT, COMMENT 1--* COMMENT (self-referential parent_id, a self-loop), POST 1--* POST_TAG, TAG 1--* POST_TAG, CATEGORY 1--* POST, CATEGORY 1--* CATEGORY (self-referential parent_id), POST 1--* MEDIA, USER *--* TAG (via a 'follows' label). Several relationship lines must cross to connect non-adjacent entities.",
+    "requirements": [
+      "All 7 entity boxes are visible with header and full attribute list, no clipping",
+      "No two entity boxes overlap each other",
+      "Every attribute line is fully contained inside its entity box with no text overflow",
+      "The primary key is shown in bold in each entity",
+      "All 10 relationship lines are present and connect the correct entity pairs",
+      "The two self-referential relationships (COMMENT->COMMENT and CATEGORY->CATEGORY) are drawn as self-loops returning to the same box",
+      "Each relationship line has a readable cardinality label (1 / * / 1--*) that does not overlap an entity box or another cardinality label",
+      "Relationship lines do not pass through any entity box that is not an endpoint of that relationship",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole ER diagram fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_009",
+    "category": "tree",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a deep COMPLETE binary decision tree titled 'Loan Approval Decision Tree (Depth 5)' (32px bold, top), depth 5 with 32 leaves. Root (depth 0): 'Credit Score >= 700?'. Depth 1 (2 internal): 'Income >= 50k?', 'Has Collateral?'. Depth 2 (4 internal): 'Debt Ratio < 0.3?', 'Employment > 2yr?', 'Collateral >= Loan?', 'Co-signer?'. Depth 3 (8 internal): 'Loan < 100k?', 'Savings >= 6mo?', 'Debt Ratio < 0.4?', 'Bankruptcy < 7yr?', 'Credit Score >= 650?', 'LTV < 80%?', 'Co-signer Score >= 700?', 'Income >= 30k?'. Depth 4 (16 internal, each a short yes/no question such as 'Age >= 21?', 'DTI < 0.45?', 'Util < 30%?', 'History > 3yr?', 'Inquiries < 3?', 'Open Accts < 10?', 'Delinq = 0?', 'Region OK?', and 8 more distinct short questions). Depth 5: 32 colored leaf boxes, each labelled APPROVE (green), REVIEW (yellow), or DENY (red), distributed across the tree. Internal nodes are rectangles; leaves are rounded colored boxes. Lay out as a top-down COMPLETE binary tree where every one of the 31 internal nodes branches Yes (left) / No (right); the 32 leaves are evenly spaced across the bottom row. Every edge labelled Yes or No. With 63 nodes across 6 levels in 1920px width the leaf row is extremely tight (~55px pitch), forcing precise equal spacing and tiny labels.",
+    "requirements": [
+      "All 31 internal-node rectangles and all 32 leaf boxes (63 nodes) are visible within the viewport with no clipping",
+      "Every node label is fully contained inside its shape with no text overflow",
+      "The tree is laid out top-down with the root at the top (depth 0) and all 32 leaves on the bottom row (depth 5)",
+      "No two nodes at the same depth overlap, and sibling subtrees are horizontally separated",
+      "The 32 leaf boxes on the bottom row are evenly spaced horizontally with equal gaps and no overlap",
+      "Every edge is labelled Yes or No, and the label does not overlap any node or another edge label",
+      "Edges connect parents to children without passing through any unrelated node",
+      "Leaf boxes are colored as specified (APPROVE green, REVIEW yellow, DENY red)",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole tree fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_010",
+    "category": "sequence_diagram",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a VERY dense UML sequence diagram titled 'OAuth 2.0 + Resource Access + Refresh Flow' (32px bold, top). NINE participants with vertical dashed lifelines and a header box each: User, Browser, Client, AuthServer, TokenStore, ResourceServer, UserDB, AuditLog, Cache. Time flows downward. Messages (horizontal arrows with labels), 34 in strict order: User->Browser 'open app', Browser->Client 'GET /login', Client->Browser 'redirect to authorize', Browser->AuthServer 'authorize request', AuthServer->Cache 'check session', Cache->AuthServer 'miss', AuthServer->Browser 'login prompt', User->Browser 'enter credentials', Browser->AuthServer 'POST credentials', AuthServer->UserDB 'lookup user', UserDB->AuthServer 'user record', AuthServer->AuthServer 'validate password' (SELF-CALL loop), AuthServer->AuditLog 'log login', AuthServer->Browser 'redirect with auth code', Browser->Client 'auth code', Client->AuthServer 'exchange code (nested)', AuthServer->TokenStore 'store refresh token', TokenStore->AuthServer 'ok', AuthServer->Cache 'cache access token', AuthServer->Client 'access + refresh token', Client->ResourceServer 'GET /data + token', ResourceServer->AuthServer 'introspect token', AuthServer->Cache 'lookup token', Cache->AuthServer 'valid', AuthServer->ResourceServer 'token valid', ResourceServer->Client 'protected data', Client->ResourceServer 'GET /more + token', ResourceServer->Client '401 expired', Client->AuthServer 'refresh (refresh token)', AuthServer->TokenStore 'validate refresh', TokenStore->AuthServer 'ok', AuthServer->Client 'new access token', Client->ResourceServer 'retry GET /more', ResourceServer->Client 'protected data'. Show ACTIVATION BARS (narrow rectangles) on lifelines while processing; the nested exchange (Client->AuthServer->TokenStore->UserDB and back) must show at least 3 stacked activation bars. Use solid arrows for requests and dashed arrows for responses. With 9 lifelines across 1920px the horizontal pitch is ~200px and 34 stacked messages make the vertical pitch ~28px, so labels must be tiny and precisely placed.",
+    "requirements": [
+      "All 9 participants have a header box at the top and a vertical lifeline extending downward, all visible",
+      "The 9 lifelines are evenly spaced horizontally with equal gaps across the diagram",
+      "All 34 messages are drawn as horizontal arrows in top-to-bottom chronological order",
+      "The AuthServer self-call ('validate password') is drawn as a self-loop on its own lifeline and is labelled",
+      "Activation bars are drawn on lifelines, and the nested exchange shows at least 3 stacked/overlapping activation bars",
+      "Every message label is readable and does not overlap a lifeline, an activation bar, or another message label",
+      "Each message arrow connects the correct two lifelines (correct source and target participant)",
+      "Response messages use dashed arrows and request messages use solid arrows as specified",
+      "No message arrow or label extends outside the viewport bounds and no element is within 10px of any edge",
+      "No scrollbar appears; the whole sequence diagram fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_011",
+    "category": "network_topology",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a dense network topology titled 'Corporate Network Topology' (32px bold, top). Top: a cloud labelled 'Internet'. Below it: redundant pair 'Firewall A' and 'Firewall B' (cross-linked to each other). Below: 'Core Router 1' and 'Core Router 2' (each firewall connects to both core routers, creating crossing links). Below: 4 distribution switches 'Switch A (Floor 1)', 'Switch B (Floor 2)', 'Switch C (Floor 3)', 'Switch D (DMZ)' (each core router connects to all 4 switches). Each switch connects to 3 leaf endpoints: A->(PC-1, PC-2, Printer-1), B->(PC-3, PC-4, Printer-2), C->(PC-5, PC-6, VoIP-1), D->(Web Server, DB Server, Mail Server). That is 23 device shapes and ~26 links including redundant crossing core links. Use a distinct icon-style shape per device class (cloud, shield for firewalls, rounded box for routers/switches, plain box for endpoints). Lines are undirected (no arrowheads).",
+    "requirements": [
+      "All 23 network devices (Internet, 2 firewalls, 2 core routers, 4 switches, 12 endpoints, plus 2 server-class noted) are visible with no clipping",
+      "Every device label is fully contained within or directly beside its shape with no overflow onto other shapes",
+      "The hierarchy is top-down: Internet -> firewalls -> core routers -> switches -> endpoints",
+      "Each firewall connects to both core routers and each core router connects to all 4 switches (the redundant crossing links are present)",
+      "Each switch connects to exactly its 3 endpoints",
+      "Connection lines do not pass through any device shape that is not one of their two endpoints",
+      "The 3 endpoints under each switch are evenly spaced and do not overlap each other, and the four switch subtrees do not overlap horizontally",
+      "Distinct shapes are used per device class (cloud, shield, rounded box, plain box)",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole topology fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_012",
+    "category": "layered_stack",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a VERY dense layered protocol-stack comparison titled 'OSI vs TCP/IP vs Protocols vs PDUs vs Devices vs Attacks vs Encapsulation' (32px bold, top). SEVEN vertical columns side by side, all sharing the same row heights so rows align exactly. Column 1 'OSI' has 7 stacked equal-height layers (top to bottom): Application, Presentation, Session, Transport, Network, Data Link, Physical. Column 2 'TCP/IP' has 4 layers spanning the equivalent heights: Application (spanning OSI's top 3), Transport, Internet, Link (spanning OSI's bottom 2). Column 3 'Protocols' aligned to each OSI layer: HTTP/FTP/SMTP/DNS, TLS/SSL/JPEG, NetBIOS/RPC, TCP/UDP/SCTP, IP/ICMP/IGMP, Ethernet/PPP/ARP, RJ45/fiber/coax. Column 4 'PDU' aligned to each OSI layer: Data, Data, Data, Segment, Packet, Frame, Bit. Column 5 'Devices' aligned to each OSI layer: Gateway/Proxy, -, -, L4 Load Balancer, Router/L3 Switch, Switch/Bridge, Hub/Repeater. Column 6 'Attacks' aligned: SQLi/XSS, SSL strip, Session hijack, SYN flood, IP spoof, MAC flood, Jamming. Column 7 'Encapsulation Header' aligned: App Header, Presentation, Session, TCP Header, IP Header, MAC Header, Preamble. Draw dashed horizontal alignment guides spanning ALL seven columns at each OSI layer boundary (8 guide lines). With 7 columns in 1920px width each column is ~250px and several cells contain long multi-token text, stressing label fit and exact row alignment.",
+    "requirements": [
+      "All seven columns are visible: OSI shows 7 layers, TCP/IP shows 4 layers, and Protocols, PDU, Devices, Attacks, Encapsulation Header each show 7 aligned entries, with no clipping",
+      "Within each column the bands are contiguous (no gaps or overlaps between adjacent bands)",
+      "The 7 OSI layers are of equal height and all of Protocols, PDU, Devices, Attacks, and Encapsulation rows align horizontally with the OSI layers",
+      "Every label in all seven columns is fully contained inside its band with no text overflow",
+      "The seven columns are horizontally separated and do not overlap each other",
+      "The TCP/IP 'Application' layer vertically spans the same height as OSI's top 3 layers, and 'Link' spans OSI's bottom 2",
+      "Dashed alignment guides span across all seven columns at OSI layer boundaries and do not obscure any label text",
+      "The seven column headers (OSI, TCP/IP, Protocols, PDU, Devices, Attacks, Encapsulation Header) are visible above their columns and not overlapping any band",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole comparison fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_013",
+    "category": "venn",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a FIVE-set Venn diagram (using the standard 5-ellipse rotationally-symmetric layout) titled 'Full-Stack & ML Skill Sets' (32px bold, top). Five congruent translucent ellipses arranged at 72-degree rotations about the center (the canonical 5-set Venn), each labelled outside the ellipse: 'Frontend', 'Backend', 'DevOps', 'Data', 'ML'. A 5-set Venn has 31 regions; place a short text label inside at least 26 of them: the 5 single-set regions ('CSS', 'SQL', 'Bash', 'Stats', 'Models'), all 10 pairwise overlaps (e.g. 'API', 'CI/CD', 'ETL', 'Dashboards', 'Monitoring', 'Edge Deploy', 'Feature Store', 'Pipelines', 'Serving', 'Viz'), at least 8 of the 10 triple-overlap regions ('Microservices', 'MLOps', 'Observability', 'DataViz', 'AutoML', 'Streaming', 'Infra-as-Code', 'Telemetry'), at least 2 of the 5 quadruple-overlap regions ('Platform', 'FullStackML'), and the central quintuple-overlap region ('Unicorn'). That is 26 region labels packed into the 31-region figure. Ellipses must be translucent so all overlaps are visible, and with 5 rotated ellipses the regions are small slivers, forcing tiny precisely-placed labels that must each sit inside the correct region without spilling.",
+    "requirements": [
+      "Five congruent translucent ellipses are drawn in the canonical rotationally-symmetric 5-set arrangement with a single central region where all five overlap",
+      "The ellipses use translucent fills so that overlap regions are visibly distinct",
+      "Each ellipse has an external label (Frontend, Backend, DevOps, Data, ML) that does not overlap another ellipse's external label",
+      "The 5 single-set region labels are each inside their correct single-set-only region",
+      "All 10 specified pairwise-overlap labels are each inside the correct two-set overlap region and do not spill into an adjacent region",
+      "At least 8 triple-overlap labels are placed inside correct three-set overlap regions",
+      "The central label 'Unicorn' is inside the quintuple-overlap region and at least 2 quadruple-overlap labels are inside correct four-set regions",
+      "No region label overlaps another region label",
+      "No ellipse or label extends outside the viewport bounds and no element is within 10px of any edge",
+      "No scrollbar appears; the whole Venn diagram fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_014",
+    "category": "control_feedback",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a dense cascade control-systems block diagram titled 'Cascade PID Feedback Control Loop' (32px bold, top). Forward path left to right: input 'r(t)' arrow -> OUTER summing junction (circle with + and - inputs) -> block 'Outer PID' -> INNER summing junction (circle with + and -) -> block 'Inner PID' -> block 'Actuator' -> block 'Plant G(s)' -> a pickoff node -> output 'y(t)'. From the pickoff after Plant, an OUTER feedback path returns leftward through 'Sensor H1(s)' to the OUTER summing junction's - input (a long lower arc). From a SECOND pickoff between Actuator and Plant, an INNER feedback path returns through 'Sensor H2(s)' to the INNER summing junction's - input (a shorter arc that must NOT cross the outer feedback arc or pass through forward blocks). Add a 'Disturbance d(t)' arrow entering a small summing junction between Actuator and Plant. Label the signals: 'r(t)', 'e1(t)' (after outer sum), 'e2(t)' (after inner sum), 'u(t)' (after inner PID), 'y(t)'. There are 3 summing junctions, 5 forward blocks, 2 sensor blocks.",
+    "requirements": [
+      "All 3 summing-junction circles, the 5 forward blocks (Outer PID, Inner PID, Actuator, Plant G(s) plus disturbance junction), and the 2 sensor blocks are visible with no clipping",
+      "The outer summing junction shows + on r(t) and - on its feedback input; the inner summing junction shows + and - signs as well",
+      "Every block label is fully contained inside its block with no text overflow",
+      "The forward-path arrows (r(t)->outer sum->Outer PID->inner sum->Inner PID->Actuator->Plant->y(t)) are present and point rightward",
+      "The OUTER feedback path returns from after the plant through Sensor H1(s) to the outer junction's - input without passing through any forward-path block",
+      "The INNER feedback path returns through Sensor H2(s) to the inner junction's - input, and the inner and outer feedback arcs do not cross each other or pass through forward blocks",
+      "The Disturbance d(t) arrow enters the summing junction between Actuator and Plant and is labelled",
+      "The signal labels r(t), e1(t), e2(t), u(t), y(t) are each on the correct edge and do not overlap a block or another label",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole control diagram fits in 1920x1080"
+    ]
+  },
+  {
+    "task_id": "diagram_015",
+    "category": "quadrant",
+    "description": "Create a single 1920x1080 self-contained HTML file (inline CSS + inline SVG) drawing a 2x2 strategy quadrant titled 'Effort vs Impact Prioritization' (32px bold, top). Horizontal axis labelled 'Effort' (Low on left, High on right); vertical axis labelled 'Impact' (Low at bottom, High at top). The two axes cross at center forming 4 quadrants, each with a corner title: top-left 'Quick Wins', top-right 'Major Projects', bottom-left 'Fill-Ins', bottom-right 'Thankless Tasks'. Plot 40 small labelled dots scattered across the quadrants (10 per quadrant), each with a text label beside it, many positioned CLOSE TOGETHER in clusters so labels are highly prone to overlap. Quick Wins: 'Cache layer', 'Fix typos', 'Add logging', 'Tooltip help', 'Rename vars', 'Hotkey menu', 'Dark mode', 'Copy edits', 'Favicon', 'Empty states'; Major Projects: 'Rewrite auth', 'Migrate DB', 'New billing', 'Multi-region', 'Redesign UI', 'Event sourcing', 'GraphQL API', 'Mobile app', 'SSO', 'Data lake'; Fill-Ins: 'Update docs', 'Clean dead code', 'Bump deps', 'Add unit tests', 'Lint config', 'Format code', 'Archive logs', 'Tag releases', 'Prune images', 'Rotate keys'; Thankless Tasks: 'Legacy patch', 'Manual report', 'Vendor portal', 'Compliance form', 'Data backfill', 'License audit', 'Tax export', 'GDPR review', 'Cookie banner', 'Disk cleanup'. Add a faint dashed diagonal 'priority line' from bottom-left to top-right. With 40 labelled points in a 1920x1080 frame the clusters force careful label placement to avoid collisions.",
+    "requirements": [
+      "Two perpendicular axes cross at the center dividing the area into 4 quadrants",
+      "The Effort axis is labelled Low on the left and High on the right; the Impact axis is labelled Low at bottom and High at top",
+      "All 4 quadrant titles are present, each in the correct quadrant, and not overlapping the axes or any dot label",
+      "Exactly 40 dots are plotted, 10 in each quadrant",
+      "Each dot has a readable text label beside it, and no dot label overlaps another dot label",
+      "No dot or its label crosses an axis line into a neighboring quadrant",
+      "The dashed diagonal priority line runs from bottom-left to top-right and does not obscure any quadrant title",
+      "All 40 dots and labels stay within the viewport bounds",
+      "No element is within 10px of any viewport edge",
+      "No scrollbar appears; the whole quadrant chart fits in 1920x1080"
+    ]
+  }
+]

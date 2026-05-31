@@ -76,10 +76,11 @@ class MetricsCollector:
     # ------------------------------------------------------------------
 
     def compute_pass_at_1(self, baseline: str) -> float:
-        """Fraction of problems where *at least one* sample passed (k=1).
+        """Fraction of problems where *at least one* sample passed.
 
-        Equivalent to ``compute_pass_at_k(baseline, k=1)`` but avoids the
-        combinatorial computation for the common single-sample case.
+        Note: this is the binary *has-any-pass* metric. It equals
+        ``compute_pass_at_k(baseline, k=1)`` only when every problem has
+        exactly one sample.  For multi-sample runs, use ``pass@k`` instead.
         """
         problems = self._get_problems(baseline)
         if not problems:

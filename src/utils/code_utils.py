@@ -29,8 +29,14 @@ def extract_code(response: str, language: str = "python") -> str:
 
 def extract_function(code: str, function_name: str) -> str | None:
     """Extract a specific function definition from code."""
+    # Multi-line function: def name(...): followed by indented body lines
     pattern = rf"(def {function_name}\s*\(.*?\n(?:(?:    .*|)\n)*)"
     match = re.search(pattern, code)
+    if match:
+        return match.group(1).rstrip()
+    # Single-line function: def name(...): <body>
+    pattern_single = rf"(def {function_name}\s*\(.*?:.*)"
+    match = re.search(pattern_single, code)
     if match:
         return match.group(1).rstrip()
     return None
@@ -45,9 +51,9 @@ def truncate_output(output: str, max_chars: int = 10_000) -> str:
     """Truncate output to a maximum number of characters."""
     if len(output) <= max_chars:
         return output
-    half = max_chars // 2
-    return (
-        output[:half]
-        + f"\n\n... [truncated {len(output) - max_chars} chars] ...\n\n"
-        + output[-half:]
-    )
+    # Reserve space for the middle message so total stays within max_chars
+    msg = f"\n\n... [truncated {len(output) - max_chars} chars] ...\n\n"
+    half = (max_chars - len(msg)) // 2
+    if half < 0:
+        half = 0
+    return output[:half] + msg + output[-half:] if half > 0 else output[:max_chars]

@@ -7,6 +7,7 @@ rather than relying on opinions or static properties.
 
 import logging
 import subprocess
+import sys
 import tempfile
 from pathlib import Path
 
@@ -100,7 +101,7 @@ class ExecutionFeedback(FeedbackProvider):
         """Run *script_path* in a subprocess and capture output."""
         try:
             proc = subprocess.run(
-                ["python", str(script_path)],
+                [sys.executable, str(script_path)],
                 capture_output=True,
                 text=True,
                 timeout=self.timeout,
@@ -120,6 +121,7 @@ class ExecutionFeedback(FeedbackProvider):
                 "stdout": "",
                 "stderr": f"Execution timed out after {self.timeout} seconds.",
                 "timed_out": True,
+                "timeout_seconds": self.timeout,
             }
 
     @staticmethod
@@ -128,7 +130,7 @@ class ExecutionFeedback(FeedbackProvider):
         parts: list[str] = []
         if result["timed_out"]:
             parts.append(
-                f"TIMEOUT: execution exceeded {result.get('timeout', '?')}s limit."
+                f"TIMEOUT: execution exceeded {result.get('timeout_seconds', '?')}s limit."
             )
         elif passed:
             parts.append("PASSED: all test assertions succeeded.")

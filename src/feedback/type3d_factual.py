@@ -108,13 +108,14 @@ class FactualVerificationFeedback(FeedbackProvider):
         try:
             raw = response.content.strip()
             if raw.startswith("```"):
-                raw = raw[raw.index("\n") + 1:]
+                nl = raw.find("\n")
+                raw = raw[nl + 1:] if nl != -1 else raw[3:]
                 if raw.endswith("```"):
                     raw = raw[:-3].strip()
             claims = json.loads(raw)
             if isinstance(claims, list):
                 return [str(c) for c in claims]
-        except (json.JSONDecodeError, ValueError):
+        except json.JSONDecodeError:
             # Fallback: split by newlines and filter
             lines = response.content.strip().split("\n")
             return [
@@ -213,13 +214,14 @@ class FactualVerificationFeedback(FeedbackProvider):
         try:
             raw = response.content.strip()
             if raw.startswith("```"):
-                raw = raw[raw.index("\n") + 1:]
+                nl = raw.find("\n")
+                raw = raw[nl + 1:] if nl != -1 else raw[3:]
                 if raw.endswith("```"):
                     raw = raw[:-3].strip()
             data = json.loads(raw)
             data["tokens"] = response.input_tokens + response.output_tokens
             return data
-        except (json.JSONDecodeError, ValueError):
+        except json.JSONDecodeError:
             return {
                 "verdict": "unverifiable",
                 "evidence": response.content[:500],

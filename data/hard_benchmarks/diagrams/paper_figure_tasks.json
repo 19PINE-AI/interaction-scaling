@@ -1,0 +1,273 @@
+[
+  {
+    "task_id": "figure_001",
+    "name": "Transformer Encoder-Decoder",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG (no external files, no scripts, no images) that reproduces the canonical Transformer encoder-decoder architecture figure. Title 'Transformer (Encoder-Decoder)' at top in 32px bold. Two parallel vertical stacks side by side. LEFT 'Encoder' stack wrapped in a labelled 'Nx' container, bottom to top: 'Input Embedding', '+ Positional Encoding', 'Multi-Head Self-Attention', 'Add & Norm', 'Feed Forward', 'Add & Norm'. RIGHT 'Decoder' stack wrapped in a labelled 'Nx' container, bottom to top: 'Output Embedding (shifted right)', '+ Positional Encoding', 'Masked Multi-Head Self-Attention', 'Add & Norm', 'Encoder-Decoder Cross-Attention', 'Add & Norm', 'Feed Forward', 'Add & Norm'. Above the decoder: 'Linear', 'Softmax', 'Output Probabilities'. From the top of the encoder stack draw TWO labelled arrows 'Keys (K)' and 'Values (V)' routing rightward into the decoder's 'Encoder-Decoder Cross-Attention' box. Draw residual skip arcs on the OUTER side of each stack: one per 'Add & Norm' (2 on the encoder left, 3 on the decoder right). Each box is a labelled rounded rectangle; the two stacks share a baseline grid so corresponding rows align. The 'Nx' multiplier label appears once on each stack container. Use dimension annotation 'd_model = 512' near the embeddings.",
+    "requirements": [
+      "All boxes (6 encoder sublayers, 8 decoder sublayers, Linear, Softmax, Output Probabilities, 2 Nx containers) are visible within the 1920x1080 viewport with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text is fully contained inside its rectangle with no text overflowing the box edges",
+      "Both 'Nx' multiplier labels are visible, one per stack container, and do not overlap any box",
+      "The 'Keys (K)' and 'Values (V)' cross-attention arrows run from the encoder top into the decoder 'Encoder-Decoder Cross-Attention' box and neither passes through any other box",
+      "The 'Keys (K)' and 'Values (V)' arrow labels do not overlap each other or any box",
+      "Residual skip arcs (2 on encoder left, 3 on decoder right) do not pass through any box and do not overlap each other",
+      "Encoder sublayer boxes have equal vertical gaps, and decoder sublayer boxes have equal vertical gaps (even spacing within each stack)",
+      "The 'd_model = 512' annotation is legible and does not overlap any box or other text",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_002",
+    "name": "ResNet Bottleneck Residual Block",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a ResNet bottleneck residual block figure. Title 'ResNet Bottleneck Block' at top in 32px bold. A vertical main path of three convolution boxes in sequence, bottom to top: '1x1 conv, 64' (reduce), '3x3 conv, 64', '1x1 conv, 256' (expand), each followed by 'BN + ReLU' annotations. Below the stack an input tensor annotation 'x: 256-d', above the stack the output. To the RIGHT of the main path draw a curved identity skip-connection arrow that bypasses all three conv boxes and rejoins at a circular '+' (element-wise addition) node above the last conv, followed by a final 'ReLU' box. Label the skip arrow 'identity'. Show channel-count annotations (64, 64, 256) on each conv box and the bottleneck reduction ratio. The skip path must NOT pass through any conv box. Center the whole block.",
+    "requirements": [
+      "All boxes (three conv boxes, the '+' addition node, the final ReLU box, input and output annotations) are visible within the 1920x1080 viewport with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text is fully contained inside its rectangle with no overflow",
+      "The identity skip-connection arrow bypasses all three conv boxes and does not pass through any of them",
+      "The skip arrow terminates at the circular '+' addition node and the '+' node sits above the third conv and below the final ReLU",
+      "Channel-count annotations '64', '64', and '256' each appear on the correct conv box and are legible",
+      "The 'identity' label on the skip arrow does not overlap any box or other text",
+      "The three conv boxes have equal vertical gaps between them (even spacing)",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_003",
+    "name": "GAN Generator + Discriminator",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a GAN training figure with both networks. Title 'Generative Adversarial Network' at top in 32px bold. LEFT: a latent noise vector box 'z ~ N(0,1), 100-d' feeding into a 'Generator G' box (drawn as an upsampling trapezoid or stacked deconv boxes), producing a 'Fake Sample x_fake' box. A separate 'Real Sample x_real' box sits below/parallel. BOTH x_fake and x_real feed RIGHTWARD into a single 'Discriminator D' box (drawn as a downsampling trapezoid), which outputs a 'Real / Fake' probability box. Draw a labelled feedback arrow 'gradient / adversarial loss' curving from the Discriminator output BACK to the Generator. Annotate the two loss terms: 'D maximizes log D(x)' and 'G minimizes log(1 - D(G(z)))'. The real-sample arrow and the fake-sample arrow must both reach the Discriminator without crossing each other through any box.",
+    "requirements": [
+      "All boxes (z, Generator G, x_fake, x_real, Discriminator D, Real/Fake output) are visible within the 1920x1080 viewport with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text is fully contained inside its shape with no overflow",
+      "The x_fake arrow and the x_real arrow both connect into the Discriminator D and neither passes through an unrelated box",
+      "The feedback/adversarial-loss arrow runs from the Discriminator output back to the Generator and does not pass through the Discriminator or sample boxes",
+      "The two loss-term annotations are both present, legible, and do not overlap any box or each other",
+      "The 'z ~ N(0,1), 100-d' latent annotation is legible and inside its box",
+      "Generator and Discriminator are visually distinguishable as up- vs down-sampling shapes (trapezoid or stack) and do not overlap",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_004",
+    "name": "Feature Pyramid Network (FPN)",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a Feature Pyramid Network figure. Title 'Feature Pyramid Network (FPN)' at top in 32px bold. LEFT column: a bottom-up backbone pathway with FOUR feature-map boxes stacked vertically, drawn at DECREASING spatial size top-to-bottom toward higher levels, labelled 'C2 (1/4)', 'C3 (1/8)', 'C4 (1/16)', 'C5 (1/32)' with channel annotations. RIGHT column: a top-down pathway with FOUR corresponding output boxes 'P5', 'P4', 'P3', 'P2', each at the same vertical level as its backbone counterpart. For each level draw a horizontal '1x1 conv (lateral connection)' arrow from Ck to the merge point. From each higher Pk draw a '2x upsample' downward arrow that merges (element-wise '+' node) with the lateral connection to form the lower P-level. Each Pk is followed by a '3x3 conv' box producing the final pyramid feature. Annotate '256-d' on all P-level outputs. Four levels, four lateral connections, three upsample-merge arrows.",
+    "requirements": [
+      "All FOUR backbone boxes (C2-C5) and all FOUR pyramid boxes (P2-P5) plus their 3x3 conv boxes and merge nodes are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text (C2-C5, P2-P5, conv labels) is fully contained inside its box with no overflow",
+      "Exactly FOUR lateral '1x1 conv' arrows connect each Ck to its corresponding Pk merge point, horizontally, without passing through other boxes",
+      "Exactly THREE top-down '2x upsample' arrows connect each higher Pk down to the next merge node, and each terminates at a '+' merge node",
+      "Each Ck box is horizontally aligned (same vertical level) with its corresponding Pk box",
+      "Backbone boxes are drawn at decreasing spatial size from C2 (largest) to C5 (smallest), reflecting the pyramid",
+      "The '256-d' channel annotation appears on the P-level outputs and is legible without colliding with other text",
+      "Lateral arrows and upsample arrows do not overlap or cross through unrelated boxes",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_005",
+    "name": "DETR (Detection Transformer)",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces the DETR architecture figure end-to-end, left to right. Title 'DETR: Detection Transformer' at top in 32px bold. PIPELINE left-to-right: (1) an input 'Image' box, (2) a 'CNN Backbone (ResNet)' box producing a 'flattened features + positional encoding' box, (3) a 'Transformer Encoder (Nx)' box, (4) a 'Transformer Decoder (Nx)' box that ALSO takes a separate input of 'N Object Queries' (draw a small row of query tokens feeding upward into the decoder), (5) parallel 'FFN' prediction heads producing a row of 'box + class' predictions including 'no object (∅)' tokens, (6) a 'Bipartite Matching (Hungarian)' box on the right that matches predictions to ground-truth boxes. Show 'Nx' multipliers on both encoder and decoder. The object-query arrow must enter the decoder separately from the encoder-memory arrow. The bipartite matching box must receive both predictions and a small 'Ground Truth' set, with matching lines drawn between them.",
+    "requirements": [
+      "All major components (Image, CNN Backbone, features+pos-enc, Transformer Encoder, Transformer Decoder, Object Queries, FFN heads, predictions row, Bipartite Matching) are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text is fully contained inside its box with no overflow",
+      "The encoder-to-decoder memory arrow and the Object-Queries-to-decoder arrow both reach the decoder as TWO distinct inputs and do not merge into the same line",
+      "Both 'Nx' multiplier labels appear (one on encoder, one on decoder) and do not overlap any box",
+      "The prediction row includes at least one explicit 'no object (∅)' token, legibly labelled",
+      "The Bipartite Matching box receives both the predictions row and a Ground Truth set, with matching lines drawn between the two",
+      "The matching lines connect predictions to ground-truth boxes without passing through unrelated pipeline boxes",
+      "The left-to-right pipeline stages are evenly spaced and horizontally aligned along a common baseline",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_006",
+    "name": "Mask R-CNN",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces the Mask R-CNN architecture figure. Title 'Mask R-CNN' at top in 32px bold. PIPELINE left-to-right: 'Input Image' -> 'Backbone CNN + FPN' -> 'Region Proposal Network (RPN)' producing 'Region Proposals (RoIs)' -> a 'RoIAlign' box. From RoIAlign the network SPLITS into THREE parallel head branches drawn side by side: (a) a 'Box Regression Head (FC)' producing 'bbox', (b) a 'Classification Head (FC)' producing 'class', (c) a 'Mask Head (FCN)' producing a small 'm x m binary mask' grid (draw a small pixel grid). The three heads must branch from the SAME RoIAlign output node. Annotate the mask branch as a fully-convolutional path distinct from the FC box/class heads. Show the RPN feeding proposals back to RoIAlign.",
+    "requirements": [
+      "All components (Input Image, Backbone+FPN, RPN, RoIs, RoIAlign, Box Head, Classification Head, Mask Head, mask grid output) are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text is fully contained inside its box with no overflow",
+      "Exactly THREE parallel head branches (box, class, mask) all originate from the single RoIAlign output node",
+      "The three head branches do not overlap each other and their connecting arrows do not cross through unrelated boxes",
+      "The Mask Head terminates in a small pixel-grid 'm x m mask' shape that is visibly a grid",
+      "The RPN box connects to RoIAlign via a 'Region Proposals (RoIs)' arrow that does not pass through the backbone box",
+      "The Mask Head is labelled as FCN and the box/class heads are labelled as FC, distinguishing the branches",
+      "The three head branches are evenly spaced / aligned where they run in parallel",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_007",
+    "name": "Latent Diffusion U-Net with Timestep + Text Cross-Attention",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a Stable-Diffusion / Latent-Diffusion denoising U-Net figure. Title 'Latent Diffusion U-Net (with conditioning)' at top in 32px bold. Draw a U-shaped network: a LEFT descending encoder of FOUR down-blocks at decreasing spatial resolution (annotate resolutions 64x64, 32x32, 16x16, 8x8 and channel counts), a bottleneck 'mid-block' at the bottom, and a RIGHT ascending decoder of FOUR up-blocks mirroring the encoder. Draw FOUR horizontal skip connections from each encoder level to its mirror decoder level. INPUT (left) is a 'Noisy Latent z_t (4 x 64 x 64)' box; OUTPUT (right) is 'Predicted Noise ε_θ'. Two conditioning signals enter: (1) a 'Timestep t -> sinusoidal embedding -> MLP' box whose embedding is injected into EVERY block (draw labelled injection arrows into each down/up block), and (2) a 'Text Prompt -> CLIP Text Encoder' box feeding 'cross-attention' into the blocks (draw cross-attention arrows into at least the mid and adjacent blocks). Annotate which blocks contain 'ResBlock' vs 'ResBlock + Cross-Attn'.",
+    "requirements": [
+      "All blocks (4 down-blocks, mid-block, 4 up-blocks), the timestep-embedding path, and the text/CLIP conditioning path are visible with no clipping at any edge",
+      "No two blocks overlap each other",
+      "Every block label text and resolution/channel annotation is fully contained inside its box with no overflow",
+      "Exactly FOUR skip connections connect each encoder down-block to its mirror decoder up-block at the same depth and do not pass through the bottleneck or unrelated blocks",
+      "The encoder down-blocks are drawn at decreasing spatial size and the decoder up-blocks mirror them at increasing size (U shape)",
+      "The timestep-embedding path injects into the blocks via labelled arrows, and these injection arrows do not overlap each other or pass through unrelated blocks",
+      "The text/CLIP cross-attention path feeds into the blocks via distinct labelled cross-attention arrows separate from the timestep arrows",
+      "Resolution annotations (64x64, 32x32, 16x16, 8x8) appear on the correct encoder levels and are legible without colliding",
+      "Input 'Noisy Latent z_t' and output 'Predicted Noise ε_θ' boxes are both present, labelled, and not overlapping",
+      "Blocks containing cross-attention are labelled distinctly from plain ResBlocks",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_008",
+    "name": "CLIP Dual-Encoder Contrastive Matrix",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces the CLIP contrastive pre-training figure. Title 'CLIP: Contrastive Language-Image Pre-training' at top in 32px bold. TOP-LEFT: a 'Text Encoder' (Transformer) box taking a column of N text inputs and producing N text embeddings T1..TN drawn as a horizontal row of small vectors across the TOP. LEFT side: an 'Image Encoder' (ResNet/ViT) box taking N images and producing N image embeddings I1..IN drawn as a vertical column of small vectors down the LEFT. In the center draw an N x N similarity matrix grid (use N = 4 or 5) where cell (i,j) = Ii · Tj; the DIAGONAL cells (matched pairs) are highlighted/shaded differently from off-diagonal cells. Label the contrastive objective 'maximize diagonal, minimize off-diagonal (symmetric cross-entropy)'. The text-embedding row must align column-wise with the matrix columns, and the image-embedding column must align row-wise with the matrix rows.",
+    "requirements": [
+      "Both encoders (Text Encoder, Image Encoder), the text-embedding row, the image-embedding column, and the N x N similarity matrix are all visible with no clipping at any edge",
+      "No two boxes or matrix cells overlap each other",
+      "Every label (T1..TN, I1..IN, encoder names) is fully contained inside its shape with no overflow",
+      "The similarity matrix is a square grid with the SAME N for rows and columns (N consistent, 4 or 5), with no missing or extra cells",
+      "The diagonal cells (matched pairs Ii·Ti) are visually highlighted/shaded differently from off-diagonal cells",
+      "The text-embedding vectors T1..TN align column-wise with the matrix columns",
+      "The image-embedding vectors I1..IN align row-wise with the matrix rows",
+      "The contrastive-objective annotation is present, legible, and does not overlap the matrix or embeddings",
+      "Matrix cells are evenly sized and evenly spaced (uniform grid)",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_009",
+    "name": "Mixture-of-Experts Layer",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a Mixture-of-Experts (MoE) layer figure. Title 'Mixture-of-Experts Layer (Top-2 Gating)' at top in 32px bold. Bottom: an 'Input Token x' box. The token feeds into a 'Gating Network / Router (softmax)' box that outputs gating weights. Draw a horizontal row of EXACTLY SIX 'Expert' FFN boxes ('Expert 1' .. 'Expert 6') above the router. The router dispatches the token to the TOP-2 selected experts (draw SOLID arrows to exactly two highlighted experts, e.g. Expert 2 and Expert 5, and faded/dashed arrows or no arrows to the unselected four). Each selected expert's output multiplies by its gate weight 'g_i' and the selected outputs feed into a 'Weighted Combine (Σ g_i · E_i(x))' box at the top producing the output. Annotate the two gate weights (e.g. g_2 = 0.7, g_5 = 0.3). Six experts, top-2 routing.",
+    "requirements": [
+      "All components (Input Token, Router/Gating box, exactly SIX Expert boxes, Weighted Combine box) are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label (Expert 1..6, router, combine) is fully contained inside its box with no overflow",
+      "There are EXACTLY six Expert boxes, drawn in an evenly spaced horizontal row",
+      "The router dispatches to EXACTLY TWO experts via solid (selected) arrows, visually distinct from the unselected experts (dashed/faded/no arrow)",
+      "The two selected experts' outputs both connect into the Weighted Combine box, and unselected experts do not connect to it",
+      "Two gate-weight annotations (e.g. g_2, g_5) appear on the correct selected-expert paths and are legible without colliding",
+      "Router-to-expert arrows do not cross through unrelated Expert boxes",
+      "The Weighted Combine box label shows the gated-sum formula (Σ g_i · E_i(x)) fully contained",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_010",
+    "name": "Graph Attention Network Message-Passing Step",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a Graph Attention Network (GAT) message-passing / aggregation step figure. Title 'Graph Attention Network: Node Update' at top in 32px bold. CENTER: a target node 'h_1' (circle). Around it draw FIVE neighbour nodes 'h_2', 'h_3', 'h_4', 'h_5', 'h_6' (circles) connected to h_1 by edges. On EACH edge from neighbour j to h_1 draw a labelled attention coefficient 'α_1j' (α_12 .. α_16), with the edges drawn at different thicknesses/opacities to indicate different attention weights. To the SIDE, draw an inset showing the attention computation: 'e_1j = LeakyReLU(aᵀ[W h_1 || W h_j])' then 'α_1j = softmax_j(e_1j)'. Show the aggregation formula 'h_1' = σ(Σ_j α_1j W h_j)' and the updated node 'h_1'' (h_1 prime) as an output. Also indicate multi-head attention with 'K heads' annotation. Five neighbours, five attention coefficients.",
+    "requirements": [
+      "The target node h_1, all FIVE neighbour nodes (h_2..h_6), and the attention-computation inset are visible with no clipping at any edge",
+      "No two node circles overlap each other",
+      "Every node label (h_1, h_2..h_6, h_1') is fully contained inside its circle with no overflow",
+      "Exactly FIVE edges connect the five neighbours to the central node h_1, each carrying a distinct attention-coefficient label α_12..α_16",
+      "The five attention-coefficient labels α_1j are legible and do not overlap each other or any node",
+      "Edges are drawn with varying thickness/opacity to indicate different attention weights",
+      "The attention-computation inset (e_1j and α_1j = softmax formulas) is present, legible, and does not overlap the graph",
+      "The aggregation formula and the updated output node h_1' are both present and labelled",
+      "A 'K heads' multi-head annotation is present and legible without colliding",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_011",
+    "name": "WaveNet Dilated Causal Convolution Stack",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces the WaveNet dilated causal convolution figure. Title 'WaveNet: Dilated Causal Convolutions' at top in 32px bold. Draw FOUR stacked horizontal layers of nodes, bottom to top: 'Input' (dilation 1), 'Hidden Layer (dilation 2)', 'Hidden Layer (dilation 4)', 'Output (dilation 8)'. Each layer is a horizontal row of EXACTLY SIXTEEN small circular nodes evenly spaced and vertically aligned in columns across the four rows. Draw the dilated-causal connection edges: each node connects upward to nodes spaced by the layer's dilation factor (1, 2, 4, 8), only to PAST timesteps (causal: edges go up-and-to-the-right or straight up, never to a future/right-of-target input). The growing receptive field should be visible as the fan-out widening with depth. Label the dilation factor (1, 2, 4, 8) at the left of each layer. Sixteen nodes per row, four rows, dilations doubling.",
+    "requirements": [
+      "All FOUR node rows (Input, three above) are fully visible with no clipping at any edge",
+      "Each row contains EXACTLY sixteen nodes, evenly spaced and column-aligned across rows",
+      "No two nodes overlap each other",
+      "Each layer's dilation factor (1, 2, 4, 8) is labelled at the left and legible without overlapping nodes",
+      "Connection edges respect causality: no edge connects a node to an input that is to its RIGHT (future timestep)",
+      "Edge spacing per layer reflects the doubling dilation (1, 2, 4, 8) so higher layers skip more nodes",
+      "The receptive field visibly widens (more fan-out) from the input layer to the output layer",
+      "Edges do not pass through unrelated nodes in a way that makes connectivity ambiguous (edges are distinguishable)",
+      "Row labels and dilation annotations do not overlap the node grid",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_012",
+    "name": "Squeeze-and-Excitation Residual Block",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a Squeeze-and-Excitation (SE) block embedded in a residual block. Title 'Squeeze-and-Excitation Residual Block' at top in 32px bold. Main path bottom to top: input feature map 'X (H x W x C)' -> a 'Residual Conv Block (F_tr)' -> feature map 'U (H x W x C)'. From U, the SE branch splits to the RIGHT: '1) Squeeze: Global Average Pool -> 1 x 1 x C' -> '2) Excitation: FC -> ReLU -> FC -> Sigmoid (1 x 1 x C)' producing a per-channel scale vector 's'. Then '3) Scale: U ⊙ s (channel-wise multiply)' recombines the SE scale with U via a '⊙' (element-wise multiply) node. Finally a residual skip-connection arrow carries X around the whole block to a '+' addition node producing the output. Annotate the reduction ratio 'r' in the excitation (C -> C/r -> C). The squeeze/excitation branch and the residual skip must be DISTINCT paths that do not cross through the main conv box.",
+    "requirements": [
+      "All components (X input, Residual Conv Block, U, Squeeze GAP, Excitation FC-ReLU-FC-Sigmoid, Scale multiply ⊙, residual + node, output) are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label text is fully contained inside its box with no overflow",
+      "The Squeeze step is labelled as Global Average Pool producing a 1 x 1 x C descriptor",
+      "The Excitation step shows the FC -> ReLU -> FC -> Sigmoid sequence with the reduction-ratio annotation (C -> C/r -> C)",
+      "The Scale '⊙' channel-wise-multiply node combines U with the excitation vector s",
+      "The residual skip-connection arrow carries X around the whole block to a separate '+' addition node and does not pass through the conv box",
+      "The SE branch path and the residual skip path are visually distinct and do not overlap each other",
+      "Tensor-shape annotations (H x W x C, 1 x 1 x C) are legible and do not collide with other text",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_013",
+    "name": "Perceiver-IO Cross-Attention with Latent Array",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces the Perceiver-IO architecture figure. Title 'Perceiver IO' at top in 32px bold. LEFT: a tall 'Input Array (M x D, e.g. M = 50000)' box representing a large byte/pixel array. CENTER: a much smaller 'Latent Array (N x C, N = 512 << M)' box. The flow: (1) a 'Cross-Attention' box where the Latent Array is the QUERY and the Input Array provides KEYS and VALUES (draw arrows: latents -> Q, input array -> K and V) to encode the large input into the small latent; (2) a stack of 'Latent Transformer (Self-Attention) x L' blocks operating only on the latent array (show the 'L' multiplier); (3) an output 'Cross-Attention (Decode)' box where a separate 'Output Query Array (O x E)' attends into the processed latents to produce the 'Output Array'. Emphasize the asymmetric sizes (input large, latent small) with explicit M, N annotations. Show that self-attention cost is O(N²) on latents, not O(M²).",
+    "requirements": [
+      "All components (Input Array, Latent Array, encode Cross-Attention, Latent Transformer stack, Output Query Array, decode Cross-Attention, Output Array) are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every box label and dimension annotation is fully contained inside its box with no overflow",
+      "The Input Array box is drawn visibly larger/taller than the Latent Array box, reflecting M >> N",
+      "In the encode Cross-Attention, the Latent Array connects as the QUERY and the Input Array connects as KEYS and VALUES, with these roles labelled (Q from latents, K/V from input)",
+      "The Latent Transformer self-attention stack shows an 'x L' (or 'L×') multiplier and operates on the latent array only",
+      "The decode stage shows a separate Output Query Array attending into the latents to produce the Output Array",
+      "Dimension annotations M, N, and their relation (N << M) are present and legible without colliding",
+      "Cross-attention K/V/Q arrows connect the correct boxes and do not pass through unrelated boxes",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_014",
+    "name": "Seq2Seq with Attention + Attention Heat-Map Grid",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces a sequence-to-sequence with attention figure including an alignment heat-map. Title 'Seq2Seq with Attention' at top in 32px bold. BOTTOM-LEFT: an encoder RNN drawn as a horizontal row of FOUR recurrent cells over source tokens ('le','chat','est','noir') with left-to-right hidden-state arrows h_1..h_4. TOP/RIGHT: a decoder RNN drawn as a horizontal row of FOUR recurrent cells generating target tokens ('the','cat','is','black'). For the CURRENT decoder step draw attention weight arrows from ALL four encoder hidden states into a 'context vector c_t = Σ α_ti h_i' node feeding the decoder cell. SEPARATELY, on the RIGHT, draw a 4 x 4 attention heat-map grid (source tokens on one axis, target tokens on the other) with cells shaded by attention weight and a roughly-diagonal alignment highlighted. Label the source axis and target axis of the heat-map. Four encoder cells, four decoder cells, 4x4 alignment grid.",
+    "requirements": [
+      "The encoder row (4 cells), decoder row (4 cells), context-vector node, and 4x4 attention heat-map are all visible with no clipping at any edge",
+      "No two cells/boxes overlap each other",
+      "Every token label and cell label is fully contained inside its box with no overflow",
+      "The encoder has EXACTLY four cells over the four source tokens and the decoder has EXACTLY four cells over the four target tokens",
+      "Attention weight arrows from all four encoder hidden states feed into the context-vector node, which feeds the decoder",
+      "The attention heat-map is a 4x4 grid (matching the 4 source and 4 target tokens) with cells shaded by weight",
+      "The heat-map's source axis and target axis are both labelled with the correct token lists",
+      "A roughly-diagonal alignment is visibly highlighted in the heat-map cells",
+      "Encoder hidden-state arrows h_1..h_4 do not cross through unrelated cells",
+      "Heat-map cells are evenly sized and evenly spaced (uniform grid)",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  },
+  {
+    "task_id": "figure_015",
+    "name": "Evoformer (AlphaFold MSA + Pair Representation)",
+    "description": "Create a single 1920x1080 self-contained HTML file using ONLY inline CSS and inline SVG that reproduces an AlphaFold-style Evoformer block figure. Title 'Evoformer Block (x48)' at top in 32px bold with the '48 blocks' multiplier shown. The block operates on TWO representations side by side: a LEFT 'MSA Representation (s x r x c_m)' drawn as a stacked grid (rows = sequences, columns = residues) and a RIGHT 'Pair Representation (r x r x c_z)' drawn as a square residue-by-residue grid. MSA-side sub-modules stacked vertically: 'MSA Row-wise Gated Self-Attention (with pair bias)', 'MSA Column-wise Gated Self-Attention', 'MSA Transition'. Pair-side sub-modules: 'Outer Product Mean' (arrow FROM MSA INTO the pair representation), 'Triangle Multiplicative Update (outgoing)', 'Triangle Multiplicative Update (incoming)', 'Triangle Self-Attention (starting node)', 'Triangle Self-Attention (ending node)', 'Pair Transition'. Draw the 'pair bias' arrow FROM the pair representation INTO the MSA row attention, and the 'Outer Product Mean' arrow FROM the MSA INTO the pair representation, making the two representations communicate bidirectionally. Show the '(x48)' block repetition.",
+    "requirements": [
+      "Both representations (MSA grid and Pair grid) and ALL named sub-modules (3 MSA-side, 6 pair-side including Outer Product Mean) are visible with no clipping at any edge",
+      "No two boxes overlap each other",
+      "Every sub-module label and dimension annotation (s x r x c_m, r x r x c_z) is fully contained inside its box with no overflow",
+      "The MSA Representation is drawn as a sequences-by-residues grid and the Pair Representation as a square residue-by-residue grid, visually distinct",
+      "The 'pair bias' arrow runs FROM the pair representation INTO the MSA row-wise attention module",
+      "The 'Outer Product Mean' arrow runs FROM the MSA representation INTO the pair representation",
+      "Both triangle multiplicative updates (outgoing and incoming) and both triangle self-attentions (starting and ending node) are present and distinctly labelled",
+      "The '(x48)' block-repetition multiplier is shown and does not overlap any box",
+      "Communication arrows (pair bias, outer product mean) do not pass through unrelated sub-module boxes",
+      "MSA-side sub-modules are evenly stacked and pair-side sub-modules are evenly stacked (aligned columns)",
+      "No element is within 10px of any viewport edge",
+      "No horizontal or vertical scrollbar appears; all content fits inside 1920x1080"
+    ]
+  }
+]

@@ -8,6 +8,7 @@ from pathlib import Path
 class ModelProvider(Enum):
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
+    OPENROUTER = "openrouter"
     LOCAL = "local"
 
 
@@ -17,6 +18,8 @@ class ModelConfig:
     model_id: str
     max_tokens: int = 4096
     temperature: float = 0.0
+    use_thinking: bool = False
+    thinking_budget: int = 10000
 
     @staticmethod
     def claude_sonnet() -> "ModelConfig":
@@ -24,6 +27,17 @@ class ModelConfig:
             provider=ModelProvider.ANTHROPIC,
             model_id="claude-sonnet-4-20250514",
             max_tokens=8192,
+        )
+
+    @staticmethod
+    def claude_sonnet_thinking() -> "ModelConfig":
+        """Claude Sonnet 4.6 with extended thinking for SFT distillation."""
+        return ModelConfig(
+            provider=ModelProvider.ANTHROPIC,
+            model_id="claude-sonnet-4-6",
+            max_tokens=16000,
+            use_thinking=True,
+            thinking_budget=10000,
         )
 
     @staticmethod
@@ -65,6 +79,40 @@ class ModelConfig:
             provider=ModelProvider.LOCAL,
             model_id=model_path,
             max_tokens=8192,
+            temperature=0.7,
+        )
+
+    @staticmethod
+    def qwen3_235b() -> "ModelConfig":
+        """Qwen3-235B-Instruct-2507 via OpenRouter — bare `qwen3-235b-a22b`
+        has Alibaba-only routing that is not enabled on this account; the
+        2507 instruct variant is the working ID and matches the Phase-5
+        teacher model."""
+        return ModelConfig(
+            provider=ModelProvider.OPENROUTER,
+            model_id="qwen/qwen3-235b-a22b-2507",
+            max_tokens=0,  # 0 = no limit, let model decide
+            temperature=0.7,
+        )
+
+    @staticmethod
+    def deepseek_r1() -> "ModelConfig":
+        """DeepSeek R1 via OpenRouter — strong reasoning with <think> traces."""
+        return ModelConfig(
+            provider=ModelProvider.OPENROUTER,
+            model_id="deepseek/deepseek-r1-0528",
+            max_tokens=0,
+            temperature=0.7,
+        )
+
+    @staticmethod
+    def gpt5() -> "ModelConfig":
+        """GPT-5 via OpenRouter — second non-Anthropic / non-Qwen
+        cross-family replication for the harness lift."""
+        return ModelConfig(
+            provider=ModelProvider.OPENROUTER,
+            model_id="openai/gpt-5",
+            max_tokens=0,  # let model decide
             temperature=0.7,
         )
 

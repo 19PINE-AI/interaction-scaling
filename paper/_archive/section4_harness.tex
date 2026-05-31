@@ -1,0 +1,125 @@
+% =====================================================================
+% Section 4 of the reframed paper:
+% Interaction scaling with external scaffolding (proposer--reviewer harness)
+% wrapping a frontier model, no post-training.
+% Standalone file --- not yet included from main.tex.
+% =====================================================================
+
+\section{Interaction Scaling with External Scaffolding}
+\label{sec:harness}
+
+\Cref{sec:framework} predicts that wrapping a frontier model in a proposer--reviewer loop with externally grounded feedback should improve artifact quality, with the magnitude of the improvement determined by the \emph{actionability} of the feedback channel (Type~3a~$>$~3d~$>$~3b/3c). We test this directly: same model, same tasks, single-shot vs.\ full harness, six modalities spanning all four sub-types of Type~3 feedback. The harness is pure scaffolding --- no fine-tuning, no retrieval-augmented context, no learned controller --- so any quality gain is attributable to interaction scaling alone.
+
+\subsection{Setup}
+\label{sec:harness-setup}
+
+\textbf{Model.} Claude Sonnet~4 (\texttt{claude-sonnet-4-20250514}), extended thinking enabled, temperature~$0$. The same model serves as both proposer and reviewer; the reviewer's context is reset to contain only the latest artifact and the grounded feedback channel (execution log, rendered screenshot, keyframe sequence, or fact-check verdicts). Any gain over single-shot is therefore attributable to \emph{interaction with the environment}, not to a more capable model. The harness uses no fine-tuning, retrieval, or learned controller.
+
+\textbf{Modalities, task counts, and feedback channels.}
+\Cref{tab:harness-setup} lists the six modalities, each instrumented with the most informative grounded feedback channel available for that artifact type (cf.\ \S{}3 for the Type taxonomy). Tasks were hand-curated to be hard for a single shot. The budget cap is 500K tokens per task (rarely binding; the iteration cap binds first).
+
+\begin{table}[ht]
+\centering
+\caption{Modalities and feedback channels. The channel determines which sub-type of grounded feedback the reviewer consumes; the proposer always sees only text/image messages.}
+\label{tab:harness-setup}
+\small
+\begin{tabular}{lccc}
+\toprule
+Modality & $N$ tasks & Feedback channel & Max iterations \\
+\midrule
+Code           & 15 & Type 3a: test execution (pytest pass/fail + traceback)           & 5 \\
+Video editing  & 15 & Type 3a+3c: script execution + keyframe VLM critique             & 3 \\
+Deep research  & 15 & Type 3d: per-claim factual verification against search           & 2 \\
+Web pages      & 15 & Type 3b: headless-browser screenshot + VLM critique              & 3 \\
+Animations     & 15 & Type 3c: rendered keyframe sequence + temporal VLM critique      & 3 \\
+Slide decks    & 20 & Type 3b: rendered slide images + per-slide VLM critique          & 3 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Conditions, replication, scoring.}
+\emph{Single-shot} = one proposer call, output is scored. \emph{Reviewed} = the full proposer$\to$execute/render$\to$review$\to$revise loop until either the reviewer accepts the artifact or the iteration cap is hit. We replicate each modality three independent times (\texttt{onpolicy\_run\{1,2,3\}}) with fresh harness state per run; non-determinism comes from the API on long reasoning traces, since temperature is fixed at $0$. Code is scored binary (canonical \texttt{pytest} pass/fail); the other modalities use a fixed-rubric VLM/LLM judge returning a continuous score in $[0, 1]$, with the same judge used for both conditions.
+
+\subsection{Headline results}
+\label{sec:harness-headline}
+
+\Cref{tab:harness-headline} reports the mean and standard deviation across the three independent runs per modality.
+
+\begin{table}[t]
+\centering
+\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. The $p$-value column is a one-sided paired sign test on per-task means (averaged across the three runs); ties (zero diff) are excluded from the count.}
+\label{tab:harness-headline}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Modality & $N$ & Feedback type & Single-shot & Reviewed & $\Delta$ (sign-test $p$) \\
+\midrule
+Code            & 15 & 3a       & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\% & $\mathbf{+33.3}$\,pp (0.008) \\
+Video editing   & 15 & 3a+3c    & $0.13 \pm 0.01$    & $\mathbf{0.60 \pm 0.07}$   & $\mathbf{+0.47}$ (0.011) \\
+Deep research   & 15 & 3d       & $0.63 \pm 0.06$    & $\mathbf{0.69 \pm 0.06}$   & $+0.06$ (0.090) \\
+Web pages       & 15 & 3b       & $0.43 \pm 0.03$    & $\mathbf{0.56 \pm 0.01}$   & $+0.13$ (0.073) \\
+Animations      & 15 & 3c       & $0.40 \pm 0.03$    & $\mathbf{0.55 \pm 0.01}$   & $+0.15$ (0.073) \\
+Slide decks     & 20 & 3b       & $0.73 \pm 0.01$    & $\mathbf{0.79 \pm 0.01}$   & $+0.06$ (0.090) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The headline observation is that the harness lifts quality on \emph{every} modality. The lift is statistically significant ($p < 0.05$, one-sided sign test) on the two execution-grounded modalities --- code (+33.3\,pp) and video (+0.47) --- and trends positive but does not clear that bar with three independent runs and 15--20 tasks per modality on the four other channels. The standard-deviation column shows that the across-run variance is small in absolute terms (1--7\,pp / 0.01--0.07), and that the within-run variance comes almost entirely from a small number of tasks the harness either recovers or fails to recover; we examine the per-task pattern next.
+
+\subsection{Capability emergence: video editing}
+\label{sec:harness-emergence}
+
+The video-editing result is qualitatively different from the others, and it is the strongest evidence that interaction scaling is a distinct axis of test-time compute rather than a quality knob. \emph{Eleven of fifteen video-editing tasks produce quality~0.0 in all three single-shot runs} --- the proposer's first-shot Python/\texttt{moviepy}/\texttt{ffmpeg} script crashes outright. The harness recovers nine of these eleven to a reviewed mean $\geq 0.5$, of which four reach perfect 1.0 in every run. Reviewed mean over the eleven SS-zero tasks is $0.62$. This is not a quality bump applied to a working artifact: \emph{the single-shot model cannot reliably produce video-editing code that runs}, and the interaction loop is what converts ``syntactically plausible but broken'' into ``executes and matches the spec.''
+
+\paragraph{Mechanism.} Inspection of recovered traces shows a consistent pattern: turn~1 emits code that imports a non-existent or misused API surface (\texttt{moviepy.editor.subclip} signatures, wrong codec strings, missing ffmpeg filters, mismatched audio sample rates); turn~2 receives the execution traceback as feedback and rewrites the offending block; turn~3 either succeeds, or (for tasks like ``cut to the moment a face appears'') receives a keyframe-VLM critique pointing at the wrong frame and revises the timestamp. Reasoning alone cannot supply this signal --- the model has no way to know its codec string is wrong until something tries to decode the resulting file. The information is physically outside the weights.
+
+\subsection{Feedback actionability validates the Type-3 taxonomy}
+\label{sec:harness-taxonomy}
+
+\S{}3 predicts a strict ordering on the magnitude of the interaction-scaling lift: execution-grounded (Type~3a) $\gg$ factual-verification (Type~3d) $>$ visual-only (Type~3b/3c). The deltas in \Cref{tab:harness-headline} support the top of this hierarchy: the two execution-grounded modalities (video, code) deliver the two largest gains by a wide margin (+0.47 and +33.3\,pp; an order of magnitude bigger than any other modality). Within the lower tier the on-policy multi-run averages do not preserve the predicted within-tier ordering --- web pages (+0.13) and animations (+0.15) lift more than research (+0.06). We attribute this to (i) a ceiling effect on research and slides (single-shot baselines of 0.63 and 0.73; only 0.37 and 0.27 of absolute headroom remains), and (ii) the fact that for animations and web pages, part of the lift comes from execution-grounded failures (a screenshot that shows a blank page or clipped element flags broken \texttt{<script>}, missing image, or CSS overflow --- not an aesthetic judgment).
+
+The grouping the framework predicts robustly --- and that the data robustly produces --- is execution-grounded vs.\ everything else. Mean lift across runs is $\approx +0.40$ for execution-grounded modalities (code's $+0.33$\,pp pass-rate as $+0.33$ unit lift; video's $+0.47$) and $\approx +0.10$ for the other four. The 4$\times$ gap is the central empirical finding the framework predicts: \emph{the feedback channel that runs the artifact and reports binary success/failure delivers roughly four times the interaction-scaling lift of channels that critique the rendered output but do not exercise its behavior}.
+
+\subsection{Token ROI by modality}
+\label{sec:harness-roi}
+
+\Cref{tab:harness-roi} reports the per-task cost of running the harness instead of single-shot, expressed both as raw token overhead and as ``tokens spent per 0.01 of additional quality.'' The latter is the practitioner-facing version of the framework prediction: the same compute, deployed against a feedback channel with high mutual information about task correctness, buys two orders of magnitude more quality than the same compute against a low-actionability channel.
+
+\begin{table}[t]
+\centering
+\caption{Per-task token cost and quality return-on-investment for the harness, averaged across the three on-policy runs. ``Extra tokens'' is reviewed-minus-single-shot per task. Tokens per 0.01 quality is extra tokens divided by (mean reviewed quality $-$ mean single-shot quality)$\cdot 100$. Code dominates by 100$\times$.}
+\label{tab:harness-roi}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Modality & Single-shot tokens & Reviewed tokens & Extra tokens & Tokens / 0.01 quality \\
+\midrule
+Code        & 3{,}336  & 4{,}575  & 1{,}239  & \textbf{37} \\
+Video       & 3{,}808  & 20{,}584 & 16{,}776 & 359 \\
+Research    & 14{,}116 & 27{,}793 & 13{,}677 & 2{,}415 \\
+Webpages    & 14{,}060 & 80{,}148 & 66{,}088 & 5{,}128 \\
+Animations  & 25{,}491 & 89{,}009 & 63{,}518 & 4{,}331 \\
+Slides      & 10{,}274 & 36{,}956 & 26{,}682 & 4{,}447 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 100$\times$ spread between code (37 tokens per 0.01 quality) and the visual/factual modalities (4{,}000--5{,}000 tokens per 0.01) has a direct practitioner implication: interaction scaling is uniformly \emph{beneficial} (every modality lifts) but is not uniformly \emph{cost-effective}. For execution-grounded artifacts the harness is essentially free per quality point. For visual-only artifacts it should be deployed selectively --- e.g., only when the single-shot output fails a structural check, or to escape a known-broken baseline rather than to polish an acceptable one. \Cref{sec:harness-earlystop} shows the harness already implements the conservative version of this strategy on its own.
+
+\subsection{The harness does not over-revise: built-in early stopping}
+\label{sec:harness-earlystop}
+
+A naive concern is that the reviewer will ``find something to criticize'' on already-good outputs and the proposer will revise them into something worse. The data does not support this.
+\emph{Code:} across the three runs the single-shot proposer passes the test suite on 9--11 of 15 tasks; on \emph{every} passing task, in every run, the reviewed condition submits at iteration~1 with no revision (30/30 instances). Total wasted tokens: zero.
+\emph{Slides:} of the 8--9 tasks per run at single-shot quality $\geq 0.95$, 5--8 are left exactly unchanged; the rest move only within judge stochasticity, never below 0.85.
+\emph{Video:} the one task with single-shot quality $= 1.0$ in all three runs stays at $1.0$ in all three reviewed runs.
+
+We characterize this as built-in early stopping: the same loop that doubles code pass-rate when the test suite fails is silent when the test suite passes, because the grounded feedback channel is the trigger for revision. Without a failing test or a defect-showing screenshot, the loop has no signal to act on. This is why code's token overhead is only 37\% above single-shot ($+1{,}239$ on $3{,}336$) despite a max-iteration cap of~5: the cap is rarely binding, the channel binds first.
+
+\subsection{Limitations}
+\label{sec:harness-limits}
+
+Three caveats narrow the scope.
+\textit{Single model family.} All results use Claude Sonnet 4. The framework predicts the relative ordering of channels should hold across proposer families (the ordering is a property of the channel), but absolute magnitudes could shift; we do not test cross-family generalization here.
+\textit{Visual VLM critique is the weakest channel and occasionally regresses.} A small number of web/animation/slide tasks show the reviewer correctly identifying a defect while the proposer's attempted fix breaks a different working element --- the negative tail of the $\Delta$ distribution. This shrinks the Type~3b/3c lift and motivates the framework's prediction: visual critique is high-bandwidth on the reviewer's input side (a screenshot is information-dense) but low-bandwidth on the output side (the reviewer cannot localize the critique to a specific code edit).
+\textit{Headroom-driven effect sizes.} Phase-1 tasks were curated to be hard, which maximizes available headroom and therefore the size of the lift. On easier tasks the absolute deltas will compress; the qualitative claims (capability emergence, channel ordering, early stopping) should survive in either direction.

@@ -1,0 +1,482 @@
+[
+  {
+    "task_id": "code_hv2_001",
+    "bug_class": "escape / quoting rules (SQL)",
+    "description": "Our SQL string escaping function incorrectly escapes single quotes by adding a backslash instead of doubling them. In SQL standards, single quotes inside single-quoted strings must be escaped by doubling (e.g., `'O''Reilly'`). The current implementation produces invalid SQL when strings contain single quotes.\n\nBuggy code:\n```python\ndef escape_sql_string(s):\n    return s.replace(\"'\", \"\\\\'\")\n```",
+    "buggy_code": "def escape_sql_string(s):\n    return s.replace(\"'\", \"\\\\'\")",
+    "fixed_code": "def escape_sql_string(s):\n    return s.replace(\"'\", \"''\")",
+    "test_code": "assert escape_sql_string(\"hello\") == \"hello\"\nassert escape_sql_string(\"O'Reilly\") == \"O''Reilly\"\nassert escape_sql_string(\"a'b'c\") == \"a''b''c\"\nassert escape_sql_string(\"\") == \"\"\nassert escape_sql_string(\"'\") == \"''\"\nassert escape_sql_string(\"''\") == \"''''\"\nassert escape_sql_string(\"no quotes here\") == \"no quotes here\"\nassert escape_sql_string(\"abc'xyz'uvw\") == \"abc''xyz''uvw\"\nprint('All tests passed!')",
+    "common_bugs": [
+      "Escaping single quotes with backslashes instead of doubling",
+      "Failing to escape single quotes in empty strings",
+      "Incorrectly escaping characters outside single quotes",
+      "Doubling quotes in non-SQL contexts"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_002",
+    "bug_class": "interval/overlap",
+    "description": "Our `compute_total_coverage` function is supposed to compute the total length covered by merging overlapping intervals. However, the code mistakenly sorts intervals by their end times instead of start times, leading to incorrect merging. For example, given `intervals = [[2,5], [1,6]]`, the expected coverage is 5 (merged interval [1,6]), but the current implementation returns 4 (merged interval [2,6]).\n\nHere is the buggy implementation:\n```python\ndef compute_total_coverage(intervals):\n    if not intervals:\n        return 0\n    intervals.sort(key=lambda x: x[1])\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        last_start, last_end = merged[-1]\n        if start <= last_end:\n            merged[-1] = [last_start, max(last_end, end)]\n        else:\n            merged.append([start, end])\n    total = 0\n    for s, e in merged:\n        total += e - s\n    return total\n```\nPlease fix the bug in `compute_total_coverage`.",
+    "buggy_code": "def compute_total_coverage(intervals):\n    if not intervals:\n        return 0\n    intervals.sort(key=lambda x: x[1])\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        last_start, last_end = merged[-1]\n        if start <= last_end:\n            merged[-1] = [last_start, max(last_end, end)]\n        else:\n            merged.append([start, end])\n    total = 0\n    for s, e in merged:\n        total += e - s\n    return total",
+    "fixed_code": "def compute_total_coverage(intervals):\n    if not intervals:\n        return 0\n    intervals.sort()\n    merged = [intervals[0]]\n    for start, end in intervals[1:]:\n        last_start, last_end = merged[-1]\n        if start <= last_end:\n            merged[-1] = [last_start, max(last_end, end)]\n        else:\n            merged.append([start, end])\n    total = 0\n    for s, e in merged:\n        total += e - s\n    return total",
+    "test_code": "assert compute_total_coverage([]) == 0\nassert compute_total_coverage([[1,2]]) == 1\nassert compute_total_coverage([[1,2], [3,4]]) == 2\nassert compute_total_coverage([[1,3], [2,4]]) == 3\nassert compute_total_coverage([[2,5], [1,6]]) == 5\nassert compute_total_coverage([[1,3], [1,2], [2,5]]) == 4\nassert compute_total_coverage([[1,2], [3,5], [4,7], [6,9]]) == 7\nassert compute_total_coverage([[5,10], [1,3], [2,6], [8,9]]) == 9\nassert compute_total_coverage([[0, 10], [1, 2], [3, 4], [5, 6]]) == 10\nassert compute_total_coverage([[1, 1], [2, 2], [3, 3], [4, 4]]) == 0\nprint('All tests passed!')",
+    "common_bugs": [
+      "Sorting intervals by end time instead of start time",
+      "Incorrectly merging intervals by not checking overlap with previous merged interval",
+      "Forgetting to sort intervals before merging",
+      "Miscalculating the merged end as the min instead of max"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_003",
+    "bug_class": "hex encoding edge case",
+    "description": "Our `hex_string_to_bytes` function is supposed to convert a hexadecimal string (e.g., `'a1'`) to its corresponding byte representation (e.g., `b'\\xa1'`). However, it processes the two hexadecimal digits in reverse order for each byte, resulting in swapped nibbles. For example, `hex_string_to_bytes('a1')` should return `b'\\xa1'` (161 in decimal), but instead returns `b'\\x1a'` (26 in decimal).\n\nHere is the current buggy implementation:\n```python\ndef hex_string_to_bytes(s):\n    bytes_list = []\n    for i in range(0, len(s), 2):\n        byte_str = s[i:i+2]\n        byte = int(byte_str[1], 16) * 16 + int(byte_str[0], 16)\n        bytes_list.append(byte)\n    return bytes(bytes_list)\n```\nPlease fix the bug in `hex_string_to_bytes`.",
+    "buggy_code": "def hex_string_to_bytes(s):\n    bytes_list = []\n    for i in range(0, len(s), 2):\n        byte_str = s[i:i+2]\n        byte = int(byte_str[1], 16) * 16 + int(byte_str[0], 16)\n        bytes_list.append(byte)\n    return bytes(bytes_list)",
+    "fixed_code": "def hex_string_to_bytes(s):\n    bytes_list = []\n    for i in range(0, len(s), 2):\n        byte_str = s[i:i+2]\n        byte = int(byte_str[0], 16) * 16 + int(byte_str[1], 16)\n        bytes_list.append(byte)\n    return bytes(bytes_list)",
+    "test_code": "assert hex_string_to_bytes('') == b''\nassert hex_string_to_bytes('00') == b'\\x00'\nassert hex_string_to_bytes('ff') == b'\\xff'\nassert hex_string_to_bytes('a1') == b'\\xa1'\nassert hex_string_to_bytes('1a') == b'\\x1a'\nassert hex_string_to_bytes('ab') == b'\\xab'\nassert hex_string_to_bytes('cd') == b'\\xcd'\nassert hex_string_to_bytes('ef') == b'\\xef'\nassert hex_string_to_bytes('12ab') == b'\\x12\\xab'\nassert hex_string_to_bytes('deadbeef') == b'\\xde\\xad\\xbe\\xef'\nprint('All tests passed!')",
+    "common_bugs": [
+      "Swapped high/low nibble in hex byte conversion",
+      "Incorrect handling of uppercase hex characters",
+      "Failure to validate even-length input",
+      "Improper padding for odd-length hex strings"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_004",
+    "bug_class": "deduplication / set / multiset invariant",
+    "description": "Bug report: our deduplication function `deduplicate_case_insensitive` is supposed to remove case-insensitive duplicates from a list, keeping the first occurrence. However, when given a list like `['A', 'a', 'A']`, it returns `['A', 'a']` instead of `['A']`. The function should deduplicate based on case-insensitive comparison, but the current implementation tracks the original value instead of the lowercase key. Here is the current implementation that has the bug:\n\n```python\ndef deduplicate_case_insensitive(strings):\n    seen = set()\n    result = []\n    for s in strings:\n        key = s.lower()\n        if key not in seen:\n            seen.add(s)\n            result.append(s)\n    return result\n```\n\nPlease fix the bug in `deduplicate_case_insensitive`.",
+    "buggy_code": "def deduplicate_case_insensitive(strings):\n    seen = set()\n    result = []\n    for s in strings:\n        key = s.lower()\n        if key not in seen:\n            seen.add(s)\n            result.append(s)\n    return result",
+    "fixed_code": "def deduplicate_case_insensitive(strings):\n    seen = set()\n    result = []\n    for s in strings:\n        key = s.lower()\n        if key not in seen:\n            seen.add(key)\n            result.append(s)\n    return result",
+    "test_code": "assert deduplicate_case_insensitive(['A', 'a', 'A']) == ['A']\nassert deduplicate_case_insensitive(['apple', 'Apple', 'BANANA']) == ['apple', 'BANANA']\nassert deduplicate_case_insensitive([]) == []\nassert deduplicate_case_insensitive(['a', 'A', 'b']) == ['a', 'b']\nassert deduplicate_case_insensitive(['X', 'x', 'Y']) == ['X', 'Y']\nassert deduplicate_case_insensitive(['z', 'Z', 'z', 'Z']) == ['z']\nassert deduplicate_case_insensitive(['Case', 'CASE', 'case']) == ['Case']\nassert deduplicate_case_insensitive(['mU', 'mU', 'Mu']) == ['mU']\nprint('All tests passed!')",
+    "common_bugs": [
+      "tracking original value instead of deduplication key",
+      "incorrect key type or transformation",
+      "misordering elements during deduplication",
+      "failing to handle empty input"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_005",
+    "bug_class": "tree/graph traversal boundary case",
+    "description": "Our `has_path_sum` function is supposed to return True if the binary tree has a root-to-leaf path where the sum of node values equals `target_sum`. However, the current implementation incorrectly returns True for an empty tree when the target_sum is 0 and fails to validate that paths end at leaves. For example, `has_path_sum(None, 0)` returns True (should be False), and a tree with a root node (value 5) and a single right child (value 7) incorrectly returns True for target_sum 5. The bug is in this implementation:\n\n```python\ndef has_path_sum(root, target_sum):\n    if not root:\n        return target_sum == 0\n    return (has_path_sum(root.left, target_sum - root.val) or \n            has_path_sum(root.right, target_sum - root.val))\n```\n\nPlease fix the bug in `has_path_sum`.",
+    "buggy_code": "def has_path_sum(root, target_sum):\n    if not root:\n        return target_sum == 0\n    return (has_path_sum(root.left, target_sum - root.val) or \n            has_path_sum(root.right, target_sum - root.val))",
+    "fixed_code": "def has_path_sum(root, target_sum):\n    if not root:\n        return False\n    if not root.left and not root.right:\n        return root.val == target_sum\n    return (has_path_sum(root.left, target_sum - root.val) or \n            has_path_sum(root.right, target_sum - root.val))",
+    "test_code": "class Node:\n    def __init__(self, val):\n        self.val = val\n        self.left = None\n        self.right = None\n\nassert not has_path_sum(None, 0)\nroot = Node(5)\nassert has_path_sum(root, 5)\nassert not has_path_sum(root, 0)\nroot.right = Node(7)\nassert not has_path_sum(root, 5)\nroot.left = Node(3)\nassert has_path_sum(root, 8)\nassert not has_path_sum(root, 3)\nassert not has_path_sum(root, 100)\nroot.left.left = Node(2)\nassert has_path_sum(root, 10)\nprint('All tests passed!')",
+    "common_bugs": [
+      "Returns True for empty tree with zero target_sum",
+      "Fails to validate paths end at leaves",
+      "Incorrectly treats None children as valid path endpoints",
+      "Does not explicitly check leaf node values"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_006",
+    "bug_class": "concurrency-free counter / accumulator edge case",
+    "description": "Our `sum_groups(seq)` function is supposed to return a list of sums of consecutive non-None elements, grouped by `None` separators. Each group is a contiguous sequence of non-None elements between `None` values. Empty groups (e.g., between consecutive `None`s) should be omitted.\n\nFor example:\n- `sum_groups([1, 2, None, 3, 4])` \u2192 `[3, 7]`\n- `sum_groups([None, 5, 6, None, 7])` \u2192 `[11, 7]` (sum of [5,6] and [7])\n- `sum_groups([None, None])` \u2192 `[]`\n- `sum_groups([1, 2, 3])` \u2192 `[6]` (single group)\n\nHowever, the current implementation incorrectly includes empty groups between `None` separators. For example, given `[None, 5, 6, None, 7]`, the expected result is `[11, 7]`, but the buggy code returns `[0, 11, 7]` because it appends the current sum (which is zero) when encountering the first `None`.\n\nHere is the current buggy implementation:\n\n```python\ndef sum_groups(seq):\n    groups = []\n    current_sum = 0\n    for num in seq:\n        if num is None:\n            groups.append(current_sum)\n            current_sum = 0\n        else:\n            current_sum += num\n    groups.append(current_sum)\n    return groups\n```\n\nPlease fix the bug in `sum_groups`.",
+    "buggy_code": "def sum_groups(seq):\n    groups = []\n    current_sum = 0\n    for num in seq:\n        if num is None:\n            groups.append(current_sum)\n            current_sum = 0\n        else:\n            current_sum += num\n    groups.append(current_sum)\n    return groups",
+    "fixed_code": "def sum_groups(seq):\n    groups = []\n    current_sum = 0\n    in_group = False\n    for num in seq:\n        if num is None:\n            if in_group:\n                groups.append(current_sum)\n                current_sum = 0\n            in_group = False\n        else:\n            current_sum += num\n            in_group = True\n    if in_group:\n        groups.append(current_sum)\n    return groups",
+    "test_code": "assert sum_groups([1, 2, None, 3, 4]) == [3, 7]\nassert sum_groups([None, 5, 6, None, 7]) == [11, 7]\nassert sum_groups([None, None]) == []\nassert sum_groups([1, 2, 3]) == [6]\nassert sum_groups([None]) == []\nassert sum_groups([None, 1]) == [1]\nassert sum_groups([1, None]) == [1]\nassert sum_groups([None, 1, None, 2]) == [1, 2]\nassert sum_groups([]) == []\nassert sum_groups([0, None, 0]) == [0, 0]\nprint('All tests passed!')",
+    "common_bugs": [
+      "Appending zero current_sum without checking if any elements were added",
+      "Forgetting to handle the final accumulated sum after loop ends",
+      "Incorrectly initializing 'in_group' state",
+      "Mismanagement of state transitions when encountering None"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_007",
+    "bug_class": "pagination",
+    "description": "Our `get_page` function is supposed to return the correct items for a 1-based page number. For example, with page_num=1 and page_size=3, it should return [1,2,3]. Instead it returns [4,5,6] because it treats page_num as 0-based. Here's the buggy code:\n\n```python\ndef get_page(items, page_num, page_size):\n    start = page_num * page_size\n    end = start + page_size\n    return items[start:end]\n```\nPlease fix the bug in `get_page`.",
+    "buggy_code": "def get_page(items, page_num, page_size):\n    start = page_num * page_size\n    end = start + page_size\n    return items[start:end]",
+    "fixed_code": "def get_page(items, page_num, page_size):\n    start = (page_num - 1) * page_size\n    end = start + page_size\n    return items[start:end]",
+    "test_code": "assert get_page([], 1, 3) == []\nassert get_page([1,2,3,4,5], 1, 3) == [1,2,3]\nassert get_page([1,2,3,4,5], 2, 3) == [4,5]\nassert get_page([1,2,3,4,5], 2, 2) == [3,4]\nassert get_page([1], 1, 10) == [1]\nassert get_page([1], 2, 10) == []\nassert get_page([1,2,3,4,5,6], 3, 2) == [5,6]\nassert get_page([1,2,3], 0, 2) == []",
+    "common_bugs": [
+      "Off-by-one due to missing adjustment for 1-based page numbers",
+      "Incorrect slicing indices leading to empty lists or out-of-bounds",
+      "Not handling empty items list",
+      "Not handling page_num beyond available pages"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_008",
+    "bug_class": "version comparison",
+    "description": "Our `compare_versions` function incorrectly treats versions with more parts as equal when the extra parts are zero. For example, `compare_versions('1.0', '1.0.0.1')` should return -1 because '1.0' is equivalent to '1.0.0.0' and is less than '1.0.0.1'. The current implementation uses `zip(parts1, parts2)` which stops after the shortest sequence. Instead, it should compare each part up to the maximum length, treating missing parts as zero.\n\nHere is the buggy implementation:\n\n```python\ndef compare_versions(v1, v2):\n    parts1 = list(map(int, v1.split('.')))\n    parts2 = list(map(int, v2.split('.')))\n    for p1, p2 in zip(parts1, parts2):\n        if p1 < p2:\n            return -1\n        elif p1 > p2:\n            return 1\n    return 0\n```\n\nPlease fix the bug in `compare_versions`.",
+    "buggy_code": "def compare_versions(v1, v2):\n    parts1 = list(map(int, v1.split('.')))\n    parts2 = list(map(int, v2.split('.')))\n    for p1, p2 in zip(parts1, parts2):\n        if p1 < p2:\n            return -1\n        elif p1 > p2:\n            return 1\n    return 0",
+    "fixed_code": "def compare_versions(v1, v2):\n    parts1 = list(map(int, v1.split('.')))\n    parts2 = list(map(int, v2.split('.')))\n    max_len = max(len(parts1), len(parts2))\n    for i in range(max_len):\n        p1 = parts1[i] if i < len(parts1) else 0\n        p2 = parts2[i] if i < len(parts2) else 0\n        if p1 < p2:\n            return -1\n        elif p1 > p2:\n            return 1\n    return 0",
+    "test_code": "assert compare_versions('1.0', '1.0') == 0\nassert compare_versions('1.0', '1.0.0') == 0\nassert compare_versions('1.0.0', '1.0') == 0\nassert compare_versions('1.0.1', '1.0') == 1\nassert compare_versions('1.0', '1.0.1') == -1\nassert compare_versions('1.0.0.0', '1.0') == 0\nassert compare_versions('1.0.0.1', '1.0') == 1\nassert compare_versions('1.0.0.0.0', '1.0.0') == 0\nassert compare_versions('0.0.0.1', '0.0') == 1\nassert compare_versions('2.1.0', '2.0.1') == 1\nassert compare_versions('1.10.0', '1.2.0') == 1\nassert compare_versions('1.01', '1.01.0') == 0\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using zip() truncates comparison to shortest version",
+      "Not treating omitted parts as zero",
+      "Integer conversion errors on non-numeric parts",
+      "Leading zero handling in version parts"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_009",
+    "bug_class": "concurrency-free counter / accumulator edge case",
+    "description": "Our `count_increases` function is supposed to count the number of times an element in a list is strictly greater than its immediate predecessor. For example, in the list `[1, 3, 2, 4]`, the increases occur at positions 1 (1\u21923) and 3 (2\u21924), so `count_increases([1,3,2,4])` should return 2. However, the current implementation incorrectly counts the transition from the last element to the first element (e.g., in `[3,1,2]` it returns 2 increases instead of 1), leading to overcounting. The buggy code is:\n\n```python\ndef count_increases(lst):\n    count = 0\n    for i in range(len(lst)):\n        if lst[i] > lst[i-1]:\n            count += 1\n    return count\n```\n\nPlease fix the bug in `count_increases`.",
+    "buggy_code": "def count_increases(lst):\n    count = 0\n    for i in range(len(lst)):\n        if lst[i] > lst[i-1]:\n            count += 1\n    return count",
+    "fixed_code": "def count_increases(lst):\n    count = 0\n    for i in range(1, len(lst)):\n        if lst[i] > lst[i-1]:\n            count += 1\n    return count",
+    "test_code": "assert count_increases([1]) == 0\nassert count_increases([1,2]) == 1\nassert count_increases([2,1]) == 0\nassert count_increases([1,2,1]) == 1\nassert count_increases([3,1,2]) == 1\nassert count_increases([1,3,2,4]) == 2\nassert count_increases([]) == 0\nassert count_increases([5,5,5]) == 0\nassert count_increases([1,1,2,3,4]) == 3\nprint('All tests passed!')",
+    "common_bugs": [
+      "Off-by-one loop start/end",
+      "Incorrect comparison in circular list",
+      "Forgetting to skip first element for pairwise comparison",
+      "Misinterpreting list bounds for empty list"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_010",
+    "bug_class": "deduplication",
+    "description": "Our deduplication function `deduplicate` is supposed to remove duplicates from a list while preserving the order of first occurrence. However, it currently returns a list with all elements, including duplicates. For example, `deduplicate([1,1,2])` should return `[1,2]` but returns `[1,1,2]`. The bug is that the code unconditionally appends each element to the result list regardless of whether it's a duplicate.\n\n```python\ndef deduplicate(lst):\n    seen = set()\n    result = []\n    for x in lst:\n        if x not in seen:\n            seen.add(x)\n        result.append(x)\n    return result\n```\nPlease fix the bug in `deduplicate`.",
+    "buggy_code": "def deduplicate(lst):\n    seen = set()\n    result = []\n    for x in lst:\n        if x not in seen:\n            seen.add(x)\n        result.append(x)\n    return result",
+    "fixed_code": "def deduplicate(lst):\n    seen = set()\n    result = []\n    for x in lst:\n        if x not in seen:\n            seen.add(x)\n            result.append(x)\n    return result",
+    "test_code": "assert deduplicate([1,1,2]) == [1,2]\nassert deduplicate([1,2,3]) == [1,2,3]\nassert deduplicate([2,1,2,3]) == [2,1,3]\nassert deduplicate([]) == []\nassert deduplicate([1,2,2,1]) == [1,2]\nassert deduplicate([5,5,5]) == [5]\nassert deduplicate([1,1,2,2,3,3]) == [1,2,3]\nassert deduplicate([3,2,1,2,3]) == [3,2,1]\nprint('All tests passed!')",
+    "common_bugs": [
+      "Unconditionally appending elements to the result list without checking for duplicates",
+      "Forgetting to add new elements to the 'seen' set",
+      "Using a list instead of a set for 'seen' leading to O(n\u00b2) time complexity",
+      "Maintaining elements in reverse order by processing input backward"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_011",
+    "bug_class": "sorting with custom key / stability / tie-break",
+    "description": "Our `sort_by_parity_desc` function is supposed to sort a list of integers such that even numbers appear first (in descending order), followed by odd numbers (also in descending order). However, the current implementation incorrectly sorts the elements within each parity group in ascending order. For example:\n\n```python\nprint(sort_by_parity_desc([3, 1, 4, 2]))  # Expected: [4, 2, 3, 1]\n                                       # Actual:   [2, 4, 3, 1]\n```\n\nHere is the current (buggy) implementation:\n\n```python\ndef sort_by_parity_desc(nums):\n    return sorted(nums, key=lambda x: (x % 2, x))\n```\n\nPlease fix the bug in `sort_by_parity_desc`.",
+    "buggy_code": "def sort_by_parity_desc(nums):\n    return sorted(nums, key=lambda x: (x % 2, x))",
+    "fixed_code": "def sort_by_parity_desc(nums):\n    return sorted(nums, key=lambda x: (x % 2, -x))",
+    "test_code": "assert sort_by_parity_desc([]) == []\nassert sort_by_parity_desc([0]) == [0]\nassert sort_by_parity_desc([1, 2]) == [2, 1]\nassert sort_by_parity_desc([3, 1, 4, 2]) == [4, 2, 3, 1]\nassert sort_by_parity_desc([5, 5, 4, 4, 3, 3]) == [4, 4, 5, 5, 3, 3]\nassert sort_by_parity_desc([10, -2, 3, 7, 0]) == [10, 0, -2, 7, 3]\nassert sort_by_parity_desc([2, 4, 3, 1, 0]) == [4, 2, 0, 3, 1]\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using (x%2, x) as the key instead of (x%2, -x)",
+      "Forgetting to handle descending numeric values in the tie-breaker",
+      "Misusing reverse=True without adjusting the key structure",
+      "Incorrect parity calculation (e.g., x%2 != 0 as the primary key)"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_012",
+    "bug_class": "multiset comparison",
+    "description": "The `is_anagram` function is supposed to check if two lists are anagrams (same elements with same frequencies), but the current implementation uses set comparisons, which ignores element counts. For example, `is_anagram([3, 3, 2], [3, 2, 2])` should return `False` because the first list has two 3s while the second has one, but the function returns `True` because sets with the same elements are equal.\n\nHere is the current buggy implementation:\n\n```python\ndef is_anagram(list1, list2):\n    return set(list1) == set(list2)\n```\n\nPlease fix the bug in `is_anagram`.",
+    "buggy_code": "def is_anagram(list1, list2):\n    return set(list1) == set(list2)",
+    "fixed_code": "from collections import Counter\n\ndef is_anagram(list1, list2):\n    return Counter(list1) == Counter(list2)",
+    "test_code": "assert is_anagram([3, 3, 2], [3, 2, 2]) == False\nassert is_anagram([1, 2, 3], [3, 2, 1]) == True\nassert is_anagram([], []) == True\nassert is_anagram([1, 1], [1]) == False\nassert is_anagram([1, 1, 2, 3], [1, 2, 3, 1]) == True\nassert is_anagram([1, 2, 2], [1, 1, 2]) == False\nassert is_anagram([1, 2], [3, 4]) == False\nassert is_anagram([5, 5, 5], [5, 5, 5]) == True\nassert is_anagram([1, 2, 3, 3], [3, 2, 1, 3]) == True\nassert is_anagram([1], []) == False\nassert is_anagram([], [2]) == False\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using set equality to compare elements, ignoring counts",
+      "Comparing sorted lists (which would work but is not optimal)",
+      "Using sum and length comparisons (same sum and length but different counts)",
+      "Checking only the presence of elements without considering their frequencies"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_013",
+    "bug_class": "sorting with custom key / stability / tie-break",
+    "description": "Bug report: Our `sort_records` function is supposed to sort a list of (category, priority) tuples first by category ascending, then by priority descending. However, it currently sorts by priority ascending in the tiebreaker. For example, given [(1, 3), (1, 2), (0, 5)], the expected output is [(0, 5), (1, 3), (1, 2)], but the current implementation returns [(0, 5), (1, 2), (1, 3)].\n\n```python\ndef sort_records(data):\n    return sorted(data, key=lambda x: (x[0], x[1]))\n```\n\nPlease fix the bug in `sort_records`.",
+    "buggy_code": "def sort_records(data):\n    return sorted(data, key=lambda x: (x[0], x[1]))",
+    "fixed_code": "def sort_records(data):\n    return sorted(data, key=lambda x: (x[0], -x[1]))",
+    "test_code": "assert sort_records([(1, 3), (1, 2), (0, 5)]) == [(0, 5), (1, 3), (1, 2)]\nassert sort_records([(2, 1), (2, 3), (2, 2)]) == [(2, 3), (2, 2), (2, 1)]\nassert sort_records([(0, 10), (0, 5), (0, 7)]) == [(0, 10), (0, 7), (0, 5)]\nassert sort_records([(3, 4), (1, 2), (3, 5)]) == [(1, 2), (3, 5), (3, 4)]\nassert sort_records([]) == []\nassert sort_records([(5, 5)]) == [(5, 5)]\nassert sort_records([(1, 3), (1, 3), (0, 0)]) == [(0, 0), (1, 3), (1, 3)]\nassert sort_records([(3, 5), (3, 5), (3, 4)]) == [(3, 5), (3, 5), (3, 4)]\nprint('All tests passed!')",
+    "common_bugs": [
+      "Forgetting to invert the secondary key's order for descending",
+      "Using an incorrect tuple element in the key tuple",
+      "Mixing up ascending and descending order in the key tuple",
+      "Not considering tie-breakers for equal primary keys"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_014",
+    "bug_class": "state machine / finite automaton transition",
+    "description": "Our `validate_time` function is supposed to return True only for valid time strings in the format 'HH:MM' (24-hour format), where HH is between 00 and 23, and MM is between 00 and 59. However, it currently returns True for '24:00' which is invalid because the hour must be 00-23. The bug occurs because the state machine does not check whether the second hour digit is valid for the first hour digit when the first digit is '2'.\n\n```python\ndef validate_time(time_str):\n    current_state = 'start'\n    for c in time_str:\n        if current_state == 'start':\n            if c not in '012':\n                return False\n            current_state = 'h1'\n        elif current_state == 'h1':\n            if not c.isdigit():\n                return False\n            current_state = 'h2'\n        elif current_state == 'h2':\n            if c != ':':\n                return False\n            current_state = 'colon'\n        elif current_state == 'colon':\n            if c < '0' or c > '5':\n                return False\n            current_state = 'm1'\n        elif current_state == 'm1':\n            if not c.isdigit():\n                return False\n            current_state = 'm2'\n        elif current_state == 'm2':\n            return False  # No more characters allowed\n    return current_state == 'm2'\n```\n\nPlease fix the bug in `validate_time`.",
+    "buggy_code": "def validate_time(time_str):\n    current_state = 'start'\n    for c in time_str:\n        if current_state == 'start':\n            if c not in '012':\n                return False\n            current_state = 'h1'\n        elif current_state == 'h1':\n            if not c.isdigit():\n                return False\n            current_state = 'h2'\n        elif current_state == 'h2':\n            if c != ':':\n                return False\n            current_state = 'colon'\n        elif current_state == 'colon':\n            if c < '0' or c > '5':\n                return False\n            current_state = 'm1'\n        elif current_state == 'm1':\n            if not c.isdigit():\n                return False\n            current_state = 'm2'\n        elif current_state == 'm2':\n            return False  # No more characters allowed\n    return current_state == 'm2'",
+    "fixed_code": "def validate_time(time_str):\n    current_state = 'start'\n    first_hour_digit = None\n    for c in time_str:\n        if current_state == 'start':\n            if c not in '012':\n                return False\n            first_hour_digit = c\n            current_state = 'h1'\n        elif current_state == 'h1':\n            if not c.isdigit():\n                return False\n            if first_hour_digit == '2' and c > '3':\n                return False\n            current_state = 'h2'\n        elif current_state == 'h2':\n            if c != ':':\n                return False\n            current_state = 'colon'\n        elif current_state == 'colon':\n            if c < '0' or c > '5':\n                return False\n            current_state = 'm1'\n        elif current_state == 'm1':\n            if not c.isdigit():\n                return False\n            current_state = 'm2'\n        elif current_state == 'm2':\n            return False  # No more characters allowed\n    return current_state == 'm2'",
+    "test_code": "assert validate_time('23:59') == True\nassert validate_time('24:00') == False\nassert validate_time('0a:59') == False\nassert validate_time('12:3') == False\nassert validate_time('09:60') == False\nassert validate_time('2:03') == False\nassert validate_time('00:59') == True\nassert validate_time('09:00') == True\nassert validate_time('12:34') == True\nassert validate_time('23:5') == False\nassert validate_time('00:00') == True\nassert validate_time('12:345') == False\nassert validate_time('12:3a') == False\nprint('All tests passed!')",
+    "common_bugs": [
+      "Missing validation of second hour digit when first digit is '2'",
+      "Incorrect transition from 'h1' state without checking digit ranges",
+      "Failing to track previous state information needed for validation",
+      "Allowing invalid hour ranges like '24' in '24:00'"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_015",
+    "bug_class": "version comparison",
+    "description": "Our natural sort function is supposed to sort version strings composed of numeric components separated by dots. It currently compares the components lexicographically instead of numerically. For example, given the input list ['1.10', '1.2', '1.0'], the expected sorted order is ['1.0', '1.2', '1.10'], but the function currently returns ['1.0', '1.10', '1.2'].\n\nHere is the current buggy implementation:\n\n```python\ndef natural_sort(versions):\n    return sorted(versions, key=lambda s: s.split('.'))\n```\n\nPlease fix the bug in `natural_sort`.",
+    "buggy_code": "def natural_sort(versions):\n    return sorted(versions, key=lambda s: s.split('.'))",
+    "fixed_code": "def natural_sort(versions):\n    return sorted(versions, key=lambda s: [int(p) for p in s.split('.')])",
+    "test_code": "assert natural_sort(['1.10', '1.2', '1.0']) == ['1.0', '1.2', '1.10']\nassert natural_sort(['2.0', '1.9.9', '1.10.0']) == ['1.9.9', '1.10.0', '2.0']\nassert natural_sort(['1.0', '1.0.0']) == ['1.0', '1.0.0']\nassert natural_sort(['10', '2']) == ['2', '10']\nassert natural_sort(['1.0001', '1.0']) == ['1.0', '1.0001']\nassert natural_sort(['1', '1.0', '1.0.0']) == ['1', '1.0', '1.0.0']\nassert natural_sort(['1.2.3', '1.2.10']) == ['1.2.3', '1.2.10']\nassert natural_sort(['1.2.3.4', '1.2.3']) == ['1.2.3', '1.2.3.4']\nprint('All tests passed!')",
+    "common_bugs": [
+      "Comparing version components as strings instead of integers",
+      "Failing to handle leading zeros in version components",
+      "Incorrectly splitting version strings into parts",
+      "Not handling version strings with different number of components"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_016",
+    "bug_class": "concurrency-free counter / accumulator edge case",
+    "description": "Our `get_max_value` function is supposed to return the maximum value in a list of integers, or `None` if the list is empty. However, when all elements are negative, the function incorrectly returns `0`. For example, given `[-5, -3]`, the function should return `-3`, but returns `0`.\n\nHere is the current implementation that has a bug:\n\n```python\ndef get_max_value(values):\n    \"\"\"\n    Return the maximum value in the list. If the list is empty, return None.\n    \"\"\"\n    current_max = 0\n    for v in values:\n        if v > current_max:\n            current_max = v\n    return current_max if values else None\n```\n\nPlease fix the bug in `get_max_value`.",
+    "buggy_code": "def get_max_value(values):\n    \"\"\"\n    Return the maximum value in the list. If the list is empty, return None.\n    \"\"\"\n    current_max = 0\n    for v in values:\n        if v > current_max:\n            current_max = v\n    return current_max if values else None",
+    "fixed_code": "def get_max_value(values):\n    if not values:\n        return None\n    current_max = values[0]\n    for v in values[1:]:\n        if v > current_max:\n            current_max = v\n    return current_max",
+    "test_code": "assert get_max_value([1, 2, 3]) == 3\nassert get_max_value([-5, -3, -1]) == -1\nassert get_max_value([5]) == 5\nassert get_max_value([]) is None\nassert get_max_value([0, -10]) == 0\nassert get_max_value([-5, 0, -10]) == 0\nassert get_max_value([-1, -2, -3]) == -1\nassert get_max_value([100, 99, 98]) == 100\nassert get_max_value([-100, -101, -99]) == -99\nprint('All tests passed!')",
+    "common_bugs": [
+      "Incorrect accumulator initialization",
+      "Improper handling of negative maximum values",
+      "Missing edge case for empty list",
+      "Using comparison operator that excludes valid values"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_017",
+    "bug_class": "numeric precision",
+    "description": "The function `average` is supposed to calculate the average of a list of integers and return a float. However, it currently uses integer division (`//`), which truncates the decimal part. For example, `average([1, 2])` returns `1` instead of `1.5`, and `average([1, 2, 3])` returns `2` instead of `2.0`. Please fix the bug in `average()`.\n\n```python\ndef average(nums):\n    if not nums:\n        return 0.0\n    return sum(nums) // len(nums)\n```",
+    "buggy_code": "def average(nums):\n    if not nums:\n        return 0.0\n    return sum(nums) // len(nums)",
+    "fixed_code": "def average(nums):\n    if not nums:\n        return 0.0\n    return sum(nums) / len(nums)",
+    "test_code": "assert average([1, 2, 3]) == 2.0\nassert average([1, 2]) == 1.5\nassert average([5]) == 5.0\nassert average([-1, -2, -3]) == -2.0\nassert average([0]) == 0.0\nassert average([]) == 0.0\nassert average([10, 20, 30]) == 20.0\nassert average([3, 3]) == 3.0\nassert average([1, 3, 5, 7]) == 4.0\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using integer division (//) instead of float division (/)",
+      "Not handling empty lists",
+      "Incorrectly returning integer instead of float",
+      "Failing to preserve decimal precision for averages"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_018",
+    "bug_class": "hash table remove semantics",
+    "description": "Our `HashTable` class's `remove` method breaks probe sequences. When removing a key that collides with other keys, `contains` returns False for surviving keys.\n\nExample:\n```python\nclass HashTable:\n    def __init__(self, capacity=5):\n        self.capacity = capacity\n        self.keys = [None] * capacity\n        self.values = [None] * capacity\n\n    def put(self, key, value):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                self.keys[index] = key\n                self.values[index] = value\n                return\n            elif self.keys[index] == key:\n                self.values[index] = value\n                return\n            index = (index + 1) % self.capacity\n\n    def contains(self, key):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                return False\n            elif self.keys[index] == key:\n                return True\n            index = (index + 1) % self.capacity\n\n    def remove(self, key):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                return\n            elif self.keys[index] == key:\n                self.keys[index] = None\n                self.values[index] = None\n                return\n            index = (index + 1) % self.capacity\n```\n\nAfter inserting 'a' and 'c' (which hash to the same index), removing 'a' should not affect checking for 'c'.",
+    "buggy_code": "class HashTable:\n    def __init__(self, capacity=5):\n        self.capacity = capacity\n        self.keys = [None] * capacity\n        self.values = [None] * capacity\n\n    def put(self, key, value):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                self.keys[index] = key\n                self.values[index] = value\n                return\n            elif self.keys[index] == key:\n                self.values[index] = value\n                return\n            index = (index + 1) % self.capacity\n\n    def contains(self, key):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                return False\n            elif self.keys[index] == key:\n                return True\n            index = (index + 1) % self.capacity\n\n    def remove(self, key):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                return\n            elif self.keys[index] == key:\n                self.keys[index] = None\n                self.values[index] = None\n                return\n            index = (index + 1) % self.capacity",
+    "fixed_code": "class HashTable:\n    def __init__(self, capacity=5):\n        self.capacity = capacity\n        self.keys = [None] * capacity\n        self.values = [None] * capacity\n        self.tombstone = object()\n\n    def put(self, key, value):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None or self.keys[index] is self.tombstone:\n                self.keys[index] = key\n                self.values[index] = value\n                return\n            elif self.keys[index] == key:\n                self.values[index] = value\n                return\n            index = (index + 1) % self.capacity\n\n    def contains(self, key):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                return False\n            elif self.keys[index] is self.tombstone:\n                index = (index + 1) % self.capacity\n            elif self.keys[index] == key:\n                return True\n            else:\n                index = (index + 1) % self.capacity\n\n    def remove(self, key):\n        index = hash(key) % self.capacity\n        while True:\n            if self.keys[index] is None:\n                return\n            elif self.keys[index] == key:\n                self.keys[index] = self.tombstone\n                self.values[index] = None\n                return\n            index = (index + 1) % self.capacity",
+    "test_code": "ht = HashTable()\nht.put('a', 1)\nht.put('c', 2)  # hash collision\nht.remove('a')\nassert ht.contains('c') == True\nassert ht.contains('a') == False\n\nht = HashTable(capacity=3)\nht.put('x', 5)\nht.put('y', 6)  # collision with 'x' if hash('x') == hash('y') % 3\nht.remove('x')\nassert ht.contains('y') == True\n\nht = HashTable(capacity=2)\nht.put('m', 3)\nht.remove('m')\nassert ht.contains('m') == False\n\nht = HashTable(capacity=4)\nht.put(1, 'a')\nht.put(5, 'b')\nht.put(9, 'c')  # all hash to same index\nht.remove(5)\nassert ht.contains(1) == True\nassert ht.contains(9) == True\n\nht = HashTable(capacity=1)\nht.put(None, 'null')\nht.remove(None)\nassert ht.contains(None) == False\n\nprint('All tests passed!')",
+    "common_bugs": [
+      "missing tombstone tracking in remove",
+      "incorrect probe continuation in contains",
+      "wrong hash modulus calculation",
+      "not handling tombstone during put"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_019",
+    "bug_class": "bit manipulation / bitmask",
+    "description": "Our `rotate_left` function is supposed to rotate the bits in an 8-bit byte to the left by 1 position. However, it returns incorrect values for bytes where the highest bit is set (e.g., 0x80), leading to results that exceed 8 bits. Please fix the bug in `rotate_left`.\n\n```python\ndef rotate_left(b):\n    return (b << 1) | (b >> 7)\n```",
+    "buggy_code": "def rotate_left(b):\n    return (b << 1) | (b >> 7)",
+    "fixed_code": "def rotate_left(b):\n    return ((b << 1) | (b >> 7)) & 0xFF",
+    "test_code": "assert rotate_left(0x00) == 0x00\nassert rotate_left(0x01) == 0x02\nassert rotate_left(0x80) == 0x01\nassert rotate_left(0xFF) == 0xFF\nassert rotate_left(0x12) == 0x24\nassert rotate_left(0x0F) == 0x1E\nassert rotate_left(0x00) == 0x00\nassert rotate_left(0x7F) == 0xFE\nassert rotate_left(0x40) == 0x80 & 0xFF\nprint('All tests passed!')",
+    "common_bugs": [
+      "Missing mask to truncate result to 8 bits",
+      "Incorrect shift count for wrap-around",
+      "Wrong bit rotation direction",
+      "Failure to handle overflow in left shift"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_020",
+    "bug_class": "checksum boundary",
+    "description": "Our `calculate_checksum` function is supposed to compute a simple 8-bit checksum by summing all bytes of input data modulo 256. However, it incorrectly excludes the last byte of input. For example, with input `'abc'`, the sum of 97 + 98 + 99 = 294 should be reduced to 294 % 256 = 38, but the function returns 195 (97 + 98 = 195). The root cause is an off-by-one error in the loop range specification.\n\n```python\ndef calculate_checksum(data):\n    checksum = 0\n    for i in range(len(data) - 1):\n        checksum += ord(data[i])\n    return checksum % 256\n```\nPlease fix the bug in `calculate_checksum`.",
+    "buggy_code": "def calculate_checksum(data):\n    checksum = 0\n    for i in range(len(data) - 1):\n        checksum += ord(data[i])\n    return checksum % 256",
+    "fixed_code": "def calculate_checksum(data):\n    checksum = 0\n    for i in range(len(data)):\n        checksum += ord(data[i])\n    return checksum % 256",
+    "test_code": "assert calculate_checksum('') == 0\nassert calculate_checksum('a') == 97\nassert calculate_checksum('ab') == (97 + 98) % 256\nassert calculate_checksum('abc') == (97 + 98 + 99) % 256\nassert calculate_checksum('hello') == (104 + 101 + 108 + 108 + 111) % 256\nassert calculate_checksum('xyz') == (120 + 121 + 122) % 256\nassert calculate_checksum('12345') == (49 + 50 + 51 + 52 + 53) % 256\nassert calculate_checksum('!@#') == (33 + 64 + 35) % 256\nprint('All tests passed!')",
+    "common_bugs": [
+      "Off-by-one in loop range (excludes last element)",
+      "Incorrect initial value for checksum accumulator",
+      "Failure to handle empty input correctly",
+      "Modulo operation applied before final summation completes"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_021",
+    "bug_class": "tree/graph traversal boundary case",
+    "description": "Our tree sum function `tree_sum(root)` is supposed to return the sum of all values in a binary tree. However, when the tree is empty (root is None), the function raises an AttributeError, and when the root node has no children, the function returns 0 instead of the root's value (e.g., `tree_sum(Node(5))` returns 0). This is because the BFS traversal incorrectly starts by adding the root's children to the queue instead of the root itself. Please fix the bug in `tree_sum`.\n\n```python\nfrom collections import deque\ndef tree_sum(root):\n    total = 0\n    queue = deque()\n    queue.append(root.left)\n    queue.append(root.right)\n    while queue:\n        node = queue.popleft()\n        if node is None:\n            continue\n        total += node.val\n        queue.append(node.left)\n        queue.append(node.right)\n    return total\n```",
+    "buggy_code": "from collections import deque\ndef tree_sum(root):\n    total = 0\n    queue = deque()\n    queue.append(root.left)\n    queue.append(root.right)\n    while queue:\n        node = queue.popleft()\n        if node is None:\n            continue\n        total += node.val\n        queue.append(node.left)\n        queue.append(node.right)\n    return total",
+    "fixed_code": "from collections import deque\ndef tree_sum(root):\n    if root is None:\n        return 0\n    total = 0\n    queue = deque([root])\n    while queue:\n        node = queue.popleft()\n        if node is None:\n            continue\n        total += node.val\n        queue.append(node.left)\n        queue.append(node.right)\n    return total",
+    "test_code": "class Node:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n# Empty tree\nassert tree_sum(None) == 0\n\n# Single node\nassert tree_sum(Node(5)) == 5\n\n# Root with left and right\ntree = Node(5, Node(3), Node(7))\nassert tree_sum(tree) == 15\n\n# Deeper tree\ntree = Node(1, Node(2, Node(4), Node(5)), Node(3))\nassert tree_sum(tree) == 15\n\n# Deep left chain\ntree = Node(10)\nfor _ in range(100):\n    tree = Node(1, tree, None)\nassert tree_sum(tree) == 110\n\n# None left child\ntree = Node(3, None, Node(5))\nassert tree_sum(tree) == 8\n\n# Root with only left child\ntree = Node(10, Node(20))\nassert tree_sum(tree) == 30\n\n# Root with only right child\ntree = Node(10, None, Node(20))\nassert tree_sum(tree) == 30\n\nprint('All tests passed!')",
+    "common_bugs": [
+      "Not initializing traversal with root node",
+      "Failing to handle empty root case",
+      "Incorrectly starting BFS with root's children",
+      "Overlooking root node's value in traversal"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_022",
+    "bug_class": "checksum / CRC / hash boundary",
+    "description": "Our `compute_crc32` function is supposed to calculate the CRC32 checksum of a byte string by processing it in 4096-byte chunks and combining the results. However, it produces incorrect checksums when data is split into multiple chunks.\n\nFor example, the CRC32 of `b\"hello\"` should be `0x3632F421` (hex), but the current implementation returns `0xE8E203E6`.\n\nHere is the buggy code:\n\n```python\nimport zlib\ndef compute_crc32(data):\n    crc = 0\n    chunk_size = 4096\n    for i in range(0, len(data), chunk_size):\n        chunk = data[i:i+chunk_size]\n        crc ^= zlib.crc32(chunk)\n    return crc\n```\n\nPlease fix the bug in `compute_crc32`.",
+    "buggy_code": "import zlib\ndef compute_crc32(data):\n    crc = 0\n    chunk_size = 4096\n    for i in range(0, len(data), chunk_size):\n        chunk = data[i:i+chunk_size]\n        crc ^= zlib.crc32(chunk)\n    return crc",
+    "fixed_code": "import zlib\ndef compute_crc32(data):\n    crc = 0\n    chunk_size = 4096\n    for i in range(0, len(data), chunk_size):\n        chunk = data[i:i+chunk_size]\n        crc = zlib.crc32(chunk, crc)\n    return crc",
+    "test_code": "import zlib\n\ndef test_case(input_data):\n    expected = zlib.crc32(input_data)\n    assert compute_crc32(input_data) == expected, f\"Failed for {input_data}\"\n\n# Empty data\ntest_case(b\"\")\n# Single chunk smaller than 4096\ntest_case(b\"hello\")\n# Single chunk exactly 4096 bytes\ntest_case(b\"a\" * 4096)\n# Two chunks\ntest_case(b\"abc\" * 2000)\n# Multiple full chunks\ntest_case(b\"x\" * 8192)\n# Non-repeating data\ntest_case(b\"123456789\")\n# Partial chunk after full chunks\ntest_case(b\"a\" * 4097)\n# Large data with varied content\ntest_case(b\"test\" * 1000)\n# Edge case: 1 byte less than full chunk\ntest_case(b\"z\" * 4095)\n# Long repeated pattern\ntest_case(b\"ab\" * 3000)\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using XOR to combine CRC values from chunks instead of chaining",
+      "Forgetting to pass the previous CRC as the initial value for each chunk",
+      "Incorrect chunk size leading to partial data processing",
+      "Off-by-one error in the loop iterating over chunks"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_023",
+    "bug_class": "concurrency-free counter / accumulator edge case",
+    "description": "Our `count_active_sessions` function incorrectly tracks active sessions by allowing negative counts when close events are received before open events. For example, the event sequence `['close', 'open']` should return an active count of 1 (ignoring the initial invalid close), but the current implementation returns 0. The function should never return a negative count.\n\n```python\ndef count_active_sessions(events):\n    count = 0\n    for event in events:\n        if event == 'open':\n            count += 1\n        elif event == 'close':\n            count -= 1\n    return count\n```\n\nPlease fix the bug in `count_active_sessions`.",
+    "buggy_code": "def count_active_sessions(events):\n    count = 0\n    for event in events:\n        if event == 'open':\n            count += 1\n        elif event == 'close':\n            count -= 1\n    return count",
+    "fixed_code": "def count_active_sessions(events):\n    count = 0\n    for event in events:\n        if event == 'open':\n            count += 1\n        elif event == 'close' and count > 0:\n            count -= 1\n    return count",
+    "test_code": "assert count_active_sessions([]) == 0\nassert count_active_sessions(['open', 'close']) == 0\nassert count_active_sessions(['open', 'open', 'close']) == 1\nassert count_active_sessions(['close', 'open']) == 1\nassert count_active_sessions(['close']) == 0\nassert count_active_sessions(['open', 'close', 'close']) == 0\nassert count_active_sessions(['open', 'open', 'close', 'close']) == 0\nassert count_active_sessions(['open', 'close', 'open', 'close']) == 0\nassert count_active_sessions(['open', 'open', 'open']) == 3\nassert count_active_sessions(['close', 'close']) == 0\nprint('All tests passed!')",
+    "common_bugs": [
+      "Failing to check if count > 0 before decrementing in 'close' case",
+      "Allowing session count to dip below zero during accumulation",
+      "Ignoring event order validity (e.g., closing before opening)",
+      "Not clamping the final count to zero if internal state went negative"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_024",
+    "bug_class": "version comparison (semver, natural sort)",
+    "description": "Our `compare_versions` function for natural sort comparison produces incorrect ordering when version parts contain numeric values with leading zeros. For example, `compare_versions('1.02', '1.2')` should return `0` because both numeric parts represent 2, but the current implementation returns `-1` because it compares the strings `'02'` and `'2'` lex order. The bug is in the numeric part comparison logic:\n\n```python\ndef compare_versions(a, b):\n    import re\n    a_parts = re.findall(r'\\d+|\\D+', a)\n    b_parts = re.findall(r'\\d+|\\D+', b)\n    for part_a, part_b in zip(a_parts, b_parts):\n        if part_a.isdigit() and part_b.isdigit():\n            if part_a < part_b:  # COMPARES STRINGS INSTEAD OF INTEGERS\n                return -1\n            elif part_a > part_b:\n                return 1\n        else:\n            if part_a < part_b:\n                return -1\n            elif part_a > part_b:\n                return 1\n    return 0\n```\nPlease fix the bug in `compare_versions` to correctly compare numeric parts as integers.",
+    "buggy_code": "def compare_versions(a, b):\n    import re\n    a_parts = re.findall(r'\\d+|\\D+', a)\n    b_parts = re.findall(r'\\d+|\\D+', b)\n    for part_a, part_b in zip(a_parts, b_parts):\n        if part_a.isdigit() and part_b.isdigit():\n            if part_a < part_b:\n                return -1\n            elif part_a > part_b:\n                return 1\n        else:\n            if part_a < part_b:\n                return -1\n            elif part_a > part_b:\n                return 1\n    return 0",
+    "fixed_code": "def compare_versions(a, b):\n    import re\n    a_parts = re.findall(r'\\d+|\\D+', a)\n    b_parts = re.findall(r'\\d+|\\D+', b)\n    for part_a, part_b in zip(a_parts, b_parts):\n        if part_a.isdigit() and part_b.isdigit():\n            num_a = int(part_a)\n            num_b = int(part_b)\n            if num_a < num_b:\n                return -1\n            elif num_a > num_b:\n                return 1\n        else:\n            if part_a < part_b:\n                return -1\n            elif part_a > part_b:\n                return 1\n    return 0",
+    "test_code": "assert compare_versions('1.02', '1.2') == 0\nassert compare_versions('1.02', '1.002') == 0\nassert compare_versions('1.02', '1.20') == -1\nassert compare_versions('v2-rc10', 'v2-rc2') == 1\nassert compare_versions('alpha123beta456', 'alpha12beta45') == 1\nassert compare_versions('0.99.0', '0.99') == 0\nassert compare_versions('a1b2c3', 'a1b2c3') == 0\nassert compare_versions('a1b2c', 'a1b2d') == -1\nassert compare_versions('123', '0123') == 0\nassert compare_versions('v1.10a', 'v1.2a') == 1\nassert compare_versions('release-1', 'release-10') == -1\nassert compare_versions('10.5.1', '10.05.01') == 0\nprint('All tests passed!')",
+    "common_bugs": [
+      "Failing to convert numeric parts to integers before comparison",
+      "Incorrectly splitting version strings into non-collating parts",
+      "Not handling leading zeros in numeric components",
+      "Overlooking lexicographic vs numeric comparison for mixed parts"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_025",
+    "bug_class": "IP address / CIDR / subnet arithmetic",
+    "description": "The `count_hosts` function is supposed to return the number of usable host IP addresses in a CIDR block. For example, `count_hosts('192.168.1.0/29')` should return 6. However, it currently returns 7. Here's the implementation:\n\n```python\ndef count_hosts(cidr: str) -> int:\n    prefix = int(cidr.split('/')[1])\n    return (1 << (32 - prefix)) - 1\n```\n\nPlease fix the bug in `count_hosts`.",
+    "buggy_code": "def count_hosts(cidr: str) -> int:\n    prefix = int(cidr.split('/')[1])\n    return (1 << (32 - prefix)) - 1",
+    "fixed_code": "def count_hosts(cidr: str) -> int:\n    prefix = int(cidr.split('/')[1])\n    return max(0, (1 << (32 - prefix)) - 2)",
+    "test_code": "assert count_hosts('192.168.1.0/29') == 6\nassert count_hosts('192.168.1.0/30') == 2\nassert count_hosts('192.168.1.0/24') == 254\nassert count_hosts('192.168.0.0/32') == 0\nassert count_hosts('10.0.0.0/1') == (1 << 31) - 2\nassert count_hosts('192.168.1.0/23') == 510\nassert count_hosts('10.42.71.0/28') == 14\nassert count_hosts('172.16.0.0/20') == 4094\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using (1 << (32 - prefix)) - 1 instead of subtracting 2",
+      "Not handling negative values from (1 << (32 - prefix)) - 2",
+      "Miscounting the number of hosts in a CIDR block",
+      "Failing to return zero for /32 CIDR blocks"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_026",
+    "bug_class": "deduplication / set / multiset invariant",
+    "description": "Our multiset equality checker incorrectly reports lists with different element counts as equal. For example, `is_multiset_equal([1,1,2], [1,2,2])` should return False, but returns True. The current implementation compares sets and lengths, but fails to check individual element counts.\n\n```python\ndef is_multiset_equal(a, b):\n    return set(a) == set(b) and len(a) == len(b)\n```\nPlease fix the bug in `is_multiset_equal`.",
+    "buggy_code": "def is_multiset_equal(a, b):\n    return set(a) == set(b) and len(a) == len(b)",
+    "fixed_code": "from collections import Counter\ndef is_multiset_equal(a, b):\n    return Counter(a) == Counter(b)",
+    "test_code": "assert is_multiset_equal([1,1,2], [2,1,1]) == True\nassert is_multiset_equal([1,1,2], [1,2]) == False\nassert is_multiset_equal([], []) == True\nassert is_multiset_equal([1,2,3], [3,2,1]) == True\nassert is_multiset_equal([1,1,2], [1,2,2]) == False\nassert is_multiset_equal([1,2,2,3], [2,1,3,2]) == True\nassert is_multiset_equal([1,2,3], [1,2,4]) == False\nassert is_multiset_equal([1,1,2], [1,2,1]) == True\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using set() and len() to check multiset equality",
+      "Forgetting to account for duplicate elements in list comparisons",
+      "Misusing Counter without proper equality checks",
+      "Assuming that same elements and length imply multiset equality"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_027",
+    "bug_class": "leap year calculation",
+    "description": "Our `days_in_year` function incorrectly returns 366 for the year 1900, which is not a leap year. The leap year calculation should follow the rule that a year is a leap year if divisible by 4 but not by 100 unless also by 400. Here is the buggy code:\n```python\ndef days_in_year(year):\n    if year % 4 == 0:\n        return 366\n    else:\n        return 365\n```\nPlease fix the bug in `days_in_year`.",
+    "buggy_code": "def days_in_year(year):\n    if year % 4 == 0:\n        return 366\n    else:\n        return 365",
+    "fixed_code": "def days_in_year(year):\n    if (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0):\n        return 366\n    else:\n        return 365",
+    "test_code": "assert days_in_year(1900) == 365\nassert days_in_year(2000) == 366\nassert days_in_year(2020) == 366\nassert days_in_year(2021) == 365\nassert days_in_year(1999) == 365\nassert days_in_year(1800) == 365\nassert days_in_year(2400) == 366\nassert days_in_year(2024) == 366\nassert days_in_year(100) == 365\nassert days_in_year(400) == 366\nprint('All tests passed!')",
+    "common_bugs": [
+      "Incorrect leap year rules (missing 100/400 rule)",
+      "Integer division instead of modulo checks",
+      "Off-by-one errors in year difference calculations",
+      "Confusing Julian and Gregorian calendar calculations"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_028",
+    "bug_class": "interval / range / segment overlap",
+    "description": "Our interval overlap checker `is_overlapping` incorrectly considers intervals that touch at a point as overlapping. For example, `is_overlapping(1, 3, 3, 5)` should return `False` since the intervals [1,3] and [3,5] only touch at 3, but the current implementation returns `True`. The bug is in the comparator logic for interval endpoints.\n\n```python\ndef is_overlapping(start1, end1, start2, end2):\n    return start1 <= end2 and start2 <= end1\n```\n\nPlease fix the bug in `is_overlapping`.",
+    "buggy_code": "def is_overlapping(start1, end1, start2, end2):\n    return start1 <= end2 and start2 <= end1",
+    "fixed_code": "def is_overlapping(start1, end1, start2, end2):\n    return start1 < end2 and start2 < end1",
+    "test_code": "assert is_overlapping(1, 3, 3, 5) == False\nassert is_overlapping(1, 4, 2, 5) == True\nassert is_overlapping(2, 5, 1, 3) == True\nassert is_overlapping(5, 10, 1, 4) == False\nassert is_overlapping(0, 1, 0, 1) == True\nassert is_overlapping(0, 0, 0, 0) == False\nassert is_overlapping(2, 3, 3, 4) == False\nassert is_overlapping(1, 10, 5, 6) == True\nassert is_overlapping(10, 20, 5, 9) == False\nassert is_overlapping(5, 5, 4, 6) == True\nprint('All tests passed!')",
+    "common_bugs": [
+      "Using `<=` instead of `<` for interval endpoint comparison",
+      "Failing to handle zero-length intervals correctly",
+      "Not accounting for interval direction/order",
+      "Confusing closed intervals [start, end] with half-open [start, end)"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_029",
+    "bug_class": "tree/graph traversal boundary case",
+    "description": "Our function `count_nodes` is supposed to count the number of nodes in a binary tree. However, it produces incorrect output for the *root* node. For example, `count_nodes` on a single-node tree returns `0` instead of `1`. The root node is never added to the count. Here is the current (buggy) implementation:\n\n```python\ndef count_nodes(root):\n    if not root:\n        return 0\n    count = 0\n    queue = [root.left, root.right]\n    while queue:\n        node = queue.pop(0)\n        if node:\n            count +=1\n            queue.append(node.left)\n            queue.append(node.right)\n    return count\n```\nPlease fix the bug in `count_nodes`.",
+    "buggy_code": "def count_nodes(root):\n    if not root:\n        return 0\n    count = 0\n    queue = [root.left, root.right]\n    while queue:\n        node = queue.pop(0)\n        if node:\n            count +=1\n            queue.append(node.left)\n            queue.append(node.right)\n    return count",
+    "fixed_code": "def count_nodes(root):\n    if not root:\n        return 0\n    count = 1\n    queue = [root.left, root.right]\n    while queue:\n        node = queue.pop(0)\n        if node:\n            count +=1\n            queue.append(node.left)\n            queue.append(node.right)\n    return count",
+    "test_code": "class TreeNode:\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n# Test cases\ndef test_count_nodes():\n    # Single node\n    assert count_nodes(TreeNode(5)) == 1\n    \n    # Root with two children\n    root = TreeNode(1, TreeNode(2), TreeNode(3))\n    assert count_nodes(root) == 3\n    \n    # Root with only left child\n    root = TreeNode(1, TreeNode(2))\n    assert count_nodes(root) == 2\n    \n    # Root with only right child\n    root = TreeNode(1, None, TreeNode(3))\n    assert count_nodes(root) == 2\n    \n    # Deep tree\n    # 1\n    #  \\n    #   2\n    #    \\n    #     3\n    root = TreeNode(1, None, TreeNode(2, None, TreeNode(3)))\n    assert count_nodes(root) == 3\n    \n    # Full binary tree of depth 2\n    #     1\n    #    / \\\n    #   2   3\n    #  / \\\n    # 4   5\n    root = TreeNode(1, \n                TreeNode(2, TreeNode(4), TreeNode(5)), \n                TreeNode(3))\n    assert count_nodes(root) == 5\n    \n    # Empty tree\n    assert count_nodes(None) == 0\n    \n    # Root with both children and grandchildren\n    #     1\n    #    / \\\n    #   2   3\n    #      / \\\n    #     4  5\n    root = TreeNode(1, \n                TreeNode(2), \n                TreeNode(3, TreeNode(4), TreeNode(5)))\n    assert count_nodes(root) == 5\n    \n    # Root with only left child, which has only left child\n    root = TreeNode(1, TreeNode(2, TreeNode(3)))\n    assert count_nodes(root) == 3\n    \n    print('All tests passed!')\ntest_count_nodes()",
+    "common_bugs": [
+      "Forgetting to initialize the count with the root node",
+      "Incorrectly starting traversal with children instead of root",
+      "Processing nodes without including the root in the count",
+      "Misusing BFS queue initialization leading to skipped nodes"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_030",
+    "bug_class": "pagination",
+    "description": "Our pagination function `get_page_items(items, page_number, page_size)` incorrectly returns the wrong subset of items when the page_number is 1-based. For example, when given a list of `[1, 2, 3, 4, 5, 6]`, page 1 with `page_size=2` should return `[1, 2]`, but the current implementation returns `[3, 4]`. The buggy code is as follows:\n\n```python\ndef get_page_items(items, page_number, page_size):\n    start = page_number * page_size\n    end = start + page_size\n    return items[start:end]\n```\nPlease fix the bug in `get_page_items`.",
+    "buggy_code": "def get_page_items(items, page_number, page_size):\n    start = page_number * page_size\n    end = start + page_size\n    return items[start:end]",
+    "fixed_code": "def get_page_items(items, page_number, page_size):\n    start = (page_number - 1) * page_size\n    end = start + page_size\n    return items[start:end]",
+    "test_code": "assert get_page_items([1,2,3,4,5,6], 1, 2) == [1, 2]\nassert get_page_items([1,2,3,4,5,6], 2, 2) == [3,4]\nassert get_page_items([1,2,3,4,5,6], 3, 2) == [5,6]\nassert get_page_items([1,2,3,4,5,6], 4, 2) == []\nassert get_page_items([], 1, 5) == []\nassert get_page_items([1], 1, 10) == [1]\nassert get_page_items([10,20,30,40], 1, 3) == [10,20,30]\nassert get_page_items([10,20,30,40], 2, 3) == [40]\nprint('All tests passed!')",
+    "common_bugs": [
+      "Off-by-one error in 1-based page number handling",
+      "Incorrect offset calculation for page start",
+      "Inverted 0-based vs 1-based indexing",
+      "Slicing beyond list bounds without truncation"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_031",
+    "bug_class": "leap year arithmetic",
+    "description": "Report: Our `days_in_month` function incorrectly reports February 1900 as having 29 days. It should return 28. The function's current implementation treats any year divisible by 4 as a leap year, but fails to account for the full leap year rule: years divisible by 100 are not leap years unless also divisible by 400. Please fix the bug in `days_in_month`.\n```python\ndef days_in_month(year, month):\n    if month == 2:\n        if year % 4 == 0:\n            return 29\n        else:\n            return 28\n    elif month in [4, 6, 9, 11]:\n        return 30\n    else:\n        return 31\n```",
+    "buggy_code": "def days_in_month(year, month):\n    if month == 2:\n        if year % 4 == 0:\n            return 29\n        else:\n            return 28\n    elif month in [4, 6, 9, 11]:\n        return 30\n    else:\n        return 31",
+    "fixed_code": "def days_in_month(year, month):\n    if month != 2:\n        return 30 if month in [4,6,9,11] else 31\n    if year % 4 != 0:\n        return 28\n    if year % 100 != 0:\n        return 29\n    return 29 if year % 400 == 0 else 28",
+    "test_code": "assert days_in_month(2020, 2) == 29\nassert days_in_month(2021, 2) == 28\nassert days_in_month(2000, 2) == 29\nassert days_in_month(1900, 2) == 28\nassert days_in_month(2023, 4) == 30\nassert days_in_month(2023, 1) == 31\nassert days_in_month(2400, 2) == 29\nassert days_in_month(1800, 2) == 28\nassert days_in_month(2023, 12) == 31\nassert days_in_month(2023, 9) == 30\nprint('All tests passed!')",
+    "common_bugs": [
+      "Incorrect leap year century rule handling",
+      "Forgetting to check divisibility by 400",
+      "Miscalculating April/June/September/November days",
+      "Month 2 edge case handling"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "code_hv2_032",
+    "bug_class": "IP address / CIDR / subnet arithmetic",
+    "description": "Our function `cidr_to_ip_count` is supposed to return the number of usable IP addresses in a given CIDR block by subtracting 2 (for network and broadcast addresses) when applicable. However, the current implementation subtracts 2 for all prefix lengths, including /31 and /32 CIDRs. For example, a CIDR of '192.168.0.0/31' (prefix 31) has 2 usable addresses but the function returns 0, and '192.168.0.0/32' has 1 address but returns 0. Please fix the bug in `cidr_to_ip_count`.\n\n```python\nimport ipaddress\n\ndef cidr_to_ip_count(cidr):\n    prefix = ipaddress.IPv4Network(cidr, strict=False).prefixlen\n    total = 1 << (32 - prefix)\n    return total - 2 if total >= 2 else 0\n```",
+    "buggy_code": "import ipaddress\n\ndef cidr_to_ip_count(cidr):\n    prefix = ipaddress.IPv4Network(cidr, strict=False).prefixlen\n    total = 1 << (32 - prefix)\n    return total - 2 if total >= 2 else 0",
+    "fixed_code": "import ipaddress\n\ndef cidr_to_ip_count(cidr):\n    prefix = ipaddress.IPv4Network(cidr, strict=False).prefixlen\n    total = 1 << (32 - prefix)\n    if prefix < 31:\n        return total - 2\n    else:\n        return total",
+    "test_code": "assert cidr_to_ip_count('192.168.0.0/24') == 254\nassert cidr_to_ip_count('192.168.0.0/31') == 2\nassert cidr_to_ip_count('192.168.0.0/32') == 1\nassert cidr_to_ip_count('10.0.0.0/30') == 2\nassert cidr_to_ip_count('172.16.0.0/31') == 2\nassert cidr_to_ip_count('192.168.1.0/25') == 126\nassert cidr_to_ip_count('192.0.0.0/0') == 4294967294\nassert cidr_to_ip_count('192.168.1.0/30') == 2\nassert cidr_to_ip_count('192.168.2.0/32') == 1\nassert cidr_to_ip_count('192.168.3.1/32') == 1\nassert cidr_to_ip_count('0.0.0.0/0') == 4294967294\nprint('All tests passed!')",
+    "common_bugs": [
+      "Incorrectly subtracting 2 for /31 and /32 CIDRs",
+      "Using signed integers during bit shift causing negative results",
+      "Failing to handle a CIDR with a host mask (like /32) due to strict parsing",
+      "Misapplying the prefix length calculation (e.g. 31 - prefix instead of 32 - prefix)"
+    ],
+    "difficulty": "hard"
+  }
+]

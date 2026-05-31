@@ -1,0 +1,191 @@
+\section{Academic Figures and Deterministic Geometric Evaluation}\label{sec:geometric}
+
+AI-generated SVG and architecture figures for papers routinely exhibit
+\emph{geometric} defects: text labels that overlap one another, boxes clipped at
+the canvas edge, text overflowing its container, or content that pushes the
+document past its intended bounds. These are precisely the kind of layout flaws a
+render-and-review loop ought to detect and repair. To study this, we introduce a
+seventh modality, beyond the six harness modalities of \Cref{sec:harness}: a
+geometry-focused Type-3b suite of 15 academic-paper architecture figures
+(Transformer, U-Net, ViT, FPN, DETR, Mask R-CNN, latent-diffusion U-Net, CLIP,
+MoE, GAT, WaveNet, SE, Perceiver-IO, Seq2Seq with attention, and Evoformer),
+each generated as a self-contained $1920\times1080$ HTML document with inline
+SVG. The defining property of these artifacts is that correctness is largely
+\emph{geometric}: whether the components are present and wired correctly is
+semantic, but whether the figure is actually legible is a question of spatial
+layout that can be measured exactly. This modality therefore
+serves as a clean testbed for whether our evaluation instrument can perceive the
+defects that an interaction loop is supposed to fix.
+
+\subsection{VLM screenshot judging is unreliable for geometric defects}
+
+Our default visual evaluator is a binary per-requirement rubric scored by a
+vision--language model (VLM) over a screenshot of the rendered artifact. Even
+when we capture the screenshot at native resolution and tile it into quadrants to
+preserve detail, this judge scored \textbf{14 of 15} single-shot figures as
+perfect. Yet by direct inspection the figures are plainly broken: the Evoformer
+figure renders two section titles, ``MSA Processing'' and ``MSA
+Representation,'' superimposed on top of one another, and the ViT figure's detail
+panel has ``Class Output'' overlapping ``Input.'' The judge cannot see these
+defects, and the reason is mechanical: screenshots are captured at $1080$ pixels
+of height, so any content that overflows the canvas is cropped \emph{off-frame}
+before the image ever reaches the VLM. The most severe geometric failures---those
+that push content past the viewport---are exactly the ones the screenshot cannot
+contain, and small overlaps that do remain in-frame fall below the VLM's
+effective acuity. A VLM scoring a single fixed-resolution capture is
+structurally blind to overflow and to fine-grained overlap, which is why the
+correct instrument for fixed-canvas visual artifacts measures the rendered
+layout directly rather than a picture of it.
+
+\subsection{Deterministic geometry}
+
+To obtain a reliable instrument we replace the VLM with a deterministic
+DOM-geometry checker. The checker loads the HTML document in a headless browser
+and, via the page's own layout engine, extracts the bounding box of every
+rendered element. From these boxes it computes, exactly and reproducibly:
+\emph{(i)} text-box overlaps---pairs of non-nested text elements whose boxes
+intersect (at a $6$\,px threshold); \emph{(ii)} out-of-bounds content---text or
+SVG primitives clipped at the viewport edge; \emph{(iii)} overflow---text
+extending past its containing box; and \emph{(iv)} document overflow---the
+document exceeding $1920\times1080$ by more than $16$\,px, the margin chosen to
+filter spurious default browser margins. Each of these is an objective predicate
+on the rendered DOM, with no model in the loop and no dependence on screenshot
+framing; a VLM is needed only for the genuinely semantic axes (are the right
+components present and correctly wired). Under this checker, only \textbf{3 of
+15} single-shot figures are geometrically clean, with a mean of $1.6$ defects per
+figure---in direct contradiction to the VLM's $14/15$ ``perfect.'' The
+deterministic metric perceives the very defects to which the VLM is blind.
+
+\subsection{Interaction scaling on an objective metric}
+
+With a reliable instrument in hand we can measure whether the interaction loop
+actually improves the figures. The harness is fully deterministic: a proposer
+generates the figure, the DOM checker computes its exact set of geometric
+defects, those specific defects are fed back to the proposer in natural language
+(e.g., ``text $X$ overlaps text $Y$; move them apart'' or ``the canvas is
+$40$\,px too tall''), and the proposer revises, for up to three iterations. The
+reward is simply the defect count---no VLM is involved at any point.
+
+\Cref{tab:geometric} reports the result. On the 15 paper figures, the mean defect
+count falls from $1.20$ to $0.27$, a $78\%$ reduction; the number of
+geometrically clean figures rises from $4/15$ to $11/15$; the total defect count
+drops from $18$ to $4$; and $8$ figures improve while \emph{none} regress
+(sign-test $p=0.008$). As a cross-check, we took the \emph{original} slides
+harness---which used VLM feedback, not geometric feedback---and re-scored its $60$
+task-runs objectively with the same DOM-geometry checker. Mean defects fell from
+$2.63$ to $0.23$, a $91\%$ reduction. The slides harness had been fixing real
+layout defects all along; the holistic and rubric VLM scores simply could not
+measure it. The improvement was real but invisible to the instrument used to
+report it.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=0.92\linewidth]{figures/comparison_grid.png}
+  \caption{Single-shot (left, red) vs.\ reviewed (right, green) academic figures
+  under deterministic geometric feedback. Single-shot renders are cramped and
+  overflow their canvas; the interaction loop, fed the exact measured defects,
+  resolves them to clean layouts. Defect counts are computed from the rendered
+  DOM. Every single-shot render shown was rated ``perfect'' by the VLM screenshot
+  judge.}
+  \label{fig:comparison-grid}
+\end{figure*}
+
+\begin{table}[t]
+  \centering
+  \caption{Interaction scaling under deterministic DOM-geometry scoring. Defects
+  are counted exactly from the rendered DOM (text overlap, out-of-bounds,
+  overflow, document overflow); lower is better. The paper-figure harness uses
+  geometric feedback directly; the slides cross-check re-scores the original
+  VLM-feedback harness with the same checker.}
+  \label{tab:geometric}
+  \begin{tabular}{lccc}
+    \toprule
+    Suite (\# runs) & Metric & Single-shot & Reviewed \\
+    \midrule
+    \multirow{4}{*}{Paper figures (15)}
+      & Mean defects        & $1.20$ & $0.27$ \;($-78\%$) \\
+      & Geometrically clean & $4/15$ & $11/15$ \\
+      & Total defects       & $18$   & $4$ \\
+      & Improved / regressed & \multicolumn{2}{c}{$8 / 0$ \;(sign-test $p=0.008$)} \\
+    \midrule
+    Slides cross-check (60)
+      & Mean defects        & $2.63$ & $0.23$ \;($-91\%$) \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\paragraph{Scope.} Deterministic geometric scoring applies to fixed-canvas
+artifacts---slides and academic figures---where the document has a well-defined
+intended size against which overflow and clipping are meaningful. Scrollable
+webpages have no fixed canvas: out-of-bounds and document-overflow predicates are
+ill-defined, and a text-overlap-only metric is noisy on a dense webpage DOM. For
+that modality the binary per-requirement rubric is the appropriate instrument.
+We therefore score fixed-canvas visual artifacts (slides, figures) with the
+deterministic geometric reward and the flowing web and animation modalities with
+the binary rubric, matching each artifact class to the metric that measures it
+exactly.
+
+\subsection{Binary-rubric evaluation for flowing and factual modalities}
+\label{sec:rubric}
+
+For modalities without a fixed canvas we score each task against its list of
+concrete, independently-checkable requirements: a judge returns a binary
+\textsc{satisfied}/\textsc{violated} verdict per requirement and the score is the
+fraction satisfied. This multi-axis binary rubric replaces a single holistic
+rating with a decomposed, reproducible measurement, and it cleanly separates a
+task's individual failure modes. \Cref{tab:rubric} reports single-shot vs.\
+reviewed rubric scores. On web pages the harness lifts the rubric score from
+$0.469$ to $0.532$ ($p=0.003$, $19$ task-runs improve and $4$ regress); on
+animations, from $0.642$ to $0.834$ ($p=0.008$, $15$ improve, $3$ regress) ---
+the largest visual-modality lift in the study, as the temporal channel exposes
+motion defects a static rating cannot.
+
+\begin{table}[t]
+  \centering
+  \caption{Interaction scaling under binary per-requirement rubric scoring on
+  the flowing visual modalities. Score is the fraction of independently-checked
+  requirements satisfied; $p$ is a one-sided paired sign test over per-task-run
+  deltas.}
+  \label{tab:rubric}
+  \begin{tabular}{lcccc}
+    \toprule
+    Modality (\# runs) & Feedback & Single-shot & Reviewed & sign-test $p$ \\
+    \midrule
+    Web pages (45)   & Type 3b (rubric)        & $0.469$ & $0.532$ & $0.003$ \\
+    Animations (32)  & Type 3c (rubric)        & $0.642$ & $0.834$ & $0.008$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The Type-3d factual channel behaves exactly as the framework prescribes: its
+lift is bounded by the model's single-shot factual error rate. On a suite of
+$15$ research reports graded against web-verified ground-truth facts, a careful
+single-shot report is already correct on $0.982$ of the rubric's facts, and the
+search-verification loop carries it to a perfect $1.000$ with zero regressions
+across all $15$ tasks. Grounded verification is precise where ungrounded review
+is not: it preserves the already-correct facts rather than perturbing them, and
+it corrects the residual errors it finds.
+
+\begin{figure}[t]
+  \centering
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/diffusion_unet_singleshot.png}
+    \caption{Single-shot ($4$ geometric defects).}
+    \label{fig:geometric-singleshot}
+  \end{subfigure}
+  \hfill
+  \begin{subfigure}[t]{0.48\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{figures/diffusion_unet_reviewed.png}
+    \caption{Reviewed ($0$ defects).}
+    \label{fig:geometric-reviewed}
+  \end{subfigure}
+  \caption{The Latent Diffusion U-Net figure under deterministic geometric
+  feedback. The single-shot rendering (\subref{fig:geometric-singleshot}) is
+  cramped and overflows its canvas, with $4$ geometric defects that the VLM
+  screenshot judge rated as perfect. After the interaction loop feeds back the
+  exact defects (\subref{fig:geometric-reviewed}), the layout is clean with $0$
+  defects.}
+  \label{fig:geometric-beforeafter}
+\end{figure}

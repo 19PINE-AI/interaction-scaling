@@ -89,9 +89,17 @@ class MetaController:
                 remaining_budget=self.budget.remaining(),
             )
 
+            logger.info(
+                "Iteration %d allocation: propose=%d, execute=%d, review=%d",
+                iteration,
+                allocation["propose"],
+                allocation["execute"],
+                allocation["review"],
+            )
+
             record = IterationRecord(iteration=iteration, code="")
 
-            # Phase 1: Propose
+            # Phase 1: Propose (respect allocation limit)
             context = None
             if current_code:
                 last_feedback = (
@@ -117,6 +125,13 @@ class MetaController:
             propose_tokens = propose_response.input_tokens + propose_response.output_tokens
             record.tokens_propose = propose_tokens
             self.budget.consume("propose", propose_tokens)
+
+            if propose_tokens > allocation["propose"]:
+                logger.warning(
+                    "Propose phase exceeded allocation: %d > %d",
+                    propose_tokens,
+                    allocation["propose"],
+                )
 
             if self.budget.is_exhausted():
                 result.iterations.append(record)

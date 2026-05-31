@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import logging
 import subprocess
+import sys
 import tempfile
 import time
 from dataclasses import dataclass
@@ -105,7 +106,7 @@ class CodeEvaluator:
         start = time.perf_counter()
         try:
             proc = subprocess.run(
-                ["python", str(script_path)],
+                [sys.executable, str(script_path)],
                 capture_output=True,
                 text=True,
                 timeout=timeout,

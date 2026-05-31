@@ -128,13 +128,116 @@ def generate(model, tok, messages, tools, max_new_tokens: int,
 
 
 def parse_tool_calls(response: str) -> list[dict]:
+    """Extract execute_code tool calls. Strict JSON first, lenient fallback.
+
+    The lenient path exists because Qwen3-8B (base and SFT v2) occasionally
+    emits unescaped `"` inside the `code` string, breaking the outer JSON.
+    Silently dropping these attempts biases pass@k metrics against tasks
+    whose code happens to contain quote characters. See
+    _lenient_extract_code for the recovery strategy.
+    """
     calls = []
     for m in TOOL_CALL_RE.finditer(response):
+        raw = m.group(1)
         try:
-            calls.append(json.loads(m.group(1)))
-        except json.JSONDecodeError:
+            calls.append(json.loads(raw))
             continue
+        except json.JSONDecodeError:
+            pass
+        recovered = _lenient_parse_tool_call(raw)
+        if recovered is not None:
+            calls.append(recovered)
     return calls
+
+
+_CODE_FIELD_START_RE = re.compile(r'"code"\s*:\s*"')
+_TEST_CODE_FIELD_START_RE = re.compile(r'"test_code"\s*:\s*"')
+
+
+def _lenient_parse_tool_call(raw: str) -> Optional[dict]:
+    """Recover from unescaped quotes by extracting the code field by position.
+
+    Heuristic: locate `"code": "` then walk forward to a plausible end marker
+    (`", "test_code":` or `"}` at an object boundary). Everything in between
+    is treated as a JSON-encoded string and decoded with tolerance for
+    unescaped quotes. Returns None if no code field is found.
+    """
+    code = _extract_string_field(raw, _CODE_FIELD_START_RE)
+    if code is None:
+        return None
+    test_code = _extract_string_field(raw, _TEST_CODE_FIELD_START_RE) or ""
+    # Match the structured form the strict parser would have produced.
+    return {
+        "name": "execute_code",
+        "arguments": {"code": code, "test_code": test_code},
+    }
+
+
+def _extract_string_field(raw: str, start_re: re.Pattern) -> Optional[str]:
+    m = start_re.search(raw)
+    if not m:
+        return None
+    start = m.end()
+    # End anchors in priority order. The first one that appears after `start`
+    # and isn't itself inside an obviously-escaped run wins.
+    end_candidates = [
+        re.compile(r'"\s*,\s*"test_code"\s*:'),
+        re.compile(r'"\s*,\s*"code"\s*:'),
+        re.compile(r'"\s*\}\s*\}'),
+        re.compile(r'"\s*\}'),
+    ]
+    end_idx = None
+    for pat in end_candidates:
+        em = pat.search(raw, start)
+        if em:
+            if end_idx is None or em.start() < end_idx:
+                end_idx = em.start()
+    if end_idx is None:
+        end_idx = len(raw)
+    return _decode_json_string_lenient(raw[start:end_idx])
+
+
+def _decode_json_string_lenient(s: str) -> str:
+    """Decode a JSON-string body where stray `"` may be unescaped.
+
+    Handles \\n \\t \\r \\" \\\\ \\/ \\uXXXX. Anything else after a backslash
+    is passed through literally (covers \\d \\s \\w etc. that LLMs emit).
+    """
+    out = []
+    i = 0
+    n = len(s)
+    while i < n:
+        c = s[i]
+        if c == '\\' and i + 1 < n:
+            nxt = s[i + 1]
+            if nxt == 'n':
+                out.append('\n'); i += 2
+            elif nxt == 't':
+                out.append('\t'); i += 2
+            elif nxt == 'r':
+                out.append('\r'); i += 2
+            elif nxt == '\\':
+                out.append('\\'); i += 2
+            elif nxt == '"':
+                out.append('"'); i += 2
+            elif nxt == "'":
+                out.append("'"); i += 2
+            elif nxt == '/':
+                out.append('/'); i += 2
+            elif nxt == 'b':
+                out.append('\b'); i += 2
+            elif nxt == 'f':
+                out.append('\f'); i += 2
+            elif nxt == 'u' and i + 5 < n:
+                try:
+                    out.append(chr(int(s[i + 2:i + 6], 16))); i += 6
+                except ValueError:
+                    out.append(c); i += 1
+            else:
+                out.append(nxt); i += 2
+        else:
+            out.append(c); i += 1
+    return ''.join(out)
 
 
 def strip_tool_calls(response: str) -> str:
@@ -182,6 +285,8 @@ def run_task(model, tok, evaluator: CodeEvaluator, task: dict,
             "gen_s": gen_s,
             "num_tool_calls": len(calls),
             "code_in_text_len": len(code_in_text),
+            "response_text": response,
+            "tool_call_args": [c.get("arguments") or c.get("function", {}).get("arguments") for c in calls],
         })
 
         if not calls:
@@ -203,8 +308,11 @@ def run_task(model, tok, evaluator: CodeEvaluator, task: dict,
                 continue
             tool_calls_made += 1
             code = args.get("code", "")
-            test_code = args.get("test_code", task["test_code"])
-            exec_result = evaluator.evaluate(code, test_code, timeout=15)
+            # Hard-override: always use the ground-truth test_code regardless of
+            # what the model emits. The tool is a self-verification scaffold;
+            # the model shouldn't be penalized for not echoing the test harness
+            # verbatim inside its tool-call arguments.
+            exec_result = evaluator.evaluate(code, task["test_code"], timeout=15)
             result = {
                 "passed": exec_result.passed,
                 "error": exec_result.error_message,
@@ -335,7 +443,11 @@ def main():
     ap.add_argument("--checkpoints", nargs="+", default=["base", "sft_review"])
     ap.add_argument("--base-model", default="Qwen/Qwen3-8B")
     ap.add_argument("--sft-review-adapter", default="models/qwen3-8b-autonomous-review-sft")
+    ap.add_argument("--sft-review-v2-adapter", default="models/qwen3-8b-autonomous-review-sft-v2")
+    ap.add_argument("--sft-review-v3-adapter", default="models/qwen3-8b-autonomous-review-sft-v3")
+    ap.add_argument("--sft-review-v4-adapter", default="models/qwen3-8b-autonomous-review-sft-v4")
     ap.add_argument("--grpo-review-adapter", default="models/qwen3-8b-autonomous-review-grpo")
+    ap.add_argument("--grpo-review-v2-adapter", default="models/qwen3-8b-autonomous-review-grpo-v2")
     ap.add_argument("--max-tool-calls", type=int, default=3)
     ap.add_argument("--max-new-tokens", type=int, default=2048)
     ap.add_argument("--temperature", type=float, default=0.0)
@@ -351,7 +463,11 @@ def main():
     adapters = {
         "base": (args.base_model, None),
         "sft_review": (args.base_model, args.sft_review_adapter),
+        "sft_review_v2": (args.base_model, args.sft_review_v2_adapter),
+        "sft_review_v3": (args.base_model, args.sft_review_v3_adapter),
+        "sft_review_v4": (args.base_model, args.sft_review_v4_adapter),
         "grpo_review": (args.base_model, args.grpo_review_adapter),
+        "grpo_review_v2": (args.base_model, args.grpo_review_v2_adapter),
     }
 
     all_results = {}

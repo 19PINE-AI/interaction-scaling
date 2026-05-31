@@ -230,8 +230,12 @@ class ReviewerAgent(Agent):
         # Strip optional markdown code fences
         if raw_stripped.startswith("```"):
             # Remove opening fence (with optional language tag)
-            first_newline = raw_stripped.index("\n")
-            raw_stripped = raw_stripped[first_newline + 1 :]
+            first_newline = raw_stripped.find("\n")
+            if first_newline == -1:
+                # Malformed fence with no newline — skip stripping
+                raw_stripped = raw_stripped[3:]
+            else:
+                raw_stripped = raw_stripped[first_newline + 1 :]
             if raw_stripped.endswith("```"):
                 raw_stripped = raw_stripped[: -len("```")].strip()
 

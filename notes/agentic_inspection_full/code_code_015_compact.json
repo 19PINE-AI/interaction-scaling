@@ -1,0 +1,49 @@
+{
+  "task_id": "code_015",
+  "category": "code",
+  "status": "final",
+  "final_passed": true,
+  "n_steps": 2,
+  "elapsed_s": 20.36,
+  "saved_images_count": 0,
+  "steps": [
+    {
+      "step": 0,
+      "gen_s": 15.03,
+      "assistant_content_head": "I'll fix the bug in the topological sort function. The issue is that parallel edges (duplicate edges from A to B) cause the in-degree to be incremented multiple times, which can lead to false cycle detection.\n\nThe fix is to deduplicate edges before processing them, so each unique edge is only counted once for in-degree calculation.\n\nLet me write the fixed solution:\n\n",
+      "tool_calls": [
+        {
+          "name": "write_file",
+          "path": "solution.py",
+          "content_bytes": 1253,
+          "content_head": "def topo_sort(edges):\n    \"\"\"Topological sort of a directed graph.\n    edges: list of (from_node, to_node) tuples\n    Returns a list of nodes in topological order.\n    Raises ValueError if the graph c"
+        },
+        {
+          "name": "bash",
+          "command": "python test.py"
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "kind": null,
+          "summary": "{'ok': True, 'path': 'solution.py', 'bytes': 1253}"
+        },
+        {
+          "tool": "bash",
+          "ok": true,
+          "kind": null,
+          "summary": "{'ok': True, 'exit_code': 0, 'stdout': 'All topo_sort tests passed!\\n', 'stderr': ''}"
+        }
+      ]
+    },
+    {
+      "step": 1,
+      "gen_s": 5.28,
+      "assistant_content_head": "The test passed successfully, indicating that the bug in the topological sort function has been fixed. The solution now correctly handles multigraphs by deduplicating edges before processing them, which prevents false cycle detection due to parallel edges.\n\nThe key changes made:\n1. Added a `unique_edges` set to store only unique edges from the input\n2. Processed only unique edges when building the",
+      "tool_calls": [],
+      "tool_results": []
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "task_id": "code_014",
+  "category": "code",
+  "status": "final",
+  "final_passed": true,
+  "n_steps": 2,
+  "elapsed_s": 25.45,
+  "saved_images_count": 0,
+  "steps": [
+    {
+      "step": 0,
+      "gen_s": 20.04,
+      "assistant_content_head": "I'll fix the bugs in the TTLCache implementation. The main issues are:\n\n1. In `put()`, we need to clean up expired entries before evicting LRU entries when the cache is full\n2. In `size()`, we need to count only non-expired entries\n3. I'll also add cleanup of expired entries in `put()` when updating existing keys (though this is minor)\n\nLet me write the fixed implementation:\n\n",
+      "tool_calls": [
+        {
+          "name": "write_file",
+          "path": "solution.py",
+          "content_bytes": 2097,
+          "content_head": "import time\nfrom collections import OrderedDict\n\nclass TTLCache:\n    \"\"\"LRU cache with per-entry TTL (time-to-live).\n    When the cache is full, the least recently used entry is evicted.\n    Expired e"
+        },
+        {
+          "name": "bash",
+          "command": "python test.py"
+        }
+      ],
+      "tool_results": [
+        {
+          "tool": "write_file",
+          "ok": true,
+          "kind": null,
+          "summary": "{'ok': True, 'path': 'solution.py', 'bytes': 2097}"
+        },
+        {
+          "tool": "bash",
+          "ok": true,
+          "kind": null,
+          "summary": "{'ok': True, 'exit_code': 0, 'stdout': 'All TTLCache tests passed!\\n', 'stderr': ''}"
+        }
+      ]
+    },
+    {
+      "step": 1,
+      "gen_s": 3.69,
+      "assistant_content_head": "The tests have passed successfully, indicating that the fixes for the TTLCache implementation are working correctly. I've addressed all the identified bugs:\n\n1. Added `_cleanup_expired()` method to remove expired entries before inserting new ones in `put()`\n2. Modified `size()` to count only non-expired entries\n3. Added cleanup of expired entries in `put()` before any operations\n\nThe implementatio",
+      "tool_calls": [],
+      "tool_results": []
+    }
+  ]
+}

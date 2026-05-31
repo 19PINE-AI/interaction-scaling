@@ -319,7 +319,8 @@ class ExperimentRunner:
 
         for _ in range(config.num_samples):
             response = proposer.generate(problem.prompt)
-            eval_result = self.evaluator.evaluate(response.code, problem.test_code)
+            full_code = problem.prompt + "\n" + response.code
+            eval_result = self.evaluator.evaluate(full_code, problem.test_code)
             candidates.append({
                 "code": response.code,
                 "passed": eval_result.passed,
