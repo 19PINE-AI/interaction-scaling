@@ -33,6 +33,7 @@ from src.rendering.browser import BrowserRenderer
 from src.utils.code_utils import extract_code
 from src.utils.llm_client import get_client
 from scripts.run_diagram_benchmark import DIAGRAM_SYSTEM_PROMPT
+from src.experiments.hard_benchmark_runner import SLIDE_SYSTEM_PROMPT
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("geomharness")
@@ -50,6 +51,9 @@ def _feedback(g: dict) -> str:
     for ex in g.get("oob_examples", []):
         lines.append(f"- CLIPPED: \"{ex}\" extends beyond the 1920x1080 viewport edge "
                      "-- move it fully inside with >=10px margin.")
+    for ex in g.get("misalignment_examples", []):
+        lines.append(f"- MISALIGNMENT: {ex} -- make the boxes in that group equal "
+                     "size, share top/bottom (or left/right) edges, and use uniform gutters.")
     if g.get("scrollbar"):
         ow, oh = g.get("overflow_px", [0, 0])
         lines.append(f"- SCROLLBAR: the page is {ow}px too wide and {oh}px too tall; "
@@ -68,11 +72,12 @@ Fix ONLY these geometric defects; preserve all correct content and structure. \
 Re-emit the COMPLETE updated HTML in a ```html code block."""
 
 
-def run_task(task, condition, max_iters, proposer, renderer, client):
+def run_task(task, condition, max_iters, proposer, renderer, client,
+             system_prompt=DIAGRAM_SYSTEM_PROMPT, include_alignment=False):
     client.reset_counters()
     start = time.time()
     prompt = task["description"]
-    resp = client.generate(config=proposer, system=DIAGRAM_SYSTEM_PROMPT,
+    resp = client.generate(config=proposer, system=system_prompt,
                            messages=[{"role": "user", "content": prompt}])
     html = extract_code(resp.content, "html")
     if not html.strip().startswith("<"):
@@ -83,7 +88,8 @@ def run_task(task, condition, max_iters, proposer, renderer, client):
     iterations = 1
     for i in range(max_i):
         try:
-            g = geometric_defects(html, renderer=renderer)
+            g = geometric_defects(html, renderer=renderer,
+                                  include_alignment=include_alignment)
         except Exception as e:  # noqa: BLE001
             logger.warning("geom failed %s: %s", task["task_id"], e)
             break
@@ -99,7 +105,7 @@ def run_task(task, condition, max_iters, proposer, renderer, client):
             fb = _feedback(g)
             if not fb.strip():
                 break
-            resp = client.generate(config=proposer, system=DIAGRAM_SYSTEM_PROMPT,
+            resp = client.generate(config=proposer, system=system_prompt,
                                    messages=[{"role": "user", "content": prompt},
                                              {"role": "assistant", "content": f"```html\n{html}\n```"},
                                              {"role": "user", "content": REVISION_PROMPT.format(feedback=fb)}])
@@ -134,9 +140,14 @@ def main():
     ap.add_argument("--condition", choices=["single_shot", "reviewed", "both"], default="both")
     ap.add_argument("--max-iters", type=int, default=3)
     ap.add_argument("--temperature", type=float, default=0.0)
+    ap.add_argument("--prompt", choices=["diagram", "slide"], default="diagram",
+                    help="system prompt for the proposer (slide = design-principle slide prompt)")
+    ap.add_argument("--include-alignment", action="store_true",
+                    help="fold misalignment into the geometric reward and feedback")
     args = ap.parse_args()
 
     tasks = json.load(open(args.tasks))
+    system_prompt = SLIDE_SYSTEM_PROMPT if args.prompt == "slide" else DIAGRAM_SYSTEM_PROMPT
     proposer = ModelConfig(provider=ModelConfig.claude_sonnet().provider,
                            model_id="claude-sonnet-4-20250514",
                            max_tokens=8192, temperature=args.temperature)
@@ -150,7 +161,8 @@ def main():
         row = {"task_id": task["task_id"],
                "category": task.get("category") or task.get("name", ""), "run": args.run}
         for cond in conditions:
-            r = run_task(task, cond, args.max_iters, proposer, renderer, client)
+            r = run_task(task, cond, args.max_iters, proposer, renderer, client,
+                         system_prompt=system_prompt, include_alignment=args.include_alignment)
             pre = "ss" if cond == "single_shot" else "rv"
             for k in ("n_defects", "text_overlap", "clipped", "overflow", "scrollbar",
                       "iterations", "total_tokens", "final_html", "screenshot_b64"):

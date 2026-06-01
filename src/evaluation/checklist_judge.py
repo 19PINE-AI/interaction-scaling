@@ -31,13 +31,23 @@ from src.utils.llm_client import get_client
 logger = logging.getLogger(__name__)
 
 CHECKLIST_SYSTEM = (
-    "You are a meticulous visual QA inspector. You are given a rendered "
-    "screenshot and a numbered list of concrete, objectively-checkable "
-    "requirements. Evaluate EACH requirement independently by looking at the "
-    "image. Do not give partial credit and do not let a good overall "
+    "You are a meticulous visual QA inspector trained in the four core "
+    "graphic-design principles (Robin Williams): PROXIMITY (related items "
+    "grouped, unrelated items separated by whitespace), ALIGNMENT (every "
+    "element shares a strong edge/centerline; side-by-side panels/pillars are "
+    "equal width with aligned top/bottom edges and uniform gutters), "
+    "REPETITION (a consistent visual system — fonts, accent color, box style, "
+    "spacing — reused throughout), and CONTRAST (clear hierarchy; the title "
+    "dominates; differing roles look strongly different; legible text/background "
+    "color contrast). You are given a rendered screenshot and a numbered list "
+    "of concrete, objectively-checkable requirements. Evaluate EACH requirement "
+    "independently by looking at the image, applying these principles strictly "
+    "wherever a requirement concerns layout, alignment, grouping, consistency, "
+    "or hierarchy. Do not give partial credit and do not let a good overall "
     "impression excuse a specific violation: if a requirement says elements "
-    "must not overlap and ANY two overlap, that requirement is violated even "
-    "if the slide looks nice overall. Respond with ONLY valid JSON."
+    "must not overlap and ANY two overlap, or panels must be equal width and "
+    "they are not, that requirement is VIOLATED even if the slide looks nice "
+    "overall. Respond with ONLY valid JSON."
 )
 
 CHECKLIST_PROMPT = """\

@@ -1,0 +1,287 @@
+[
+  {
+    "task_id": "rp_transformer",
+    "paper": "Vaswani et al., 'Attention Is All You Need', NeurIPS 2017",
+    "description": "Create a single self-contained 1920x1080 HTML slide (inline CSS + inline SVG, no scrolling) titled 'Attention Is All You Need (Vaswani et al., 2017)'. Lay out FOUR coexisting regions that share a common top edge and a common bottom edge: (A) LEFT panel (33% width): an inline-SVG encoder-decoder stack diagram with two columns of stacked sublayers - encoder column: 'Input Embedding' -> 'Positional Encoding' -> 'Multi-Head Attention' -> 'Add & Norm' -> 'Feed Forward' -> 'Add & Norm' (label the stack 'Nx = 6'); decoder column: 'Output Embedding' -> 'Positional Encoding' -> 'Masked Multi-Head Attention' -> 'Add & Norm' -> 'Multi-Head Attention' -> 'Add & Norm' -> 'Feed Forward' -> 'Add & Norm' -> 'Linear' -> 'Softmax'. (B) CENTER panel (33%): the two equations 'Attention(Q,K,V) = softmax(QK^T / sqrt(d_k)) V' and 'MultiHead(Q,K,V) = Concat(head_1,...,head_h) W^O' rendered with real superscripts/subscripts, plus a 4-item bullet list of contributions (no recurrence/convolution; parallelizable; O(1) path length; state-of-the-art BLEU). (C) RIGHT panel (34%): a results table with header row and rows: 'EN-DE BLEU 28.4', 'EN-FR BLEU 41.8', 'Training cost 3.5 days x 8 P100', 'Params (base) 65M', 'Params (big) 213M'. (D) a one-line footnote pinned to the bottom edge citing the paper. All text is provided; reproduce it faithfully. ALSO add to panel C the positional-encoding formula 'PE(pos,2i)=sin(pos/10000^(2i/d_model))' with real sub/superscripts, and expand the results table to 6 rows by adding 'Heads h=8'.",
+    "requirements": [
+      "No element overlaps any other element; no SVG arrow passes through any box's label text",
+      "The three panels A, B, C have the same top edge and the same bottom edge (equal panel heights, aligned)",
+      "The three panels are equal-width within a few percent and separated by a visible uniform gutter (>=24px)",
+      "Every encoder and decoder sublayer box listed is present and its label is fully inside the box (no clipping)",
+      "Both equations render QK^T and W^O as superscripts and d_k as a subscript (not plain inline text)",
+      "All five result-table rows are present with both label and value, no cell text truncated",
+      "The four contribution bullets are each at most two lines and fully inside panel B",
+      "Nothing overflows the 1920x1080 canvas; there is no horizontal or vertical scrollbar",
+      "The footnote is fully visible above the bottom edge and does not overlap any panel",
+      "Every text element is at least 12px",
+      "The positional-encoding formula renders its superscript (2i/d_model) and is fully inside panel C, not clipped"
+    ],
+    "expected_issues": [
+      "Encoder/decoder stacks of different total height break the equal-bottom-edge requirement",
+      "Dense decoder column overflows its panel or the canvas bottom",
+      "Equation typeset as plain text without real sub/superscripts",
+      "Panels drift to unequal widths once content is added"
+    ]
+  },
+  {
+    "task_id": "rp_resnet",
+    "paper": "He et al., 'Deep Residual Learning for Image Recognition', CVPR 2016",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'Deep Residual Learning (He et al., 2016)'. Three coexisting, vertically-aligned regions sharing equal panel heights: (A) LEFT (28%): an inline-SVG residual block - input 'x' splits into a path through 'weight layer -> ReLU -> weight layer' and an identity skip-connection arrow that curves around and re-joins at a '+' node, followed by a final 'ReLU'; label the identity arrow 'identity x' and put the formula 'H(x) = F(x) + x' beneath the block. (B) CENTER (38%): a dense paragraph (the provided text) on the degradation problem: 'Deeper plain networks have higher training error than shallower ones - not caused by overfitting but by optimization difficulty. Residual learning reformulates layers to fit a residual mapping F(x) := H(x) - x, which is easier to optimize; if identity is optimal, push residual to zero.' Below it, four bullets: '152 layers, 8x deeper than VGG', 'Lower complexity than VGG-16/19', '3.57% top-5 error on ImageNet (1st, ILSVRC 2015)', 'Won COCO detection & segmentation'. (C) RIGHT (34%): a 6-row ImageNet top-1 error table with header 'Model | top-1 err' and rows 'plain-34 | 28.54', 'ResNet-34 | 25.03', 'ResNet-50 | 22.85', 'ResNet-101 | 21.75', 'ResNet-152 | 21.43'. A footnote pinned to the bottom. ALSO, beside the basic residual block, draw the BOTTLENECK block (1x1 -> 3x3 -> 1x1 conv with identity skip) as a second aligned sub-diagram of equal size sharing the same top and bottom edge as the basic block.",
+    "requirements": [
+      "No element overlaps any other; the skip-connection arrow does not pass through the weight-layer box text",
+      "Panels A, B, C share the same top and bottom edge (aligned, equal heights)",
+      "The dense degradation paragraph is fully inside panel B with no text clipped or overflowing",
+      "The formula 'H(x) = F(x) + x' renders with a real subscript/superscript style (x as identity term) and is fully visible",
+      "All five ImageNet table rows plus the header are present with no truncated cells",
+      "The four bullets are each at most two lines and fully inside their panel",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar appears",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "The '+' join node and the identity arrow are both clearly drawn and labeled",
+      "Every text element is at least 12px",
+      "The basic block and the bottleneck block are drawn as two equal-size sub-diagrams sharing the same top and bottom edge"
+    ],
+    "expected_issues": [
+      "Skip arrow routed straight through the conv-layer boxes",
+      "Dense paragraph overflows the center panel",
+      "Panels of unequal height once the table grows",
+      "Table rows clipped at the panel bottom"
+    ]
+  },
+  {
+    "task_id": "rp_bert",
+    "paper": "Devlin et al., 'BERT', NAACL 2019",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'BERT: Pre-training of Deep Bidirectional Transformers (Devlin et al., 2019)'. The body is TWO equal-width side-by-side panels with identical top and bottom edges and a uniform central gutter: LEFT panel header 'Pre-training' shows an inline-SVG flow 'Unlabeled text -> [MLM + NSP objectives] -> BERT encoder (12 or 24 layers)' with two bullets ('Masked LM: mask 15% of tokens, predict them', 'Next Sentence Prediction: is B the next sentence?'); RIGHT panel header 'Fine-tuning' shows a flow 'Pre-trained BERT -> + task head -> labeled task data' with two bullets ('Same architecture, swap the top layer', 'One model -> 11 NLP tasks'). BELOW the two panels, spanning the full width, a single results strip: a 5-cell equal-width row of GLUE-style stat cards 'GLUE 80.5', 'MNLI 86.7', 'SQuAD v1.1 F1 93.2', 'SQuAD v2.0 F1 83.1', 'SWAG 86.3'. A footnote at the bottom. ALSO, below the GLUE strip, add a full-width input-representation diagram: a horizontal row of 6 token cells where each token shows three stacked summed embeddings (Token + Segment + Position), all token cells equal width and aligned.",
+    "requirements": [
+      "The two main panels are equal width and share the same top and bottom edge",
+      "There is a visible uniform gutter between the two panels (>=24px), and neither panel's content crosses into the other",
+      "The five GLUE stat cards form one row of equal-width cards with uniform gaps between them",
+      "All five stat cards show both a label and its number, none clipped",
+      "No element overlaps any other element anywhere on the slide",
+      "Each bullet is at most two lines and fully inside its panel",
+      "The two inline-SVG flow diagrams are fully inside their respective panels (no overflow)",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "Every text element is at least 12px",
+      "The input-representation row shows 6 equal-width token cells, each with three stacked embedding layers, aligned in one row"
+    ],
+    "expected_issues": [
+      "The two panels end up unequal width or with misaligned bottoms",
+      "GLUE stat cards unequal width / uneven gaps",
+      "Flow arrows overflow the panel",
+      "Results strip overlaps the panels above it"
+    ]
+  },
+  {
+    "task_id": "rp_alexnet",
+    "paper": "Krizhevsky et al., 'ImageNet Classification with Deep CNNs', NeurIPS 2012",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'AlexNet (Krizhevsky et al., 2012)'. TOP region (full width): an inline-SVG left-to-right pipeline of EIGHT equal-width stage boxes with right-pointing arrows. Each box carries THREE lines of dense text: layer name / kernel-stride / output volume: 'Conv1 | 11x11 s4 | 96@55x55', 'Conv2 | 5x5 pad2 | 256@27x27', 'Conv3 | 3x3 pad1 | 384@13x13', 'Conv4 | 3x3 pad1 | 384@13x13', 'Conv5 | 3x3 pad1 | 256@13x13', 'FC6 | - | 4096', 'FC7 | - | 4096', 'FC8 | - | 1000'. DIRECTLY BELOW the pipeline, an aligned row of EIGHT small parameter chips, one centered under each stage box and sharing the box widths: '35K', '307K', '885K', '664K', '442K', '37.7M', '16.8M', '4.1M'. BOTTOM region: TWO equal-width aligned panels - LEFT a dense bullet list ('ReLU -> faster training', 'Two GTX 580 GPUs (3GB), split across GPUs', 'Local response normalization', 'Overlapping max-pooling', 'Dropout 0.5 in FC layers', 'Augmentation: crops + PCA color jitter'); RIGHT a results table ('ILSVRC-2010 top-5 17.0%', 'ILSVRC-2012 top-5 15.3%', '60M params', '650K neurons', '~5 days, 2 GPUs'). Footnote at bottom.",
+    "requirements": [
+      "All eight pipeline stage boxes are exactly equal width with a uniform gutter (>=16px) between adjacent boxes",
+      "The eight stage boxes share the same top edge and the same bottom edge (aligned row)",
+      "All THREE lines of text in every stage box are fully inside the box, none clipped or overflowing",
+      "Each of the eight parameter chips is centered under its stage box and aligned in a single row sharing one baseline",
+      "The parameter-chip row does not overlap the pipeline row or the bottom panels",
+      "Arrows connect adjacent stages and do not overlap any box text",
+      "The two bottom panels are equal width and share the same top and bottom edge",
+      "All six left bullets and all five right table rows are present and fully inside their panels",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge; every text element is at least 11px"
+    ],
+    "expected_issues": [
+      "Eight equal-width boxes do not fit -> uneven widths or overflow off the right edge",
+      "Stage labels with size text clipped",
+      "Bottom panels misaligned or overlapping the pipeline",
+      "Arrows drawn through box text"
+    ]
+  },
+  {
+    "task_id": "rp_gan",
+    "paper": "Goodfellow et al., 'Generative Adversarial Nets', NeurIPS 2014",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'Generative Adversarial Nets (Goodfellow et al., 2014)'. LEFT half (50%): an inline-SVG diagram - a noise box 'z ~ p_z' feeds Generator 'G' producing 'fake x'; real data 'x ~ p_data' and 'fake x' both feed Discriminator 'D' which outputs 'real / fake'; a dashed arrow shows the gradient feeding back to G. RIGHT half (50%), three stacked equal-width full-width cards sharing the same left and right edges with uniform vertical gaps: card 1 the value function 'min_G max_D V(D,G) = E_{x~p_data}[log D(x)] + E_{z~p_z}[log(1 - D(G(z)))]' with real subscripts/superscripts; card 2 a 4-line algorithm box ('for number of training iterations:', '  sample minibatch of z and x', '  update D by ascending its gradient', '  update G by descending its gradient'); card 3 two bullets ('At optimum p_g = p_data, D = 1/2', 'No explicit density needed'). Footnote at the bottom. ALSO add a fourth right-hand card with a 3x3 grid of generated-sample placeholders (equal-size cells) and a metrics line 'Inception Score / FID'.",
+    "requirements": [
+      "No element overlaps any other; the feedback/gradient arrow does not pass through G's or D's label",
+      "The value-function equation renders subscripts (p_data, p_z) and is fully inside its card, not clipped",
+      "The three right-hand cards share the same left edge and the same right edge (equal width, vertically aligned)",
+      "The three right-hand cards have uniform vertical gaps between them",
+      "The algorithm box keeps its line indentation and all four lines are fully visible",
+      "The left diagram (z, G, x, D, outputs) is fully inside the left half with nothing crossing the centre line",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "Both bullets in the third card are at most two lines and fully inside the card",
+      "Every text element is at least 12px",
+      "The fourth card's 3x3 sample grid has 9 equal-size aligned cells and does not overlap the other cards"
+    ],
+    "expected_issues": [
+      "Equation overflows its card or loses subscripts",
+      "Three cards drift to unequal widths or uneven vertical spacing",
+      "Diagram arrows cross the centre line into the right half",
+      "Algorithm indentation lost / lines clipped"
+    ]
+  },
+  {
+    "task_id": "rp_word2vec",
+    "paper": "Mikolov et al., 'Efficient Estimation of Word Representations', 2013",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'word2vec: CBOW vs Skip-gram (Mikolov et al., 2013)'. TOP HALF: TWO equal-width side-by-side architecture panels with identical top/bottom edges and a central gutter. LEFT 'CBOW': inline-SVG with context words 'w(t-2), w(t-1), w(t+1), w(t+2)' projecting into a shared 'SUM/projection' node predicting 'w(t)'. RIGHT 'Skip-gram': single input 'w(t)' projecting out to predict the same four context words. BOTTOM HALF: a full-width row of THREE coexisting equal-height blocks sharing top and bottom edges with uniform gutters: (1) BLOCK 'Objective': the skip-gram softmax 'p(w_O | w_I) = exp(v'_{w_O}^T v_{w_I}) / sum_{w=1}^{W} exp(v'_w^T v_{w_I})' with real sub/superscripts; (2) BLOCK 'Settings': a 4-row table ('dim = 300', 'window = 5', 'negative = 5', 'epochs = 3'); (3) BLOCK 'Analogies': FOUR cards 'king - man + woman ~= queen', 'Paris - France + Italy ~= Rome', 'big - bigger + small ~= smaller', 'Tokyo - Japan + Russia ~= Moscow'. Footnote at bottom.",
+    "requirements": [
+      "The two architecture panels are equal width and share the same top and bottom edge",
+      "The three bottom blocks are equal height, share the same top and bottom edge, with uniform gutters between them",
+      "In CBOW all four context inputs connect into the shared node, and in Skip-gram the single input fans out to all four, without arrow-label overlap",
+      "The softmax objective renders its subscripts (w_O, w_I) and the superscript T and the sum bounds, fully inside its block (no horizontal overflow)",
+      "All four 'Settings' rows are present and fully inside their block",
+      "All four analogy cards are present, equal width within the block, with no clipped text",
+      "No element overlaps any other element on the slide",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "Every text element is at least 12px"
+    ],
+    "expected_issues": [
+      "The two mirror-image diagrams come out different sizes / misaligned",
+      "Fan-in / fan-out arrows overlap the word labels",
+      "Analogy cards unequal width or text clipped",
+      "Strip overlaps the panels above"
+    ]
+  },
+  {
+    "task_id": "rp_unet",
+    "paper": "Ronneberger et al., 'U-Net', MICCAI 2015",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'U-Net (Ronneberger et al., 2015)'. LEFT two-thirds (66%): an inline-SVG U-shaped architecture. The contracting path descends through 5 levels of feature-map boxes, EACH labeled with its channel count inside the box (1 -> 64 -> 128 -> 256 -> 512 -> 1024 at the bottleneck), with down-arrows labeled 'max pool 2x2'; the expanding path ascends through the mirror levels labeled (512 -> 256 -> 128 -> 64) with up-arrows labeled 'up-conv 2x2'. Horizontal dashed 'copy & crop' skip arrows link each encoder level to the SAME-HEIGHT decoder level. RIGHT third (34%): a dense panel containing (a) a 5-row resolution table 'level 1: 572x572 / level 2: 284x284 / level 3: 140x140 / level 4: 68x68 / level 5 (bottleneck): 32x32', (b) five bullets ('Fully convolutional, no dense layers', 'Skip connections concatenate encoder features', 'Heavy elastic augmentation', 'Overlap-tile for large images', 'Won ISBI 2015 cell-tracking'), and (c) a one-line note 'Output: 388x388 segmentation map'. Footnote at bottom.",
+    "requirements": [
+      "Every feature-map box shows its channel-count label fully inside the box (none clipped), for all encoder and decoder levels",
+      "Each of the four 'copy & crop' skip arrows links an encoder level to the decoder level at the SAME vertical height (horizontal, level-aligned)",
+      "The contracting and expanding arms are vertically symmetric: corresponding levels share the same top edge",
+      "No feature-map box overlaps another; no skip arrow passes through a box label",
+      "The down-arrow ('max pool 2x2') and up-arrow ('up-conv 2x2') labels are all fully visible and not clipped",
+      "The right panel's 5 resolution rows, 5 bullets and the output note are all present and fully inside the panel",
+      "The diagram (left 66%) and the right panel do not overlap",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "Each bullet is at most two lines",
+      "Every text element is at least 11px"
+    ],
+    "expected_issues": [
+      "Encoder/decoder levels at mismatched heights so skip arrows are diagonal",
+      "Asymmetric arms (the U is lopsided)",
+      "Boxes overlap as depth increases",
+      "Right panel content overflows or collides with the diagram"
+    ]
+  },
+  {
+    "task_id": "rp_adam",
+    "paper": "Kingma & Ba, 'Adam', ICLR 2015",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'Adam Optimizer (Kingma & Ba, 2015)'. THREE coexisting equal-height regions sharing top/bottom edges: (A) LEFT (36%): the four update equations stacked, each with real subscripts/superscripts: 'm_t = beta_1 m_{t-1} + (1-beta_1) g_t', 'v_t = beta_2 v_{t-1} + (1-beta_2) g_t^2', 'm_hat_t = m_t / (1 - beta_1^t)', 'v_hat_t = v_t / (1 - beta_2^t)', and 'theta_t = theta_{t-1} - alpha * m_hat_t / (sqrt(v_hat_t) + eps)'. (B) CENTER (34%): a boxed algorithm with lines 'Require: alpha, beta_1, beta_2, eps', 'Initialize m_0=0, v_0=0, t=0', 'while not converged:', '  t = t + 1', '  g_t = grad f(theta_{t-1})', '  update m_t, v_t, m_hat, v_hat', '  theta_t = ...'. (C) RIGHT (30%): a defaults table ('alpha = 0.001', 'beta_1 = 0.9', 'beta_2 = 0.999', 'eps = 1e-8') plus three bullets ('Bias-corrected 1st/2nd moments', 'Per-parameter adaptive rates', 'Invariant to gradient rescaling'). Footnote at the bottom. ALSO add a fourth region: an inline-SVG convergence chart comparing Adam vs SGD vs RMSProp (three labeled descending curves) with x-axis 'iterations' and y-axis 'loss', sharing the panels' top/bottom edges.",
+    "requirements": [
+      "All five equations render their subscripts (t, t-1, 1, 2) and superscripts (t, 2) correctly, not as plain text",
+      "Every equation is fully inside panel A with no horizontal clipping",
+      "The three panels A, B, C share the same top and bottom edge (equal heights, aligned)",
+      "The algorithm box preserves line indentation and all its lines are fully visible",
+      "All four defaults rows and three bullets are present and fully inside panel C",
+      "No element overlaps any other element",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "The three panels are equal width within a few percent with uniform gutters",
+      "Every text element is at least 12px",
+      "The convergence chart shows three labeled curves with both axis labels and is fully inside its region, aligned with the other panels"
+    ],
+    "expected_issues": [
+      "Long equations overflow the left panel horizontally",
+      "Subscripts/superscripts rendered as inline text",
+      "Panels of unequal height once equations wrap",
+      "Algorithm indentation lost"
+    ]
+  },
+  {
+    "task_id": "rp_dropout",
+    "paper": "Srivastava et al., 'Dropout', JMLR 2014",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'Dropout (Srivastava et al., 2014)'. TOP region: TWO equal-width side-by-side inline-SVG network diagrams sharing the same top and bottom edge - LEFT captioned 'Standard net' (a 3-4-4-2 fully-connected MLP with every edge drawn) and RIGHT captioned 'With dropout' (the same net with about half the hidden units greyed out / crossed and their edges removed). BELOW, a full-width row of THREE equal-width result cards with uniform gaps: 'MNIST error 1.35% -> 1.05%', 'Street View SVHN improved', 'TIMIT phone error reduced'. A dense one-paragraph caption beneath ('Randomly drop units (with prob p) during training to prevent co-adaptation; at test time use all units with weights scaled by p. Equivalent to training an ensemble of 2^n thinned networks sharing weights.'). Footnote at the bottom. ALSO add an equations row: 'train: y = f(D * x), D~Bernoulli(p)' and 'test: y = f(p * x)', plus the note 'ensemble of 2^n thinned nets', with real sub/superscripts.",
+    "requirements": [
+      "The two network diagrams are equal width and share the same top and bottom edge",
+      "Both networks have the same node-grid geometry; corresponding layers are at the same vertical positions",
+      "In the right diagram the dropped units are visually distinct (greyed/crossed) and their edges removed",
+      "No node label or edge overlaps another node's label",
+      "The three result cards are equal width with uniform gaps and aligned top/bottom edges",
+      "The dense caption paragraph is fully visible (not clipped or overflowing its container)",
+      "No element overlaps any other element on the slide",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "Every text element is at least 12px",
+      "Both train/test dropout equations render correctly (Bernoulli(p), 2^n superscript) and are fully visible, not clipped"
+    ],
+    "expected_issues": [
+      "The two MLPs come out different sizes / misaligned",
+      "Edges criss-cross over node labels in the dense net",
+      "Result cards unequal width / uneven gaps",
+      "Caption paragraph clipped"
+    ]
+  },
+  {
+    "task_id": "rp_vgg",
+    "paper": "Simonyan & Zisserman, 'Very Deep Convolutional Networks (VGG)', ICLR 2015",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'VGG: ConvNet Configurations (Simonyan & Zisserman, 2015)'. The centrepiece is the famous dense configuration TABLE occupying the LEFT 62%: 6 columns 'A | A-LRN | B | C | D | E' with a dark header row, and rows grouped by block: 'input (224x224 RGB)', then conv blocks with cells like 'conv3-64', 'conv3-128', 'conv3-256', 'conv3-512' (deeper configs add rows: B adds a second conv3-64 and conv3-128; D is VGG-16 with three conv3-256/512 per block; E is VGG-19 with four), interleaved with 'maxpool' rows, then 'FC-4096', 'FC-4096', 'FC-1000', 'soft-max' rows. Fill at least 16 body rows so the table is genuinely dense. RIGHT 36%: a panel with four bullets ('Only 3x3 conv filters throughout', 'Depth 11 -> 19 weight layers', 'VGG-16 / VGG-19 most used', '~138M params (VGG-16)') and a small results table ('top-1 24.4%', 'top-5 7.0% (VGG-16)', 'top-5 7.3% (ensemble 2nd, ILSVRC-2014)'). Footnote at the bottom. Increase the configuration table to AT LEAST 19 body rows and add a final 'params' row giving each config's parameter count (133M,133M,133M,134M,138M,144M).",
+    "requirements": [
+      "The configuration table has all 6 columns (A, A-LRN, B, C, D, E) with a distinct header row",
+      "The table has at least 16 body rows and no cell text is clipped or truncated",
+      "Empty/absent cells are still rendered as aligned table cells (the column grid stays regular)",
+      "The dense table is fully inside the left region and does not overflow the canvas",
+      "The right panel (bullets + small results table) shares the table's top and bottom edge (aligned)",
+      "No element overlaps any other element",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar (the dense table must fit)",
+      "The four right-hand bullets and three result rows are all present and fully inside the panel",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "Every text element is at least 11px",
+      "The configuration table has at least 19 body rows including a final params row, and every cell across all 6 columns stays aligned with none clipped"
+    ],
+    "expected_issues": [
+      "Dense 16+ row x 6 col table overflows the canvas bottom (scrollbar)",
+      "Column grid breaks where configs differ (misaligned cells)",
+      "Cells clipped to fit",
+      "Right panel misaligned with the table"
+    ]
+  },
+  {
+    "task_id": "rp_lstm",
+    "paper": "Hochreiter & Schmidhuber, 'Long Short-Term Memory', 1997",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'LSTM Cell (Hochreiter & Schmidhuber, 1997)'. LEFT half: an inline-SVG LSTM cell diagram showing the cell state line across the top, three gates (forget, input, output) drawn as sigmoid units, a tanh candidate, the pointwise multiply/add operators, and inputs 'x_t' and 'h_{t-1}' entering, 'h_t' and 'C_t' leaving. RIGHT half: the SIX gate equations stacked, each with correct subscripts/superscripts: 'f_t = sigma(W_f [h_{t-1}, x_t] + b_f)', 'i_t = sigma(W_i [h_{t-1}, x_t] + b_i)', 'g_t = tanh(W_g [h_{t-1}, x_t] + b_g)', 'o_t = sigma(W_o [h_{t-1}, x_t] + b_o)', 'C_t = f_t * C_{t-1} + i_t * g_t', 'h_t = o_t * tanh(C_t)'. The left and right halves share the same top and bottom edge. Footnote at the bottom. ALSO, below the cell diagram, draw the UNROLLED chain over three time steps (t-1, t, t+1) as three equal-width aligned cell blocks passing C and h between them.",
+    "requirements": [
+      "All six equations render subscripts (t, t-1, f, i, g, o) correctly, not as plain inline text",
+      "Each equation is on its own line, fully visible, with no horizontal clipping or overflow",
+      "The left diagram and right equation column share the same top and bottom edge (aligned halves)",
+      "The cell-state line, three gates, tanh, and pointwise operators are all drawn and labeled without overlap",
+      "Inputs x_t and h_{t-1} and outputs h_t and C_t are all labeled and not clipped",
+      "No element overlaps any other element on the slide",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "The left and right halves are of comparable width with a clear gutter between them",
+      "Every text element is at least 12px",
+      "The unrolled three-timestep chain shows three equal-width aligned cell blocks with C/h arrows between them, no overlap"
+    ],
+    "expected_issues": [
+      "Gate equations lose subscripts or overflow the column",
+      "Diagram operators overlap gate labels",
+      "Halves of unequal height / misaligned",
+      "Bracket notation [h,x] clipped"
+    ]
+  },
+  {
+    "task_id": "rp_ddpm",
+    "paper": "Ho et al., 'Denoising Diffusion Probabilistic Models', NeurIPS 2020",
+    "description": "Create a self-contained 1920x1080 HTML slide titled 'Denoising Diffusion Probabilistic Models (Ho et al., 2020)'. TOP region (full width): an inline-SVG horizontal Markov chain of SIX equal-width, equally-spaced state boxes 'x_0', 'x_1', '...', 'x_{t-1}', 'x_t', 'x_T' with forward arrows (top, labeled 'q(x_t | x_{t-1}) add noise') going left-to-right and reverse arrows (bottom, labeled 'p_theta(x_{t-1} | x_t) denoise') going right-to-left. BOTTOM region: TWO equal-width aligned panels - LEFT the equations 'q(x_t|x_{t-1}) = N(x_t; sqrt(1-beta_t) x_{t-1}, beta_t I)' and the simplified loss 'L = E[ || epsilon - epsilon_theta(x_t, t) ||^2 ]' with real subscripts/superscripts; RIGHT four bullets ('Forward: gradually add Gaussian noise', 'Reverse: learn to denoise step by step', 'Train epsilon-prediction network (U-Net)', 'Sample x_T ~ N(0, I), iterate to x_0'). Footnote at the bottom. ALSO add a third bottom block: an inline-SVG noise-schedule mini-chart of beta_t increasing linearly over t (labeled axes), making three equal-height aligned bottom blocks.",
+    "requirements": [
+      "The six chain state boxes are equal width, equally spaced (uniform gaps), and share the same top and bottom edge",
+      "Forward arrows run left-to-right along the top and reverse arrows run right-to-left along the bottom, without their labels overlapping the boxes",
+      "Both equations render subscripts (x_t, x_{t-1}, beta_t) and the norm/superscript correctly",
+      "The two bottom panels are equal width and share the same top and bottom edge",
+      "The equations are fully inside the left panel with no horizontal overflow",
+      "All four right-hand bullets are present, each at most two lines, fully inside the panel",
+      "No element overlaps any other element on the slide",
+      "Nothing overflows the 1920x1080 canvas; no scrollbar",
+      "The footnote is fully visible above the bottom edge and overlaps nothing",
+      "Every text element is at least 12px",
+      "The three bottom blocks (equations, bullets, noise-schedule chart) are equal height, aligned, with the chart's axes labeled and fully contained"
+    ],
+    "expected_issues": [
+      "Chain boxes unevenly spaced or unequal width",
+      "Forward/reverse arrow labels collide with the boxes",
+      "Long equation overflows the left panel",
+      "Bottom panels misaligned"
+    ]
+  }
+]

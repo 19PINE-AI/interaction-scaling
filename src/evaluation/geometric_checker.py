@@ -131,12 +131,79 @@ _PROBE_JS = r"""
   const overH = document.documentElement.scrollHeight - H;
   const scrollbar = (overW > OVTHRESH) || (overH > OVTHRESH);
 
+  // --- alignment of card/pillar BOX groups (HTML) ---
+  // A frequent slide defect the overlap/overflow checks miss: a row of "stage"
+  // boxes or side-by-side panels that should be equal-width with aligned edges
+  // and uniform gutters, but are not. We collect bordered/filled HTML boxes,
+  // keep the outermost ones, cluster them into rows (shared top) and columns
+  // (shared left), and within each group of >=3 flag unequal size, misaligned
+  // far edges, and uneven gaps. Tolerances are loose so only clear, visible
+  // violations count (this is a reliability-first instrument).
+  const SKIP_AL = new Set(['table','thead','tbody','tfoot','tr','td','th','svg','g',
+                           'text','tspan','path','rect','circle','line','polygon',
+                           'ellipse','html','body','ul','ol','li','br','hr']);
+  const cand = [];
+  for (const el of all) {
+    const tag = el.tagName.toLowerCase();
+    if (SKIP_AL.has(tag)) continue;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === 'hidden' || cs.display === 'none' || parseFloat(cs.opacity) === 0) continue;
+    let nb = 0;
+    for (const s of ['Top','Right','Bottom','Left'])
+      if (cs['border'+s+'Style'] !== 'none' && parseFloat(cs['border'+s+'Width']) > 0) nb++;
+    const bg = cs.backgroundColor;
+    const hasBg = bg && bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent';
+    if (nb < 2 && !hasBg) continue;            // must look like a card/panel
+    const r = el.getBoundingClientRect();
+    if (r.width < 80 || r.height < 30) continue;
+    if (r.width > W * 0.72 || r.height > H * 0.88) continue;  // skip full-canvas bg
+    cand.push({el, x: r.left, y: r.top, r: r.right, b: r.bottom, w: r.width, h: r.height});
+  }
+  // keep only outermost cards (drop any card nested inside another card)
+  const cards = cand.filter(c => !cand.some(o => o !== c && o.el.contains(c.el)));
+
+  const spread = a => a.length ? Math.max(...a) - Math.min(...a) : 0;
+  const avg = a => a.reduce((s, v) => s + v, 0) / a.length;
+  let misalign = 0; const malEx = [];
+  const clusterBy = (key) => {        // greedy 1-D clustering on an edge coord
+    const TOL = 16, groups = [];
+    for (const c of [...cards].sort((p, q) => p[key] - q[key])) {
+      const gg = groups.find(g => Math.abs(g[0][key] - c[key]) <= TOL);
+      if (gg) gg.push(c); else groups.push([c]);
+    }
+    return groups.filter(g => g.length >= 3);
+  };
+
+  // rows: cards sharing a top edge -> should share bottom, equal width, even h-gaps
+  for (const g of clusterBy('y')) {
+    if (spread(g.map(c => c.w)) > Math.max(12, 0.06 * avg(g.map(c => c.w)))) {
+      misalign++; if (malEx.length < 8) malEx.push('row: unequal box widths (x' + g.length + ')'); }
+    if (spread(g.map(c => c.b)) > 14) {
+      misalign++; if (malEx.length < 8) malEx.push('row: misaligned bottom edges'); }
+    const s = [...g].sort((a, b) => a.x - b.x), gaps = [];
+    for (let i = 1; i < s.length; i++) gaps.push(s[i].x - s[i - 1].r);
+    if (gaps.length >= 2 && spread(gaps) > Math.max(12, 0.35 * Math.abs(avg(gaps)))) {
+      misalign++; if (malEx.length < 8) malEx.push('row: uneven gutters'); }
+  }
+  // columns: cards sharing a left edge -> should share right, equal height, even v-gaps
+  for (const g of clusterBy('x')) {
+    if (spread(g.map(c => c.h)) > Math.max(12, 0.06 * avg(g.map(c => c.h)))) {
+      misalign++; if (malEx.length < 8) malEx.push('col: unequal box heights (x' + g.length + ')'); }
+    if (spread(g.map(c => c.r)) > 14) {
+      misalign++; if (malEx.length < 8) malEx.push('col: misaligned right edges'); }
+    const s = [...g].sort((a, b) => a.y - b.y), gaps = [];
+    for (let i = 1; i < s.length; i++) gaps.push(s[i].y - s[i - 1].b);
+    if (gaps.length >= 2 && spread(gaps) > Math.max(12, 0.35 * Math.abs(avg(gaps)))) {
+      misalign++; if (malEx.length < 8) malEx.push('col: uneven vertical gaps'); }
+  }
+
   return {
     n_text: texts.length,
     text_overlap: overlaps.length, overlap_examples: overlaps.slice(0, 12),
     out_of_bounds: oob, oob_examples: oobEx,
     overflow: overflow, overflow_examples: ovEx,
     scrollbar: scrollbar, overflow_px: [overW, overH],
+    misalignment: misalign, misalignment_examples: malEx, n_cards: cards.length,
     viewport: [W, H],
   };
 }
@@ -144,11 +211,16 @@ _PROBE_JS = r"""
 
 
 def geometric_defects(html: str, width: int = 1920, height: int = 1080,
-                      renderer=None) -> dict:
+                      renderer=None, include_alignment: bool = False) -> dict:
     """Render *html* and return its deterministic geometric defects.
 
     Returns a dict with raw counts plus ``clean`` (bool: zero geometric defects)
     and ``n_defects`` (total). Reuses a BrowserRenderer's browser if given.
+
+    ``misalignment`` (unequal-width / misaligned-edge / uneven-gutter box groups)
+    is always reported but only folded into ``n_defects`` when
+    ``include_alignment`` is set, so existing callers (figures, original slides)
+    keep their published overlap/overflow-only counts unchanged.
     """
     from src.rendering.browser import BrowserRenderer
     own = renderer is None
@@ -168,6 +240,8 @@ def geometric_defects(html: str, width: int = 1920, height: int = 1080,
     if "error" not in data:
         n = (data["text_overlap"] + data["out_of_bounds"] + data["overflow"]
              + (1 if data["scrollbar"] else 0))
+        if include_alignment:
+            n += data.get("misalignment", 0)
         data["n_defects"] = n
         data["clean"] = (n == 0)
     return data

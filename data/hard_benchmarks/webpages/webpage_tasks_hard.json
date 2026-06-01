@@ -1,0 +1,253 @@
+[
+  {
+    "task_id": "webh_dashboard",
+    "description": "Build a dense single-page analytics dashboard for 'MetricHub' at 1920px wide. It must contain, in this order: (1) a fixed top bar with the 'MetricHub' logo on the left, a centered search input, and a user avatar + 'Settings' link on the right; (2) a left sidebar (240px) with 6 nav items (Overview, Traffic, Revenue, Users, Reports, Settings) where 'Overview' is the active/highlighted item; (3) a main area with a row of FOUR equal-width KPI cards (Revenue $128,400 +12.3%, Users 24,108 +4.1%, Sessions 91,233 -2.0%, Conversion 3.4% +0.6%) each showing label, big number, and a colored delta (green for +, red for -); (4) below, TWO equal-width chart panels side by side ('Revenue over time' and 'Traffic sources') each at least 320px tall with a titled header and an inline-SVG chart placeholder; (5) below that, a full-width data table 'Top pages' with columns Page | Views | Avg time | Bounce and at least 6 rows. Responsive: at 375px the sidebar collapses (hidden or to a top hamburger), KPI cards stack to 1 column, and chart panels stack vertically.",
+    "requirements": [
+      "A fixed top bar contains the logo (left), a centered search input, and avatar + Settings (right), all vertically centered",
+      "The left sidebar is ~240px wide and lists all six nav items with 'Overview' visibly highlighted as active",
+      "The four KPI cards are equal width, aligned in one row with uniform gaps, each showing label, number, and a delta",
+      "Positive deltas are green and the negative Sessions delta (-2.0%) is red",
+      "The two chart panels are equal width, side by side, each >=320px tall with a titled header and a visible chart placeholder",
+      "The 'Top pages' table shows all four column headers and at least 6 data rows with no cell text clipped",
+      "On desktop (1920px) nothing overflows horizontally and there is no unexpected horizontal scrollbar",
+      "At 375px width the four KPI cards stack into a single column",
+      "At 375px width the two chart panels stack vertically (not side by side)",
+      "At 375px the sidebar is collapsed/hidden (replaced by a hamburger or removed), not overlapping the content",
+      "All numeric values listed are present exactly as given",
+      "Text and background colors maintain legible contrast throughout"
+    ],
+    "expected_issues": [
+      "KPI cards drift to unequal widths or wrap awkwardly",
+      "Sidebar overlaps main content or does not collapse on mobile",
+      "Charts overflow their panels; table cells clipped",
+      "Deltas not color-coded by sign"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_pricing",
+    "description": "Build a cloud-hosting pricing page for 'NimbusCloud' at 1920px wide with BOTH a 3-tier card row AND a dense feature comparison table. Tiers: Starter $0/mo, Pro $29/mo (mark 'Most popular' with a colored top border), Business $99/mo. Each card lists price, a one-line tagline, a primary CTA button, and 4 bullet features. Below the cards, a comparison table with a left feature-name column and the three plan columns, at least 12 feature rows (e.g. 'Projects', 'Bandwidth', 'Build minutes', 'Team seats', 'Custom domains', 'SSL', 'Analytics', 'Priority support', 'SSO', 'Audit logs', 'SLA', 'Uptime') using checkmarks/dashes or values per cell. A FAQ section with 5 question rows below. Responsive: at 375px the three pricing cards stack vertically and the comparison table becomes horizontally scrollable within its own container (not the whole page).",
+    "requirements": [
+      "Three pricing tier cards (Starter $0, Pro $29, Business $99) are equal width, top-aligned, in one row",
+      "The Pro card is marked 'Most popular' with a colored top border at least 4px",
+      "Each card shows price, tagline, a CTA button, and exactly four feature bullets",
+      "The comparison table has a feature-name column plus three plan columns, all aligned",
+      "The comparison table has at least 12 feature rows with a value or check/dash in every cell (no empty unaligned cells)",
+      "The FAQ section lists exactly five question rows",
+      "On desktop nothing overflows horizontally; the table fits within the page width",
+      "At 375px the three pricing cards stack into a single column",
+      "At 375px the comparison table scrolls horizontally within its own container, not forcing the whole page to scroll sideways",
+      "All listed prices ($0, $29, $99) appear exactly",
+      "A consistent accent color is reused across the Pro highlight, CTAs, and table checkmarks"
+    ],
+    "expected_issues": [
+      "Comparison table overflows the page width on mobile",
+      "Pricing cards unequal height/width or misaligned tops",
+      "Empty comparison cells break the column grid",
+      "Accent color used inconsistently"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_docs",
+    "description": "Build a three-column documentation page for an open-source library 'querykit' at 1920px wide: (1) a LEFT sidebar (260px) with a nav tree of 3 sections each with 3-4 sub-links, current page 'Quickstart' highlighted; (2) a CENTER content column (max 760px, centered in remaining space) with an H1 'Quickstart', intro paragraph, an 'Installation' H2 followed by a code block 'npm install querykit', a 'Usage' H2 with a second multi-line code block, and a note/callout box; (3) a RIGHT 'On this page' table-of-contents (200px) listing the in-page headings (Installation, Usage, Notes) with the first one highlighted. A top bar spans all three columns with logo + version selector + GitHub link. Responsive: at 375px both side columns hide and only the center content (full width) and a top hamburger remain.",
+    "requirements": [
+      "A top bar spans the full width with the logo, a version selector, and a GitHub link",
+      "The left sidebar (~260px) shows a nav tree of three sections with sub-links and 'Quickstart' highlighted",
+      "The center content column is constrained (max ~760px) and not full-bleed on desktop",
+      "Both code blocks are monospaced, visually distinct (background/border), and do not overflow their container",
+      "The right 'On this page' TOC lists Installation, Usage, Notes with the first highlighted",
+      "The three columns are vertically aligned at the same top and do not overlap",
+      "On desktop nothing overflows horizontally",
+      "At 375px both the left sidebar and right TOC are hidden, leaving the center content full width",
+      "At 375px a hamburger or menu affordance replaces the sidebar without overlapping content",
+      "The callout/note box is visually distinct from body text and fully contained",
+      "Heading hierarchy is visually clear (H1 larger/heavier than H2)"
+    ],
+    "expected_issues": [
+      "Code blocks overflow horizontally",
+      "Three-column layout collapses incorrectly or columns overlap",
+      "Center column runs full-bleed (no max width)",
+      "Side columns still present / overlapping on mobile"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_schedule",
+    "description": "Build a conference schedule page for 'DevConf 2026' at 1920px wide as a multi-track timetable. A header shows the conference name, date 'June 15, 2026', and a 3-tab track filter (All, Frontend, Backend). The schedule is a grid: a left time column (9:00 to 13:00 in 30-min rows, 9 rows) and THREE track columns (Main Stage, Frontend, Backend) of equal width. At least 8 session blocks are placed in the grid, each showing a title, speaker, and a colored tag for its track; at least one session spans two time rows (a 60-min talk) and the 10:00 keynote spans all three track columns. Below the grid, a legend mapping the three track colors. Responsive: at 375px the three track columns stack into a single vertical list grouped by time.",
+    "requirements": [
+      "A header shows 'DevConf 2026', the date 'June 15, 2026', and a three-tab track filter",
+      "A left time column lists 9:00 through 13:00 in 30-minute increments (9 rows)",
+      "There are three equal-width track columns labeled Main Stage, Frontend, Backend, aligned to the time rows",
+      "At least eight session blocks appear, each with a title, a speaker, and a track-colored tag",
+      "At least one session block visibly spans two 30-minute rows",
+      "The 10:00 keynote spans the full width of all three track columns",
+      "A legend maps each of the three track colors to its track name",
+      "Session blocks align to their time-row boundaries without overlapping adjacent blocks",
+      "On desktop nothing overflows horizontally",
+      "At 375px the track columns stack into a single time-ordered vertical list",
+      "Track tag colors are used consistently between the blocks and the legend"
+    ],
+    "expected_issues": [
+      "Session blocks misaligned to the time grid or overlapping",
+      "Row-spanning / column-spanning sessions break the grid",
+      "Track columns unequal width",
+      "Grid does not linearize on mobile"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_repo",
+    "description": "Build a code-hosting repository page (GitHub-style) for 'acme/querykit' at 1920px wide. Top: a repo header with owner/name breadcrumb, a description, and a row of three stat buttons (Star 1.2k, Fork 184, Watch 56). Below, a two-column layout: LEFT (main, ~70%) a file-browser toolbar ('main' branch selector, '12 commits' link) above a file list table with at least 7 rows (mix of folders and files: src/, tests/, README.md, package.json, LICENSE, .gitignore, tsconfig.json) each with name, last-commit message, and relative time; below the file list a rendered README card with an H1 and a paragraph. RIGHT (sidebar, ~30%) an 'About' panel with the description, a topics row of 4 tag chips, and a 'Releases' line; below it a language bar (a thin horizontal stacked bar) with a legend (TypeScript 78%, CSS 14%, JavaScript 8%). Responsive: at 375px the sidebar drops below the main column (single column).",
+    "requirements": [
+      "A repo header shows the owner/name breadcrumb, a description, and three stat buttons (Star 1.2k, Fork 184, Watch 56)",
+      "The main column is roughly 70% width and the About sidebar roughly 30%, side by side and top-aligned",
+      "A file-list table shows at least 7 rows, each with a name, a last-commit message, and a relative time",
+      "Folder rows are visually distinguishable from file rows (icon or style)",
+      "A README card below the file list shows an H1 heading and a paragraph",
+      "The About sidebar shows the description, exactly four topic chips, and a Releases line",
+      "A stacked language bar appears with a legend listing TypeScript 78%, CSS 14%, JavaScript 8%",
+      "The language-bar segment widths are proportional to the listed percentages",
+      "On desktop nothing overflows horizontally; file-list cells are not clipped",
+      "At 375px the About sidebar moves below the main column (single column layout)",
+      "The accent color is consistent across links, chips, and the active branch selector"
+    ],
+    "expected_issues": [
+      "File list cells (long commit messages) overflow or clip",
+      "Language-bar segments not proportional",
+      "Two-column layout does not stack on mobile",
+      "Topic chips wrap untidily / unequal styling"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_status",
+    "description": "Build a service status page for 'NimbusCloud Status' at 1920px wide. Top: an overall banner 'All Systems Operational' with a green indicator. Below, a 'Current status' section listing SEVEN services (API, Dashboard, CDN, Database, Auth, Webhooks, Email) each as a row with the service name (left) and a status pill (right): five 'Operational' (green), one 'Degraded Performance' (amber, for CDN), one 'Partial Outage' (red, for Webhooks). Below, a 'Uptime (90 days)' section showing, for each of the seven services, a row of 90 thin vertical bars (mostly green with a few amber/red) and a '99.98%' figure at the right. Below, an 'Incident history' timeline with 3 dated incident entries, each with a title, a colored severity dot, and a short description. Responsive: at 375px the service name and status pill stack within each row and the 90-bar strips remain on one line (may shrink).",
+    "requirements": [
+      "An overall banner reads 'All Systems Operational' with a green status indicator",
+      "Exactly seven services are listed, each with a name and a status pill",
+      "Five services show green 'Operational', CDN shows amber 'Degraded Performance', Webhooks shows red 'Partial Outage'",
+      "Each of the seven services has an uptime strip of 90 thin vertical bars",
+      "Each uptime strip shows a percentage figure (e.g. 99.98%) aligned to its right",
+      "The incident history lists exactly three dated entries, each with a title, a severity dot, and a description",
+      "Status pill colors (green/amber/red) are used consistently between the service list and uptime bars",
+      "On desktop the seven rows are left-aligned and the pills are right-aligned in a consistent column",
+      "Nothing overflows horizontally on desktop",
+      "At 375px each service row stacks the name above its pill, and the 90-bar strip stays on a single line",
+      "The seven service rows share consistent height and vertical rhythm"
+    ],
+    "expected_issues": [
+      "90-bar uptime strips wrap to multiple lines or overflow",
+      "Status pills not consistently right-aligned",
+      "Severity colors inconsistent",
+      "Rows of uneven height / misaligned pills"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_product",
+    "description": "Build an e-commerce product detail page for 'Aero Running Shoe' at 1920px wide. Two-column hero: LEFT a gallery with one large main image placeholder and a row of 4 thumbnail placeholders below it; RIGHT a product info panel with title, a star rating (4.5 with '128 reviews'), price '$139.00', a size selector (chips 7,8,9,10,11), a quantity stepper, and a full-width 'Add to cart' button. Below the hero, a specifications table (at least 8 rows: Weight, Drop, Upper, Midsole, Outsole, Use, Colorway, SKU). Below that, a reviews section with 3 review cards (author, stars, text). Below that, a 'You may also like' row of 4 equal-width related-product cards. A sticky mini add-to-cart bar appears pinned to the bottom showing the product name and price. Responsive: at 375px the hero stacks (gallery above info), the related row becomes a horizontal scroller, and the sticky bar remains pinned.",
+    "requirements": [
+      "The hero is two columns on desktop: gallery (left) and product info (right), top-aligned",
+      "The gallery shows one large image placeholder and exactly four thumbnail placeholders in a row",
+      "The info panel shows title, a 4.5 star rating with '128 reviews', price '$139.00', size chips (7-11), a quantity stepper, and a full-width Add to cart button",
+      "The specifications table has at least 8 rows, each with a label and a value, no cell clipped",
+      "The reviews section shows exactly three review cards, each with author, stars, and text",
+      "The 'You may also like' row shows four equal-width related-product cards with uniform gaps",
+      "A sticky bar pinned to the bottom shows the product name and the price $139.00",
+      "On desktop nothing overflows horizontally and the sticky bar does not cover essential hero content",
+      "At 375px the hero stacks vertically (gallery above info)",
+      "At 375px the related-products row becomes a horizontal scroller (cards do not shrink illegibly or wrap messily)",
+      "The price '$139.00' appears identically in the info panel and the sticky bar"
+    ],
+    "expected_issues": [
+      "Sticky bar overlaps content or disappears",
+      "Related cards unequal width / wrap on desktop",
+      "Spec table cells clipped",
+      "Hero does not stack on mobile"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_news",
+    "description": "Build a newspaper-style homepage for 'The Daily Ledger' at 1920px wide with a dense multi-column grid. Masthead: centered title 'The Daily Ledger', a date line 'Monday, June 1, 2026', and a horizontal nav of 6 sections (World, Business, Tech, Science, Culture, Opinion). Below, a 12-column-style article grid: a large lead story spanning the left two-thirds (headline, byline, image placeholder, 3-line dek), a right column with 3 stacked secondary stories (headline + 1-line summary, separated by hairlines), and below the fold a row of 4 equal-width 'More headlines' cards. A thin section divider rule separates blocks. Responsive: at 375px everything collapses to a single column in reading order (lead, then secondaries, then the 4 cards).",
+    "requirements": [
+      "A centered masthead shows 'The Daily Ledger', the date line, and a 6-section horizontal nav",
+      "A lead story occupies the left two-thirds with a headline, byline, image placeholder, and a multi-line dek",
+      "A right column holds exactly three stacked secondary stories separated by hairline rules",
+      "Below the fold, four equal-width 'More headlines' cards appear in one row with uniform gaps",
+      "The lead column and the right column are top-aligned and do not overlap",
+      "Hairline/divider rules are consistent in weight and color (repetition)",
+      "Headline typography clearly outranks body/summary text (contrast/hierarchy)",
+      "On desktop nothing overflows horizontally",
+      "At 375px the entire layout collapses to a single column in the order lead, secondaries, then the four cards",
+      "The six nav sections are evenly spaced and aligned on one row on desktop",
+      "All six section names and the date line appear exactly as specified"
+    ],
+    "expected_issues": [
+      "Multi-column grid misaligns; lead and sidebar overlap",
+      "Four bottom cards unequal width",
+      "Divider rules inconsistent",
+      "Layout does not linearize correctly on mobile"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_settings",
+    "description": "Build an account settings page for 'Workspace' at 1920px wide using a two-pane layout: LEFT a settings nav (220px) with 5 items (Profile, Account, Notifications, Billing, Security), 'Notifications' active. RIGHT a content pane showing the Notifications settings as THREE grouped sections ('Email', 'Push', 'SMS'), each a card with a header and 3-4 labeled toggle rows (label + description on the left, an on/off toggle switch on the right) - at least 10 toggle rows total, with a clear mix of on and off states. A sticky footer action bar within the content pane has 'Cancel' and a primary 'Save changes' button right-aligned. Responsive: at 375px the left nav becomes a horizontal scrollable tab strip on top and the toggle rows stack label-above-control.",
+    "requirements": [
+      "A left settings nav (~220px) lists all five items with 'Notifications' highlighted as active",
+      "The content pane shows three grouped cards: Email, Push, SMS",
+      "There are at least 10 toggle rows total across the three cards",
+      "Each toggle row has a left-aligned label (+description) and a right-aligned on/off switch in a consistent column",
+      "Both on and off toggle states are visually distinct and both appear among the rows",
+      "A sticky action bar shows 'Cancel' and a primary 'Save changes' button, right-aligned",
+      "The toggle switches all share one consistent style (repetition)",
+      "On desktop the toggle controls align in a single right-hand column across all rows",
+      "Nothing overflows horizontally on desktop",
+      "At 375px the left nav becomes a top tab strip and toggle rows stack the control below the label",
+      "The primary 'Save changes' button is visually higher-contrast than 'Cancel'"
+    ],
+    "expected_issues": [
+      "Toggle controls not aligned in a consistent column",
+      "Action bar overlaps last toggle rows",
+      "On/off states indistinguishable",
+      "Nav does not transform on mobile"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_papers",
+    "description": "Build an arXiv-style paper search-results page for 'OpenPapers' at 1920px wide. Top: a search bar pre-filled with 'transformer efficiency' and a results count '1-10 of 3,482'. Two-column layout: LEFT a filters sidebar (260px) with grouped facets ('Year' with 4 checkboxes 2026-2023, 'Category' with 4 checkboxes, 'Sort by' radio group) and an 'Apply' button. RIGHT a results list of at least 6 paper entries, each showing a title (link style), an author line, a venue+year line, a 2-line abstract snippet, and a row of 3 small tag chips. A pagination control (Prev, 1 2 3 ... 349, Next) sits at the bottom of the results. Responsive: at 375px the filters sidebar collapses into a 'Filters' button/disclosure above the results and entries go full width.",
+    "requirements": [
+      "A search bar is pre-filled with 'transformer efficiency' and a results count '1-10 of 3,482' is shown",
+      "A left filters sidebar (~260px) shows Year (4 checkboxes), Category (4 checkboxes), and a Sort-by radio group, plus an Apply button",
+      "The results list shows at least 6 paper entries",
+      "Each paper entry has a title, an author line, a venue+year line, a 2-line abstract snippet, and exactly three tag chips",
+      "Abstract snippets are truncated to about two lines (not full paragraphs) and do not overflow",
+      "A pagination control with Prev/Next and numbered pages appears at the bottom of the results",
+      "The sidebar and results list are top-aligned and do not overlap on desktop",
+      "Tag chips share a consistent style across all entries (repetition)",
+      "On desktop nothing overflows horizontally",
+      "At 375px the filters collapse into a disclosure/button above the results and entries become full width",
+      "Title links use a consistent accent color distinct from body text"
+    ],
+    "expected_issues": [
+      "Abstract snippets not clamped (overflow / uneven entry heights)",
+      "Sidebar overlaps results or does not collapse on mobile",
+      "Tag chips styled inconsistently",
+      "Pagination wraps or misaligns"
+    ],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  }
+]

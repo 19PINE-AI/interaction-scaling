@@ -37,6 +37,12 @@ CFG = {
         "out": "results/hard_benchmarks/web_rubric_rescore.json",
         "kind": "screenshot",
     },
+    "web_hard": {
+        "tasks": "data/hard_benchmarks/webpages/webpage_tasks_hard.json",
+        "runs": [f"results/hard_benchmarks/webpages_hard_onpolicy_run{i}.json" for i in (1, 2, 3)],
+        "out": "results/hard_benchmarks/web_hard_rubric_rescore.json",
+        "kind": "screenshot",
+    },
     "animations": {
         "tasks": "data/hard_benchmarks/animations/animation_tasks.json",
         "runs": [f"results/hard_benchmarks/animations_onpolicy_run{i}.json" for i in (1, 2, 3)],

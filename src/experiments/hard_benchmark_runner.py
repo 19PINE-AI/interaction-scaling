@@ -27,8 +27,32 @@ logger = logging.getLogger(__name__)
 # Prompts
 # ---------------------------------------------------------------------------
 
+# The four core graphic-design principles (Robin Williams, "The Non-Designer's
+# Design Book"): Proximity, Alignment, Repetition, Contrast, plus deliberate
+# color. Applied identically in the generation prompt, the reviewer feedback
+# prompt, and the rubric judge so the artifact is produced, critiqued, and
+# scored against the same design criteria.
+DESIGN_PRINCIPLES = """\
+Apply the four core design principles throughout:
+- PROXIMITY: group related items into a single visual unit with tight
+  internal spacing, and separate unrelated groups with generous whitespace.
+  Related things belong together; unrelated things must be visibly apart.
+- ALIGNMENT: every element shares a strong edge or centerline with
+  another — nothing is placed arbitrarily. Side-by-side panels/pillars/cards
+  must be equal width, share top and bottom edges, and have uniform gutters;
+  columns and rows of boxes line up exactly.
+- REPETITION: reuse a consistent visual system — the same heading style,
+  body font, accent color, box style, corner radius, bullet glyph, and spacing
+  unit everywhere. Repetition unifies the slide/page.
+- CONTRAST: if two elements differ in role, make them strongly different
+  (size, weight, color, structure) to build a clear hierarchy and guide the eye
+  — avoid timid, near-identical styling. The title must dominate.
+- COLOR: choose one deliberate, harmonious palette (complementary, triadic, or
+  analogous) with one accent color used consistently, and keep strong
+  text/background contrast for legibility."""
+
 SLIDE_SYSTEM_PROMPT = """\
-You are an expert web developer creating presentation slides as single-page HTML files.
+You are an expert presentation designer creating slides as single-page HTML files.
 
 Rules:
 - Output a COMPLETE, self-contained HTML file (<!DOCTYPE html> through </html>)
@@ -36,21 +60,26 @@ Rules:
 - The slide must render at 1920×1080 pixels with NO scrolling needed
 - ALL text must be fully visible — no overflow, no truncation, no clipping
 - Text elements must NOT overlap each other
-- Maintain proper alignment and visual hierarchy
 - Use appropriate font sizes (title: 36-48px, body: 16-24px, footnotes: 10-14px)
-- Wrap your complete HTML in a ```html code block"""
+
+%s
+
+- Wrap your complete HTML in a ```html code block""" % DESIGN_PRINCIPLES
 
 WEBPAGE_SYSTEM_PROMPT = """\
-You are an expert web developer creating webpages as single-page HTML files.
+You are an expert web designer creating webpages as single-page HTML files.
 
 Rules:
 - Output a COMPLETE, self-contained HTML file (<!DOCTYPE html> through </html>)
 - Use inline CSS (no external stylesheets)
 - The page is rendered in a 1920px-wide viewport; vertical scrolling is permitted
 - ALL text must be readable — no unintended overlap, clipping, or truncation
-- Preserve the requested sections, visual hierarchy, and alignment
+- Preserve the requested sections and content
 - Use appropriate font sizes and spacing for a desktop landing page
-- Wrap your complete HTML in a ```html code block"""
+
+%s
+
+- Wrap your complete HTML in a ```html code block""" % DESIGN_PRINCIPLES
 
 ANIMATION_SYSTEM_PROMPT = """\
 You are an expert web developer creating animations as single-page HTML files.
@@ -74,15 +103,17 @@ Rules:
 - Wrap your code in a ```python code block"""
 
 VISUAL_REVIEW_PROMPT = """\
-You are reviewing a rendered screenshot of a presentation slide or animation.
+You are reviewing a rendered screenshot of a presentation slide or web page.
 Carefully examine the image for these specific issues:
 
 1. **Text overflow**: Any text that is cut off, extends beyond its container, or requires scrolling
 2. **Text overlap**: Any text or elements that overlap each other, making content unreadable
-3. **Alignment issues**: Elements that should be aligned but aren't (e.g., columns not lined up, text not centered when it should be)
-4. **Readability**: Text too small to read, poor contrast, or unclear visual hierarchy
-5. **Layout problems**: Missing elements, broken layouts, elements outside the visible area
-6. **Content completeness**: All required content is present and visible
+3. **Alignment**: Elements that should share an edge or centerline but don't — side-by-side panels/pillars/cards of unequal width, misaligned top/bottom edges, uneven gutters, columns/rows that don't line up
+4. **Proximity**: Related items not grouped (scattered, ambiguous spacing) or unrelated groups crowded together with no separating whitespace
+5. **Repetition**: Inconsistent visual system — heading/body fonts, accent color, box style, corner radius, bullet glyph, or spacing that varies where it should repeat
+6. **Contrast**: Weak hierarchy — title not dominant, elements of different roles styled too similarly, or poor text/background color contrast
+7. **Readability & layout**: Text too small, missing elements, broken layout, elements outside the visible area
+8. **Content completeness**: All required content is present and visible
 
 The original requirements were:
 {requirements}

@@ -44,8 +44,19 @@ CATEGORIES = {
         "method": "run_slide_task",
         "max_iters": 3,
     },
+    "slides_hard2": {
+        # real-paper-grounded dense slides (text+figure, aligned pillars)
+        "task_file": DATA_DIR / "slides" / "slide_tasks_hard2.json",
+        "method": "run_slide_task",
+        "max_iters": 3,
+    },
     "webpages": {
         "task_file": DATA_DIR / "webpages" / "webpage_tasks.json",
+        "method": "run_webpage_task",
+        "max_iters": 3,
+    },
+    "webpages_hard": {
+        "task_file": DATA_DIR / "webpages" / "webpage_tasks_hard.json",
         "method": "run_webpage_task",
         "max_iters": 3,
     },
