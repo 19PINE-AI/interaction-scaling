@@ -16,311 +16,100 @@
 \gdef\HyperFirstAtBeginDocument#1{#1}
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
-\citation{wei2022chain,yao2023tree,deepseek2025r1,kimi2025k15,snell2024scaling}
+\citation{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling}
 \citation{wang2023selfconsistency,brown2024large}
-\citation{huang2024selfcorrect,kamoi2025correct}
-\citation{trankiela2026singleagent}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
+\newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
+\newlabel{sec:intro@cref}{{[section][1][]1}{[1][1][]1}}
+\citation{shinn2023reflexion,yao2023react,gou2024critic,shen2025thinking}
+\citation{shinn2023reflexion}
+\citation{yao2023react}
 \citation{gou2024critic}
-\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
-\newlabel{sec:intro}{{1}{2}{Introduction}{section.1}{}}
-\newlabel{sec:intro@cref}{{[section][1][]1}{[1][2][]2}}
-\@writefile{toc}{\contentsline {paragraph}{Thesis.}{2}{paragraph*.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Four contributions.}{2}{paragraph*.2}\protected@file@percent }
-\citation{wei2022chain}
-\citation{wang2023selfconsistency}
-\citation{yao2023tree}
-\citation{shinn2023reflexion,madaan2023selfrefine}
-\citation{snell2024scaling,beeching2024searchscale}
-\citation{deepseek2025r1,kimi2025k15}
-\citation{huang2024selfcorrect}
-\citation{kamoi2025correct}
-\citation{gou2024critic}
-\citation{du2023multi}
-\citation{trankiela2026singleagent}
-\@writefile{toc}{\contentsline {paragraph}{Roadmap.}{3}{paragraph*.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{section.2}\protected@file@percent }
-\newlabel{sec:related}{{2}{3}{Related Work}{section.2}{}}
-\newlabel{sec:related@cref}{{[section][2][]2}{[1][3][]3}}
-\@writefile{toc}{\contentsline {paragraph}{Test-time scaling.}{3}{paragraph*.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Self-correction limits and grounded verification.}{3}{paragraph*.5}\protected@file@percent }
 \citation{shen2025thinking}
-\citation{schick2023toolformer,patil2024gorilla}
-\citation{yao2023react,wang2023voyager}
-\citation{gehring2025rlef}
-\citation{webgen2025}
-\citation{chen2021evaluating,brown2024large}
-\citation{stiennon2020learning,casper2023open}
-\citation{kirk2024diversity,padmakumar2024writing}
-\citation{magister2023teaching,ho2023largelm,fu2023specializing}
-\citation{deepseek2025r1}
-\citation{kimi2025k15}
-\citation{huang2024selfcorrect,kamoi2025correct}
-\citation{trankiela2026singleagent}
-\@writefile{toc}{\contentsline {paragraph}{Thinking vs.\ doing.}{4}{paragraph*.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Agentic LLMs and grounded refinement.}{4}{paragraph*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Sampling-based inference scaling and consistency-vs-diversity.}{4}{paragraph*.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Distillation of tool use and refinement behavior.}{4}{paragraph*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}The Grounded Feedback Framework}{4}{section.3}\protected@file@percent }
-\newlabel{sec:framework}{{3}{4}{The Grounded Feedback Framework}{section.3}{}}
-\newlabel{sec:framework@cref}{{[section][3][]3}{[1][4][]4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Feedback taxonomy}{4}{subsection.3.1}\protected@file@percent }
-\newlabel{sec:taxonomy}{{3.1}{4}{Feedback taxonomy}{subsection.3.1}{}}
-\newlabel{sec:taxonomy@cref}{{[subsection][1][3]3.1}{[1][4][]4}}
-\citation{cover2006elements}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Information-theoretic formalization}{5}{subsection.3.2}\protected@file@percent }
-\newlabel{sec:formalization}{{3.2}{5}{Information-theoretic formalization}{subsection.3.2}{}}
-\newlabel{sec:formalization@cref}{{[subsection][2][3]3.2}{[1][5][]5}}
-\@writefile{toc}{\contentsline {paragraph}{Random variables.}{5}{paragraph*.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Type 0/1 (no grounding).}{5}{paragraph*.11}\protected@file@percent }
-\citation{huang2024selfcorrect,trankiela2026singleagent}
-\@writefile{toc}{\contentsline {paragraph}{Type 2/3 (grounded).}{6}{paragraph*.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{What this argument proves vs.\ predicts.}{6}{paragraph*.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Predictions}{6}{subsection.3.3}\protected@file@percent }
-\newlabel{sec:predictions}{{3.3}{6}{Predictions}{subsection.3.3}{}}
-\newlabel{sec:predictions@cref}{{[subsection][3][3]3.3}{[1][6][]6}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces The proposer--reviewer harness. Blue boxes are LLM calls (same model, different contexts); orange is the environment. The reviewer's context is reset between iterations to contain only the latest artifact and the grounded feedback channel --- preventing context overload and concentrating the LLM's analysis on the localizable signal in $E$.\relax }}{7}{figure.caption.14}\protected@file@percent }
+\citation{wei2022chain,deepseek2025r1,snell2024scaling}
+\citation{wang2023selfconsistency,brown2024large}
+\@writefile{toc}{\contentsline {paragraph}{Grounding is the variable, on both sides of the loop.}{2}{paragraph*.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Contributions.}{2}{paragraph*.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph  {executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph  {feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref  {sec:framework}). Grounded \emph  {evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.\relax }}{3}{figure.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:harness}{{1}{7}{The proposer--reviewer harness. Blue boxes are LLM calls (same model, different contexts); orange is the environment. The reviewer's context is reset between iterations to contain only the latest artifact and the grounded feedback channel --- preventing context overload and concentrating the LLM's analysis on the localizable signal in $E$.\relax }{figure.caption.14}{}}
-\newlabel{fig:harness@cref}{{[figure][1][]1}{[1][7][]7}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Method: The Proposer--Reviewer Harness}{7}{section.4}\protected@file@percent }
-\newlabel{sec:method}{{4}{7}{Method: The Proposer--Reviewer Harness}{section.4}{}}
-\newlabel{sec:method@cref}{{[section][4][]4}{[1][7][]7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Architecture}{7}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Budget definition and allocation}{7}{subsection.4.2}\protected@file@percent }
-\newlabel{sec:method-budget}{{4.2}{7}{Budget definition and allocation}{subsection.4.2}{}}
-\newlabel{sec:method-budget@cref}{{[subsection][2][4]4.2}{[1][7][]7}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Cross-modal instantiation}{7}{subsection.4.3}\protected@file@percent }
-\newlabel{sec:method-modality}{{4.3}{7}{Cross-modal instantiation}{subsection.4.3}{}}
-\newlabel{sec:method-modality@cref}{{[subsection][3][4]4.3}{[1][7][]7}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Modality--specific instantiations of the harness. The feedback channel determines which Type 3 sub-modality the reviewer consumes; the proposer always sees text or images.\relax }}{8}{table.caption.15}\protected@file@percent }
-\newlabel{tab:harness-setup}{{1}{8}{Modality--specific instantiations of the harness. The feedback channel determines which Type 3 sub-modality the reviewer consumes; the proposer always sees text or images.\relax }{table.caption.15}{}}
-\newlabel{tab:harness-setup@cref}{{[table][1][]1}{[1][7][]8}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Interaction Scaling with External Scaffolding}{8}{section.5}\protected@file@percent }
-\newlabel{sec:harness}{{5}{8}{Interaction Scaling with External Scaffolding}{section.5}{}}
-\newlabel{sec:harness@cref}{{[section][5][]5}{[1][7][]8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Setup}{8}{subsection.5.1}\protected@file@percent }
-\newlabel{sec:harness-setup}{{5.1}{8}{Setup}{subsection.5.1}{}}
-\newlabel{sec:harness-setup@cref}{{[subsection][1][5]5.1}{[1][8][]8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Six-modality headline results}{8}{subsection.5.2}\protected@file@percent }
-\newlabel{sec:harness-headline}{{5.2}{8}{Six-modality headline results}{subsection.5.2}{}}
-\newlabel{sec:harness-headline@cref}{{[subsection][2][5]5.2}{[1][8][]8}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Capability emergence: code as a case study}{8}{subsection.5.3}\protected@file@percent }
-\newlabel{sec:harness-emergence}{{5.3}{8}{Capability emergence: code as a case study}{subsection.5.3}{}}
-\newlabel{sec:harness-emergence@cref}{{[subsection][3][5]5.3}{[1][8][]8}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf  {Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt  {pytest}); video by a native full-video rubric (Gemini\nobreakspace  {}3.1\nobreakspace  {}Pro judging the whole rendered clip); the four visual/factual rows use a holistic screenshot judge and serve here as a cross-modal overview, with the precise web and animation figures given by the binary rubric in \Cref  {tab:rubric} and the academic-figure and slide results by deterministic geometry in \Cref  {tab:geometric}.\relax }}{9}{table.caption.16}\protected@file@percent }
-\newlabel{tab:harness-headline}{{2}{9}{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf {Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt {pytest}); video by a native full-video rubric (Gemini~3.1~Pro judging the whole rendered clip); the four visual/factual rows use a holistic screenshot judge and serve here as a cross-modal overview, with the precise web and animation figures given by the binary rubric in \Cref {tab:rubric} and the academic-figure and slide results by deterministic geometry in \Cref {tab:geometric}.\relax }{table.caption.16}{}}
-\newlabel{tab:harness-headline@cref}{{[table][2][]2}{[1][8][]9}}
-\@writefile{toc}{\contentsline {paragraph}{Mechanism.}{9}{paragraph*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Video editing.}{9}{paragraph*.18}\protected@file@percent }
-\newlabel{sec:harness-video}{{5.3}{9}{Video editing}{paragraph*.18}{}}
-\newlabel{sec:harness-video@cref}{{[subsection][3][5]5.3}{[1][9][]9}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Feedback actionability validates the Type-3 taxonomy}{9}{subsection.5.4}\protected@file@percent }
-\newlabel{sec:harness-taxonomy}{{5.4}{9}{Feedback actionability validates the Type-3 taxonomy}{subsection.5.4}{}}
-\newlabel{sec:harness-taxonomy@cref}{{[subsection][4][5]5.4}{[1][9][]9}}
-\@writefile{toc}{\contentsline {paragraph}{The framework predicts the tier-level grouping, not a per-channel ranking.}{10}{paragraph*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The load-bearing claim is grounded vs.\ ungrounded feedback.}{10}{paragraph*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}In-modality feedback-type controls (Type 1 / Type 2 / Type 3a)}{10}{subsection.5.5}\protected@file@percent }
-\newlabel{sec:harness-typecontrols}{{5.5}{10}{In-modality feedback-type controls (Type 1 / Type 2 / Type 3a)}{subsection.5.5}{}}
-\newlabel{sec:harness-typecontrols@cref}{{[subsection][5][5]5.5}{[1][10][]10}}
-\@writefile{toc}{\contentsline {paragraph}{Type 3a beats the static channels on capability and efficiency, and Type 1 commits the predicted ungrounded-channel failure mode.}{10}{paragraph*.22}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed; the ``SS'' column is the \emph  {per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref  {tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph  {reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph  {and} Type 3a is $\sim $2.5$\times $ more token-efficient (1.53 vs.\ 2.07 iterations).\relax }}{11}{table.caption.21}\protected@file@percent }
-\newlabel{tab:type-controls}{{3}{11}{In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed; the ``SS'' column is the \emph {per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref {tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph {reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph {and} Type 3a is $\sim $2.5$\times $ more token-efficient (1.53 vs.\ 2.07 iterations).\relax }{table.caption.21}{}}
-\newlabel{tab:type-controls@cref}{{[table][3][]3}{[1][10][]11}}
-\@writefile{toc}{\contentsline {paragraph}{Type 1 is stronger than naive ``no information'' would predict, and Type 1 $\approx $ Type 2 by construction of the bug set.}{11}{paragraph*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Reasoning-only at matched budget: is this just more compute?}{11}{subsection.5.6}\protected@file@percent }
-\newlabel{sec:harness-reasoning}{{5.6}{11}{Reasoning-only at matched budget: is this just more compute?}{subsection.5.6}{}}
-\newlabel{sec:harness-reasoning@cref}{{[subsection][6][5]5.6}{[1][11][]11}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref  {tab:type-controls}); the 3-run aggregate is reported in \Cref  {tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times $ the harness's token budget.\relax }}{11}{table.caption.24}\protected@file@percent }
-\newlabel{tab:reasoning-baseline}{{4}{11}{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref {tab:type-controls}); the 3-run aggregate is reported in \Cref {tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times $ the harness's token budget.\relax }{table.caption.24}{}}
-\newlabel{tab:reasoning-baseline@cref}{{[table][4][]4}{[1][11][]11}}
-\citation{ruan2025iad}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Four-strategy scaling curves: the headline result}{12}{subsection.5.7}\protected@file@percent }
-\newlabel{sec:harness-scaling}{{5.7}{12}{Four-strategy scaling curves: the headline result}{subsection.5.7}{}}
-\newlabel{sec:harness-scaling@cref}{{[subsection][7][5]5.7}{[1][12][]12}}
-\@writefile{toc}{\contentsline {paragraph}{What this benchmark cannot adjudicate.}{12}{paragraph*.26}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces \textbf  {The headline scaling result (3-seed mean $\pm $ SD).} Pass-rate by strategy\nobreakspace  {}$\times $\nobreakspace  {}budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent on-policy runs; R was run once (extended-thinking variation across seeds is small at temp\nobreakspace  {}0) at the sweep's budget partition (a more generous partition lifts R to $86.7\%$; see footnote and \Cref  {tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise on a 3-seed $\times $ 15-task suite; pass@$N$ is non-decreasing in $N$ in expectation but not pointwise across finite-sample on-policy seeds. \emph  {Reasoning-only and best-of-$N$ saturate well below 100\%}; all three iteration-with-feedback strategies reach $\geq 97.8\%$ at $B{=}20$K (L hit 100\% on 2 of 3 seeds; H on all 3; H is the only variant at strict 100\% across seeds). The architectural ordering across H, L is within seed noise on pass-rate; what separates them is token efficiency and reliability (\Cref  {sec:harness-separation}).\relax }}{13}{table.caption.25}\protected@file@percent }
-\newlabel{tab:scaling-curves}{{5}{13}{\textbf {The headline scaling result (3-seed mean $\pm $ SD).} Pass-rate by strategy~$\times $~budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent on-policy runs; R was run once (extended-thinking variation across seeds is small at temp~0) at the sweep's budget partition (a more generous partition lifts R to $86.7\%$; see footnote and \Cref {tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise on a 3-seed $\times $ 15-task suite; pass@$N$ is non-decreasing in $N$ in expectation but not pointwise across finite-sample on-policy seeds. \emph {Reasoning-only and best-of-$N$ saturate well below 100\%}; all three iteration-with-feedback strategies reach $\geq 97.8\%$ at $B{=}20$K (L hit 100\% on 2 of 3 seeds; H on all 3; H is the only variant at strict 100\% across seeds). The architectural ordering across H, L is within seed noise on pass-rate; what separates them is token efficiency and reliability (\Cref {sec:harness-separation}).\relax }{table.caption.25}{}}
-\newlabel{tab:scaling-curves@cref}{{[table][5][]5}{[1][12][]13}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Architectural separation: token efficiency and reliability among interaction strategies}{13}{subsection.5.8}\protected@file@percent }
-\newlabel{sec:harness-separation}{{5.8}{13}{Architectural separation: token efficiency and reliability among interaction strategies}{subsection.5.8}{}}
-\newlabel{sec:harness-separation@cref}{{[subsection][8][5]5.8}{[1][12][]13}}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Three interaction-strategy variants at $B{=}20$K on the 15 hard code tasks, all using Type 3a execution feedback. Pass-rate is within seed noise (sign-test $p{>}0.6$ on the H--L comparison); the harness wins on \emph  {token efficiency} (1{,}029 vs.\ 1{,}431 L vs.\ 1{,}416 IAD mean output tokens) and on \emph  {seed variance} (zero across three seeds for H; L hit 100\% in 2 of 3 seeds; IAD was run for one seed only).\relax }}{13}{table.caption.28}\protected@file@percent }
-\newlabel{tab:LvsH}{{6}{13}{Three interaction-strategy variants at $B{=}20$K on the 15 hard code tasks, all using Type 3a execution feedback. Pass-rate is within seed noise (sign-test $p{>}0.6$ on the H--L comparison); the harness wins on \emph {token efficiency} (1{,}029 vs.\ 1{,}431 L vs.\ 1{,}416 IAD mean output tokens) and on \emph {seed variance} (zero across three seeds for H; L hit 100\% in 2 of 3 seeds; IAD was run for one seed only).\relax }{table.caption.28}{}}
-\newlabel{tab:LvsH@cref}{{[table][6][]6}{[1][13][]13}}
-\@writefile{toc}{\contentsline {paragraph}{Pass rate at saturation: ties within seed noise.}{13}{paragraph*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Token efficiency and seed variance: where H separates.}{13}{paragraph*.30}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {Four-strategy scaling curves on hard code (Sonnet 4, 3-seed means).} Reasoning-only (R) saturates at 73.3\% at this sweep's fixed thinking-to-output partition; a more generous thinking-heavy partition lifts R to 86.7\% (\Cref  {tab:reasoning-baseline}, shown by the dashed reference line). Best-of-$N$ at 86.7\%; both iteration-with-feedback strategies (L, H) reach the 100\% ceiling at $B{=}20$K within seed noise (L: 97.8\,$\pm $\,3.1\,pp; H: 100.0\,$\pm $\,0.0\,pp). The qualitative gap is between \emph  {reasoning/sampling} and \emph  {interaction with feedback}, not within the interaction strategies, and survives either R reading.\relax }}{14}{figure.caption.27}\protected@file@percent }
-\newlabel{fig:scaling-curves}{{2}{14}{\textbf {Four-strategy scaling curves on hard code (Sonnet 4, 3-seed means).} Reasoning-only (R) saturates at 73.3\% at this sweep's fixed thinking-to-output partition; a more generous thinking-heavy partition lifts R to 86.7\% (\Cref {tab:reasoning-baseline}, shown by the dashed reference line). Best-of-$N$ at 86.7\%; both iteration-with-feedback strategies (L, H) reach the 100\% ceiling at $B{=}20$K within seed noise (L: 97.8\,$\pm $\,3.1\,pp; H: 100.0\,$\pm $\,0.0\,pp). The qualitative gap is between \emph {reasoning/sampling} and \emph {interaction with feedback}, not within the interaction strategies, and survives either R reading.\relax }{figure.caption.27}{}}
-\newlabel{fig:scaling-curves@cref}{{[figure][2][]2}{[1][12][]14}}
-\@writefile{toc}{\contentsline {paragraph}{What separates the interaction strategies.}{14}{paragraph*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.9}Cross-model replication: not a Claude artifact}{14}{subsection.5.9}\protected@file@percent }
-\newlabel{sec:harness-crossmodel}{{5.9}{14}{Cross-model replication: not a Claude artifact}{subsection.5.9}{}}
-\newlabel{sec:harness-crossmodel@cref}{{[subsection][9][5]5.9}{[1][14][]14}}
-\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Cross-model replication on the same 15 hard code tasks. The Claude row is the multi-run reference from \Cref  {tab:harness-headline}; Qwen and GPT-5 are single on-policy runs at $T{=}0.7$. The harness lift survives across three families (Anthropic, Alibaba, OpenAI).\relax }}{14}{table.caption.32}\protected@file@percent }
-\newlabel{tab:crossmodel}{{7}{14}{Cross-model replication on the same 15 hard code tasks. The Claude row is the multi-run reference from \Cref {tab:harness-headline}; Qwen and GPT-5 are single on-policy runs at $T{=}0.7$. The harness lift survives across three families (Anthropic, Alibaba, OpenAI).\relax }{table.caption.32}{}}
-\newlabel{tab:crossmodel@cref}{{[table][7][]7}{[1][14][]14}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.10}Held-out generalization}{15}{subsection.5.10}\protected@file@percent }
-\newlabel{sec:harness-heldout}{{5.10}{15}{Held-out generalization}{subsection.5.10}{}}
-\newlabel{sec:harness-heldout@cref}{{[subsection][10][5]5.10}{[1][15][]15}}
-\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Held-out generalization on 32 newly constructed code tasks (zero overlap with the 15-task development set). The harness recovers 3/3 single-shot failures and regresses zero passing tasks. The smaller absolute $\Delta $ is a baseline-compression effect (single-shot is 90.6\% on the held-out set, leaving at most 9.4\,pp headroom).\relax }}{15}{table.caption.33}\protected@file@percent }
-\newlabel{tab:heldout}{{8}{15}{Held-out generalization on 32 newly constructed code tasks (zero overlap with the 15-task development set). The harness recovers 3/3 single-shot failures and regresses zero passing tasks. The smaller absolute $\Delta $ is a baseline-compression effect (single-shot is 90.6\% on the held-out set, leaving at most 9.4\,pp headroom).\relax }{table.caption.33}{}}
-\newlabel{tab:heldout@cref}{{[table][8][]8}{[1][15][]15}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.11}Budget allocation matters: an 86.6 pp spread}{15}{subsection.5.11}\protected@file@percent }
-\newlabel{sec:harness-allocation}{{5.11}{15}{Budget allocation matters: an 86.6 pp spread}{subsection.5.11}{}}
-\newlabel{sec:harness-allocation@cref}{{[subsection][11][5]5.11}{[1][15][]15}}
-\@writefile{toc}{\contentsline {paragraph}{The executor budget.}{15}{paragraph*.35}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Budget allocation simplex on 15 hard code tasks, $B = 10$K total. Pass-rate is monotone in the proposer's per-call cap; review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.\relax }}{16}{table.caption.34}\protected@file@percent }
-\newlabel{tab:allocation}{{9}{16}{Budget allocation simplex on 15 hard code tasks, $B = 10$K total. Pass-rate is monotone in the proposer's per-call cap; review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.\relax }{table.caption.34}{}}
-\newlabel{tab:allocation@cref}{{[table][9][]9}{[1][15][]16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.12}Token ROI by modality}{16}{subsection.5.12}\protected@file@percent }
-\newlabel{sec:harness-roi}{{5.12}{16}{Token ROI by modality}{subsection.5.12}{}}
-\newlabel{sec:harness-roi@cref}{{[subsection][12][5]5.12}{[1][16][]16}}
-\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Per-task token cost and quality return-on-investment for the harness, averaged across three on-policy runs. ``Extra tokens'' is reviewed-minus-single-shot per task. Tokens per 0.01 quality is extra tokens divided by (mean reviewed quality $-$ mean single-shot quality)$\cdot 100$. Code dominates by $100\times $.\relax }}{16}{table.caption.36}\protected@file@percent }
-\newlabel{tab:harness-roi}{{10}{16}{Per-task token cost and quality return-on-investment for the harness, averaged across three on-policy runs. ``Extra tokens'' is reviewed-minus-single-shot per task. Tokens per 0.01 quality is extra tokens divided by (mean reviewed quality $-$ mean single-shot quality)$\cdot 100$. Code dominates by $100\times $.\relax }{table.caption.36}{}}
-\newlabel{tab:harness-roi@cref}{{[table][10][]10}{[1][16][]16}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.13}The harness does not over-revise: built-in early stopping}{17}{subsection.5.13}\protected@file@percent }
-\newlabel{sec:harness-earlystop}{{5.13}{17}{The harness does not over-revise: built-in early stopping}{subsection.5.13}{}}
-\newlabel{sec:harness-earlystop@cref}{{[subsection][13][5]5.13}{[1][16][]17}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Academic Figures and Deterministic Geometric Evaluation}{17}{section.6}\protected@file@percent }
-\newlabel{sec:geometric}{{6}{17}{Academic Figures and Deterministic Geometric Evaluation}{section.6}{}}
-\newlabel{sec:geometric@cref}{{[section][6][]6}{[1][17][]17}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}VLM screenshot judging is unreliable for geometric defects}{17}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Deterministic geometry}{18}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Interaction scaling on an objective metric}{18}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The VLM is blind here, as a judge \emph  {and} as a reviewer.}{18}{paragraph*.37}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Interaction scaling under deterministic DOM-geometry scoring, across four visual modalities at one identical generation configuration (Claude Sonnet 4, temperature $0$, design-principle prompt, alignment-inclusive geometric reward, three seeds; propose\,$\to $\,measure\,$\to $\,feed exact defects back\,$\to $\,revise, $\le 3$ iterations). Defects are counted exactly from the rendered DOM (text overlap, container/horizontal overflow, clipping, box-group misalignment); web pages are scored at desktop $1920$ and mobile $375$ widths and summed, and animations are scored at every sampled frame and summed. Lower is better; $p$ is a two-sided paired sign test on per-task-run pairs.\relax }}{19}{table.caption.39}\protected@file@percent }
-\newlabel{tab:geometric}{{11}{19}{Interaction scaling under deterministic DOM-geometry scoring, across four visual modalities at one identical generation configuration (Claude Sonnet 4, temperature $0$, design-principle prompt, alignment-inclusive geometric reward, three seeds; propose\,$\to $\,measure\,$\to $\,feed exact defects back\,$\to $\,revise, $\le 3$ iterations). Defects are counted exactly from the rendered DOM (text overlap, container/horizontal overflow, clipping, box-group misalignment); web pages are scored at desktop $1920$ and mobile $375$ widths and summed, and animations are scored at every sampled frame and summed. Lower is better; $p$ is a two-sided paired sign test on per-task-run pairs.\relax }{table.caption.39}{}}
-\newlabel{tab:geometric@cref}{{[table][11][]11}{[1][19][]19}}
-\@writefile{toc}{\contentsline {paragraph}{Extending the instrument to scrollable web pages.}{19}{paragraph*.40}\protected@file@percent }
-\newlabel{sec:web-geometry}{{6.3}{19}{Extending the instrument to scrollable web pages}{paragraph*.40}{}}
-\newlabel{sec:web-geometry@cref}{{[subsection][3][6]6.3}{[1][19][]19}}
-\@writefile{toc}{\contentsline {paragraph}{Extending the instrument to animations (per frame).}{19}{paragraph*.41}\protected@file@percent }
-\newlabel{sec:anim-geometry}{{6.3}{19}{Extending the instrument to animations (per frame)}{paragraph*.41}{}}
-\newlabel{sec:anim-geometry@cref}{{[subsection][3][6]6.3}{[1][19][]19}}
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Interaction scaling under binary per-requirement rubric scoring on the flowing visual modalities. Score is the fraction of independently-checked requirements satisfied; $p$ is a one-sided paired sign test over per-task-run deltas.\relax }}{20}{table.caption.43}\protected@file@percent }
-\newlabel{tab:rubric}{{12}{20}{Interaction scaling under binary per-requirement rubric scoring on the flowing visual modalities. Score is the fraction of independently-checked requirements satisfied; $p$ is a one-sided paired sign test over per-task-run deltas.\relax }{table.caption.43}{}}
-\newlabel{tab:rubric@cref}{{[table][12][]12}{[1][20][]20}}
-\@writefile{toc}{\contentsline {paragraph}{Scope.}{20}{paragraph*.42}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Binary-rubric evaluation for flowing and factual modalities}{20}{subsection.6.4}\protected@file@percent }
-\newlabel{sec:rubric}{{6.4}{20}{Binary-rubric evaluation for flowing and factual modalities}{subsection.6.4}{}}
-\newlabel{sec:rubric@cref}{{[subsection][4][6]6.4}{[1][20][]20}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Internalizing the Harness into a Small Student}{20}{section.7}\protected@file@percent }
-\newlabel{sec:distill}{{7}{20}{Internalizing the Harness into a Small Student}{section.7}{}}
-\newlabel{sec:distill@cref}{{[section][7][]7}{[1][20][]20}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Setup}{20}{subsection.7.1}\protected@file@percent }
-\newlabel{sec:distill-setup}{{7.1}{20}{Setup}{subsection.7.1}{}}
-\newlabel{sec:distill-setup@cref}{{[subsection][1][7]7.1}{[1][20][]20}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}Markdown emission with external scaffold}{21}{subsection.7.2}\protected@file@percent }
-\newlabel{sec:distill-format}{{7.2}{21}{Markdown emission with external scaffold}{subsection.7.2}{}}
-\newlabel{sec:distill-format@cref}{{[subsection][2][7]7.2}{[1][21][]21}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}Headline results}{21}{subsection.7.3}\protected@file@percent }
-\newlabel{sec:distill-headline}{{7.3}{21}{Headline results}{subsection.7.3}{}}
-\newlabel{sec:distill-headline@cref}{{[subsection][3][7]7.3}{[1][21][]21}}
-\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Distilled 8B student on the 18-task hard held-out suite (teacher's pre-curated single-shot failures, so teacher single-shot is 0/18 by construction). The student lifts judge-keep from 0\% to 44\% at pass@1 and 56\% at pass@3. The $0.50\times $ capability ratio against the teacher is established on a separate 44-task out-of-distribution suite reported next, where teacher single-shot is non-degenerate.\relax }}{21}{table.caption.45}\protected@file@percent }
-\newlabel{tab:distill-headline}{{13}{21}{Distilled 8B student on the 18-task hard held-out suite (teacher's pre-curated single-shot failures, so teacher single-shot is 0/18 by construction). The student lifts judge-keep from 0\% to 44\% at pass@1 and 56\% at pass@3. The $0.50\times $ capability ratio against the teacher is established on a separate 44-task out-of-distribution suite reported next, where teacher single-shot is non-degenerate.\relax }{table.caption.45}{}}
-\newlabel{tab:distill-headline@cref}{{[table][13][]13}{[1][21][]21}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Three recipe findings}{21}{subsection.7.4}\protected@file@percent }
-\newlabel{sec:distill-recipes}{{7.4}{21}{Three recipe findings}{subsection.7.4}{}}
-\newlabel{sec:distill-recipes@cref}{{[subsection][4][7]7.4}{[1][21][]21}}
-\@writefile{toc}{\contentsline {paragraph}{(a) U-curve in retained reasoning length.}{22}{paragraph*.46}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Reasoning-cap U-curve on the 18-task hard held-out suite. SFT recipe sweep on Qwen3-VL-8B-Instruct (37 judge-kept teacher traces; same inference protocol). The optimum is at the student's coherence horizon, not the teacher's.\relax }}{22}{table.caption.47}\protected@file@percent }
-\newlabel{tab:distill-ucurve}{{14}{22}{Reasoning-cap U-curve on the 18-task hard held-out suite. SFT recipe sweep on Qwen3-VL-8B-Instruct (37 judge-kept teacher traces; same inference protocol). The optimum is at the student's coherence horizon, not the teacher's.\relax }{table.caption.47}{}}
-\newlabel{tab:distill-ucurve@cref}{{[table][14][]14}{[1][22][]22}}
-\@writefile{toc}{\contentsline {paragraph}{(b) More SFT data regresses.}{22}{paragraph*.48}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Three independent attempts to scale the SFT corpus past V3's 37 examples. All regressed. Quality dominates quantity at this scale.\relax }}{22}{table.caption.49}\protected@file@percent }
-\newlabel{tab:distill-datascale}{{15}{22}{Three independent attempts to scale the SFT corpus past V3's 37 examples. All regressed. Quality dominates quantity at this scale.\relax }{table.caption.49}{}}
-\newlabel{tab:distill-datascale@cref}{{[table][15][]15}{[1][22][]22}}
-\@writefile{toc}{\contentsline {paragraph}{(c) RFT polishes consistency but kills pass@$k$.}{22}{paragraph*.50}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve; per-task variance collapses; pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph  {is} the inference-scaling budget. \textit  {Note on notation.} \textbf  {mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph  {pass@1}=44\% reported in \Cref  {tab:distill-headline,tab:distill-ablation}, which is just seed\nobreakspace  {}1's accuracy. \emph  {pass@2} and \emph  {pass@3} are union pass-rates over the first 2 / all 3 seeds.\relax }}{23}{table.caption.51}\protected@file@percent }
-\newlabel{tab:distill-rft}{{16}{23}{RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve; per-task variance collapses; pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph {is} the inference-scaling budget. \textit {Note on notation.} \textbf {mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph {pass@1}=44\% reported in \Cref {tab:distill-headline,tab:distill-ablation}, which is just seed~1's accuracy. \emph {pass@2} and \emph {pass@3} are union pass-rates over the first 2 / all 3 seeds.\relax }{table.caption.51}{}}
-\newlabel{tab:distill-rft@cref}{{[table][16][]16}{[1][22][]23}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Consolidated ablation: locating the V3 optimum}{23}{subsection.7.5}\protected@file@percent }
-\newlabel{sec:distill-ablation}{{7.5}{23}{Consolidated ablation: locating the V3 optimum}{subsection.7.5}{}}
-\newlabel{sec:distill-ablation@cref}{{[subsection][5][7]7.5}{[1][22][]23}}
-\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Consolidated SFT and post-training ablation on the 18-task hard held-out suite. All single-seed pass@1; pass@3 values are reported where collected. V3 with the 1500-character reasoning cap and 37 judge-kept teacher traces is the recipe sweet spot; V3+fc4k is identical in outcome quality but $2.2\times $ faster at inference. Configurations on either side of V3 are below the optimum and clarify which lever is load-bearing.\relax }}{23}{table.caption.52}\protected@file@percent }
-\newlabel{tab:distill-ablation}{{17}{23}{Consolidated SFT and post-training ablation on the 18-task hard held-out suite. All single-seed pass@1; pass@3 values are reported where collected. V3 with the 1500-character reasoning cap and 37 judge-kept teacher traces is the recipe sweet spot; V3+fc4k is identical in outcome quality but $2.2\times $ faster at inference. Configurations on either side of V3 are below the optimum and clarify which lever is load-bearing.\relax }{table.caption.52}{}}
-\newlabel{tab:distill-ablation@cref}{{[table][17][]17}{[1][23][]23}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Operational deployment}{24}{subsection.7.6}\protected@file@percent }
-\newlabel{sec:distill-deploy}{{7.6}{24}{Operational deployment}{subsection.7.6}{}}
-\newlabel{sec:distill-deploy@cref}{{[subsection][6][7]7.6}{[1][24][]24}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Discussion}{24}{section.8}\protected@file@percent }
-\newlabel{sec:discussion}{{8}{24}{Discussion}{section.8}{}}
-\newlabel{sec:discussion@cref}{{[section][8][]8}{[1][24][]24}}
-\@writefile{toc}{\contentsline {paragraph}{Two scaling axes saturate; the third does not.}{24}{paragraph*.53}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Architecture buys efficiency and reliability.}{24}{paragraph*.54}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Grounding the evaluation, not just the feedback.}{24}{paragraph*.55}\protected@file@percent }
+\newlabel{fig:concept}{{1}{3}{\textbf {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph {executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph {feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref {sec:framework}). Grounded \emph {evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.\relax }{figure.caption.2}{}}
+\newlabel{fig:concept@cref}{{[figure][1][]1}{[1][2][]3}}
+\@writefile{toc}{\contentsline {section}{\numberline {2}The Grounded-Feedback Framework}{3}{section.2}\protected@file@percent }
+\newlabel{sec:framework}{{2}{3}{The Grounded-Feedback Framework}{section.2}{}}
+\newlabel{sec:framework@cref}{{[section][2][]2}{[1][2][]3}}
+\@writefile{toc}{\contentsline {paragraph}{Related work.}{3}{paragraph*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}A feedback taxonomy by grounding}{3}{subsection.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces \textbf  {The DPI ceiling.} Reasoning and best-of-$N$ are functions of the frozen weights/prompt $(\Theta ,X)$ and saturate at the information already present (measured $73.3\%$ and $86.7\%$ on hard code at a $20$K-token budget; \Cref  {sec:interaction}). Grounded interaction imports external information each cycle and exceeds the ceiling, reaching strict $100\%$. Schematic; saturation values are the measured ceilings.\relax }}{4}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:dpi}{{2}{4}{\textbf {The DPI ceiling.} Reasoning and best-of-$N$ are functions of the frozen weights/prompt $(\Theta ,X)$ and saturate at the information already present (measured $73.3\%$ and $86.7\%$ on hard code at a $20$K-token budget; \Cref {sec:interaction}). Grounded interaction imports external information each cycle and exceeds the ceiling, reaching strict $100\%$. Schematic; saturation values are the measured ceilings.\relax }{figure.caption.6}{}}
+\newlabel{fig:dpi@cref}{{[figure][2][]2}{[1][4][]4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Why grounding breaks the ceiling: a DPI bound}{4}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The symmetric claim: ungrounded evaluation cannot measure the gain.}{4}{paragraph*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Predictions}{4}{subsection.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Modality instantiations. Each modality pairs a grounded feedback channel with the instrument that both drives revision and scores the result. ``$\dagger $'' marks the four modalities scored by the deterministic DOM-geometry instrument and analyzed jointly in \Cref  {sec:grounded_eval}.\relax }}{5}{table.caption.10}\protected@file@percent }
+\newlabel{tab:setup}{{1}{5}{Modality instantiations. Each modality pairs a grounded feedback channel with the instrument that both drives revision and scores the result. ``$\dagger $'' marks the four modalities scored by the deterministic DOM-geometry instrument and analyzed jointly in \Cref {sec:grounded_eval}.\relax }{table.caption.10}{}}
+\newlabel{tab:setup@cref}{{[table][1][]1}{[1][5][]5}}
+\@writefile{toc}{\contentsline {section}{\numberline {3}Method: A Budget-Aware Proposer--Reviewer Harness}{5}{section.3}\protected@file@percent }
+\newlabel{sec:method}{{3}{5}{Method: A Budget-Aware Proposer--Reviewer Harness}{section.3}{}}
+\newlabel{sec:method@cref}{{[section][3][]3}{[1][4][]5}}
+\@writefile{toc}{\contentsline {paragraph}{Architecture.}{5}{paragraph*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The three grounded instruments.}{5}{paragraph*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Budget.}{5}{paragraph*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4}Interaction Is a Distinct, Unbounded Axis}{5}{section.4}\protected@file@percent }
+\newlabel{sec:interaction}{{4}{5}{Interaction Is a Distinct, Unbounded Axis}{section.4}{}}
+\newlabel{sec:interaction@cref}{{[section][4][]4}{[1][5][]5}}
+\@writefile{toc}{\contentsline {paragraph}{Reasoning and sampling saturate; interaction does not (P1).}{5}{paragraph*.11}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces \textbf  {Two axes saturate; the third does not.} At a matched $20$K-token budget on hard code, the two in-token-space axes (red) plateau below the interaction strategies (green), which all reach $\geq 97.8\%$. The proposer--reviewer harness reaches strict $100\%$ across seeds. Dotted line: best-of-$N$ ceiling.\relax }}{6}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:strategies}{{3}{6}{\textbf {Two axes saturate; the third does not.} At a matched $20$K-token budget on hard code, the two in-token-space axes (red) plateau below the interaction strategies (green), which all reach $\geq 97.8\%$. The proposer--reviewer harness reaches strict $100\%$ across seeds. Dotted line: best-of-$N$ ceiling.\relax }{figure.caption.12}{}}
+\newlabel{fig:strategies@cref}{{[figure][3][]3}{[1][6][]6}}
+\@writefile{toc}{\contentsline {paragraph}{Architecture buys efficiency and reliability.}{6}{paragraph*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Built-in early stopping.}{6}{paragraph*.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}The Active Ingredient Is Execution, Not Review}{6}{section.5}\protected@file@percent }
+\newlabel{sec:channel}{{5}{6}{The Active Ingredient Is Execution, Not Review}{section.5}{}}
+\newlabel{sec:channel@cref}{{[section][5][]5}{[1][6][]6}}
+\@writefile{toc}{\contentsline {paragraph}{Code as a clean case study.}{6}{paragraph*.15}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet\nobreakspace  {}4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta $ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta \%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.\relax }}{7}{table.caption.19}\protected@file@percent }
+\newlabel{tab:geometric}{{2}{7}{Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet~4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta $ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta \%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.\relax }{table.caption.19}{}}
+\newlabel{tab:geometric@cref}{{[table][2][]2}{[1][7][]7}}
+\@writefile{toc}{\contentsline {paragraph}{An in-modality control isolates execution (P2).}{7}{paragraph*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Grounding the Evaluation: The Gain Is Invisible to a VLM}{7}{section.6}\protected@file@percent }
+\newlabel{sec:grounded_eval}{{6}{7}{Grounding the Evaluation: The Gain Is Invisible to a VLM}{section.6}{}}
+\newlabel{sec:grounded_eval@cref}{{[section][6][]6}{[1][7][]7}}
+\@writefile{toc}{\contentsline {paragraph}{The default VLM judge is structurally blind.}{7}{paragraph*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{A deterministic instrument reveals a large, significant effect across four modalities.}{7}{paragraph*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{An ungrounded \emph  {reviewer} makes layout worse (ablation).}{7}{paragraph*.21}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction; whiskers are paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.\relax }}{8}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:geomreduction}{{4}{8}{\textbf {Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction; whiskers are paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.\relax }{figure.caption.20}{}}
+\newlabel{fig:geomreduction@cref}{{[figure][4][]4}{[1][7][]8}}
+\@writefile{toc}{\contentsline {paragraph}{Two modalities where the honest answer is ``no headroom.''}{8}{paragraph*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Robustness}{8}{section.7}\protected@file@percent }
+\newlabel{sec:robustness}{{7}{8}{Robustness}{section.7}{}}
+\newlabel{sec:robustness@cref}{{[section][7][]7}{[1][8][]8}}
+\@writefile{toc}{\contentsline {paragraph}{Cross-model, code.}{8}{paragraph*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Cross-model, grounded geometry.}{8}{paragraph*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Held-out generalization.}{8}{paragraph*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Budget allocation.}{8}{paragraph*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Internalizing the Harness into a Small Student}{9}{section.8}\protected@file@percent }
+\newlabel{sec:distill}{{8}{9}{Internalizing the Harness into a Small Student}{section.8}{}}
+\newlabel{sec:distill@cref}{{[section][8][]8}{[1][9][]9}}
+\@writefile{toc}{\contentsline {paragraph}{Result.}{9}{paragraph*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variance is a budget (a cautionary finding).}{9}{paragraph*.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Discussion and Conclusion}{9}{section.9}\protected@file@percent }
+\newlabel{sec:discussion}{{9}{9}{Discussion and Conclusion}{section.9}{}}
+\newlabel{sec:discussion@cref}{{[section][9][]9}{[1][9][]9}}
+\@writefile{toc}{\contentsline {paragraph}{Grounding is the load-bearing variable.}{9}{paragraph*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{A methodological warning for the field.}{9}{paragraph*.30}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Limits, honestly stated.}{9}{paragraph*.31}\protected@file@percent }
 \bibstyle{plainnat}
 \bibdata{refs}
-\bibcite{beeching2024searchscale}{{1}{2024}{{Beeching et~al.}}{{Beeching, Tunstall, and Rush}}}
-\@writefile{toc}{\contentsline {paragraph}{Variance is a budget.}{25}{paragraph*.56}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{25}{section.9}\protected@file@percent }
-\newlabel{sec:conclusion}{{9}{25}{Conclusion}{section.9}{}}
-\newlabel{sec:conclusion@cref}{{[section][9][]9}{[1][25][]25}}
-\bibcite{brown2024large}{{2}{2024}{{Brown et~al.}}{{Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and Mirhoseini}}}
-\bibcite{casper2023open}{{3}{2023}{{Casper et~al.}}{{Casper, Davies, Shi, Gilbert, et~al.}}}
-\bibcite{chen2021evaluating}{{4}{2021}{{Chen et~al.}}{{Chen, Tworek, Jun, Yuan, Pinto, Kaplan, Edwards, Burda, Joseph, Brockman, et~al.}}}
-\bibcite{cover2006elements}{{5}{2006}{{Cover and Thomas}}{{}}}
-\bibcite{deepseek2025r1}{{6}{2025}{{DeepSeek-AI}}{{}}}
-\bibcite{du2023multi}{{7}{2023}{{Du et~al.}}{{Du, Li, Torralba, Tenenbaum, and Mordatch}}}
-\bibcite{fu2023specializing}{{8}{2023}{{Fu et~al.}}{{Fu, Peng, Ou, Sabharwal, and Khot}}}
-\bibcite{gehring2025rlef}{{9}{2025}{{Gehring et~al.}}{{Gehring, Zheng, Copet, Mella, Cohen, and Synnaeve}}}
-\bibcite{gou2024critic}{{10}{2024}{{Gou et~al.}}{{Gou, Shao, Gong, Shen, Yang, Duan, and Chen}}}
-\bibcite{ho2023largelm}{{11}{2023}{{Ho et~al.}}{{Ho, Schmid, and Yun}}}
-\bibcite{huang2024selfcorrect}{{12}{2024}{{Huang et~al.}}{{Huang, Chen, Mishra, Zheng, Yu, Song, and Zhou}}}
-\bibcite{kamoi2025correct}{{13}{2025}{{Kamoi et~al.}}{{Kamoi, Zhang, Zhang, Han, and Zhang}}}
-\bibcite{kirk2024diversity}{{14}{2024}{{Kirk et~al.}}{{Kirk, Mediratta, Nalmpantis, Luketina, Hambro, Grefenstette, and Raileanu}}}
-\bibcite{webgen2025}{{15}{2025}{{Lu et~al.}}{{Lu, Ren, Yang, Wang, Zong, Pan, Zhan, and Li}}}
-\bibcite{madaan2023selfrefine}{{16}{2023}{{Madaan et~al.}}{{Madaan, Tandon, Gupta, Hallinan, Gao, Wiegreffe, Alon, Dziri, Prabhumoye, Yang, Welleck, Majumder, Gupta, Yazdanbakhsh, and Clark}}}
-\bibcite{magister2023teaching}{{17}{2023}{{Magister et~al.}}{{Magister, Mallinson, Adamek, Malmi, and Severyn}}}
-\bibcite{padmakumar2024writing}{{18}{2024}{{Padmakumar and He}}{{}}}
-\bibcite{patil2024gorilla}{{19}{2024}{{Patil et~al.}}{{Patil, Zhang, Wang, and Gonzalez}}}
-\bibcite{ruan2025iad}{{20}{2025}{{Ruan et~al.}}{{Ruan, Briakou, Han, Chen, Jiao, et~al.}}}
-\bibcite{schick2023toolformer}{{21}{2023}{{Schick et~al.}}{{Schick, Dwivedi-Yu, Dess{\'\i }, Raileanu, Lomeli, Zettlemoyer, Cancedda, and Scialom}}}
-\bibcite{shen2025thinking}{{22}{2025}{{Shen et~al.}}{{Shen, Jain, Xiao, Amos, Ramdas, Tian, and Geramifard}}}
-\bibcite{shinn2023reflexion}{{23}{2023}{{Shinn et~al.}}{{Shinn, Cassano, Berman, Gopinath, Narasimhan, and Yao}}}
-\bibcite{snell2024scaling}{{24}{2025}{{Snell et~al.}}{{Snell, Lee, Xu, and Kumar}}}
-\bibcite{stiennon2020learning}{{25}{2020}{{Stiennon et~al.}}{{Stiennon, Ouyang, Wu, Ziegler, Lowe, Voss, Radford, Amodei, and Christiano}}}
-\bibcite{kimi2025k15}{{26}{2025}{{Team}}{{}}}
-\bibcite{trankiela2026singleagent}{{27}{2026}{{Tran and Kiela}}{{}}}
-\bibcite{wang2023voyager}{{28}{2023{}}{{Wang et~al.}}{{Wang, Xie, Jiang, Mandlekar, Xiao, Zhu, Fan, and Anandkumar}}}
-\bibcite{wang2023selfconsistency}{{29}{2023{}}{{Wang et~al.}}{{Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou}}}
-\bibcite{wei2022chain}{{30}{2022}{{Wei et~al.}}{{Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou}}}
-\bibcite{yao2023tree}{{31}{2023{}}{{Yao et~al.}}{{Yao, Yu, Zhao, Shafran, Griffiths, Cao, and Narasimhan}}}
-\bibcite{yao2023react}{{32}{2023{}}{{Yao et~al.}}{{Yao, Zhao, Yu, Du, Shafran, Narasimhan, and Cao}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Phase 1 baseline: feedback actionability bar chart}{28}{appendix.A}\protected@file@percent }
-\newlabel{app:phase1}{{A}{28}{Phase 1 baseline: feedback actionability bar chart}{appendix.A}{}}
-\newlabel{app:phase1@cref}{{[appendix][1][2147483647]A}{[1][28][]28}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}Pipeline implementation}{28}{appendix.B}\protected@file@percent }
-\newlabel{app:pipeline}{{B}{28}{Pipeline implementation}{appendix.B}{}}
-\newlabel{app:pipeline@cref}{{[appendix][2][2147483647]B}{[1][28][]28}}
-\@writefile{toc}{\contentsline {paragraph}{Harness.}{28}{paragraph*.58}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Reproducibility.}{28}{paragraph*.59}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Code and data availability.}{28}{paragraph*.60}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The 15-task hard code suite.}{29}{paragraph*.61}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {C}Hyperparameters and SFT details for the 8B distillation}{29}{appendix.C}\protected@file@percent }
-\newlabel{app:hyperparams}{{C}{29}{Hyperparameters and SFT details for the 8B distillation}{appendix.C}{}}
-\newlabel{app:hyperparams@cref}{{[appendix][3][2147483647]C}{[1][29][]29}}
-\@writefile{toc}{\contentsline {section}{\numberline {D}Per-task pass@$k$ breakdown for the 8B markdown student}{29}{appendix.D}\protected@file@percent }
-\newlabel{app:per-task-md}{{D}{29}{Per-task pass@\texorpdfstring {$k$}{k} breakdown for the 8B markdown student}{appendix.D}{}}
-\newlabel{app:per-task-md@cref}{{[appendix][4][2147483647]D}{[1][29][]29}}
-\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Per-task judge-keep outcome for the 8B markdown student on the 18-task hard held-out suite. $\text  {$\mathsurround \z@ \mathchar "458$}$ = judge-kept; $\cdot $ = judge-rejected.\relax }}{30}{table.caption.62}\protected@file@percent }
-\newlabel{tab:per-task-md}{{18}{30}{Per-task judge-keep outcome for the 8B markdown student on the 18-task hard held-out suite. $\checkmark $ = judge-kept; $\cdot $ = judge-rejected.\relax }{table.caption.62}{}}
-\newlabel{tab:per-task-md@cref}{{[table][18][2147483647]18}{[1][29][]30}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Single-shot (left, red) vs.\ reviewed (right, green) academic figures under deterministic geometric feedback. Single-shot renders are cramped and overflow their canvas; the interaction loop, fed the exact measured defects, resolves them to clean layouts. Defect counts are computed from the rendered DOM. Every single-shot render shown was rated ``perfect'' by the VLM screenshot judge.\relax }}{31}{figure.caption.38}\protected@file@percent }
-\newlabel{fig:comparison-grid}{{3}{31}{Single-shot (left, red) vs.\ reviewed (right, green) academic figures under deterministic geometric feedback. Single-shot renders are cramped and overflow their canvas; the interaction loop, fed the exact measured defects, resolves them to clean layouts. Defect counts are computed from the rendered DOM. Every single-shot render shown was rated ``perfect'' by the VLM screenshot judge.\relax }{figure.caption.38}{}}
-\newlabel{fig:comparison-grid@cref}{{[figure][3][]3}{[1][19][]31}}
-\newlabel{fig:geometric-singleshot}{{4a}{32}{Single-shot ($4$ geometric defects).\relax }{figure.caption.44}{}}
-\newlabel{fig:geometric-singleshot@cref}{{[subfigure][1][4]4a}{[1][20][]32}}
-\newlabel{sub@fig:geometric-singleshot}{{a}{32}{Single-shot ($4$ geometric defects).\relax }{figure.caption.44}{}}
-\newlabel{sub@fig:geometric-singleshot@cref}{{[subfigure][1][4]4a}{[1][20][]32}}
-\newlabel{fig:geometric-reviewed}{{4b}{32}{Reviewed ($0$ defects).\relax }{figure.caption.44}{}}
-\newlabel{fig:geometric-reviewed@cref}{{[subfigure][2][4]4b}{[1][20][]32}}
-\newlabel{sub@fig:geometric-reviewed}{{b}{32}{Reviewed ($0$ defects).\relax }{figure.caption.44}{}}
-\newlabel{sub@fig:geometric-reviewed@cref}{{[subfigure][2][4]4b}{[1][20][]32}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces The Latent Diffusion U-Net figure under deterministic geometric feedback. The single-shot rendering (\subref  {fig:geometric-singleshot}) is cramped and overflows its canvas, with $4$ geometric defects that the VLM screenshot judge rated as perfect. After the interaction loop feeds back the exact defects (\subref  {fig:geometric-reviewed}), the layout is clean with $0$ defects.\relax }}{32}{figure.caption.44}\protected@file@percent }
-\newlabel{fig:geometric-beforeafter}{{4}{32}{The Latent Diffusion U-Net figure under deterministic geometric feedback. The single-shot rendering (\subref {fig:geometric-singleshot}) is cramped and overflows its canvas, with $4$ geometric defects that the VLM screenshot judge rated as perfect. After the interaction loop feeds back the exact defects (\subref {fig:geometric-reviewed}), the layout is clean with $0$ defects.\relax }{figure.caption.44}{}}
-\newlabel{fig:geometric-beforeafter@cref}{{[figure][4][]4}{[1][20][]32}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Phase 1 baseline (single-run): interaction-scaling lift orders by \emph  {feedback actionability}. Execution feedback (Code: +0.20) is binary and machine-readable; factual verification (Research: +0.17) is specific but softer; visual feedback (Web: +0.08, Animations: +0.07, Slides: +0.03) is holistic and lossy to operationalize. The multi-run averages reported in \Cref  {tab:harness-headline} reorder some within-tier rows but preserve the execution-grounded vs.\ ungrounded ordering.\relax }}{32}{figure.caption.57}\protected@file@percent }
-\newlabel{fig:actionability}{{5}{32}{Phase 1 baseline (single-run): interaction-scaling lift orders by \emph {feedback actionability}. Execution feedback (Code: +0.20) is binary and machine-readable; factual verification (Research: +0.17) is specific but softer; visual feedback (Web: +0.08, Animations: +0.07, Slides: +0.03) is holistic and lossy to operationalize. The multi-run averages reported in \Cref {tab:harness-headline} reorder some within-tier rows but preserve the execution-grounded vs.\ ungrounded ordering.\relax }{figure.caption.57}{}}
-\newlabel{fig:actionability@cref}{{[figure][5][2147483647]5}{[1][28][]32}}
-\gdef \@abspage@last{32}
+\bibcite{brown2024large}{{1}{2024}{{Brown et~al.}}{{Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and Mirhoseini}}}
+\bibcite{deepseek2025r1}{{2}{2025}{{DeepSeek-AI}}{{}}}
+\bibcite{gou2024critic}{{3}{2024}{{Gou et~al.}}{{Gou, Shao, Gong, Shen, Yang, Duan, and Chen}}}
+\bibcite{shen2025thinking}{{4}{2025}{{Shen et~al.}}{{Shen, Jain, Xiao, Amos, Ramdas, Tian, and Geramifard}}}
+\bibcite{shinn2023reflexion}{{5}{2023}{{Shinn et~al.}}{{Shinn, Cassano, Berman, Gopinath, Narasimhan, and Yao}}}
+\bibcite{snell2024scaling}{{6}{2025}{{Snell et~al.}}{{Snell, Lee, Xu, and Kumar}}}
+\bibcite{wang2023selfconsistency}{{7}{2023}{{Wang et~al.}}{{Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery, and Zhou}}}
+\bibcite{wei2022chain}{{8}{2022}{{Wei et~al.}}{{Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le, and Zhou}}}
+\bibcite{yao2023tree}{{9}{2023{}}{{Yao et~al.}}{{Yao, Yu, Zhao, Shafran, Griffiths, Cao, and Narasimhan}}}
+\bibcite{yao2023react}{{10}{2023{}}{{Yao et~al.}}{{Yao, Zhao, Yu, Du, Shafran, Narasimhan, and Cao}}}
+\@writefile{toc}{\contentsline {paragraph}{Operational recipe.}{10}{paragraph*.32}\protected@file@percent }
+\gdef \@abspage@last{10}

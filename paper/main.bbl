@@ -1,17 +1,9 @@
-\begin{thebibliography}{32}
+\begin{thebibliography}{10}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[Beeching et~al.(2024)Beeching, Tunstall, and
-  Rush]{beeching2024searchscale}
-Edward Beeching, Lewis Tunstall, and Sasha Rush.
-\newblock Scaling test-time compute with open models.
-\newblock Hugging Face blog post, 2024.
-\newblock
-  \url{https://huggingface.co/spaces/HuggingFaceH4/blogpost-scaling-test-time-compute}.
 
 \bibitem[Brown et~al.(2024)Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and
   Mirhoseini]{brown2024large}
@@ -20,46 +12,10 @@ Bradley Brown, Jordan Juravsky, Ryan Ehrlich, Ronald Clark, Quoc~V. Le,
 \newblock Large language monkeys: Scaling inference compute with repeated
   sampling, 2024.
 
-\bibitem[Casper et~al.(2023)Casper, Davies, Shi, Gilbert,
-  et~al.]{casper2023open}
-Stephen Casper, Xander Davies, Claudia Shi, Thomas~Krendl Gilbert, et~al.
-\newblock Open problems and fundamental limitations of reinforcement learning
-  from human feedback, 2023.
-
-\bibitem[Chen et~al.(2021)Chen, Tworek, Jun, Yuan, Pinto, Kaplan, Edwards,
-  Burda, Joseph, Brockman, et~al.]{chen2021evaluating}
-Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde de~Oliveira
-  Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg
-  Brockman, et~al.
-\newblock Evaluating large language models trained on code, 2021.
-
-\bibitem[Cover and Thomas(2006)]{cover2006elements}
-Thomas~M. Cover and Joy~A. Thomas.
-\newblock \emph{Elements of Information Theory}.
-\newblock Wiley-Interscience, 2nd edition, 2006.
-
 \bibitem[DeepSeek-AI(2025)]{deepseek2025r1}
 DeepSeek-AI.
 \newblock {DeepSeek}-{R1}: Incentivizing reasoning capability in {LLMs} via
   reinforcement learning, 2025.
-
-\bibitem[Du et~al.(2023)Du, Li, Torralba, Tenenbaum, and Mordatch]{du2023multi}
-Yilun Du, Shuang Li, Antonio Torralba, Joshua~B. Tenenbaum, and Igor Mordatch.
-\newblock Improving factuality and reasoning in language models through
-  multiagent debate, 2023.
-
-\bibitem[Fu et~al.(2023)Fu, Peng, Ou, Sabharwal, and Khot]{fu2023specializing}
-Yao Fu, Hao Peng, Litu Ou, Ashish Sabharwal, and Tushar Khot.
-\newblock Specializing smaller language models towards multi-step reasoning.
-\newblock In \emph{International Conference on Machine Learning}, 2023.
-
-\bibitem[Gehring et~al.(2025)Gehring, Zheng, Copet, Mella, Cohen, and
-  Synnaeve]{gehring2025rlef}
-Jonas Gehring, Kunhao Zheng, Jade Copet, Vegard Mella, Taco Cohen, and Gabriel
-  Synnaeve.
-\newblock {RLEF}: Grounding code {LLMs} in execution feedback with
-  reinforcement learning.
-\newblock In \emph{International Conference on Machine Learning}, 2025.
 
 \bibitem[Gou et~al.(2024)Gou, Shao, Gong, Shen, Yang, Duan, and
   Chen]{gou2024critic}
@@ -68,82 +24,6 @@ Zhibin Gou, Zhihong Shao, Yeyun Gong, Yelong Shen, Yujiu Yang, Nan Duan, and
 \newblock {CRITIC}: Large language models can self-correct with
   tool-interactive critiquing.
 \newblock In \emph{International Conference on Learning Representations}, 2024.
-
-\bibitem[Ho et~al.(2023)Ho, Schmid, and Yun]{ho2023largelm}
-Namgyu Ho, Laura Schmid, and Se-Young Yun.
-\newblock Large language models are reasoning teachers.
-\newblock In \emph{Annual Meeting of the Association for Computational
-  Linguistics}, 2023.
-
-\bibitem[Huang et~al.(2024)Huang, Chen, Mishra, Zheng, Yu, Song, and
-  Zhou]{huang2024selfcorrect}
-Jie Huang, Xinyun Chen, Swaroop Mishra, Huaixiu~Steven Zheng, Adams~Wei Yu,
-  Xinying Song, and Denny Zhou.
-\newblock Large language models cannot self-correct reasoning yet.
-\newblock In \emph{International Conference on Learning Representations}, 2024.
-
-\bibitem[Kamoi et~al.(2025)Kamoi, Zhang, Zhang, Han, and
-  Zhang]{kamoi2025correct}
-Ryo Kamoi, Yusen Zhang, Nan Zhang, Jiawei Han, and Rui Zhang.
-\newblock When can {LLMs} actually correct their own mistakes? a critical
-  survey of self-correction of {LLMs}.
-\newblock \emph{Transactions of the Association for Computational Linguistics},
-  2025.
-
-\bibitem[Kirk et~al.(2024)Kirk, Mediratta, Nalmpantis, Luketina, Hambro,
-  Grefenstette, and Raileanu]{kirk2024diversity}
-Robert Kirk, Ishita Mediratta, Christoforos Nalmpantis, Jelena Luketina, Eric
-  Hambro, Edward Grefenstette, and Roberta Raileanu.
-\newblock Understanding the effects of {RLHF} on {LLM} generalisation and
-  diversity.
-\newblock In \emph{International Conference on Learning Representations}, 2024.
-
-\bibitem[Lu et~al.(2025)Lu, Ren, Yang, Wang, Zong, Pan, Zhan, and
-  Li]{webgen2025}
-Zimu Lu, Houxing Ren, Yunqiao Yang, Ke~Wang, Zhuofan Zong, Junting Pan, Mingjie
-  Zhan, and Hongsheng Li.
-\newblock {WebGen-Agent}: Enhancing interactive website generation with
-  multi-level feedback and step-level reinforcement learning, 2025.
-
-\bibitem[Madaan et~al.(2023)Madaan, Tandon, Gupta, Hallinan, Gao, Wiegreffe,
-  Alon, Dziri, Prabhumoye, Yang, Welleck, Majumder, Gupta, Yazdanbakhsh, and
-  Clark]{madaan2023selfrefine}
-Aman Madaan, Niket Tandon, Prakhar Gupta, Skyler Hallinan, Luyu Gao, Sarah
-  Wiegreffe, Uri Alon, Nouha Dziri, Shrimai Prabhumoye, Yiming Yang, Sean
-  Welleck, Bodhisattwa~Prasad Majumder, Shashank Gupta, Amir Yazdanbakhsh, and
-  Peter Clark.
-\newblock Self-refine: Iterative refinement with self-feedback.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2023.
-
-\bibitem[Magister et~al.(2023)Magister, Mallinson, Adamek, Malmi, and
-  Severyn]{magister2023teaching}
-Lucie~Charlotte Magister, Jonathan Mallinson, Jakub Adamek, Eric Malmi, and
-  Aliaksei Severyn.
-\newblock Teaching small language models to reason.
-\newblock In \emph{Annual Meeting of the Association for Computational
-  Linguistics (Short Papers)}, 2023.
-
-\bibitem[Padmakumar and He(2024)]{padmakumar2024writing}
-Vishakh Padmakumar and He~He.
-\newblock Does writing with language models reduce content diversity?
-\newblock In \emph{International Conference on Learning Representations}, 2024.
-
-\bibitem[Patil et~al.(2024)Patil, Zhang, Wang, and Gonzalez]{patil2024gorilla}
-Shishir~G. Patil, Tianjun Zhang, Xin Wang, and Joseph~E. Gonzalez.
-\newblock Gorilla: Large language model connected with massive {APIs}.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2024.
-
-\bibitem[Ruan et~al.(2025)Ruan, Briakou, Han, Chen, Jiao, et~al.]{ruan2025iad}
-Yangjun Ruan, Eleftheria Briakou, Charles~Xie Han, Yu~Chen, Yufan Jiao, et~al.
-\newblock Iterative agent decoding for detecting compounding errors in {LLM}
-  agents, 2025.
-
-\bibitem[Schick et~al.(2023)Schick, Dwivedi-Yu, Dess{\'\i}, Raileanu, Lomeli,
-  Zettlemoyer, Cancedda, and Scialom]{schick2023toolformer}
-Timo Schick, Jane Dwivedi-Yu, Roberto Dess{\'\i}, Roberta Raileanu, Maria
-  Lomeli, Luke Zettlemoyer, Nicola Cancedda, and Thomas Scialom.
-\newblock Toolformer: Language models can teach themselves to use tools.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2023.
 
 \bibitem[Shen et~al.(2025)Shen, Jain, Xiao, Amos, Ramdas, Tian, and
   Geramifard]{shen2025thinking}
@@ -166,38 +46,13 @@ Charlie Snell, Jaehoon Lee, Kelvin Xu, and Aviral Kumar.
   scaling model parameters.
 \newblock In \emph{International Conference on Learning Representations}, 2025.
 
-\bibitem[Stiennon et~al.(2020)Stiennon, Ouyang, Wu, Ziegler, Lowe, Voss,
-  Radford, Amodei, and Christiano]{stiennon2020learning}
-Nisan Stiennon, Long Ouyang, Jeff Wu, Daniel~M. Ziegler, Ryan Lowe, Chelsea
-  Voss, Alec Radford, Dario Amodei, and Paul Christiano.
-\newblock Learning to summarize with human feedback.
-\newblock In \emph{Advances in Neural Information Processing Systems}, 2020.
-
-\bibitem[Team(2025)]{kimi2025k15}
-Kimi Team.
-\newblock Kimi k1.5: Scaling reinforcement learning with {LLMs}, 2025.
-
-\bibitem[Tran and Kiela(2026)]{trankiela2026singleagent}
-Dat Tran and Douwe Kiela.
-\newblock Single-agent {LLMs} outperform multi-agent systems on multi-hop
-  reasoning under equal thinking token budgets, 2026.
-
-\bibitem[Wang et~al.(2023{\natexlab{a}})Wang, Xie, Jiang, Mandlekar, Xiao, Zhu,
-  Fan, and Anandkumar]{wang2023voyager}
-Guanzhi Wang, Yuqi Xie, Yunfan Jiang, Ajay Mandlekar, Chaowei Xiao, Yuke Zhu,
-  Linxi Fan, and Anima Anandkumar.
-\newblock Voyager: An open-ended embodied agent with large language models.
-\newblock In \emph{NeurIPS Foundation Models for Decision Making Workshop},
-  2023{\natexlab{a}}.
-
-\bibitem[Wang et~al.(2023{\natexlab{b}})Wang, Wei, Schuurmans, Le, Chi, Narang,
-  Chowdhery, and Zhou]{wang2023selfconsistency}
+\bibitem[Wang et~al.(2023)Wang, Wei, Schuurmans, Le, Chi, Narang, Chowdhery,
+  and Zhou]{wang2023selfconsistency}
 Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc~V. Le, Ed~H. Chi, Sharan Narang,
   Aakanksha Chowdhery, and Denny Zhou.
 \newblock Self-consistency improves chain of thought reasoning in language
   models.
-\newblock In \emph{International Conference on Learning Representations},
-  2023{\natexlab{b}}.
+\newblock In \emph{International Conference on Learning Representations}, 2023.
 
 \bibitem[Wei et~al.(2022)Wei, Wang, Schuurmans, Bosma, Ichter, Xia, Chi, Le,
   and Zhou]{wei2022chain}

@@ -1,0 +1,30 @@
+\section{Interaction Is a Distinct, Unbounded Axis}
+\label{sec:interaction}
+
+\paragraph{Reasoning and sampling saturate; interaction does not (P1).} On $15$ hard code tasks at a fixed $20$K-token budget, we compare four strategies: reasoning-only (extended thinking), best-of-$N$ sampling with an oracle verifier, a single-agent loop (L), and the proposer--reviewer harness (H). Reasoning saturates at $73.3\%$ ($86.7\%$ under a generous thinking-heavy budget partition) and best-of-$N$ at $86.7\%$, while \emph{every} feedback-iterating strategy reaches $\geq 97.8\%$ (\Cref{fig:strategies}). The gap between interaction and the in-token-space axes is $13$--$27$\,pp and is the framework's load-bearing prediction.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.82\linewidth,height=4.4cm,
+  xbar,xmin=60,xmax=103,
+  bar width=9pt,enlarge y limits=0.2,
+  xlabel={pass-rate at $20$K-token budget (\%)},
+  symbolic y coords={reasoning,sampling,loop,harness},
+  ytick=data,
+  yticklabels={reasoning,best-of-$N$,single-agent loop,proposer--reviewer},
+  nodes near coords,nodes near coords style={font=\footnotesize},
+  every node near coord/.append style={/pgf/number format/.cd,fixed,precision=1},
+  xtick={60,70,80,90,100},xmajorgrids]
+  \addplot[draw=cSS!60!black,fill=cSS!35] coordinates {(73.3,reasoning) (86.7,sampling)};
+  \addplot[draw=cRV!60!black,fill=cRV!35] coordinates {(97.8,loop) (100.0,harness)};
+  \draw[cGrey,densely dotted,thick] (axis cs:86.7,reasoning) -- (axis cs:86.7,harness);
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Two axes saturate; the third does not.} At a matched $20$K-token budget on hard code, the two in-token-space axes (red) plateau below the interaction strategies (green), which all reach $\geq 97.8\%$. The proposer--reviewer harness reaches strict $100\%$ across seeds. Dotted line: best-of-$N$ ceiling.}
+\label{fig:strategies}
+\end{figure}
+
+\paragraph{Architecture buys efficiency and reliability.} Among interaction strategies the gap is not in ceiling pass-rate (they tie within seed noise at $N{=}15$) but in cost and variance. The proposer--reviewer harness is the most token-efficient ($1{,}029$ mean output tokens vs.\ $1{,}431$ for the single-agent loop and $1{,}416$ for the oracle-verifier sample-and-select baseline) and the only variant at strict $100\%$ with \emph{zero} seed variance; the single-agent loop hits $100\%$ in $2$ of $3$ seeds. Context isolation (the reviewer sees only what it needs to localize defects), structured critique (a typed defect list, not raw stderr), and role specialization explain the efficiency.
+
+\paragraph{Built-in early stopping.} The loop does not over-revise: on code, across three runs, \emph{every} already-passing single-shot task is submitted at iteration~1 with no revision ($30/30$ instances, zero wasted tokens). The grounded signal---a failing test---is the trigger; without it the loop is silent. This is why code's token overhead is only ${\sim}37\%$ above single-shot despite an iteration cap of $5$.

@@ -1,0 +1,50 @@
+\section{Grounding the Evaluation: The Gain Is Invisible to a VLM}
+\label{sec:grounded_eval}
+
+The visual modalities expose the symmetric half of the framework (P3): even when grounded feedback \emph{does} fix the artifact, an ungrounded metric cannot see it.
+
+\paragraph{The default VLM judge is structurally blind.} Our starting evaluator is a binary per-requirement rubric scored by a VLM over a screenshot. On $15$ dense academic-paper architecture figures, even with native-resolution quadrant tiling, this judge rates \textbf{$14$ of $15$} single-shot renders ``perfect.'' Yet by direct inspection they are broken---superimposed section titles, labels spilling out of boxes. The reason is mechanical: screenshots are captured at $1080$\,px, so any content overflowing the canvas is cropped \emph{off-frame before the image reaches the judge}, and small in-frame overlaps fall below its acuity. A deterministic DOM-geometry check finds only \textbf{$3$ of $15$} are actually clean (mean $1.6$ defects). The VLM is blind to precisely the defects that matter.
+
+\paragraph{A deterministic instrument reveals a large, significant effect across four modalities.} We score four visual modalities with the same DOM-geometry+alignment instrument under one identical configuration (Sonnet~4, temperature~$0$, design-principle prompt, three seeds, propose$\to$measure$\to$feed-exact-defects-back$\to$revise, $\le3$ iterations). \Cref{tab:geometric} and \Cref{fig:geomreduction} report the result: grounded geometric feedback produces a large, significant reduction in real layout defects on \emph{all four}, with bootstrap 95\% CIs that exclude zero and improvements outnumbering regressions $\ge5{:}1$. The magnitudes track single-shot headroom---dense responsive web pages are defect-rich out of the box ($16$ defects/page across desktop and mobile), while a frontier model under a design-principle prompt already lays out many figures and slides cleanly.
+
+\begin{table}[t]
+\centering\small
+\caption{Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet~4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta$ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta\%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.}
+\label{tab:geometric}
+\begin{tabular}{lcccccc}
+\toprule
+Modality & $n$ & SS & Rev. & $\Delta$ & 95\% CI & impr./regr.\ ($p$) \\
+\midrule
+Academic figures (20) & 60 & $0.57$ & $0.15$ & $-74\%$ & $[52,89]\%$ & $17/2$\;($7{\times}10^{-4}$) \\
+Dense slides (12)     & 36 & $1.25$ & $0.33$ & $-73\%$ & $[45,93]\%$ & $13/1$\;($1.8{\times}10^{-3}$) \\
+Web pages (20)        & 60 & $16.1$ & $8.5$  & $-47\%$ & $[30,62]\%$ & $33/2$\;($4{\times}10^{-8}$) \\
+Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;($3{\times}10^{-5}$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.8\linewidth,height=4.2cm,
+  xbar,xmin=0,xmax=100,bar width=10pt,enlarge y limits=0.22,
+  xlabel={geometric-defect reduction under grounded feedback (\%), bootstrap 95\% CI},
+  symbolic y coords={Animations,Web pages,Dense slides,Academic figures},
+  ytick=data,xtick={0,20,40,60,80,100},xmajorgrids,
+  nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,precision=0},
+  nodes near coords align={anchor=west}]
+  \addplot+[draw=cRV!60!black,fill=cRV!35,
+    error bars/.cd,x dir=both,x explicit]
+    coordinates {(74,Academic figures)+=(15,0)-=(22,0)
+                 (73,Dense slides)+=(20,0)-=(28,0)
+                 (47,Web pages)+=(15,0)-=(17,0)
+                 (40,Animations)+=(24,0)-=(30,0)};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction; whiskers are paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.}
+\label{fig:geomreduction}
+\end{figure}
+
+\paragraph{An ungrounded \emph{reviewer} makes layout worse (ablation).} Grounding matters on the feedback side too, controllably. On the same dense slides, holding tasks and proposer fixed and varying only the reviewer: a VLM-feedback reviewer \emph{increases} the mean geometric defect count ($1.89\to2.44$)---blind to the true geometry, its edits break alignment as often as they fix it---whereas the deterministic geometric-feedback reviewer reduces it ($1.25\to0.33$). The binary VLM rubric on these slides simultaneously saturates ($0.97$ mean, $29/36$ rated perfect), confirming the judge cannot even see the difference. Both halves of \Cref{fig:concept} are necessary.
+
+\paragraph{Two modalities where the honest answer is ``no headroom.''} \emph{Video editing}, scored by Gemini~3.1~Pro's native full-clip rubric (a near-grounded instrument that observes pixels, not a still), is already strong single-shot ($0.70$, $22/45$ task-runs perfect) so the reviewed lift is small and not significant ($+0.04$); a hardened multi-step suite de-saturates it (single-shot ``fully correct'' $49\%\to11\%$). \emph{Deep research}, scored against exact provided facts, saturates ($0.982$, $+0.018$, n.s.): a frontier model knows well-documented facts and does not take the planted traps, so the Type-3d lift is bounded by the near-zero single-shot error rate---a genuine limit of the factual modality, since de-saturating it would require facts the judge itself cannot grade. We report these as scoped negatives rather than headline lifts.

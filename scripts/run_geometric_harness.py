@@ -204,15 +204,29 @@ def main():
                     help="score as a scrollable responsive page (multi-width, horizontal-overflow only)")
     ap.add_argument("--animation", action="store_true",
                     help="score per-frame geometry across the task's frame_times_ms")
+    ap.add_argument("--model", choices=["sonnet", "gemini", "gpt4o", "gpt5d", "gpt4", "qwen3-235b", "gpt5", "deepseek-r1"],
+                    default="sonnet", help="proposer model (cross-model replication)")
     args = ap.parse_args()
 
     tasks = json.load(open(args.tasks))
     system_prompt = {"slide": SLIDE_SYSTEM_PROMPT, "web": WEBPAGE_SYSTEM_PROMPT,
                      "animation": ANIMATION_SYSTEM_PROMPT}.get(
         args.prompt, DIAGRAM_SYSTEM_PROMPT)
-    proposer = ModelConfig(provider=ModelConfig.claude_sonnet().provider,
-                           model_id="claude-sonnet-4-20250514",
-                           max_tokens=8192, temperature=args.temperature)
+    if args.model == "sonnet":
+        proposer = ModelConfig(provider=ModelConfig.claude_sonnet().provider,
+                               model_id="claude-sonnet-4-20250514",
+                               max_tokens=8192, temperature=args.temperature)
+    elif args.model == "gemini":
+        proposer = ModelConfig.gemini_pro(); proposer.temperature = args.temperature
+    elif args.model in ("gpt4o", "gpt5d"):
+        from src.config import ModelProvider
+        proposer = ModelConfig(provider=ModelProvider.OPENAI,
+                               model_id="gpt-4o" if args.model == "gpt4o" else "gpt-5",
+                               max_tokens=8192, temperature=args.temperature)
+    else:
+        proposer = {"gpt4": ModelConfig.gpt4, "qwen3-235b": ModelConfig.qwen3_235b,
+                    "gpt5": ModelConfig.gpt5, "deepseek-r1": ModelConfig.deepseek_r1}[args.model]()
+        proposer.temperature = args.temperature
     renderer = BrowserRenderer()
     client = get_client()
     conditions = ["single_shot", "reviewed"] if args.condition == "both" else [args.condition]

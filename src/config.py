@@ -9,6 +9,7 @@ class ModelProvider(Enum):
     ANTHROPIC = "anthropic"
     OPENAI = "openai"
     OPENROUTER = "openrouter"
+    GEMINI = "gemini"
     LOCAL = "local"
 
 
@@ -54,6 +55,14 @@ class ModelConfig:
             provider=ModelProvider.ANTHROPIC,
             model_id="claude-haiku-4-5-20251001",
             max_tokens=4096,
+        )
+
+    @staticmethod
+    def gemini_pro() -> "ModelConfig":
+        return ModelConfig(
+            provider=ModelProvider.GEMINI,
+            model_id="gemini-3.1-pro-preview",
+            max_tokens=16384,
         )
 
     @staticmethod

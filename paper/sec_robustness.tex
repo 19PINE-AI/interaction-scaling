@@ -1,0 +1,10 @@
+\section{Robustness}
+\label{sec:robustness}
+
+\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the $15$ hard code tasks the harness lifts Sonnet~4 by $+33.3$\,pp (to $100\%$), Qwen3-235B by $+26.7$\,pp, and GPT-5 by $+13.3$\,pp (on a higher single-shot baseline). All three families benefit from the same execution-grounded loop.
+
+\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the grounded-evaluation effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense responsive-web suite, scored by the identical model-free DOM instrument. Because the instrument depends on no model, a reduction here is attributable to the grounded loop rather than to the scorer; it reproduces the direction of \Cref{tab:geometric} on a different model family.
+
+\paragraph{Held-out generalization.} On a $32$-task held-out code suite constructed after the method was fixed, the harness lifts $90.6\%\to100\%$, recovering $3/3$ first-shot failures with zero regressions---no tuning to the original tasks.
+
+\paragraph{Budget allocation.} Sweeping the proposer/reviewer token split on a fixed budget produces an $86.6$\,pp spread in pass-rate, monotone in the proposer's per-call share: the optimum is \emph{propose-heavy} (allocate the majority to generation, reserve enough for the reviewer to localize defects). Extra inference compute is better spent on additional samples than on deeper iteration past the early-stop point.

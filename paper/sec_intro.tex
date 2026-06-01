@@ -1,0 +1,54 @@
+\section{Introduction}
+\label{sec:intro}
+
+Scaling test-time compute has become the dominant lever for improving large models on artifact-producing tasks---code, web pages, slides, figures, animations, research reports. The literature has formalized two axes, and both operate \emph{inside the model's own token space}. \emph{Reasoning scaling} \citep{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling} spends more tokens thinking before committing to an answer. \emph{Sampling scaling} \citep{wang2023selfconsistency,brown2024large} draws more independent attempts and selects one. In both, every additional token is a function of the same frozen weights and the same fixed prompt: more compute reorganizes information already in the system but imports none.
+
+A third axis breaks this closure: \emph{interaction} with an external environment that returns \textbf{grounded} feedback---a test result, a rendered layout, a search verdict. Such feedback is not a function of the weights; it is an observation of the artifact's real behavior, and it can carry information the model never had. This axis is well established empirically \citep{shinn2023reflexion,yao2023react,gou2024critic,shen2025thinking}, but accounts of \emph{why} and \emph{when} it should beat reasoning- or sampling-only scaling remain informal, and---we argue---half-stated.
+
+\paragraph{Grounding is the variable, on both sides of the loop.} Our thesis is that one variable governs interaction scaling: \textbf{grounding}, the property that a signal is computed from the artifact's actual behavior rather than from a model's opinion of it. And grounding must hold on \emph{both} sides of the proposer--reviewer loop (\Cref{fig:concept}):
+\begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+\item \textbf{Grounded feedback} (the reviewer signal that drives revision): run the code and read \texttt{pytest}; render the HTML and measure the real bounding boxes; issue the query and read the result. This is the side prior work emphasizes, and a data-processing-inequality argument (\Cref{sec:framework}) shows it is exactly what lets interaction exceed the ceiling that bounds reasoning and sampling.
+\item \textbf{Grounded evaluation} (the metric that \emph{measures} the gain): the same observation, used as the score. This side is almost always overlooked, and getting it wrong silently hides the effect.
+\end{enumerate}
+The second point is not a detail. The default evaluator for visual artifacts is a vision--language model (VLM) reading a screenshot, and it is \emph{structurally} blind to the defects that matter: content overflowing the canvas is cropped off-frame before the image reaches the judge, and small overlaps fall below its acuity. On dense academic figures this VLM judge rates $14$ of $15$ single-shot renders ``perfect'' when a deterministic check finds only $3$ are actually clean (\Cref{sec:grounded_eval}). Worse, when the same VLM is used as the \emph{reviewer}, its edits make slide geometry \emph{worse}. Ungrounded on either side, the third axis either does not fire or cannot be seen.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[font=\small,
+  box/.style={rounded corners=2pt,draw=cGrey,thick,minimum height=8mm,minimum width=20mm,align=center,fill=white},
+  prop/.style={box,fill=cAccent!12,draw=cAccent},
+  env/.style={box,fill=black!4},
+  gnd/.style={box,fill=cRV!14,draw=cRV},
+  ung/.style={box,fill=cSS!12,draw=cSS},
+  ar/.style={-{Latex[length=2mm]},thick,cGrey}]
+  \node[prop] (prop) {Proposer\\\footnotesize(frozen LLM)};
+  \node[env, right=16mm of prop] (art) {Artifact\\\footnotesize code / HTML / SVG};
+  \node[gnd, right=16mm of art] (inst) {Environment\\\footnotesize \emph{execute / render}\\\footnotesize \emph{/ measure}};
+  \node[prop, below=11mm of art] (rev) {Reviewer};
+  \draw[ar] (prop) -- node[above,font=\footnotesize]{generate} (art);
+  \draw[ar] (art) -- node[above,font=\footnotesize]{} (inst);
+  \draw[ar,cRV] (inst) |- node[pos=0.25,right,font=\footnotesize,cRV]{\textbf{grounded}}
+        node[pos=0.75,above,font=\footnotesize,cRV]{exact defects / verdict} (rev);
+  \draw[ar] (rev) -- node[below,font=\footnotesize,align=center]{targeted\\revision} (prop);
+  % two-sided grounding callouts
+  \node[gnd,below=7mm of rev,xshift=-2mm,minimum width=34mm] (f) {\footnotesize\textbf{(1) grounded feedback}\\\footnotesize drives revision past the DPI ceiling};
+  \node[gnd,right=10mm of f,minimum width=34mm] (e) {\footnotesize\textbf{(2) grounded evaluation}\\\footnotesize is needed to \emph{measure} the gain};
+  \begin{scope}[on background layer]
+    \node[draw=cRV!50,dashed,rounded corners,fit=(inst)(rev)(f)(e),inner sep=4mm,label={[cRV,font=\footnotesize]above right:GROUNDED (DOM geometry, \texttt{pytest}, search)}] {};
+  \end{scope}
+  \node[ung,right=10mm of inst,yshift=0mm,minimum width=26mm,align=center] (vlm)
+     {\footnotesize VLM reads a\\\footnotesize \emph{screenshot}};
+  \node[font=\footnotesize,cSS,below=1.5mm of vlm,align=center,text width=30mm] {\textbf{ungrounded:} overflow cropped off-frame; rates broken figures ``perfect''; as reviewer, breaks layout};
+  \draw[ar,cSS,dashed] (art.north) to[out=60,in=180] (vlm.west);
+\end{tikzpicture}
+\caption{\textbf{Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph{executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph{feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref{sec:framework}). Grounded \emph{evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.}
+\label{fig:concept}
+\end{figure}
+
+\paragraph{Contributions.}
+\begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+\item \textbf{A grounding framework (\Cref{sec:framework}).} A Type~0--3 feedback taxonomy and a DPI bound showing ungrounded review (and reasoning, and sampling) cannot exceed the information in the weights, while grounded feedback can---plus the symmetric, and to our knowledge new, observation that ungrounded \emph{evaluation} cannot measure the gain.
+\item \textbf{Interaction is a distinct, unbounded axis (\Cref{sec:interaction,sec:channel}).} At a matched $20$K-token budget, reasoning and best-of-$N$ saturate ($73.3\%$/$86.7\%$) while every interaction strategy reaches $\geq 97.8\%$; an in-modality control isolates test \emph{execution} as the active ingredient, and the harness is the most token-efficient, zero-variance strategy.
+\item \textbf{Grounded evaluation, and a deterministic instrument (\Cref{sec:grounded_eval}).} We show the VLM judge is structurally blind, build a deterministic DOM-geometry+alignment instrument, and report large, significant, CI-backed defect reductions under grounded feedback across four visual modalities measured identically---gains the standard metric cannot even see---plus a controlled ablation in which VLM feedback makes layout \emph{worse}.
+\item \textbf{Robustness and internalization (\Cref{sec:robustness,sec:distill}).} The effects replicate across model families (including grounded geometry on Gemini~3.1~Pro), to held-out tasks, and under a propose-heavy budget allocation; and the harness's behavior partially distills into an $8$B student at ${\sim}10\times$ lower deployment cost.
+\end{enumerate}

@@ -34,6 +34,7 @@ class LLMClient:
         self._anthropic: anthropic.Anthropic | None = None
         self._openai: openai.OpenAI | None = None
         self._openrouter: openai.OpenAI | None = None
+        self._gemini = None
         self._local_model = None
         self._local_tokenizer = None
         self._vllm_model = None
@@ -79,6 +80,8 @@ class LLMClient:
             response = self._call_openai(config, system, messages, temp)
         elif config.provider == ModelProvider.OPENROUTER:
             response = self._call_openrouter(config, system, messages, temp)
+        elif config.provider == ModelProvider.GEMINI:
+            response = self._call_gemini(config, system, messages, temp)
         elif config.provider == ModelProvider.LOCAL:
             response = self._call_local(config, system, messages, temp)
         else:
@@ -97,6 +100,39 @@ class LLMClient:
             config.model_id,
         )
         return response
+
+    def _call_gemini(
+        self,
+        config: ModelConfig,
+        system: str,
+        messages: list[dict],
+        temperature: float,
+    ) -> LLMResponse:
+        import os
+        from google import genai
+        from google.genai import types
+        if self._gemini is None:
+            self._gemini = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
+        contents = []
+        for m in messages:
+            role = "model" if m["role"] == "assistant" else "user"
+            text = m["content"] if isinstance(m["content"], str) else str(m["content"])
+            contents.append({"role": role, "parts": [{"text": text}]})
+        resp = self._gemini.models.generate_content(
+            model=config.model_id,
+            contents=contents,
+            config=types.GenerateContentConfig(
+                system_instruction=system,
+                temperature=temperature,
+                max_output_tokens=config.max_tokens,
+            ),
+        )
+        text = resp.text or ""
+        um = getattr(resp, "usage_metadata", None)
+        it = getattr(um, "prompt_token_count", 0) or 0
+        ot = getattr(um, "candidates_token_count", 0) or 0
+        return LLMResponse(content=text, input_tokens=it, output_tokens=ot,
+                           model=config.model_id, stop_reason=None)
 
     def _call_anthropic(
         self,
