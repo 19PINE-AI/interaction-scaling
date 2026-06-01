@@ -28,12 +28,12 @@ import time
 from pathlib import Path
 
 from src.config import ModelConfig
-from src.evaluation.geometric_checker import geometric_defects
+from src.evaluation.geometric_checker import geometric_defects, web_geometric_defects
 from src.rendering.browser import BrowserRenderer
 from src.utils.code_utils import extract_code
 from src.utils.llm_client import get_client
 from scripts.run_diagram_benchmark import DIAGRAM_SYSTEM_PROMPT
-from src.experiments.hard_benchmark_runner import SLIDE_SYSTEM_PROMPT
+from src.experiments.hard_benchmark_runner import SLIDE_SYSTEM_PROMPT, WEBPAGE_SYSTEM_PROMPT
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("geomharness")
@@ -62,6 +62,29 @@ def _feedback(g: dict) -> str:
     return "\n".join(lines)
 
 
+def _feedback_web(g: dict) -> str:
+    """Width-labeled deterministic feedback for a scrollable responsive page."""
+    lines = []
+    for wname, gw in g.get("per_width", {}).items():
+        if not isinstance(gw, dict) or "error" in gw:
+            continue
+        px = wname.split("x")[0]
+        tag = f"at {px}px width"
+        for a, b in gw.get("overlap_examples", []):
+            lines.append(f"- OVERLAP ({tag}): \"{a}\" overlaps \"{b}\" -- separate them.")
+        for ex in gw.get("overflow_examples", []):
+            lines.append(f"- OVERFLOW ({tag}): \"{ex}\" spills outside its container -- contain or wrap it.")
+        for ex in gw.get("oob_examples", []):
+            lines.append(f"- HORIZONTAL CLIP ({tag}): \"{ex}\" extends past the right edge -- keep all content within {px}px.")
+        for ex in gw.get("misalignment_examples", []):
+            lines.append(f"- MISALIGNMENT ({tag}): {ex} -- equalize sizes, share edges, use uniform gutters.")
+        if gw.get("scrollbar"):
+            ow = gw.get("overflow_px", [0, 0])[0]
+            lines.append(f"- HORIZONTAL SCROLLBAR ({tag}): the page is {ow}px too wide -- "
+                         f"nothing may exceed {px}px width (vertical scrolling is fine).")
+    return "\n".join(lines)
+
+
 REVISION_PROMPT = """\
 Your previous figure (shown above) was rendered and measured. These EXACT \
 geometric defects were detected in the DOM:
@@ -73,9 +96,14 @@ Re-emit the COMPLETE updated HTML in a ```html code block."""
 
 
 def run_task(task, condition, max_iters, proposer, renderer, client,
-             system_prompt=DIAGRAM_SYSTEM_PROMPT, include_alignment=False):
+             system_prompt=DIAGRAM_SYSTEM_PROMPT, include_alignment=False, web=False):
     client.reset_counters()
     start = time.time()
+    scorer = (lambda h: web_geometric_defects(h, renderer=renderer,
+                                              include_alignment=include_alignment)) if web \
+        else (lambda h: geometric_defects(h, renderer=renderer,
+                                          include_alignment=include_alignment))
+    feedbacker = _feedback_web if web else _feedback
     prompt = task["description"]
     resp = client.generate(config=proposer, system=system_prompt,
                            messages=[{"role": "user", "content": prompt}])
@@ -88,8 +116,7 @@ def run_task(task, condition, max_iters, proposer, renderer, client,
     iterations = 1
     for i in range(max_i):
         try:
-            g = geometric_defects(html, renderer=renderer,
-                                  include_alignment=include_alignment)
+            g = scorer(html)
         except Exception as e:  # noqa: BLE001
             logger.warning("geom failed %s: %s", task["task_id"], e)
             break
@@ -102,7 +129,7 @@ def run_task(task, condition, max_iters, proposer, renderer, client,
         if condition == "single_shot" or nd == 0:
             break
         if i < max_i - 1:
-            fb = _feedback(g)
+            fb = feedbacker(g)
             if not fb.strip():
                 break
             resp = client.generate(config=proposer, system=system_prompt,
@@ -140,14 +167,17 @@ def main():
     ap.add_argument("--condition", choices=["single_shot", "reviewed", "both"], default="both")
     ap.add_argument("--max-iters", type=int, default=3)
     ap.add_argument("--temperature", type=float, default=0.0)
-    ap.add_argument("--prompt", choices=["diagram", "slide"], default="diagram",
-                    help="system prompt for the proposer (slide = design-principle slide prompt)")
+    ap.add_argument("--prompt", choices=["diagram", "slide", "web"], default="diagram",
+                    help="system prompt for the proposer")
     ap.add_argument("--include-alignment", action="store_true",
                     help="fold misalignment into the geometric reward and feedback")
+    ap.add_argument("--web", action="store_true",
+                    help="score as a scrollable responsive page (multi-width, horizontal-overflow only)")
     args = ap.parse_args()
 
     tasks = json.load(open(args.tasks))
-    system_prompt = SLIDE_SYSTEM_PROMPT if args.prompt == "slide" else DIAGRAM_SYSTEM_PROMPT
+    system_prompt = {"slide": SLIDE_SYSTEM_PROMPT, "web": WEBPAGE_SYSTEM_PROMPT}.get(
+        args.prompt, DIAGRAM_SYSTEM_PROMPT)
     proposer = ModelConfig(provider=ModelConfig.claude_sonnet().provider,
                            model_id="claude-sonnet-4-20250514",
                            max_tokens=8192, temperature=args.temperature)
@@ -162,7 +192,8 @@ def main():
                "category": task.get("category") or task.get("name", ""), "run": args.run}
         for cond in conditions:
             r = run_task(task, cond, args.max_iters, proposer, renderer, client,
-                         system_prompt=system_prompt, include_alignment=args.include_alignment)
+                         system_prompt=system_prompt, include_alignment=args.include_alignment,
+                         web=args.web)
             pre = "ss" if cond == "single_shot" else "rv"
             for k in ("n_defects", "text_overlap", "clipped", "overflow", "scrollbar",
                       "iterations", "total_tokens", "final_html", "screenshot_b64"):

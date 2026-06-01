@@ -26,7 +26,8 @@ logger = logging.getLogger(__name__)
 
 # JS executed in the page: collect geometry and compute defects deterministically.
 _PROBE_JS = r"""
-() => {
+(cfg) => {
+  const WEB = !!(cfg && cfg.web);   // scrollable page: only horizontal overflow is a defect
   const W = window.innerWidth, H = window.innerHeight;
   const EPS = 4;            // ignore sub-pixel / hairline touches (px)
   const MINOVL = 6;         // min intersection side to count as a real overlap
@@ -84,8 +85,12 @@ _PROBE_JS = r"""
   // edge. Elements entirely off-screen (e.g. position:absolute;left:-9999px
   // a11y/skip-link text, or off-canvas decorations) are hidden on purpose, not
   // clipped, so they must not register as defects.
-  const partlyInView = (x, y, r, b) => r > 0 && b > 0 && x < W && y < H;
-  const crossesEdge = (x, y, r, b) => r > W + EPS || b > H + EPS || x < -EPS || y < -EPS;
+  // On a scrollable web page, content extending BELOW the fold (b > H) is normal,
+  // not a defect; only HORIZONTAL clipping (past the right edge or before the
+  // left edge) is a real layout failure. Fixed-canvas artifacts use all edges.
+  const partlyInView = (x, y, r, b) => WEB ? (r > 0 && x < W) : (r > 0 && b > 0 && x < W && y < H);
+  const crossesEdge = (x, y, r, b) => WEB ? (r > W + EPS || x < -EPS)
+                                          : (r > W + EPS || b > H + EPS || x < -EPS || y < -EPS);
   for (const t of texts) {  // clipped text labels
     if (partlyInView(t.x, t.y, t.r, t.b) && crossesEdge(t.x, t.y, t.r, t.b)) {
       oob++; if (oobEx.length < 8) oobEx.push(t.t); seen.add(t.el);
@@ -129,7 +134,8 @@ _PROBE_JS = r"""
   const OVTHRESH = 16;
   const overW = document.documentElement.scrollWidth - W;
   const overH = document.documentElement.scrollHeight - H;
-  const scrollbar = (overW > OVTHRESH) || (overH > OVTHRESH);
+  // Vertical scroll is expected on a web page; only a HORIZONTAL scrollbar is a defect there.
+  const scrollbar = WEB ? (overW > OVTHRESH) : ((overW > OVTHRESH) || (overH > OVTHRESH));
 
   // --- alignment of card/pillar BOX groups (HTML) ---
   // A frequent slide defect the overlap/overflow checks miss: a row of "stage"
@@ -211,7 +217,8 @@ _PROBE_JS = r"""
 
 
 def geometric_defects(html: str, width: int = 1920, height: int = 1080,
-                      renderer=None, include_alignment: bool = False) -> dict:
+                      renderer=None, include_alignment: bool = False,
+                      web: bool = False) -> dict:
     """Render *html* and return its deterministic geometric defects.
 
     Returns a dict with raw counts plus ``clean`` (bool: zero geometric defects)
@@ -221,6 +228,10 @@ def geometric_defects(html: str, width: int = 1920, height: int = 1080,
     is always reported but only folded into ``n_defects`` when
     ``include_alignment`` is set, so existing callers (figures, original slides)
     keep their published overlap/overflow-only counts unchanged.
+
+    ``web=True`` scores a scrollable page: vertical document overflow and
+    below-the-fold clipping are NOT defects (the page scrolls); only horizontal
+    overflow, text-on-text overlap, container overflow, and misalignment count.
     """
     from src.rendering.browser import BrowserRenderer
     own = renderer is None
@@ -229,7 +240,7 @@ def geometric_defects(html: str, width: int = 1920, height: int = 1080,
     try:
         page.set_content(html, wait_until="networkidle")
         page.wait_for_timeout(80)
-        data = page.evaluate(_PROBE_JS)
+        data = page.evaluate(_PROBE_JS, {"web": web})
     except Exception as e:  # noqa: BLE001
         logger.warning("geometric probe failed: %s", e)
         data = {"error": str(e)}
@@ -245,6 +256,32 @@ def geometric_defects(html: str, width: int = 1920, height: int = 1080,
         data["n_defects"] = n
         data["clean"] = (n == 0)
     return data
+
+
+def web_geometric_defects(html: str, widths=((1920, 1080), (375, 812)),
+                          renderer=None, include_alignment: bool = True) -> dict:
+    """Deterministic web layout defects, summed across desktop and mobile widths.
+
+    A responsive page must hold up at multiple widths; the classic single-shot
+    failures are horizontal overflow / broken grids on mobile and card
+    misalignment on desktop. We score the page at each width with ``web=True``
+    and sum the per-width defect counts. Returns per-width detail plus the
+    combined ``n_defects`` / ``clean``.
+    """
+    from src.rendering.browser import BrowserRenderer
+    own = renderer is None
+    renderer = renderer or BrowserRenderer()
+    per_width, total = {}, 0
+    try:
+        for (w, h) in widths:
+            g = geometric_defects(html, width=w, height=h, renderer=renderer,
+                                   include_alignment=include_alignment, web=True)
+            per_width[f"{w}x{h}"] = g
+            total += g.get("n_defects", 0) if "error" not in g else 0
+    finally:
+        if own:
+            renderer.close()
+    return {"n_defects": total, "clean": total == 0, "per_width": per_width}
 
 
 if __name__ == "__main__":

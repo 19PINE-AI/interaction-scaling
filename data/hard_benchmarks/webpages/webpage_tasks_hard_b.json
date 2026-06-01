@@ -1,0 +1,193 @@
+[
+  {
+    "task_id": "webh_kanban",
+    "description": "Build a project board (Kanban) for 'ShipIt' at 1920px wide. A top bar shows the board name, a member-avatars stack, and a 'New task' button. Below, FOUR equal-width columns (Backlog, In Progress, Review, Done) with uniform gutters, each with a column header showing the title and a count badge, and a vertical stack of task cards. Distribute at least 14 task cards across the columns (Backlog 5, In Progress 4, Review 3, Done 2); each card shows a title, a small colored label chip, an assignee avatar, and a due date. Responsive: at 375px the four columns stack into one vertical column in order, each column's cards beneath its header.",
+    "requirements": [
+      "Exactly four columns (Backlog, In Progress, Review, Done) of equal width with uniform gutters between them",
+      "The four column headers share the same top edge and each shows a title plus a count badge",
+      "At least 14 task cards total are distributed across the columns",
+      "Every task card shows a title, a colored label chip, an assignee avatar, and a due date, none clipped",
+      "All cards within a column are equal width and left/right aligned to their column",
+      "No card overlaps another card or column header",
+      "On desktop nothing overflows horizontally (no horizontal scrollbar)",
+      "At 375px the four columns stack vertically in order with each column's cards under its header",
+      "Card label chips share one consistent style across all cards (repetition)",
+      "Column count badges match the number of cards shown in each column"
+    ],
+    "expected_issues": ["Columns unequal width / uneven gutters", "Cards overflow or overlap", "No horizontal scroll handling on mobile", "Count badges inconsistent with card counts"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_email",
+    "description": "Build a three-pane email client 'Mailbox' at 1920px wide: LEFT folder rail (220px) with 6 folders (Inbox 12, Starred, Sent, Drafts 3, Archive, Trash) where Inbox is active and unread counts are right-aligned badges; CENTER message list (380px) with at least 8 message rows each showing sender, subject, a one-line snippet, and a time, with unread rows visually bolder; RIGHT reading pane (remaining width) showing the selected message: subject header, sender + avatar + time, a toolbar (Reply, Forward, Archive, Delete), and a body of several paragraphs. The three panes share the same top and bottom edges. Responsive: at 375px only the message list shows (folder rail becomes a hamburger, reading pane hidden until selection).",
+    "requirements": [
+      "Three panes (folder rail, message list, reading pane) sit side by side sharing the same top and bottom edge",
+      "The folder rail lists all six folders with Inbox active and unread counts as right-aligned badges",
+      "The message list shows at least 8 rows, each with sender, subject, snippet, and time",
+      "Unread message rows are visually distinct (bolder) from read rows",
+      "The reading pane shows a subject header, sender/avatar/time, a toolbar with at least four actions, and a multi-paragraph body",
+      "The folder unread badges are right-aligned in a consistent column",
+      "No pane content overlaps another pane; snippets are truncated, not overflowing",
+      "On desktop nothing overflows horizontally",
+      "At 375px the layout collapses to the message list with the folder rail behind a hamburger and the reading pane hidden",
+      "Toolbar action buttons share a consistent style"
+    ],
+    "expected_issues": ["Panes misaligned / different heights", "Snippets overflow rows", "Badges not aligned", "No mobile collapse"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_calendar",
+    "description": "Build a month-view calendar for 'June 2026' at 1920px wide. A header shows 'June 2026', prev/next arrows, and a 'Today' button. Below, a 7-column grid (Sun..Sat column headers) with 5 week rows of equal-width, equal-height day cells. Fill the dates 1-30 in the correct positions (June 1 2026 is a Monday). Place at least 6 event chips inside day cells (e.g. '10:00 Standup', '14:00 Review'), with one day showing '+2 more'. Today (e.g. the 1st) is highlighted. Responsive: at 375px the calendar becomes a vertical agenda list of only the days that have events, each day a row with its event chips.",
+    "requirements": [
+      "A header shows 'June 2026', prev/next controls, and a Today button",
+      "Seven equal-width day-of-week column headers (Sun through Sat) are aligned over the grid",
+      "The grid has 5 week rows of equal-height, equal-width day cells (35 cells)",
+      "Dates 1-30 appear once each in the correct cells, with June 1 in the Monday column",
+      "At least six event chips appear inside day cells, and one cell shows a '+N more' overflow indicator",
+      "The 'today' cell is visually highlighted distinctly from the others",
+      "Day cells are uniformly sized and the grid lines/edges align across all rows and columns",
+      "Event chips do not overflow their day cell (they clamp or show '+N more')",
+      "On desktop nothing overflows horizontally",
+      "At 375px the calendar becomes a vertical agenda list of event-bearing days, not a squeezed 7-column grid"
+    ],
+    "expected_issues": ["Day cells unequal size / grid misaligned", "Dates in wrong columns", "Event chips overflow cells", "7-col grid squashed unreadably on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_chat",
+    "description": "Build a messaging app 'Pulse' at 1920px wide: LEFT conversation list (320px) with a search box and at least 6 conversation rows (avatar, name, last-message snippet, time, and some with an unread count badge); RIGHT a chat thread with a header (contact name + avatar + online dot), a scrollable message area showing at least 8 alternating bubbles (incoming left-aligned, outgoing right-aligned, with timestamps), and a fixed composer at the bottom (text input + send button). The two panes share the same top and bottom edges. Responsive: at 375px only the chat thread shows with a back arrow; the conversation list is hidden.",
+    "requirements": [
+      "Two panes (conversation list and chat thread) share the same top and bottom edge",
+      "The conversation list has a search box and at least 6 rows, each with avatar, name, snippet, and time",
+      "At least some conversations show an unread count badge, right-aligned",
+      "The chat thread has a header with contact name, avatar, and an online indicator",
+      "At least 8 message bubbles appear: incoming bubbles left-aligned, outgoing bubbles right-aligned",
+      "Each message bubble has a timestamp and does not overflow the thread width",
+      "A composer (input + send button) is pinned to the bottom of the thread and does not overlap messages",
+      "Incoming vs outgoing bubbles use consistent, distinct styling (repetition + contrast)",
+      "On desktop nothing overflows horizontally",
+      "At 375px only the chat thread is shown (with a back affordance) and the conversation list is hidden"
+    ],
+    "expected_issues": ["Bubbles not correctly left/right aligned", "Composer overlaps messages or detaches", "Panes unequal height", "List not hidden on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_invoice",
+    "description": "Build a printable invoice page for 'Acme Co.' at 1920px wide, centered in an A4-like sheet (max ~900px). Header: company name + logo placeholder on the left, 'INVOICE #2026-0042' and issue/due dates on the right. Below, two address blocks side by side (From / Bill To) of equal width. Then a line-items table with columns Description | Qty | Unit price | Amount and at least 6 rows, all numbers right-aligned. Below the table, a totals block right-aligned with Subtotal $4,200.00, Tax (8%) $336.00, and a bold Total $4,536.00. A footer note spans the bottom. Responsive: at 375px the From/Bill To blocks stack and the line-items table scrolls horizontally within its container.",
+    "requirements": [
+      "The invoice sheet is centered with a constrained max width (not full-bleed)",
+      "The header shows the company (left) and 'INVOICE #2026-0042' with dates (right), top-aligned",
+      "The From and Bill To address blocks are equal width and side by side",
+      "The line-items table has all four columns and at least 6 rows with no clipped cells",
+      "All Qty, Unit price, and Amount values are right-aligned in their columns",
+      "The totals block is right-aligned and shows Subtotal $4,200.00, Tax (8%) $336.00, and a bold Total $4,536.00",
+      "The three total figures appear exactly as specified and Total is visually emphasized",
+      "On desktop nothing overflows horizontally",
+      "At 375px the From/Bill To blocks stack vertically and the table scrolls within its own container",
+      "Consistent typographic hierarchy (INVOICE heading dominates; labels lighter than values)"
+    ],
+    "expected_issues": ["Numbers left-aligned / columns ragged", "Totals not right-aligned or wrong", "Address blocks unequal width", "Table breaks page width on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_profile",
+    "description": "Build a social profile page for '@maya.codes' at 1920px wide. A full-width cover banner, with a circular avatar overlapping its bottom edge, the display name 'Maya Chen', handle, and a bio line. A stats row of THREE equal-width items (Posts 248, Followers 12.4k, Following 386) with a 'Follow' button. A tab bar (Posts, Media, Likes) with Posts active. Below, a responsive post grid of at least 9 equal-size square thumbnail placeholders in 3 columns with uniform gaps. Responsive: at 375px the stats row stays in one line (smaller), and the post grid becomes 1 column (or stays a tight grid) without horizontal overflow.",
+    "requirements": [
+      "A full-width cover banner with a circular avatar overlapping its bottom edge",
+      "The display name, handle, and a bio line are present and legible over/under the banner",
+      "A stats row shows three equal-width items (Posts 248, Followers 12.4k, Following 386) plus a Follow button",
+      "A tab bar shows Posts, Media, Likes with Posts visibly active",
+      "The post grid shows at least 9 equal-size square thumbnails in 3 columns with uniform gaps",
+      "The avatar is circular and does not overlap the name/stats text",
+      "Thumbnails are uniformly sized and aligned in a clean grid (no ragged last row gaps misaligning the columns)",
+      "On desktop nothing overflows horizontally",
+      "At 375px the layout has no horizontal overflow and the stats row remains on one line",
+      "A single accent color is reused for the active tab, the Follow button, and links"
+    ],
+    "expected_issues": ["Avatar overlaps text", "Thumbnails unequal size / grid ragged", "Stats row wraps badly on mobile", "Horizontal overflow on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_checkout",
+    "description": "Build a checkout page for 'Checkout' at 1920px wide as a two-column layout: LEFT (60%) a form with three labeled sections (Contact, Shipping address with a 2x2 grid of fields, Payment with card-number/expiry/CVC fields) using aligned labels and inputs; RIGHT (40%) an order summary card that is sticky on scroll, listing 3 line items (name, qty, price), a promo-code input, and Subtotal $172.00 / Shipping $8.00 / Total $180.00, plus a full-width 'Pay $180.00' button. Responsive: at 375px the order summary moves below the form (not sticky), and the 2x2 address grid becomes single-column.",
+    "requirements": [
+      "A two-column layout: form (~60%) on the left and order summary (~40%) on the right, top-aligned",
+      "The form has three clearly grouped sections (Contact, Shipping, Payment)",
+      "Form fields have aligned labels and inputs; the shipping address uses a 2x2 field grid that lines up",
+      "The order summary lists three line items each with name, qty, and price",
+      "The order summary shows Subtotal $172.00, Shipping $8.00, Total $180.00 and a 'Pay $180.00' button",
+      "The Total $180.00 and the Pay button amount match exactly",
+      "The order summary is sticky on desktop scroll and does not overlap the form",
+      "On desktop nothing overflows horizontally",
+      "At 375px the order summary moves below the form and the 2x2 address grid becomes a single column",
+      "Inputs share a consistent style and the Pay button is the highest-contrast action"
+    ],
+    "expected_issues": ["Labels/inputs misaligned", "Sticky summary overlaps form or jumps", "Totals inconsistent", "2x2 grid does not collapse on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_specs",
+    "description": "Build a product comparison / spec-sheet page for 'Compare Phones' at 1920px wide comparing THREE phones side by side. A header row has an empty top-left cell then three equal-width phone columns, each with an image placeholder, model name, and price (Aero $799, Aero Pro $999, Aero Max $1199). Below, a dense specification table with a left attribute column and the three phone columns, at least 14 attribute rows (Display, Resolution, Chip, RAM, Storage, Rear camera, Front camera, Battery, Charging, Weight, Water resistance, Biometrics, Colors, OS) with a value in every cell. Alternating row shading. A sticky compare header keeps the phone names visible on scroll. Responsive: at 375px it shows one phone column at a time with a selector, or the table scrolls horizontally within its container.",
+    "requirements": [
+      "A header row aligns three equal-width phone columns over the spec table, each with image, name, and price",
+      "The three prices appear exactly (Aero $799, Aero Pro $999, Aero Max $1199)",
+      "The spec table has a left attribute column plus the three phone columns, all aligned",
+      "There are at least 14 attribute rows with a value in every cell (no empty unaligned cells)",
+      "Alternating rows are shaded consistently (repetition) and no cell text is clipped",
+      "The phone-name header stays visible on scroll (sticky) and stays aligned to its columns",
+      "On desktop nothing overflows horizontally; the table fits the page width",
+      "At 375px the comparison remains usable (single-column selector or horizontally scrollable table within its container), not a squashed 4-column grid",
+      "Column widths for the three phones are equal",
+      "The price/header typography outranks the spec values (hierarchy)"
+    ],
+    "expected_issues": ["Dense 14x4 table overflows or misaligns", "Sticky header detaches from columns", "Empty cells break the grid", "Table unreadable on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_gallery",
+    "description": "Build an image gallery page 'Shots' at 1920px wide. A header with the title and a filter bar of 5 category pills (All active, Nature, Urban, People, Abstract). Below, a masonry-style grid of at least 12 image-placeholder cards arranged in 4 columns; cards have varying heights but the COLUMNS stay equal width with uniform gutters and the cards pack without large ragged gaps. Each card has a hover-caption bar with a title and a small heart/like count. A 'Load more' button is centered at the bottom. Responsive: at 375px the grid becomes a single column and the filter pills become a horizontally scrollable row.",
+    "requirements": [
+      "A filter bar shows five category pills with 'All' active",
+      "The grid arranges at least 12 cards in 4 equal-width columns with uniform gutters",
+      "Card heights may vary (masonry) but the four columns remain equal width and aligned",
+      "Cards pack without large ragged vertical gaps between columns",
+      "Each card has a caption bar with a title and a like count, not clipped",
+      "A centered 'Load more' button appears below the grid",
+      "Filter pills share one consistent style with the active pill visually distinct",
+      "On desktop nothing overflows horizontally",
+      "At 375px the grid becomes a single column and the filter pills scroll horizontally in their own row",
+      "Image placeholders maintain consistent styling/spacing (repetition)"
+    ],
+    "expected_issues": ["Masonry columns unequal width / misaligned", "Large ragged gaps", "Captions overflow cards", "Filter bar wraps messily on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "webh_landing",
+    "description": "Build a long marketing landing page for a SaaS 'FlowState' at 1920px wide with many aligned sections stacked vertically: (1) sticky top nav (logo left; links Product, Pricing, Docs, Blog center; 'Sign in' + 'Get started' right); (2) hero (centered headline, subhead, two CTAs, a product screenshot placeholder); (3) a logos strip of 5 evenly-spaced grayscale customer-logo placeholders; (4) a 3-column features row (icon + title + 2-line description), equal width; (5) a 2-column 'how it works' alternating row (text + image); (6) a testimonial block (quote, author, avatar); (7) a 3-tier pricing teaser (Free, Pro, Team) equal-width cards; (8) an FAQ of 4 items; (9) a footer with 4 equal-width link columns and a bottom legal bar. Responsive: at 375px the nav collapses to a hamburger and every multi-column section becomes a single column.",
+    "requirements": [
+      "A sticky top nav has the logo (left), centered links, and right-side auth buttons, all vertically centered",
+      "The hero has a centered headline, subhead, two CTA buttons, and a screenshot placeholder",
+      "The logos strip shows 5 evenly-spaced logo placeholders aligned on one row",
+      "The features row has 3 equal-width columns (icon + title + description) with uniform gutters",
+      "The pricing teaser shows 3 equal-width cards (Free, Pro, Team) top-aligned",
+      "The footer has 4 equal-width link columns plus a bottom legal bar",
+      "All major sections are full-width bands that align to a consistent content max-width / left edge (repetition)",
+      "On desktop nothing overflows horizontally and no two sections overlap vertically",
+      "At 375px the nav collapses to a hamburger",
+      "At 375px every multi-column section (features, how-it-works, pricing, footer) becomes a single column",
+      "One consistent accent color is reused across CTAs, active nav, and pricing highlight"
+    ],
+    "expected_issues": ["Section content widths inconsistent (not aligned to a common grid)", "3-column rows unequal width", "Sections overlap / sticky nav covers hero", "Multi-column sections don't collapse on mobile"],
+    "viewport_sizes": ["1920x1080", "375x812"],
+    "difficulty": "hard"
+  }
+]

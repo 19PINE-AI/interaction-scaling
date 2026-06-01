@@ -133,31 +133,51 @@ VLM review does not.
   \end{tabular}
 \end{table}
 
-\paragraph{Scope.} Deterministic geometric scoring applies to fixed-canvas
-artifacts---slides and academic figures---where the document has a well-defined
-intended size against which overflow and clipping are meaningful. Scrollable
-webpages have no fixed canvas: out-of-bounds and document-overflow predicates are
-ill-defined, and a text-overlap-only metric is noisy on a dense webpage DOM. For
-that modality the binary per-requirement rubric is the appropriate instrument.
-We therefore score fixed-canvas visual artifacts (slides, figures) with the
-deterministic geometric reward and the flowing web and animation modalities with
-the binary rubric, matching each artifact class to the metric that measures it
-exactly.
+\paragraph{Extending the instrument to scrollable web pages.} A web page has no
+fixed 1080-px canvas, so vertical overflow and below-the-fold clipping are not
+defects---the page is meant to scroll. But the other geometric failures are still
+well-defined, and a \emph{multi-width} adaptation captures the dominant
+single-shot web failure: at each target width we count text-on-text overlap,
+container overflow, box-group misalignment, and \emph{horizontal} overflow
+(content wider than the viewport, i.e.\ a horizontal scrollbar), and we sum these
+across a desktop ($1920$) and a mobile ($375$) width. The mobile pass is what
+catches responsive breakage---grids that do not collapse and rows that overflow
+sideways on a phone. On a hardened suite of $20$ dense, responsive, real-world
+page types (dashboard, pricing comparison, docs, calendar, email client, spec
+sheet, long marketing landing, $\dots$), single-shot pages are strikingly
+defect-rich: a mean of $16.1$ geometric defects per page across the two widths.
+The geometric-feedback harness (the same propose\,$\to$\,measure\,$\to$\,feed
+exact defects back\,$\to$\,revise loop) reduces this to $8.5$ ($-47\%$) over three
+seeds ($n{=}60$), with $33$ pages improved and only $2$ regressed (sign-test
+$p=3.7\times10^{-8}$). The binary VLM rubric on the same suite registered only a
+$+0.054$ lift ($p=0.30$, n.s.): once again deterministic geometry reveals a large,
+highly significant layout improvement that screenshot-based judging misses.
+
+\paragraph{Scope.} Deterministic geometric scoring thus applies to any artifact
+with a well-defined intended geometry: fixed-canvas slides and figures (overflow,
+clipping, overlap, alignment against the canvas) and scrollable web pages (the
+same predicates minus vertical overflow, evaluated per width). The binary
+per-requirement rubric remains the instrument for the temporal (animation) and
+factual (research) modalities, matching each artifact class to the metric that
+measures it exactly.
 
 \subsection{Binary-rubric evaluation for flowing and factual modalities}
 \label{sec:rubric}
 
-For modalities without a fixed canvas we score each task against its list of
-concrete, independently-checkable requirements: a judge returns a binary
+For the temporal (animation) and factual (research) modalities, and as a
+complementary \emph{content} check on web pages, we score each task against its
+list of concrete, independently-checkable requirements: a judge returns a binary
 \textsc{satisfied}/\textsc{violated} verdict per requirement and the score is the
 fraction satisfied. This multi-axis binary rubric replaces a single holistic
 rating with a decomposed, reproducible measurement, and it cleanly separates a
 task's individual failure modes. \Cref{tab:rubric} reports single-shot vs.\
-reviewed rubric scores. On web pages the harness lifts the rubric score from
-$0.469$ to $0.532$ ($p=0.003$, $19$ task-runs improve and $4$ regress); on
-animations, from $0.642$ to $0.834$ ($p=0.008$, $15$ improve, $3$ regress) ---
-the largest visual-modality lift in the study, as the temporal channel exposes
-motion defects a static rating cannot.
+reviewed rubric scores. On the original web suite the content rubric lifts from
+$0.469$ to $0.532$ ($p=0.003$, $19$ task-runs improve and $4$ regress)---a real
+but modest content gain, distinct from the large \emph{layout} gain that
+deterministic multi-width geometry exposes above; on animations, from $0.642$ to
+$0.834$ ($p=0.008$, $15$ improve, $3$ regress)---the largest visual-modality lift
+under the rubric, as the temporal channel exposes motion defects a static rating
+cannot.
 
 \begin{table}[t]
   \centering

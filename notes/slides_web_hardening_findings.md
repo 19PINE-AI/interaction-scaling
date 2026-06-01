@@ -52,14 +52,36 @@ Same shape as the academic-figure result (-78%, p=0.008) and original slides
 (-91%), now on real-paper dense slides and with alignment folded in: grounded
 geometric feedback reliably removes real layout defects; VLM feedback cannot.
 
-## 4. Hard web (`webpage_tasks_hard.json`, 10 dense real-grounded pages)
-Analytics dashboard, cloud pricing w/ 12-row comparison table, 3-column docs,
-multi-track schedule, GitHub-style repo, status page (90-bar uptime strips),
-e-commerce PDP, newspaper grid, settings (10+ aligned toggles), arXiv results;
-11-12 precise requirements each (content + alignment + responsive breakpoints).
-Restores rubric headroom under the new design-aware pipeline: SS **0.667**,
-RV 0.721, lift **+0.054** (10 up / 5 down, p=0.30 at n=30), **0/30 perfect**.
-Direction matches the old web result (+0.063); more seeds needed for significance.
+## 4. Hard web -- same redesign as slides (`webpage_tasks_hard.json`, 20 tasks)
+20 dense, real-grounded, responsive pages (dashboard, cloud pricing w/ 12-row
+comparison table, 3-col docs, multi-track schedule, GitHub repo, status page,
+PDP, newspaper grid, settings, arXiv results, kanban, email client, month
+calendar, chat, invoice, social profile, checkout, phone spec-sheet, masonry
+gallery, long SaaS landing). 10-12 precise requirements each (content +
+alignment + responsive). Expanded from 10 -> 20 for representativeness/parity
+with the other modalities.
+
+**VLM rubric (new design-aware pipeline):** SS 0.667, RV 0.721, lift +0.054
+(p=0.30 at n=30), 0/30 perfect -- positive direction (matches old +0.063) but
+NOT significant. The rubric undersells the effect, exactly as on slides.
+
+**Deterministic MULTI-WIDTH geometry instrument (the web analog of the slide
+result).** Web is scrollable, so `geometric_checker(web=True)` ignores vertical
+overflow/below-fold clipping and scores only text-overlap + container-overflow +
+misalignment + HORIZONTAL overflow; `web_geometric_defects` sums this at desktop
+(1920) AND mobile (375) -- the responsive failure (grids breaking / horizontal
+scroll on mobile) is the dominant single-shot defect. Web geometric-feedback
+harness (`run_geometric_harness --web --prompt web --include-alignment`),
+**20 tasks x 3 seeds, n=60**:
+- mean defects **16.1 -> 8.5 (-47%)**, total 965 -> 510
+- geometrically clean **10/60 -> 16/60**
+- **33 improved / 2 regressed / 25 tied**, two-sided sign-test **p = 3.7e-08**
+
+Dense responsive pages are defect-RICH single-shot (~16 layout defects/page
+across the two widths) -- unlike slides (near-clean). The harness cannot fully
+clean them in 3 iters but removes ~half, with 33:2 odds. Same lesson as slides:
+deterministic geometry reveals a large, highly-significant interaction-scaling
+effect that the VLM rubric (+0.054, n.s.) is blind to.
 
 ## 5. Apples-to-apples regeneration under the new pipeline (old prompt -> new)
 All slide/web suites regenerated with the design-principle prompts + judge; old
