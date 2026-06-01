@@ -187,21 +187,23 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.1}VLM screenshot judging is unreliable for geometric defects}{17}{subsection.6.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Deterministic geometry}{17}{subsection.6.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Interaction scaling on an objective metric}{18}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Dense, real-paper slides and alignment.}{18}{paragraph*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The VLM is blind here, as a judge \emph  {and} as a reviewer.}{18}{paragraph*.37}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Extending the instrument to scrollable web pages.}{18}{paragraph*.40}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Interaction scaling under deterministic DOM-geometry scoring. Defects are counted exactly from the rendered DOM (text overlap, out-of-bounds, overflow, document overflow); lower is better. The paper-figure harness uses geometric feedback directly; the slides cross-check re-scores the original VLM-feedback harness with the same checker.\relax }}{19}{table.caption.39}\protected@file@percent }
-\newlabel{tab:geometric}{{11}{19}{Interaction scaling under deterministic DOM-geometry scoring. Defects are counted exactly from the rendered DOM (text overlap, out-of-bounds, overflow, document overflow); lower is better. The paper-figure harness uses geometric feedback directly; the slides cross-check re-scores the original VLM-feedback harness with the same checker.\relax }{table.caption.39}{}}
+\newlabel{sec:web-geometry}{{6.3}{18}{Extending the instrument to scrollable web pages}{paragraph*.40}{}}
+\newlabel{sec:web-geometry@cref}{{[subsection][3][6]6.3}{[1][18][]18}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Interaction scaling under deterministic DOM-geometry scoring, across three visual modalities at one identical generation configuration (Claude Sonnet 4, temperature $0$, design-principle prompt, alignment-inclusive geometric reward, three seeds; propose\,$\to $\,measure\,$\to $\,feed exact defects back\,$\to $\,revise, $\le 3$ iterations). Defects are counted exactly from the rendered DOM (text overlap, container/horizontal overflow, clipping, box-group misalignment); web pages are scored at desktop $1920$ and mobile $375$ widths and summed. Lower is better; $p$ is a two-sided paired sign test.\relax }}{19}{table.caption.39}\protected@file@percent }
+\newlabel{tab:geometric}{{11}{19}{Interaction scaling under deterministic DOM-geometry scoring, across three visual modalities at one identical generation configuration (Claude Sonnet 4, temperature $0$, design-principle prompt, alignment-inclusive geometric reward, three seeds; propose\,$\to $\,measure\,$\to $\,feed exact defects back\,$\to $\,revise, $\le 3$ iterations). Defects are counted exactly from the rendered DOM (text overlap, container/horizontal overflow, clipping, box-group misalignment); web pages are scored at desktop $1920$ and mobile $375$ widths and summed. Lower is better; $p$ is a two-sided paired sign test.\relax }{table.caption.39}{}}
 \newlabel{tab:geometric@cref}{{[table][11][]11}{[1][18][]19}}
-\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Interaction scaling under binary per-requirement rubric scoring on the flowing visual modalities. Score is the fraction of independently-checked requirements satisfied; $p$ is a one-sided paired sign test over per-task-run deltas.\relax }}{19}{table.caption.42}\protected@file@percent }
-\newlabel{tab:rubric}{{12}{19}{Interaction scaling under binary per-requirement rubric scoring on the flowing visual modalities. Score is the fraction of independently-checked requirements satisfied; $p$ is a one-sided paired sign test over per-task-run deltas.\relax }{table.caption.42}{}}
-\newlabel{tab:rubric@cref}{{[table][12][]12}{[1][19][]19}}
 \@writefile{toc}{\contentsline {paragraph}{Scope.}{19}{paragraph*.41}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Binary-rubric evaluation for flowing and factual modalities}{19}{subsection.6.4}\protected@file@percent }
 \newlabel{sec:rubric}{{6.4}{19}{Binary-rubric evaluation for flowing and factual modalities}{subsection.6.4}{}}
 \newlabel{sec:rubric@cref}{{[subsection][4][6]6.4}{[1][19][]19}}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Interaction scaling under binary per-requirement rubric scoring on the flowing visual modalities. Score is the fraction of independently-checked requirements satisfied; $p$ is a one-sided paired sign test over per-task-run deltas.\relax }}{20}{table.caption.42}\protected@file@percent }
+\newlabel{tab:rubric}{{12}{20}{Interaction scaling under binary per-requirement rubric scoring on the flowing visual modalities. Score is the fraction of independently-checked requirements satisfied; $p$ is a one-sided paired sign test over per-task-run deltas.\relax }{table.caption.42}{}}
+\newlabel{tab:rubric@cref}{{[table][12][]12}{[1][19][]20}}
 \@writefile{toc}{\contentsline {section}{\numberline {7}Internalizing the Harness into a Small Student}{20}{section.7}\protected@file@percent }
 \newlabel{sec:distill}{{7}{20}{Internalizing the Harness into a Small Student}{section.7}{}}
-\newlabel{sec:distill@cref}{{[section][7][]7}{[1][20][]20}}
+\newlabel{sec:distill@cref}{{[section][7][]7}{[1][19][]20}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Setup}{20}{subsection.7.1}\protected@file@percent }
 \newlabel{sec:distill-setup}{{7.1}{20}{Setup}{subsection.7.1}{}}
 \newlabel{sec:distill-setup@cref}{{[subsection][1][7]7.1}{[1][20][]20}}
@@ -222,10 +224,10 @@
 \newlabel{tab:distill-ucurve}{{14}{21}{Reasoning-cap U-curve on the 18-task hard held-out suite. SFT recipe sweep on Qwen3-VL-8B-Instruct (37 judge-kept teacher traces; same inference protocol). The optimum is at the student's coherence horizon, not the teacher's.\relax }{table.caption.46}{}}
 \newlabel{tab:distill-ucurve@cref}{{[table][14][]14}{[1][21][]21}}
 \@writefile{toc}{\contentsline {paragraph}{(b) More SFT data regresses.}{21}{paragraph*.47}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{(c) RFT polishes consistency but kills pass@$k$.}{21}{paragraph*.49}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Three independent attempts to scale the SFT corpus past V3's 37 examples. All regressed. Quality dominates quantity at this scale.\relax }}{22}{table.caption.48}\protected@file@percent }
 \newlabel{tab:distill-datascale}{{15}{22}{Three independent attempts to scale the SFT corpus past V3's 37 examples. All regressed. Quality dominates quantity at this scale.\relax }{table.caption.48}{}}
 \newlabel{tab:distill-datascale@cref}{{[table][15][]15}{[1][21][]22}}
+\@writefile{toc}{\contentsline {paragraph}{(c) RFT polishes consistency but kills pass@$k$.}{22}{paragraph*.49}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve; per-task variance collapses; pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph  {is} the inference-scaling budget. \textit  {Note on notation.} \textbf  {mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph  {pass@1}=44\% reported in \Cref  {tab:distill-headline,tab:distill-ablation}, which is just seed\nobreakspace  {}1's accuracy. \emph  {pass@2} and \emph  {pass@3} are union pass-rates over the first 2 / all 3 seeds.\relax }}{22}{table.caption.50}\protected@file@percent }
 \newlabel{tab:distill-rft}{{16}{22}{RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve; per-task variance collapses; pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph {is} the inference-scaling budget. \textit {Note on notation.} \textbf {mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph {pass@1}=44\% reported in \Cref {tab:distill-headline,tab:distill-ablation}, which is just seed~1's accuracy. \emph {pass@2} and \emph {pass@3} are union pass-rates over the first 2 / all 3 seeds.\relax }{table.caption.50}{}}
 \newlabel{tab:distill-rft@cref}{{[table][16][]16}{[1][22][]22}}
@@ -242,7 +244,7 @@
 \newlabel{sec:discussion}{{8}{23}{Discussion}{section.8}{}}
 \newlabel{sec:discussion@cref}{{[section][8][]8}{[1][23][]23}}
 \@writefile{toc}{\contentsline {paragraph}{Two scaling axes saturate; the third does not.}{23}{paragraph*.52}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Architecture buys efficiency and reliability.}{23}{paragraph*.53}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Architecture buys efficiency and reliability.}{24}{paragraph*.53}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Grounding the evaluation, not just the feedback.}{24}{paragraph*.54}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Variance is a budget.}{24}{paragraph*.55}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {9}Conclusion}{24}{section.9}\protected@file@percent }
@@ -285,36 +287,36 @@
 \@writefile{toc}{\contentsline {section}{\numberline {A}Phase 1 baseline: feedback actionability bar chart}{27}{appendix.A}\protected@file@percent }
 \newlabel{app:phase1}{{A}{27}{Phase 1 baseline: feedback actionability bar chart}{appendix.A}{}}
 \newlabel{app:phase1@cref}{{[appendix][1][2147483647]A}{[1][27][]27}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}Pipeline implementation}{27}{appendix.B}\protected@file@percent }
-\newlabel{app:pipeline}{{B}{27}{Pipeline implementation}{appendix.B}{}}
-\newlabel{app:pipeline@cref}{{[appendix][2][2147483647]B}{[1][27][]27}}
-\@writefile{toc}{\contentsline {paragraph}{Harness.}{27}{paragraph*.57}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Pipeline implementation}{28}{appendix.B}\protected@file@percent }
+\newlabel{app:pipeline}{{B}{28}{Pipeline implementation}{appendix.B}{}}
+\newlabel{app:pipeline@cref}{{[appendix][2][2147483647]B}{[1][27][]28}}
+\@writefile{toc}{\contentsline {paragraph}{Harness.}{28}{paragraph*.57}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Reproducibility.}{28}{paragraph*.58}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Code and data availability.}{28}{paragraph*.59}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{The 15-task hard code suite.}{28}{paragraph*.60}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {C}Hyperparameters and SFT details for the 8B distillation}{28}{appendix.C}\protected@file@percent }
 \newlabel{app:hyperparams}{{C}{28}{Hyperparameters and SFT details for the 8B distillation}{appendix.C}{}}
 \newlabel{app:hyperparams@cref}{{[appendix][3][2147483647]C}{[1][28][]28}}
-\@writefile{toc}{\contentsline {section}{\numberline {D}Per-task pass@$k$ breakdown for the 8B markdown student}{28}{appendix.D}\protected@file@percent }
-\newlabel{app:per-task-md}{{D}{28}{Per-task pass@\texorpdfstring {$k$}{k} breakdown for the 8B markdown student}{appendix.D}{}}
-\newlabel{app:per-task-md@cref}{{[appendix][4][2147483647]D}{[1][28][]28}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Per-task pass@$k$ breakdown for the 8B markdown student}{29}{appendix.D}\protected@file@percent }
+\newlabel{app:per-task-md}{{D}{29}{Per-task pass@\texorpdfstring {$k$}{k} breakdown for the 8B markdown student}{appendix.D}{}}
+\newlabel{app:per-task-md@cref}{{[appendix][4][2147483647]D}{[1][28][]29}}
 \@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Per-task judge-keep outcome for the 8B markdown student on the 18-task hard held-out suite. $\text  {$\mathsurround \z@ \mathchar "458$}$ = judge-kept; $\cdot $ = judge-rejected.\relax }}{29}{table.caption.61}\protected@file@percent }
 \newlabel{tab:per-task-md}{{18}{29}{Per-task judge-keep outcome for the 8B markdown student on the 18-task hard held-out suite. $\checkmark $ = judge-kept; $\cdot $ = judge-rejected.\relax }{table.caption.61}{}}
-\newlabel{tab:per-task-md@cref}{{[table][18][2147483647]18}{[1][28][]29}}
+\newlabel{tab:per-task-md@cref}{{[table][18][2147483647]18}{[1][29][]29}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Single-shot (left, red) vs.\ reviewed (right, green) academic figures under deterministic geometric feedback. Single-shot renders are cramped and overflow their canvas; the interaction loop, fed the exact measured defects, resolves them to clean layouts. Defect counts are computed from the rendered DOM. Every single-shot render shown was rated ``perfect'' by the VLM screenshot judge.\relax }}{30}{figure.caption.38}\protected@file@percent }
 \newlabel{fig:comparison-grid}{{3}{30}{Single-shot (left, red) vs.\ reviewed (right, green) academic figures under deterministic geometric feedback. Single-shot renders are cramped and overflow their canvas; the interaction loop, fed the exact measured defects, resolves them to clean layouts. Defect counts are computed from the rendered DOM. Every single-shot render shown was rated ``perfect'' by the VLM screenshot judge.\relax }{figure.caption.38}{}}
 \newlabel{fig:comparison-grid@cref}{{[figure][3][]3}{[1][18][]30}}
 \newlabel{fig:geometric-singleshot}{{4a}{31}{Single-shot ($4$ geometric defects).\relax }{figure.caption.43}{}}
-\newlabel{fig:geometric-singleshot@cref}{{[subfigure][1][4]4a}{[1][20][]31}}
+\newlabel{fig:geometric-singleshot@cref}{{[subfigure][1][4]4a}{[1][19][]31}}
 \newlabel{sub@fig:geometric-singleshot}{{a}{31}{Single-shot ($4$ geometric defects).\relax }{figure.caption.43}{}}
-\newlabel{sub@fig:geometric-singleshot@cref}{{[subfigure][1][4]4a}{[1][20][]31}}
+\newlabel{sub@fig:geometric-singleshot@cref}{{[subfigure][1][4]4a}{[1][19][]31}}
 \newlabel{fig:geometric-reviewed}{{4b}{31}{Reviewed ($0$ defects).\relax }{figure.caption.43}{}}
-\newlabel{fig:geometric-reviewed@cref}{{[subfigure][2][4]4b}{[1][20][]31}}
+\newlabel{fig:geometric-reviewed@cref}{{[subfigure][2][4]4b}{[1][19][]31}}
 \newlabel{sub@fig:geometric-reviewed}{{b}{31}{Reviewed ($0$ defects).\relax }{figure.caption.43}{}}
-\newlabel{sub@fig:geometric-reviewed@cref}{{[subfigure][2][4]4b}{[1][20][]31}}
+\newlabel{sub@fig:geometric-reviewed@cref}{{[subfigure][2][4]4b}{[1][19][]31}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces The Latent Diffusion U-Net figure under deterministic geometric feedback. The single-shot rendering (\subref  {fig:geometric-singleshot}) is cramped and overflows its canvas, with $4$ geometric defects that the VLM screenshot judge rated as perfect. After the interaction loop feeds back the exact defects (\subref  {fig:geometric-reviewed}), the layout is clean with $0$ defects.\relax }}{31}{figure.caption.43}\protected@file@percent }
 \newlabel{fig:geometric-beforeafter}{{4}{31}{The Latent Diffusion U-Net figure under deterministic geometric feedback. The single-shot rendering (\subref {fig:geometric-singleshot}) is cramped and overflows its canvas, with $4$ geometric defects that the VLM screenshot judge rated as perfect. After the interaction loop feeds back the exact defects (\subref {fig:geometric-reviewed}), the layout is clean with $0$ defects.\relax }{figure.caption.43}{}}
-\newlabel{fig:geometric-beforeafter@cref}{{[figure][4][]4}{[1][20][]31}}
+\newlabel{fig:geometric-beforeafter@cref}{{[figure][4][]4}{[1][19][]31}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Phase 1 baseline (single-run): interaction-scaling lift orders by \emph  {feedback actionability}. Execution feedback (Code: +0.20) is binary and machine-readable; factual verification (Research: +0.17) is specific but softer; visual feedback (Web: +0.08, Animations: +0.07, Slides: +0.03) is holistic and lossy to operationalize. The multi-run averages reported in \Cref  {tab:harness-headline} reorder some within-tier rows but preserve the execution-grounded vs.\ ungrounded ordering.\relax }}{31}{figure.caption.56}\protected@file@percent }
 \newlabel{fig:actionability}{{5}{31}{Phase 1 baseline (single-run): interaction-scaling lift orders by \emph {feedback actionability}. Execution feedback (Code: +0.20) is binary and machine-readable; factual verification (Research: +0.17) is specific but softer; visual feedback (Web: +0.08, Animations: +0.07, Slides: +0.03) is holistic and lossy to operationalize. The multi-run averages reported in \Cref {tab:harness-headline} reorder some within-tier rows but preserve the execution-grounded vs.\ ungrounded ordering.\relax }{figure.caption.56}{}}
 \newlabel{fig:actionability@cref}{{[figure][5][2147483647]5}{[1][27][]31}}

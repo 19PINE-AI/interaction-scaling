@@ -6,11 +6,13 @@ the canvas edge, text overflowing its container, or content that pushes the
 document past its intended bounds. These are precisely the kind of layout flaws a
 render-and-review loop ought to detect and repair. To study this, we introduce a
 seventh modality, beyond the six harness modalities of \Cref{sec:harness}: a
-geometry-focused Type-3b suite of 15 academic-paper architecture figures
-(Transformer, U-Net, ViT, FPN, DETR, Mask R-CNN, latent-diffusion U-Net, CLIP,
-MoE, GAT, WaveNet, SE, Perceiver-IO, Seq2Seq with attention, and Evoformer),
-each generated as a self-contained $1920\times1080$ HTML document with inline
-SVG. The defining property of these artifacts is that correctness is largely
+geometry-focused Type-3b suite of 20 dense academic-paper architecture figures
+(Transformer, U-Net, ViT, Swin, FPN, DETR, Mask R-CNN, Faster R-CNN,
+latent-diffusion U-Net, CLIP, MoE, GAT, WaveNet, SE, Perceiver-IO, Seq2Seq with
+attention, Flamingo, Evoformer, $\dots$), each generated as a self-contained
+$1920\times1080$ HTML document with inline SVG, and each hardened with a legend
+and per-block tensor-shape annotations so a frontier model cannot trivially lay
+it out. The defining property of these artifacts is that correctness is largely
 \emph{geometric}: whether the components are present and wired correctly is
 semantic, but whether the figure is actually legible is a question of spatial
 layout that can be measured exactly. This modality therefore
@@ -22,8 +24,8 @@ defects that an interaction loop is supposed to fix.
 Our default visual evaluator is a binary per-requirement rubric scored by a
 vision--language model (VLM) over a screenshot of the rendered artifact. Even
 when we capture the screenshot at native resolution and tile it into quadrants to
-preserve detail, this judge scored \textbf{14 of 15} single-shot figures as
-perfect. Yet by direct inspection the figures are plainly broken: the Evoformer
+preserve detail, on an initial 15-figure probe this judge scored \textbf{14 of
+15} single-shot figures as perfect. Yet by direct inspection the figures are plainly broken: the Evoformer
 figure renders two section titles, ``MSA Processing'' and ``MSA
 Representation,'' superimposed on top of one another, and the ViT figure's detail
 panel has ``Class Output'' overlapping ``Input.'' The judge cannot see these
@@ -59,43 +61,48 @@ deterministic metric perceives the very defects to which the VLM is blind.
 \subsection{Interaction scaling on an objective metric}
 
 With a reliable instrument in hand we can measure whether the interaction loop
-actually improves the figures. The harness is fully deterministic: a proposer
-generates the figure, the DOM checker computes its exact set of geometric
+actually improves the artifact. The harness is fully deterministic: a proposer
+generates the artifact, the DOM checker computes its exact set of geometric
 defects, those specific defects are fed back to the proposer in natural language
-(e.g., ``text $X$ overlaps text $Y$; move them apart'' or ``the canvas is
-$40$\,px too tall''), and the proposer revises, for up to three iterations. The
-reward is simply the defect count---no VLM is involved at any point.
+(e.g., ``text $X$ overlaps text $Y$; move them apart''; ``the panels in this row
+are unequal width; equalize and align them''; ``content is $80$\,px too wide at
+$375$\,px''), and the proposer revises, for up to three iterations. The reward is
+simply the defect count---no VLM is involved at any point.
 
-\Cref{tab:geometric} reports the result. On the 15 paper figures, the mean defect
-count falls from $1.20$ to $0.27$, a $78\%$ reduction; the number of
-geometrically clean figures rises from $4/15$ to $11/15$; the total defect count
-drops from $18$ to $4$; and $8$ figures improve while \emph{none} regress
-(sign-test $p=0.008$). As a cross-check, we took the \emph{original} slides
-harness---which used VLM feedback, not geometric feedback---and re-scored its $60$
-task-runs objectively with the same DOM-geometry checker. Mean defects fell from
-$2.63$ to $0.23$, a $91\%$ reduction. The slides harness had been fixing real
-layout defects all along; the holistic and rubric VLM scores simply could not
-measure it. The improvement was real but invisible to the instrument used to
-report it.
+We extend the checker with a deterministic \emph{alignment} axis (groups of
+card/pillar boxes flagged for unequal size, misaligned far edges, or uneven
+gutters), since rows of equal-width, edge-aligned panels are the failure mode that
+dominates dense slides and web layouts, and we evaluate three visual modalities
+under one identical configuration: Claude Sonnet 4 at temperature $0$, the same
+design-principle generation prompt, the alignment-inclusive geometric reward, and
+three seeds each. The three suites are $20$ dense academic-paper architecture
+figures, $12$ slides that reproduce the content of well-known papers
+(Transformer, ResNet, BERT, U-Net, $\dots$) with dense text coexisting with a
+figure and aligned pillars, and $20$ dense responsive web pages (dashboards,
+pricing comparisons, calendars, spec sheets, $\dots$; \Cref{sec:web-geometry}).
 
-\paragraph{Dense, real-paper slides and alignment.} To stress the failure mode
-that dominates real decks---dense text coexisting with a figure, and rows of
-panels or pillars that must be equal-width and edge-aligned---we built a
-twelve-task suite of slides that reproduce the content of well-known papers
-(Transformer, ResNet, BERT, U-Net, GAN, $\dots$), and we extended the DOM checker
-with a deterministic \emph{alignment} axis (groups of card/pillar boxes flagged
-for unequal size, misaligned far edges, or uneven gutters). The pattern repeats
-and sharpens. The binary VLM rubric again saturates---it rates $29$ of $36$
+\Cref{tab:geometric} reports the result: on all three modalities the
+geometric-feedback loop produces a large, statistically significant reduction in
+real layout defects, with improvements outnumbering regressions by $9$:$1$ or
+better. Mean defects fall $74\%$ on figures ($0.57\to0.15$, $p=7\times10^{-4}$),
+$73\%$ on dense slides ($1.25\to0.33$, $p=0.0018$), and $47\%$ on web pages
+($16.1\to8.5$, $p=4\times10^{-8}$). The magnitudes track single-shot headroom:
+dense responsive web pages are strikingly defect-rich out of the box ($16$ defects
+per page across desktop and mobile), whereas a frontier model under a
+design-principle prompt already lays out many figures and slides cleanly---so the
+loop has fewer, but still significant, defects to remove.
+
+\paragraph{The VLM is blind here, as a judge \emph{and} as a reviewer.} On the
+same dense slides the binary VLM rubric saturates---it rates $29$ of $36$
 single-shot slides perfect ($0.97$ mean)---while deterministic geometry finds only
-half of them clean (mean $1.25$ defects, dominated by text overlap and
-misalignment). Crucially, a VLM-feedback reviewer here \emph{increases} the mean
-defect count ($1.89\to2.44$): blind to the true geometry, its edits break
-alignment as often as they fix it. The deterministic geometric-feedback harness,
-in contrast, reduces mean defects from $1.25$ to $0.33$ (a $73\%$ reduction)
-across three seeds ($n{=}36$), raising the geometrically clean fraction from
-$18/36$ to $29/36$, with $13$ slides improved and only $1$ regressed (sign-test
-$p=0.0018$). Grounded geometric feedback fixes dense real-world slides; ungrounded
-VLM review does not.
+half of them clean. Worse, when the \emph{reviewer} is a VLM rather than the
+geometry checker, the mean slide defect count \emph{rises} ($1.89\to2.44$): blind
+to the true geometry, its edits break alignment as often as they fix it. Only the
+grounded geometric signal reliably removes the defects. As an independent
+cross-check, re-scoring the $60$ task-runs of the \emph{original} VLM-feedback
+slides harness with the DOM checker shows mean defects of $2.63\to0.23$---that
+harness had been fixing real layout defects all along, but the holistic and rubric
+VLM scores it reported could not measure the improvement.
 
 \begin{figure*}[t]
   \centering
@@ -111,47 +118,43 @@ VLM review does not.
 
 \begin{table}[t]
   \centering
-  \caption{Interaction scaling under deterministic DOM-geometry scoring. Defects
-  are counted exactly from the rendered DOM (text overlap, out-of-bounds,
-  overflow, document overflow); lower is better. The paper-figure harness uses
-  geometric feedback directly; the slides cross-check re-scores the original
-  VLM-feedback harness with the same checker.}
+  \caption{Interaction scaling under deterministic DOM-geometry scoring, across
+  three visual modalities at one identical generation configuration (Claude
+  Sonnet 4, temperature $0$, design-principle prompt, alignment-inclusive
+  geometric reward, three seeds; propose\,$\to$\,measure\,$\to$\,feed exact
+  defects back\,$\to$\,revise, $\le 3$ iterations). Defects are counted exactly
+  from the rendered DOM (text overlap, container/horizontal overflow, clipping,
+  box-group misalignment); web pages are scored at desktop $1920$ and mobile
+  $375$ widths and summed. Lower is better; $p$ is a two-sided paired sign test.}
   \label{tab:geometric}
-  \begin{tabular}{lccc}
+  \small
+  \begin{tabular}{lcccccc}
     \toprule
-    Suite (\# runs) & Metric & Single-shot & Reviewed \\
+    Modality & $n$ & SS & Rev. & $\Delta$ & clean SS$\to$Rev. & impr./regr.\ ($p$) \\
     \midrule
-    \multirow{4}{*}{Paper figures (15)}
-      & Mean defects        & $1.20$ & $0.27$ \;($-78\%$) \\
-      & Geometrically clean & $4/15$ & $11/15$ \\
-      & Total defects       & $18$   & $4$ \\
-      & Improved / regressed & \multicolumn{2}{c}{$8 / 0$ \;(sign-test $p=0.008$)} \\
-    \midrule
-    Slides cross-check (60)
-      & Mean defects        & $2.63$ & $0.23$ \;($-91\%$) \\
+    Academic figures (20) & 60 & $0.57$ & $0.15$ & $-74\%$ & $39\to52$ & $17/2$ \;($7{\times}10^{-4}$) \\
+    Dense slides (12)     & 36 & $1.25$ & $0.33$ & $-73\%$ & $18\to29$ & $13/1$ \;($0.0018$) \\
+    Web pages (20)        & 60 & $16.1$ & $8.5$  & $-47\%$ & $10\to16$ & $33/2$ \;($4{\times}10^{-8}$) \\
     \bottomrule
   \end{tabular}
 \end{table}
 
-\paragraph{Extending the instrument to scrollable web pages.} A web page has no
-fixed 1080-px canvas, so vertical overflow and below-the-fold clipping are not
-defects---the page is meant to scroll. But the other geometric failures are still
-well-defined, and a \emph{multi-width} adaptation captures the dominant
-single-shot web failure: at each target width we count text-on-text overlap,
-container overflow, box-group misalignment, and \emph{horizontal} overflow
-(content wider than the viewport, i.e.\ a horizontal scrollbar), and we sum these
-across a desktop ($1920$) and a mobile ($375$) width. The mobile pass is what
-catches responsive breakage---grids that do not collapse and rows that overflow
-sideways on a phone. On a hardened suite of $20$ dense, responsive, real-world
-page types (dashboard, pricing comparison, docs, calendar, email client, spec
-sheet, long marketing landing, $\dots$), single-shot pages are strikingly
-defect-rich: a mean of $16.1$ geometric defects per page across the two widths.
-The geometric-feedback harness (the same propose\,$\to$\,measure\,$\to$\,feed
-exact defects back\,$\to$\,revise loop) reduces this to $8.5$ ($-47\%$) over three
-seeds ($n{=}60$), with $33$ pages improved and only $2$ regressed (sign-test
-$p=3.7\times10^{-8}$). The binary VLM rubric on the same suite registered only a
-$+0.054$ lift ($p=0.30$, n.s.): once again deterministic geometry reveals a large,
-highly significant layout improvement that screenshot-based judging misses.
+\paragraph{Extending the instrument to scrollable web pages.}
+\label{sec:web-geometry}
+A web page has no fixed 1080-px canvas, so vertical overflow and below-the-fold
+clipping are not defects---the page is meant to scroll. But the other geometric
+failures are still well-defined, and a \emph{multi-width} adaptation captures the
+dominant single-shot web failure: at each target width we count text-on-text
+overlap, container overflow, box-group misalignment, and \emph{horizontal}
+overflow (content wider than the viewport, i.e.\ a horizontal scrollbar), and we
+sum these across a desktop ($1920$) and a mobile ($375$) width. The mobile pass is
+what catches responsive breakage---grids that do not collapse and rows that
+overflow sideways on a phone. The web row of \Cref{tab:geometric} is computed this
+way, and it is the largest single-shot defect load of the three modalities ($16$
+per page); notably the binary VLM rubric on the very same suite registered only a
+$+0.054$ lift ($p=0.30$, n.s.), so once again the deterministic instrument reveals
+a large, highly significant layout improvement that screenshot-based judging
+misses entirely.
 
 \paragraph{Scope.} Deterministic geometric scoring thus applies to any artifact
 with a well-defined intended geometry: fixed-canvas slides and figures (overflow,

@@ -35,6 +35,7 @@ from src.evaluation.checklist_judge import checklist_score
 from src.rendering.browser import BrowserRenderer
 from src.utils.code_utils import extract_code
 from src.utils.llm_client import get_client
+from src.experiments.hard_benchmark_runner import DESIGN_PRINCIPLES
 
 logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("diagram")
@@ -54,7 +55,10 @@ Rules:
 - Every label must be fully inside its shape; nothing may overflow or clip
 - Boxes/nodes must NOT overlap each other; arrows must not pass through nodes
   that are not their endpoints; sibling elements must be evenly spaced
-- Wrap your complete HTML in a ```html code block"""
+
+%s
+
+- Wrap your complete HTML in a ```html code block""" % DESIGN_PRINCIPLES
 
 REVISION_PROMPT = """\
 Your previous diagram (shown above) was rendered and inspected. A rubric check \
