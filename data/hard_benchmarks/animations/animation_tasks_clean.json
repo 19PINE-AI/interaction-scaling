@@ -1,0 +1,282 @@
+[
+  {
+    "task_id": "anc_slidein_row",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) where FOUR equal-size cards slide in from off the LEFT edge, one after another (~0.5s apart), and settle into a centered horizontal row with uniform gutters. Over ~3s all four arrive and stop in their aligned row. Each card has a title and an icon box.",
+    "frame_times_ms": [200, 800, 1400, 2200, 3000],
+    "requirements": [
+      "All visible cards stay fully within the 1920x1080 viewport at every frame (none clipped at the left edge while entering)",
+      "Cards arrive one at a time (more cards visible in later frames)",
+      "In the final frame the four cards form one centered row, equal-size, with uniform gutters",
+      "Cards never overlap each other during entry",
+      "The four cards share the same vertical center (aligned row) once settled",
+      "No horizontal or vertical scrollbar at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_reorder_bars",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of SIX equal-width vertical bars on a shared baseline, evenly spaced, each labeled with a value. Over ~3s they smoothly reorder by sliding horizontally into ascending height order (a few position swaps). Bars keep equal width and the shared baseline throughout.",
+    "frame_times_ms": [200, 1000, 1800, 2600, 3200],
+    "requirements": [
+      "Exactly 6 equal-width bars on one shared baseline at every frame",
+      "All bars stay fully within the viewport at every frame",
+      "Bars never overlap horizontally during the swaps (gaps preserved)",
+      "Bar positions visibly change over time (reordering occurs)",
+      "The final frame shows bars in ascending height order, evenly spaced",
+      "Each bar keeps its value label attached and legible throughout"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_tab_underline",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a horizontal tab bar with FIVE equally-spaced tab labels and a sliding underline indicator. Over ~4s the active tab cycles 1->2->3->4->5, and the underline slides to sit exactly under the active tab each time (matching its width and x-position).",
+    "frame_times_ms": [200, 1000, 1800, 2600, 3400, 4000],
+    "requirements": [
+      "Five tab labels in one evenly-spaced horizontal row, fully within the viewport at every frame",
+      "A single underline indicator is present and sits directly under exactly one tab at each settled moment",
+      "The active tab changes over time (1 through 5)",
+      "The underline's horizontal position changes over time to track the active tab",
+      "The underline stays on the tab-bar axis (never drifts above/below the row or off the sides)",
+      "The underline width matches the tab it underlines (does not overshoot into neighbors)"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_toast_stack",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of toast notifications. Over ~4s, FOUR equal-width toasts slide in from the RIGHT edge one at a time and stack vertically in the top-right corner (newest on top, with uniform vertical gaps and a fixed right margin). Each toast has an icon, a title, and a close affordance.",
+    "frame_times_ms": [400, 1200, 2000, 2800, 3600],
+    "requirements": [
+      "Each toast stays fully within the viewport at every frame (none clipped at the right edge once settled)",
+      "Toasts appear one at a time (more visible in later frames)",
+      "Stacked toasts do not overlap each other",
+      "All toasts share the same right edge and width (right-aligned, equal width)",
+      "Stacked toasts have uniform vertical gaps between them",
+      "By the final frame all four toasts are visible and stacked in the top-right"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_expand_push",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a horizontal row of FOUR equal-width cards centered on screen. Over ~3s the SECOND card smoothly expands to about double width while the third and fourth cards slide right to make room (the row stays centered as a group). All cards stay on the same row and fully on screen.",
+    "frame_times_ms": [200, 900, 1600, 2400, 3000],
+    "requirements": [
+      "All four cards stay fully within the viewport at every frame (none pushed off the right edge)",
+      "The second card visibly widens over time",
+      "Cards never overlap each other during the push",
+      "All four cards remain on a single aligned row (shared vertical center) throughout",
+      "The third and fourth cards visibly shift right as the second expands",
+      "No scrollbar appears at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_carousel",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a card carousel: FOUR equal-size cards in a horizontal track that slides so each card becomes centered in turn (1->2->3->4) over ~4s, the centered card slightly enlarged. Five-... four pagination dots below indicate the active card.",
+    "frame_times_ms": [200, 1200, 2200, 3200, 4000],
+    "requirements": [
+      "Exactly one card is centered at a time, and which card is centered changes over time (1->2->3->4)",
+      "The four cards stay equal-size and share the same vertical center at every frame",
+      "No card is clipped at the screen edge unexpectedly (only an intentional rounded viewport mask may clip neighbors)",
+      "Cards do not overlap each other",
+      "Exactly four pagination dots sit in one aligned, equally-spaced row and the active dot matches the centered card",
+      "No scrollbar appears at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_kanban_move",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of THREE equal-width columns (To Do, Doing, Done) with headers, each holding 2 static cards, plus ONE highlighted card that slides over ~3.5s from To Do to Doing to Done, settling at the bottom of each column in turn.",
+    "frame_times_ms": [200, 1200, 2000, 2800, 3600],
+    "requirements": [
+      "Three equal-width columns sharing the same top edge with uniform gutters at every frame",
+      "The highlighted card changes column over time (To Do -> Doing -> Done)",
+      "The moving card stays fully within the board and viewport at every frame",
+      "The moving card does not overlap any column header or other card during its travel",
+      "Cards within a column are equal width and aligned to their column",
+      "By the final frame the highlighted card is in the Done column"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_drawer",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a side drawer. A content page (a header bar plus a few aligned rows) is visible; over ~2.5s a 380px-wide drawer panel slides in from the RIGHT edge and a dim overlay fades over the rest of the page. The drawer contains a title and 4 aligned menu rows. The drawer settles flush against the right edge.",
+    "frame_times_ms": [200, 800, 1400, 2000, 2600],
+    "requirements": [
+      "The drawer panel stays fully within the viewport at every frame (it settles flush to the right edge, not past it)",
+      "The drawer visibly slides in over time (its x-position moves leftward into view across frames)",
+      "By the final frame the drawer is fully open and its 4 menu rows are visible and left-aligned",
+      "The drawer does not overlap or clip its own menu rows (text stays inside the panel)",
+      "The underlying page content is not pushed off-screen (the drawer overlays, it does not displace content off the viewport)",
+      "No horizontal scrollbar appears at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_swap_tiles",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a centered 3x3 grid of NINE equal-size numbered tiles (1-9) with uniform gaps. Over ~3s, two pairs of tiles swap positions by sliding past/around each other (e.g. tile 1<->9, then 3<->7), ending in a valid 3x3 grid again.",
+    "frame_times_ms": [200, 900, 1600, 2300, 3000],
+    "requirements": [
+      "Nine equal-size tiles arranged in a 3x3 grid with uniform gaps in the first and last frames",
+      "All nine tiles stay fully within the viewport at every frame",
+      "Tiles do not overlap each other at the start and end (a brief pass during a swap is allowed only if they do not occupy the same cell at a settled frame)",
+      "Two distinct swaps visibly occur over time (tile positions change)",
+      "The final frame is again a clean aligned 3x3 grid (rows and columns aligned)",
+      "Each tile keeps its number label centered and legible"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_orbit",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of SIX equal-size dots orbiting a centered label at a FIXED radius, evenly spaced around the circle (60 degrees apart). Over ~4s they rotate together about the center (at least a quarter turn) while staying evenly spaced on the circle. The center label stays fixed.",
+    "frame_times_ms": [200, 1000, 2000, 3000, 4000],
+    "requirements": [
+      "Exactly 6 equal-size dots are evenly spaced (about 60 degrees apart) on a circle at every frame",
+      "All 6 dots stay fully within the viewport at every frame (none drifts off the circle or off-canvas)",
+      "The dots' angular positions change over time (they orbit)",
+      "The dots maintain a constant radius from the center (they stay on the circle, not spiraling)",
+      "No dot overlaps the center label",
+      "The center label stays fixed at the center throughout"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_stagger_grid",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a 3x3 grid of NINE equal-size cards that fade-and-slide in from a small offset, staggered top-left to bottom-right over ~3s, each settling into its aligned grid cell. The final grid is perfectly aligned with equal-size cells and uniform gutters.",
+    "frame_times_ms": [200, 800, 1400, 2200, 3000],
+    "requirements": [
+      "All cards (including mid-slide) stay fully within the viewport at every frame",
+      "Cards appear in a staggered sequence over time (more visible in later frames)",
+      "The final frame shows all 9 cards in an aligned 3x3 grid with equal-size cells and uniform gutters",
+      "Cards do not overlap each other at any frame",
+      "The three columns share vertical edges and the three rows share horizontal edges (clean grid)",
+      "Each card's content stays inside the card (no overflow)"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_progress_token",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of a horizontal pipeline of FIVE equally-spaced, equal-size stage nodes connected by segments. Over ~4s a single circular token travels left-to-right ALONG the connecting path, pausing briefly at each node (which lights up as the token arrives). The token stays on the path between node centers.",
+    "frame_times_ms": [200, 1000, 1800, 2600, 3400, 4000],
+    "requirements": [
+      "Five equal-size stage nodes in one evenly-spaced horizontal row, fully within the viewport at every frame",
+      "A single token moves left-to-right over time (its x-position increases across frames)",
+      "The token stays on the connecting path (aligned to the node row, not drifting above/below or off the ends)",
+      "Nodes light up in left-to-right order as the token reaches them",
+      "The token never leaves the viewport or runs past the last node",
+      "The five nodes stay equally spaced and aligned on one axis throughout"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_fab_menu",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a floating action button (FAB) in the BOTTOM-RIGHT corner. Over ~2s it expands into a speed-dial of FOUR equal-size sub-action buttons that fan upward in a vertical column above the FAB (each with a small label to its left), then the FAB icon rotates 45deg. All buttons must remain fully on screen near the corner.",
+    "frame_times_ms": [200, 700, 1200, 1700, 2200],
+    "requirements": [
+      "The FAB stays anchored in the bottom-right corner, fully within the viewport, at every frame",
+      "Four equal-size sub-action buttons appear over time, fanning upward above the FAB",
+      "All four sub-buttons stay fully within the viewport (none clipped at the top or right edge)",
+      "The sub-buttons are vertically aligned in a column with uniform gaps",
+      "Sub-buttons do not overlap each other or the FAB",
+      "Each sub-button's label sits beside it without overlapping another button"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_avatar_fan",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of an avatar stack: FIVE equal-size circular avatars start overlapping (each offset ~20px from the previous) in the centre. Over ~3s they fan OUT into a single evenly-spaced horizontal row (no overlap), then a '+3' counter chip appears at the end.",
+    "frame_times_ms": [200, 900, 1600, 2300, 3000],
+    "requirements": [
+      "Five equal-size circular avatars are present at every frame",
+      "All avatars stay fully within the viewport at every frame",
+      "The avatars transition from overlapping to a non-overlapping evenly-spaced row over time",
+      "In the final frame the five avatars do not overlap and have uniform spacing",
+      "A '+3' counter chip appears at the end of the row by the final frame, not overlapping the last avatar",
+      "All avatars share the same vertical center (aligned row)"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_breadcrumb_grow",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a breadcrumb trail building up. Starting from 'Home', segments append one-by-one over ~3.5s ('Home > Library > Datasets > Vision > train-2026') with a chevron separator between each. The trail stays on one left-aligned horizontal line and must not run off the right edge (it stays within a max-width container).",
+    "frame_times_ms": [300, 1000, 1700, 2400, 3200],
+    "requirements": [
+      "Breadcrumb segments append over time (more segments visible in later frames)",
+      "All segments and chevrons stay on one horizontal line (aligned, same vertical center) at every frame",
+      "The trail never runs off the right edge of the viewport (it stays within bounds, e.g. ellipsizing or wrapping inside its container)",
+      "By the final frame all five segments are present in order with chevron separators",
+      "Segments and chevrons do not overlap each other",
+      "No horizontal scrollbar appears at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_modal_open",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a modal dialog. Over ~2.5s a dim backdrop fades in over a content page, then a centered modal card scales-and-fades up from 90% to 100%, containing a title, two lines of body text, and a right-aligned row of two buttons (Cancel, Confirm). The modal stays centered and fully on screen.",
+    "frame_times_ms": [200, 700, 1200, 1800, 2400],
+    "requirements": [
+      "The modal card is horizontally and vertically centered and fully within the viewport once shown",
+      "The modal grows in over time (scale increases across early frames) then settles",
+      "The modal content (title, body, buttons) stays inside the modal card (no overflow)",
+      "The two buttons are right-aligned in one row inside the modal and do not overlap",
+      "A dim backdrop covers the page behind the modal in the settled frames",
+      "No scrollbar appears at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_split_resize",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a two-pane split view (left list pane, right detail pane) with a vertical divider. Over ~3s the divider slides from 30% to 60% of the width and back, resizing both panes; each pane's content reflows to fit. Panes always fill the full width together with no gap or overlap, and content never overflows its pane.",
+    "frame_times_ms": [200, 900, 1600, 2300, 3000],
+    "requirements": [
+      "The two panes together fill the full viewport width with no gap and no overlap at every frame",
+      "The divider's x-position changes over time (the split ratio animates)",
+      "Both panes stay fully within the viewport (nothing clipped at the screen edges)",
+      "Each pane's content stays inside that pane (no text overflow across the divider)",
+      "The divider stays vertical and spans the full height between the panes",
+      "No horizontal scrollbar appears at any frame"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_chip_reflow",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a row of SIX filter chips of varying widths. Over ~3s, three chips become 'selected' one at a time; each selected chip animates to the FRONT of the row (a reflow) while the others slide to make room. Chips stay on one left-aligned row with uniform gaps and within the container width.",
+    "frame_times_ms": [300, 1000, 1700, 2400, 3000],
+    "requirements": [
+      "All six chips stay on one horizontal row (aligned, same vertical center) at every frame",
+      "Chips reflow over time (their left-to-right order changes as chips are selected)",
+      "Chips never overlap each other during the reflow",
+      "All chips stay fully within the viewport / container (none pushed off the right edge)",
+      "Selected chips are visually distinct from unselected ones",
+      "Gaps between chips stay uniform once settled"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_sort_rows",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a small data table (a header row plus FIVE equal-height data rows, each with 3 cells). Over ~3s the rows re-sort by a numeric column: rows slide vertically to their new positions (a few reorderings). Rows keep equal height, aligned columns, and a fixed header.",
+    "frame_times_ms": [200, 900, 1600, 2300, 3000],
+    "requirements": [
+      "A fixed header row plus five equal-height data rows are present at every frame",
+      "Data rows visibly change vertical order over time (re-sorting occurs)",
+      "Rows never overlap each other during the reorder",
+      "All rows stay fully within the viewport (none slides off the top or bottom edge)",
+      "The three columns stay vertically aligned across all rows throughout",
+      "By the final frame the rows are in sorted order with no overlap"
+    ],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "anc_accordion",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a vertical accordion with FOUR equal-width section headers stacked in a centered column. Over ~3.5s, sections open one at a time: opening a section expands its content panel (pushing the sections below it down) while the previously-open section collapses. Headers stay equal-width and left/right aligned; expanded content stays inside its panel.",
+    "frame_times_ms": [200, 900, 1600, 2300, 3000],
+    "requirements": [
+      "Four equal-width section headers stay in one aligned vertical column at every frame",
+      "Exactly one section's content panel is expanded at a time, and which one changes over time",
+      "Expanded content stays inside its panel (no text overflow past the panel edges)",
+      "Sections never overlap each other (the ones below shift down as a section expands)",
+      "All sections stay fully within the viewport (the column does not push content off the bottom edge)",
+      "Section headers remain equal-width and edge-aligned throughout"
+    ],
+    "difficulty": "hard"
+  }
+]

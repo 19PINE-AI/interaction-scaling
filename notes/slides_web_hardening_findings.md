@@ -118,17 +118,19 @@ discussion/section_geometric + tab:geometric all updated to these numbers;
 compiles 31pp, 0 undefined refs.
 
 ## 7. Animations + code hardening (2026-06-01)
-**Animations** (`animation_tasks_hard.json`, 15 SVG/CSS tasks -- NO canvas, per user,
-so per-frame DOM geometry applies). New instrument `animation_geometric_defects`
-advances the live page to each frame time and probes the DOM (catches elements
-flying off-canvas / colliding mid-motion that the frame-VLM misses). Harness:
-`run_geometric_harness --animation --prompt animation --include-alignment`, per-frame
-summed reward, frame-labeled feedback. Result (3 seeds, n=45): improved/regressed
-**17/2, p=7.3e-4** (robust headline). Mean 16.0->2.8 (-82%) but HEAVY-TAILED: ~half
-the suite (8/15: steps, gauges, equalizer, timeline, donut, loader, map, typing) is
-clean single-shot; the dynamic ones bite (clock mean 182 incl one 546->0 render,
-network 16, barsort 16, carousel 12). Report the sign test, not the mean. Added as
-the 4th row of tab:geometric.
+**Animations** (SVG/CSS, NO canvas per user; per-frame DOM geometry via
+`animation_geometric_defects` -- advance live page to each frame time, probe DOM;
+`run_geometric_harness --animation --prompt animation --include-alignment`).
+First suite (`animation_tasks_hard.json`, 15) was NOISY: ~half saturated (8/15 clean
+SS) and one clock render blew up to 546 defects -> mean outlier-skewed (16->2.8,
+"-82%"), so only the sign test (17/2, p=7.3e-4) was robust. User asked for a CLEANER
+set. Built `animation_tasks_clean.json` (**20 tasks**) entirely from bounded biting
+motion patterns (slide-in/clip, reorder, expand/push, traversal, staggered entrance;
+few well-separated elements -> no cascade). RESULT (3 seeds, n=60): mean SS
+**16.9 -> 10.2 (-40%)**, median SS 8, **max 70 (no blow-up)**, clean 18/60->25/60,
+improved/regressed **34/7, sign-test p=2.5e-5**. Cleaner AND stronger (41 decisive
+pairs vs 19; meaningful mean). THIS is the animation row of tab:geometric now (the
+old 15-task suite stays in repo but is superseded).
 
 **Code** (`code_tasks_hard.json`). First attempt (12 implement-from-spec) was TOO
 EASY (single-shot 89%); replaced with 11 deep-spec tasks (kept base/eval_expr/glob

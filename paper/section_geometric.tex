@@ -80,15 +80,15 @@ figures, $12$ slides that reproduce the content of well-known papers
 (Transformer, ResNet, BERT, U-Net, $\dots$) with dense text coexisting with a
 figure and aligned pillars, $20$ dense responsive web pages (dashboards,
 pricing comparisons, calendars, spec sheets, $\dots$; \Cref{sec:web-geometry}),
-and $15$ SVG/CSS animations scored per frame (\Cref{sec:anim-geometry}).
+and $20$ SVG/CSS animations scored per frame (\Cref{sec:anim-geometry}).
 
 \Cref{tab:geometric} reports the result: on all four modalities the
 geometric-feedback loop produces a statistically significant reduction in
-real layout defects, with improvements outnumbering regressions by $8$:$1$ or
-better. Mean defects fall $74\%$ on figures ($0.57\to0.15$, $p=7\times10^{-4}$),
+real layout defects, with improvements outnumbering regressions by roughly
+$5$:$1$ or better. Mean defects fall $74\%$ on figures ($0.57\to0.15$, $p=7\times10^{-4}$),
 $73\%$ on dense slides ($1.25\to0.33$, $p=0.0018$), $47\%$ on web pages
-($16.1\to8.5$, $p=4\times10^{-8}$), and $82\%$ on animations
-($p=7\times10^{-4}$). The magnitudes track single-shot headroom:
+($16.1\to8.5$, $p=4\times10^{-8}$), and $40\%$ on animations
+($16.9\to10.2$, $p=3\times10^{-5}$). The magnitudes track single-shot headroom:
 dense responsive web pages are strikingly defect-rich out of the box ($16$ defects
 per page across desktop and mobile), whereas a frontier model under a
 design-principle prompt already lays out many figures and slides cleanly---so the
@@ -129,7 +129,7 @@ VLM scores it reported could not measure the improvement.
   box-group misalignment); web pages are scored at desktop $1920$ and mobile
   $375$ widths and summed, and animations are scored at every sampled frame and
   summed. Lower is better; $p$ is a two-sided paired sign test on per-task-run
-  pairs (robust to the magnitude outliers that skew the animation mean).}
+  pairs.}
   \label{tab:geometric}
   \small
   \begin{tabular}{lcccccc}
@@ -139,7 +139,7 @@ VLM scores it reported could not measure the improvement.
     Academic figures (20) & 60 & $0.57$ & $0.15$ & $-74\%$ & $39\to52$ & $17/2$ \;($7{\times}10^{-4}$) \\
     Dense slides (12)     & 36 & $1.25$ & $0.33$ & $-73\%$ & $18\to29$ & $13/1$ \;($0.0018$) \\
     Web pages (20)        & 60 & $16.1$ & $8.5$  & $-47\%$ & $10\to16$ & $33/2$ \;($4{\times}10^{-8}$) \\
-    Animations (15)       & 45 & $16.0$ & $2.8$  & $-82\%$ & $27\to35$ & $17/2$ \;($7{\times}10^{-4}$) \\
+    Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $18\to25$ & $34/7$ \;($3{\times}10^{-5}$) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -169,15 +169,18 @@ the DOM at every frame, summing the per-frame defect counts. This catches the
 failure unique to motion---an element that is on-screen at $t{=}0$ but flies off
 the viewport or collides with another mid-animation, or an animated row of bars/
 nodes that goes ragged during a transition---which a single end-state screenshot
-cannot see. On 15 SVG/CSS animation tasks (sorting bars, an analog clock, a
-settling network graph, a card carousel, a staggered grid reveal, $\dots$) the
-geometric-feedback loop improves $17$ of the $19$ decisive task-runs and regresses
-only $2$ (sign-test $p=7\times10^{-4}$). The mean reduction is large ($16.0\to2.8$
-defect-frames) but magnitude here is heavy-tailed---roughly half the suite is
-already clean single-shot, while a few dynamic tasks (notably the clock, whose
-ticks, numerals and three hands must all stay inside the dial at every frame) fail
-badly and are repaired---so we treat the per-pair sign test, not the mean, as the
-robust summary.
+cannot see. The suite is $20$ tasks built from the motion patterns that reliably
+produce bounded defect loads---sliding/clipping (a card row sliding in, a side
+drawer, toasts, a speed-dial), reordering (sorting bars, a re-sorting table, tile
+swaps, chip reflow), expansion (an expanding card pushing its neighbors, an
+accordion, a resizing split), traversal (a carousel, a kanban card, a token
+walking a pipeline), and staggered entrance---each with few, well-separated
+elements so no single render can cascade into hundreds of defects. Across three
+seeds ($n{=}60$) the geometric-feedback loop cuts mean defects $16.9\to10.2$
+($-40\%$; median single-shot $8$, max $70$) and improves $34$ of the $41$ decisive
+task-runs while regressing $7$ (two-sided sign-test $p=3\times10^{-5}$). Unlike a
+single end-state check, this rewards keeping the layout valid \emph{throughout}
+the motion.
 
 \paragraph{Scope.} Deterministic geometric scoring thus applies to any artifact
 with a well-defined intended geometry: fixed-canvas slides and figures (overflow,
