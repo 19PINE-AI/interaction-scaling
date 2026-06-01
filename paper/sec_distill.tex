@@ -3,6 +3,23 @@
 
 Can the harness's interaction-quality behavior be \emph{internalized} so a small model emits high-quality artifacts in fewer passes? We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via SFT.
 
-\paragraph{Result.} The student reaches $0.50\times$ the teacher's mean@1 capability on a $44$-task out-of-distribution suite (rising to $0.70\times$ at pass@2), and $44\%/56\%$ pass@1/pass@3 on an $18$-task hard held-out suite, at ${\sim}10\times$ lower deployment cost than running the harness over a frontier model. Run inside the same harness, the small student recovers more of the gap, confirming that scaffolding and internalization compose.
+\paragraph{Result.} The student reaches $0.50\times$ the teacher's mean@1 capability on a $44$-task out-of-distribution suite (rising to $0.70\times$ at pass@2), and $44\%/56\%$ pass@1/pass@3 on an $18$-task hard held-out suite, at ${\sim}10\times$ lower deployment cost than running the harness over a frontier model (\Cref{fig:distill}). Run inside the same harness, the small student recovers more of the gap, confirming that scaffolding and internalization compose.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.6\linewidth,height=3.8cm,
+  ybar,bar width=16pt,ymin=0,ymax=0.62,
+  ylabel={pass-rate (18-task hard held-out)},
+  symbolic x coords={pass@1,pass@3},xtick=data,enlarge x limits=0.6,
+  nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=2},
+  ymajorgrids,ytick={0,0.2,0.4,0.6}]
+  \addplot[draw=cAccent!60!black,fill=cAccent!30] coordinates {(pass@1,0.44) (pass@3,0.56)};
+  \legend{}
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{An $8$B student internalizes interaction quality.} Pass@$1$/pass@$3$ of the distilled $8$B markdown student on the hard held-out suite ($0.50\times$/$0.70\times$ teacher mean@1/@2 on the $44$-task OOD set), at ${\sim}10\times$ lower deployment cost.}
+\label{fig:distill}
+\end{figure}
 
 \paragraph{Variance is a budget (a cautionary finding).} Reinforcement fine-tuning (RFT) on top of SFT improves every per-turn consistency metric we measure \emph{and} regresses pass@3 by $17$\,pp. For sampling-based deployment, output-distribution variance \emph{is} the inference-scaling lever, and any post-training that reduces it spends from the same budget best-of-$N$ draws on. Variance is not noise to minimize; it is the resource sampling converts into quality. The operational recipe is therefore: SFT to internalize interaction quality, keep the proposer's sampling temperature, and run it inside the grounded harness.

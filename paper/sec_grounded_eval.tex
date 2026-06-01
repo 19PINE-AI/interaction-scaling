@@ -3,7 +3,25 @@
 
 The visual modalities expose the symmetric half of the framework (P3): even when grounded feedback \emph{does} fix the artifact, an ungrounded metric cannot see it.
 
-\paragraph{The default VLM judge is structurally blind.} Our starting evaluator is a binary per-requirement rubric scored by a VLM over a screenshot. On $15$ dense academic-paper architecture figures, even with native-resolution quadrant tiling, this judge rates \textbf{$14$ of $15$} single-shot renders ``perfect.'' Yet by direct inspection they are broken---superimposed section titles, labels spilling out of boxes. The reason is mechanical: screenshots are captured at $1080$\,px, so any content overflowing the canvas is cropped \emph{off-frame before the image reaches the judge}, and small in-frame overlaps fall below its acuity. A deterministic DOM-geometry check finds only \textbf{$3$ of $15$} are actually clean (mean $1.6$ defects). The VLM is blind to precisely the defects that matter.
+\paragraph{The default VLM judge is structurally blind.} Our starting evaluator is a binary per-requirement rubric scored by a VLM over a screenshot. On $15$ dense academic-paper architecture figures, even with native-resolution quadrant tiling, this judge rates \textbf{$14$ of $15$} single-shot renders ``perfect.'' Yet by direct inspection they are broken---superimposed section titles, labels spilling out of boxes. The reason is mechanical: screenshots are captured at $1080$\,px, so any content overflowing the canvas is cropped \emph{off-frame before the image reaches the judge}, and small in-frame overlaps fall below its acuity. A deterministic DOM-geometry check finds only \textbf{$3$ of $15$} are actually clean (mean $1.6$ defects). The VLM is blind to precisely the defects that matter (\Cref{fig:blind}).
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.62\linewidth,height=3.6cm,
+  ybar,bar width=20pt,ymin=0,ymax=16,
+  ylabel={single-shot figures (of 15)},
+  symbolic x coords={VLM judge,DOM geometry},xtick=data,
+  enlarge x limits=0.5,nodes near coords,nodes near coords style={font=\footnotesize},
+  ymajorgrids,ytick={0,5,10,15}]
+  \addplot[draw=cSS!60!black,fill=cSS!35] coordinates {(VLM judge,14)};
+  \addplot[draw=cRV!60!black,fill=cRV!35] coordinates {(DOM geometry,3)};
+  \legend{}
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{The VLM judge is structurally blind.} Number of the same $15$ single-shot academic figures rated \emph{clean/perfect}: the VLM-on-a-screenshot judge passes $14$; the deterministic DOM-geometry instrument passes only $3$. The other $11$ are broken in ways cropped off-frame or below VLM acuity.}
+\label{fig:blind}
+\end{figure}
 
 \paragraph{A deterministic instrument reveals a large, significant effect across four modalities.} We score four visual modalities with the same DOM-geometry+alignment instrument under one identical configuration (Sonnet~4, temperature~$0$, design-principle prompt, three seeds, propose$\to$measure$\to$feed-exact-defects-back$\to$revise, $\le3$ iterations). \Cref{tab:geometric} and \Cref{fig:geomreduction} report the result: grounded geometric feedback produces a large, significant reduction in real layout defects on \emph{all four}, with bootstrap 95\% CIs that exclude zero and improvements outnumbering regressions $\ge5{:}1$. The magnitudes track single-shot headroom---dense responsive web pages are defect-rich out of the box ($16$ defects/page across desktop and mobile), while a frontier model under a design-principle prompt already lays out many figures and slides cleanly.
 
@@ -45,6 +63,25 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
 \label{fig:geomreduction}
 \end{figure}
 
-\paragraph{An ungrounded \emph{reviewer} makes layout worse (ablation).} Grounding matters on the feedback side too, controllably. On the same dense slides, holding tasks and proposer fixed and varying only the reviewer: a VLM-feedback reviewer \emph{increases} the mean geometric defect count ($1.89\to2.44$)---blind to the true geometry, its edits break alignment as often as they fix it---whereas the deterministic geometric-feedback reviewer reduces it ($1.25\to0.33$). The binary VLM rubric on these slides simultaneously saturates ($0.97$ mean, $29/36$ rated perfect), confirming the judge cannot even see the difference. Both halves of \Cref{fig:concept} are necessary.
+\paragraph{An ungrounded \emph{reviewer} makes layout worse (ablation).} Grounding matters on the feedback side too, controllably. On the same dense slides, holding tasks and proposer fixed and varying only the reviewer: a VLM-feedback reviewer \emph{increases} the mean geometric defect count ($1.89\to2.44$)---blind to the true geometry, its edits break alignment as often as they fix it---whereas the deterministic geometric-feedback reviewer reduces it ($1.25\to0.33$). The binary VLM rubric on these slides simultaneously saturates ($0.97$ mean, $29/36$ rated perfect), confirming the judge cannot even see the difference. Both halves of \Cref{fig:concept} are necessary (\Cref{fig:ablation}).
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.66\linewidth,height=3.9cm,
+  ybar,bar width=13pt,ymin=0,ymax=2.9,
+  ylabel={mean geometric defects (slides)},
+  symbolic x coords={VLM-feedback,geometric-feedback},xtick=data,
+  enlarge x limits=0.6,
+  nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=2},
+  ymajorgrids,ytick={0,1,2},
+  legend style={font=\footnotesize,at={(0.5,1.02)},anchor=south,legend columns=2,draw=cGrey!50}]
+  \addplot[draw=cGrey,fill=black!10] coordinates {(VLM-feedback,1.89) (geometric-feedback,1.25)}; \addlegendentry{single-shot}
+  \addplot[draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-feedback,2.44) (geometric-feedback,0.33)}; \addlegendentry{reviewed}
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{An ungrounded reviewer makes layout worse (controlled ablation).} Same modality, same proposer; only the reviewer's grounding varies. A VLM-feedback reviewer \emph{increases} mean geometric defects ($1.89\to2.44$); the deterministic geometric-feedback reviewer reduces them ($1.25\to0.33$). The grounded signal is necessary on the feedback side, not just the metric side.}
+\label{fig:ablation}
+\end{figure}
 
 \paragraph{Two modalities where the honest answer is ``no headroom.''} \emph{Video editing}, scored by Gemini~3.1~Pro's native full-clip rubric (a near-grounded instrument that observes pixels, not a still), is already strong single-shot ($0.70$, $22/45$ task-runs perfect) so the reviewed lift is small and not significant ($+0.04$); a hardened multi-step suite de-saturates it (single-shot ``fully correct'' $49\%\to11\%$). \emph{Deep research}, scored against exact provided facts, saturates ($0.982$, $+0.018$, n.s.): a frontier model knows well-documented facts and does not take the planted traps, so the Type-3d lift is bounded by the near-zero single-shot error rate---a genuine limit of the factual modality, since de-saturating it would require facts the judge itself cannot grade. We report these as scoped negatives rather than headline lifts.
