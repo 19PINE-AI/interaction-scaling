@@ -1,0 +1,257 @@
+[
+  {
+    "task_id": "animh_barsort",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG/JS, NO <canvas>) of a bar-chart SORT. Show 8 vertical SVG bars of distinct heights and equal width, evenly spaced along a shared baseline, each labeled with its value. Over ~4 seconds animate them smoothly reordering into ascending height (bars slide horizontally to swap positions, several swaps). Bars keep equal width and the shared baseline throughout; the final state is fully sorted ascending. A title sits at top.",
+    "frame_times_ms": [0, 600, 1200, 2000, 3000, 4000, 4500],
+    "requirements": [
+      "There are exactly 8 equal-width bars sharing one baseline at every sampled frame",
+      "All bars stay fully within the 1920x1080 viewport at every frame (none clipped at an edge)",
+      "Bars never overlap each other during the swaps",
+      "The bars are visibly reordering over time (positions differ between early and late frames)",
+      "The final frame shows the bars sorted in ascending height order",
+      "Each bar keeps its value label attached and legible throughout",
+      "The bars remain evenly spaced (uniform gaps) at the start and end",
+      "No horizontal or vertical scrollbar appears at any frame"
+    ],
+    "expected_issues": ["Bars overflow the viewport while swapping", "Bars overlap during transitions", "Uneven spacing / unequal widths", "Animation static (no reorder)"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_steps",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG/JS, NO <canvas>) of a 5-step horizontal progress stepper ('Cart -> Address -> Shipping -> Payment -> Done'). Five equal-width, equally-spaced circular step nodes sit on one horizontal line connected by segments. Over ~4s the steps activate left-to-right: each node fills with the accent color and its connector fills, one after another, with a checkmark appearing in completed nodes. All five nodes stay on one aligned row throughout.",
+    "frame_times_ms": [0, 800, 1600, 2400, 3200, 4000, 4400],
+    "requirements": [
+      "Exactly 5 equal-size step nodes sit on one horizontal line, equally spaced, at every frame",
+      "All nodes, labels, and connectors stay fully within the viewport at every frame",
+      "The five nodes share the same vertical center (aligned row) throughout",
+      "Steps activate in left-to-right order over time (more nodes filled in later frames)",
+      "Connector segments fill between consecutive activated nodes",
+      "Completed nodes show a checkmark and the active node is visually distinct",
+      "Step labels stay attached to their nodes and do not overlap neighbors",
+      "No scrollbar appears at any frame"
+    ],
+    "expected_issues": ["Nodes drift off the row", "Connectors misaligned with nodes", "Labels overlap", "All steps fill at once (no sequencing)"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_gauges",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of THREE equal-size dashboard gauges in one aligned row (CPU, Memory, Disk). Each gauge is an SVG semicircular arc with a sweeping needle and a numeric readout that counts up to its target (72%, 45%, 88%) over ~3s. The three gauges share the same size, top edge, and baseline, with uniform gutters.",
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 3000, 3400],
+    "requirements": [
+      "Exactly three equal-size gauges in one row, sharing top and bottom edges with uniform gutters, at every frame",
+      "All three gauges and their readouts stay fully within the viewport at every frame",
+      "Each needle sweeps from the start position toward its target over time (angle differs between early and late frames)",
+      "Each numeric readout counts up and ends at its target (72%, 45%, 88%)",
+      "Needles stay within their gauge arc (do not extend outside the gauge)",
+      "The three gauges do not overlap each other",
+      "Gauge labels (CPU, Memory, Disk) stay attached and legible",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Needle sweeps outside the arc / off-canvas", "Gauges unequal size or misaligned", "Readouts overflow", "Needles static"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_carousel",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG/JS, NO <canvas>) of a card carousel. Four equal-size content cards sit in a horizontal track; over ~4s the track slides so each card becomes centered in turn (card 1 -> 2 -> 3 -> 4), with the centered card slightly enlarged and the others dimmed. Pagination dots below indicate the active card. Cards stay equal-size and horizontally aligned; partially-visible neighbor cards are clipped only by an explicit rounded viewport mask, never by the screen edge unexpectedly.",
+    "frame_times_ms": [0, 1000, 1500, 2500, 3500, 4000, 4400],
+    "requirements": [
+      "Four equal-size cards share the same vertical center and height at every frame",
+      "Exactly one card is centered/enlarged at a time, and which card is centered changes over time (1->2->3->4)",
+      "The active pagination dot matches the centered card and there are exactly 4 dots",
+      "All on-screen content stays within the viewport (no card or dot clipped at the screen edge unexpectedly)",
+      "Cards do not overlap each other",
+      "The pagination dots sit in one aligned row, equally spaced",
+      "The non-centered cards are visibly dimmed relative to the centered one",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Cards clipped at screen edge", "More than one card centered", "Dots misaligned / wrong active dot", "Cards overlap"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_typing",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a terminal typewriter. A centered terminal window (with a title bar and 3 colored dots) types out, line by line over ~5s, a short multi-line shell session (at least 5 lines: a command, then output lines), with a blinking block cursor that advances. Completed lines stay; text never overflows the terminal box; the terminal stays centered and fully on screen.",
+    "frame_times_ms": [0, 800, 1600, 2400, 3200, 4200, 5000],
+    "requirements": [
+      "A centered terminal window with a title bar and three colored dots is fully within the viewport at every frame",
+      "Text is revealed progressively over time (more characters/lines visible in later frames)",
+      "At least 5 lines are present by the final frame",
+      "A blinking block cursor is visible and advances with the text",
+      "Text never overflows the terminal box (no clipping at the box edge, no horizontal overflow of a line)",
+      "Completed lines remain visible (text is not erased between frames except the cursor blink)",
+      "The terminal window does not move off-screen or get clipped at any frame",
+      "No page scrollbar at any frame"
+    ],
+    "expected_issues": ["Text overflows the terminal box", "Lines wrap/clip off-screen", "Cursor missing or not advancing", "Terminal drifts off-canvas"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_clock",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of an analog clock. A centered SVG clock face with 12 hour ticks (evenly spaced around the dial), numerals, and three hands (hour, minute, second) of distinct lengths. Over ~6s the second hand sweeps smoothly (one full or partial revolution), the minute hand moves slightly; all hands rotate about the exact center and stay within the dial radius.",
+    "frame_times_ms": [0, 1000, 2000, 3000, 4000, 5000, 6000],
+    "requirements": [
+      "A centered circular clock face with 12 evenly-spaced hour ticks is fully within the viewport at every frame",
+      "Three hands of distinct lengths (hour, minute, second) all pivot about the exact center of the dial",
+      "The second hand's angle changes between consecutive frames (it is sweeping)",
+      "No hand extends beyond the dial's outer radius at any frame",
+      "The 12 numerals stay in their positions around the dial and do not overlap",
+      "The clock face stays centered and is never clipped at a viewport edge",
+      "Hour ticks are evenly spaced (uniform angular spacing)",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Hands extend past the dial / off-center pivot", "Ticks unevenly spaced", "Second hand static", "Face clipped at edge"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_orgchart",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of an org chart expanding. Start with a single root node centered at top; over ~4s reveal level 2 (3 children) then level 3 (each child gains 2 leaves, 6 leaves), with connector lines drawn from parent to child as nodes appear. Nodes on the same level are equal-size, equally spaced, and share a horizontal row; connectors join box edges without crossing through other node labels.",
+    "frame_times_ms": [0, 800, 1600, 2400, 3200, 4000, 4400],
+    "requirements": [
+      "Nodes on the same level are equal-size and share a horizontal row (aligned) at every frame where they exist",
+      "The chart expands over time: more levels/nodes are visible in later frames than earlier ones",
+      "By the final frame there are 1 + 3 + 6 = 10 nodes in three aligned levels",
+      "Connector lines join parent and child node edges and do not pass through any other node's label",
+      "All nodes and connectors stay fully within the viewport at every frame",
+      "Sibling nodes on each level are equally spaced (uniform gaps)",
+      "Node labels stay inside their boxes and do not overlap",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Lower levels overflow the viewport width", "Connectors cross node labels", "Levels misaligned / uneven spacing", "Chart static"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_equalizer",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of an audio equalizer: a row of 16 equal-width vertical bars on a shared baseline, each oscillating up and down at its own rate over ~4s (a lively equalizer look). Bars keep equal width, the shared baseline, and uniform gaps; none exceeds the top of its track or the viewport.",
+    "frame_times_ms": [0, 400, 800, 1200, 2000, 3000, 4000],
+    "requirements": [
+      "Exactly 16 equal-width bars share one baseline with uniform gaps at every frame",
+      "Bar heights change over time (the equalizer is animating, not static)",
+      "No bar exceeds the top of its track or extends beyond the viewport at any frame",
+      "All 16 bars stay within the viewport horizontally (none clipped at the side)",
+      "Bars never overlap horizontally (gaps preserved as heights change)",
+      "The baseline stays fixed (bars grow/shrink from the same bottom line)",
+      "Different bars show different heights within a frame (independent oscillation)",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Bars exceed track top / go off-canvas", "Bars change width or baseline shifts", "All bars identical (no independent motion)", "Gaps collapse"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_timeline",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG/JS, NO <canvas>) of a horizontal media timeline. A full-width track with evenly-spaced tick marks and time labels (0:00 .. 5:00), a playhead that moves left-to-right over ~5s, and 4 event markers at fixed positions that 'pop' (scale up briefly) as the playhead passes them. The track, ticks, playhead and markers stay on one aligned horizontal axis, fully on screen.",
+    "frame_times_ms": [0, 1000, 2000, 3000, 4000, 5000, 5400],
+    "requirements": [
+      "A horizontal track with evenly-spaced tick marks and time labels spans the width, fully within the viewport",
+      "The playhead moves left-to-right over time (its x-position increases across frames)",
+      "Exactly 4 event markers sit at fixed positions on the track axis",
+      "Each marker pops (scales up) around the time the playhead passes it",
+      "The playhead never leaves the track / viewport bounds",
+      "Tick marks are evenly spaced and aligned on the track axis",
+      "Time labels stay attached under their ticks and do not overlap",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Playhead overshoots the track", "Ticks unevenly spaced", "Markers misaligned with axis", "Playhead static"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_donut",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG, NO <canvas>) of a donut chart assembling. A centered SVG donut with 4 segments (40%, 30%, 20%, 10%) that draw in sequence over ~3.5s (each arc sweeps from 0 to its share), with a center label counting up to 100% and a legend of 4 aligned rows (color swatch + label + percent) appearing alongside. Donut stays centered; legend rows stay aligned.",
+    "frame_times_ms": [0, 700, 1400, 2100, 2800, 3500, 3900],
+    "requirements": [
+      "A centered donut chart is fully within the viewport at every frame",
+      "The four segments draw in over time (more arc is filled in later frames)",
+      "By the final frame the four segments total a full ring in proportions 40/30/20/10",
+      "A center label counts up and ends at 100%",
+      "A legend of exactly 4 rows (swatch + label + percent) is left-aligned in a column with uniform row spacing",
+      "Legend swatch colors match the corresponding donut segments",
+      "Donut and legend do not overlap and both stay within the viewport",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Arc segments overshoot/wrong proportions", "Legend rows misaligned", "Donut off-center or clipped", "Segments appear all at once"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_kanban_move",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a task card moving across a Kanban board. Three equal-width columns (To Do, Doing, Done) with headers, each holding 2-3 static cards, plus one highlighted card that animates over ~4s from the To Do column to Doing to Done (sliding between columns and settling at the bottom of each). Columns stay equal-width and aligned; the moving card never leaves the board or overlaps a column header.",
+    "frame_times_ms": [0, 1000, 2000, 2500, 3500, 4000, 4400],
+    "requirements": [
+      "Three equal-width columns sharing the same top edge with uniform gutters at every frame",
+      "Each column has a header label (To Do, Doing, Done) and static cards",
+      "The highlighted card changes column over time (To Do -> Doing -> Done)",
+      "The moving card stays fully within the board and viewport at every frame",
+      "The moving card does not overlap any column header or any other card's text",
+      "Cards within a column are equal width and left/right aligned to their column",
+      "By the final frame the highlighted card is in the Done column",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Card flies outside the board", "Columns unequal width", "Card overlaps headers/other cards", "Card does not move"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_network",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG/JS, NO <canvas>) of a small network graph settling. Six labeled circular nodes connected by edges start clustered near the center and, over ~4s, animate outward to a spread, readable layout (a hexagon-like arrangement); edges follow their endpoints. Final layout has no node overlapping another and no edge passing through a non-endpoint node. All nodes stay within the viewport throughout.",
+    "frame_times_ms": [0, 800, 1600, 2400, 3200, 4000, 4400],
+    "requirements": [
+      "Exactly 6 labeled circular nodes are present at every frame",
+      "Nodes move apart over time (the layout spreads from clustered to dispersed)",
+      "All nodes stay fully within the viewport at every frame (none clipped at an edge)",
+      "In the final frame no node overlaps another node",
+      "Edges connect to node centers/edges and follow the nodes as they move",
+      "In the final frame no edge passes through a node that is not its endpoint",
+      "Node labels stay attached and legible (not overlapping other nodes)",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Nodes fly off-canvas while spreading", "Final layout still overlapping", "Edges cross through nodes", "Layout static"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_reveal_grid",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/JS, NO <canvas>) of a staggered grid reveal. A 3x3 grid of 9 equal-size cards fades-and-slides in one-by-one (staggered over ~3s, e.g. top-left first to bottom-right last), each settling into its aligned grid cell. The final grid is perfectly aligned (equal-size cells, uniform gutters). Cards slide in from a small offset, never from off-screen far enough to be clipped at a viewport edge.",
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 3000, 3400],
+    "requirements": [
+      "The final frame shows a 3x3 grid of 9 equal-size cards with uniform row and column gutters, aligned",
+      "Cards appear in a staggered sequence over time (more cards visible in later frames)",
+      "All cards (including mid-slide) stay fully within the viewport at every frame",
+      "In the final frame all 9 cards are present and aligned to the grid",
+      "Cards do not overlap each other at any frame",
+      "The three columns share vertical edges and the three rows share horizontal edges (clean grid)",
+      "Each card's content stays inside the card (no overflow)",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Cards slide in from off-canvas and get clipped", "Final grid misaligned / unequal cells", "Cards overlap during stagger", "All appear at once"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_loader_sequence",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS, NO <canvas>) of a centered multi-stage loading sequence. A centered card shows a row of 3 equal, equally-spaced pulsing dots, below a determinate progress bar that fills 0->100% over ~3s, below a status text that changes through 'Connecting...' -> 'Downloading...' -> 'Done'. Everything stays centered and within the card; the card stays centered on screen.",
+    "frame_times_ms": [0, 500, 1000, 1500, 2000, 2800, 3200],
+    "requirements": [
+      "A centered card containing the dots, progress bar, and status text is fully within the viewport at every frame",
+      "Exactly 3 equal-size dots in one aligned, equally-spaced row, pulsing (their scale/opacity changes over time)",
+      "A progress bar fills monotonically from 0% toward 100% over time and ends full",
+      "The status text changes through the three stages over time",
+      "The progress fill never exceeds the bar track bounds",
+      "All elements stay inside the card and the card stays centered (no drift off-screen)",
+      "The dots row, bar, and text are horizontally centered and vertically stacked with consistent spacing",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Progress fill overflows the track", "Dots unequal/misaligned", "Card drifts off-center", "Status text static or overflowing"],
+    "difficulty": "hard"
+  },
+  {
+    "task_id": "animh_map_route",
+    "description": "Create a self-contained 1920x1080 HTML animation (inline CSS/SVG/JS, NO <canvas>) of a route drawing on a stylized map. A centered SVG map panel contains 4 location pins; over ~4s the pins drop in sequence (a small bounce) and a route polyline draws progressively connecting them in order, with a moving marker traveling along the drawn route. All pins, the route, and the marker stay within the map panel and the viewport.",
+    "frame_times_ms": [0, 800, 1600, 2400, 3200, 4000, 4400],
+    "requirements": [
+      "A centered map panel is fully within the viewport at every frame",
+      "Exactly 4 pins drop in sequence over time (more pins present in later frames)",
+      "A route polyline draws progressively over time, connecting the pins in order",
+      "A marker travels along the drawn portion of the route (its position advances over frames)",
+      "All pins, the route, and the marker stay within the map panel bounds at every frame",
+      "Pins do not overlap each other",
+      "By the final frame all 4 pins and the full route are visible",
+      "No scrollbar at any frame"
+    ],
+    "expected_issues": ["Route or marker leaves the map panel", "Pins overlap or land off-panel", "Route draws all at once", "Marker static"],
+    "difficulty": "hard"
+  }
+]

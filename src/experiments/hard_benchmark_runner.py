@@ -82,16 +82,22 @@ Rules:
 - Wrap your complete HTML in a ```html code block""" % DESIGN_PRINCIPLES
 
 ANIMATION_SYSTEM_PROMPT = """\
-You are an expert web developer creating animations as single-page HTML files.
+You are an expert motion designer creating animations as single-page HTML files.
 
 Rules:
 - Output a COMPLETE, self-contained HTML file with embedded CSS and JavaScript
 - No external dependencies (no CDN links, no imports)
 - The animation should run in a 1920×1080 viewport
-- Use requestAnimationFrame for smooth JavaScript animations
-- CSS animations should use proper keyframes
-- All visual elements must stay within the viewport bounds
-- Wrap your complete HTML in a ```html code block"""
+- Build the scene from HTML/SVG/CSS elements (not a <canvas> bitmap), animated
+  with CSS keyframes or requestAnimationFrame, so every element is a real
+  positioned node
+- All visual elements must stay fully within the viewport bounds at EVERY moment
+  of the animation (nothing flies off-screen or gets clipped mid-motion)
+- Elements must not overlap or collide unless the task explicitly calls for it
+
+%s
+
+- Wrap your complete HTML in a ```html code block""" % DESIGN_PRINCIPLES
 
 CODE_SYSTEM_PROMPT = """\
 You are an expert Python programmer. Write correct, efficient solutions.

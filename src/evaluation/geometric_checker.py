@@ -258,6 +258,63 @@ def geometric_defects(html: str, width: int = 1920, height: int = 1080,
     return data
 
 
+def animation_geometric_defects(html: str, frame_times_ms, renderer=None,
+                                width: int = 1920, height: int = 1080,
+                                include_alignment: bool = True) -> dict:
+    """Deterministic geometry of an SVG/DOM animation, summed across sampled frames.
+
+    The page is loaded once and advanced to each frame time; at every frame we
+    probe the live DOM for the fixed-canvas defects (text overlap, clipping/
+    out-of-bounds, container overflow, scrollbar, and box-group misalignment).
+    The dominant animation failures---an element leaving the viewport mid-motion,
+    two elements colliding during a transition, an animated grid going ragged---
+    register as per-frame defects. The reward is the SUM of per-frame defect
+    counts (a defect present for several frames counts for each), so the harness
+    is pushed to keep the layout valid throughout the animation, not just at t=0.
+
+    NOTE: measures the rendered DOM/SVG, so it applies to SVG/CSS/DOM animations,
+    not pixels drawn inside a <canvas> (which the DOM cannot see).
+    """
+    from src.rendering.browser import BrowserRenderer
+    own = renderer is None
+    renderer = renderer or BrowserRenderer(default_width=width, default_height=height)
+    page = renderer._new_page(width, height)
+    per_frame, total = {}, 0
+    try:
+        page.set_content(html, wait_until="networkidle")
+        page.wait_for_timeout(50)
+        elapsed = 0
+        for t in frame_times_ms:
+            wait = max(0, t - elapsed)
+            if wait:
+                page.wait_for_timeout(wait)
+            elapsed = t
+            try:
+                data = page.evaluate(_PROBE_JS, {"web": False})
+            except Exception as e:  # noqa: BLE001
+                per_frame[t] = {"error": str(e)}
+                continue
+            n = (data["text_overlap"] + data["out_of_bounds"] + data["overflow"]
+                 + (1 if data["scrollbar"] else 0))
+            if include_alignment:
+                n += data.get("misalignment", 0)
+            data["n_defects"] = n
+            per_frame[t] = data
+            total += n
+    except Exception as e:  # noqa: BLE001
+        logger.warning("animation probe failed: %s", e)
+        return {"error": str(e), "n_defects": None}
+    finally:
+        page.close()
+        if own:
+            renderer.close()
+    frames_with_defects = sum(1 for d in per_frame.values()
+                              if isinstance(d, dict) and d.get("n_defects"))
+    return {"n_defects": total, "clean": total == 0,
+            "frames_with_defects": frames_with_defects,
+            "n_frames": len(frame_times_ms), "per_frame": per_frame}
+
+
 def web_geometric_defects(html: str, widths=((1920, 1080), (375, 812)),
                           renderer=None, include_alignment: bool = True) -> dict:
     """Deterministic web layout defects, summed across desktop and mobile widths.

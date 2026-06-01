@@ -72,21 +72,23 @@ simply the defect count---no VLM is involved at any point.
 We extend the checker with a deterministic \emph{alignment} axis (groups of
 card/pillar boxes flagged for unequal size, misaligned far edges, or uneven
 gutters), since rows of equal-width, edge-aligned panels are the failure mode that
-dominates dense slides and web layouts, and we evaluate three visual modalities
+dominates dense slides and web layouts, and we evaluate four visual modalities
 under one identical configuration: Claude Sonnet 4 at temperature $0$, the same
 design-principle generation prompt, the alignment-inclusive geometric reward, and
-three seeds each. The three suites are $20$ dense academic-paper architecture
+three seeds each. The four suites are $20$ dense academic-paper architecture
 figures, $12$ slides that reproduce the content of well-known papers
 (Transformer, ResNet, BERT, U-Net, $\dots$) with dense text coexisting with a
-figure and aligned pillars, and $20$ dense responsive web pages (dashboards,
-pricing comparisons, calendars, spec sheets, $\dots$; \Cref{sec:web-geometry}).
+figure and aligned pillars, $20$ dense responsive web pages (dashboards,
+pricing comparisons, calendars, spec sheets, $\dots$; \Cref{sec:web-geometry}),
+and $15$ SVG/CSS animations scored per frame (\Cref{sec:anim-geometry}).
 
-\Cref{tab:geometric} reports the result: on all three modalities the
-geometric-feedback loop produces a large, statistically significant reduction in
-real layout defects, with improvements outnumbering regressions by $9$:$1$ or
+\Cref{tab:geometric} reports the result: on all four modalities the
+geometric-feedback loop produces a statistically significant reduction in
+real layout defects, with improvements outnumbering regressions by $8$:$1$ or
 better. Mean defects fall $74\%$ on figures ($0.57\to0.15$, $p=7\times10^{-4}$),
-$73\%$ on dense slides ($1.25\to0.33$, $p=0.0018$), and $47\%$ on web pages
-($16.1\to8.5$, $p=4\times10^{-8}$). The magnitudes track single-shot headroom:
+$73\%$ on dense slides ($1.25\to0.33$, $p=0.0018$), $47\%$ on web pages
+($16.1\to8.5$, $p=4\times10^{-8}$), and $82\%$ on animations
+($p=7\times10^{-4}$). The magnitudes track single-shot headroom:
 dense responsive web pages are strikingly defect-rich out of the box ($16$ defects
 per page across desktop and mobile), whereas a frontier model under a
 design-principle prompt already lays out many figures and slides cleanly---so the
@@ -119,13 +121,15 @@ VLM scores it reported could not measure the improvement.
 \begin{table}[t]
   \centering
   \caption{Interaction scaling under deterministic DOM-geometry scoring, across
-  three visual modalities at one identical generation configuration (Claude
+  four visual modalities at one identical generation configuration (Claude
   Sonnet 4, temperature $0$, design-principle prompt, alignment-inclusive
   geometric reward, three seeds; propose\,$\to$\,measure\,$\to$\,feed exact
   defects back\,$\to$\,revise, $\le 3$ iterations). Defects are counted exactly
   from the rendered DOM (text overlap, container/horizontal overflow, clipping,
   box-group misalignment); web pages are scored at desktop $1920$ and mobile
-  $375$ widths and summed. Lower is better; $p$ is a two-sided paired sign test.}
+  $375$ widths and summed, and animations are scored at every sampled frame and
+  summed. Lower is better; $p$ is a two-sided paired sign test on per-task-run
+  pairs (robust to the magnitude outliers that skew the animation mean).}
   \label{tab:geometric}
   \small
   \begin{tabular}{lcccccc}
@@ -135,6 +139,7 @@ VLM scores it reported could not measure the improvement.
     Academic figures (20) & 60 & $0.57$ & $0.15$ & $-74\%$ & $39\to52$ & $17/2$ \;($7{\times}10^{-4}$) \\
     Dense slides (12)     & 36 & $1.25$ & $0.33$ & $-73\%$ & $18\to29$ & $13/1$ \;($0.0018$) \\
     Web pages (20)        & 60 & $16.1$ & $8.5$  & $-47\%$ & $10\to16$ & $33/2$ \;($4{\times}10^{-8}$) \\
+    Animations (15)       & 45 & $16.0$ & $2.8$  & $-82\%$ & $27\to35$ & $17/2$ \;($7{\times}10^{-4}$) \\
     \bottomrule
   \end{tabular}
 \end{table}
@@ -150,11 +155,29 @@ overflow (content wider than the viewport, i.e.\ a horizontal scrollbar), and we
 sum these across a desktop ($1920$) and a mobile ($375$) width. The mobile pass is
 what catches responsive breakage---grids that do not collapse and rows that
 overflow sideways on a phone. The web row of \Cref{tab:geometric} is computed this
-way, and it is the largest single-shot defect load of the three modalities ($16$
+way, and it is among the largest single-shot defect loads of the four modalities ($16$
 per page); notably the binary VLM rubric on the very same suite registered only a
 $+0.054$ lift ($p=0.30$, n.s.), so once again the deterministic instrument reveals
 a large, highly significant layout improvement that screenshot-based judging
 misses entirely.
+
+\paragraph{Extending the instrument to animations (per frame).}
+\label{sec:anim-geometry}
+For SVG/CSS animations the canvas is fixed but the layout is \emph{time-varying},
+so we advance the live page to each of the task's sampled frame times and probe
+the DOM at every frame, summing the per-frame defect counts. This catches the
+failure unique to motion---an element that is on-screen at $t{=}0$ but flies off
+the viewport or collides with another mid-animation, or an animated row of bars/
+nodes that goes ragged during a transition---which a single end-state screenshot
+cannot see. On 15 SVG/CSS animation tasks (sorting bars, an analog clock, a
+settling network graph, a card carousel, a staggered grid reveal, $\dots$) the
+geometric-feedback loop improves $17$ of the $19$ decisive task-runs and regresses
+only $2$ (sign-test $p=7\times10^{-4}$). The mean reduction is large ($16.0\to2.8$
+defect-frames) but magnitude here is heavy-tailed---roughly half the suite is
+already clean single-shot, while a few dynamic tasks (notably the clock, whose
+ticks, numerals and three hands must all stay inside the dial at every frame) fail
+badly and are repaired---so we treat the per-pair sign test, not the mean, as the
+robust summary.
 
 \paragraph{Scope.} Deterministic geometric scoring thus applies to any artifact
 with a well-defined intended geometry: fixed-canvas slides and figures (overflow,

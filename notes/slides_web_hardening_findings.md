@@ -117,6 +117,30 @@ cross-check is kept as one sentence (different harness). Paper abstract/intro/
 discussion/section_geometric + tab:geometric all updated to these numbers;
 compiles 31pp, 0 undefined refs.
 
+## 7. Animations + code hardening (2026-06-01)
+**Animations** (`animation_tasks_hard.json`, 15 SVG/CSS tasks -- NO canvas, per user,
+so per-frame DOM geometry applies). New instrument `animation_geometric_defects`
+advances the live page to each frame time and probes the DOM (catches elements
+flying off-canvas / colliding mid-motion that the frame-VLM misses). Harness:
+`run_geometric_harness --animation --prompt animation --include-alignment`, per-frame
+summed reward, frame-labeled feedback. Result (3 seeds, n=45): improved/regressed
+**17/2, p=7.3e-4** (robust headline). Mean 16.0->2.8 (-82%) but HEAVY-TAILED: ~half
+the suite (8/15: steps, gauges, equalizer, timeline, donut, loader, map, typing) is
+clean single-shot; the dynamic ones bite (clock mean 182 incl one 546->0 render,
+network 16, barsort 16, carousel 12). Report the sign test, not the mean. Added as
+the 4th row of tab:geometric.
+
+**Code** (`code_tasks_hard.json`). First attempt (12 implement-from-spec) was TOO
+EASY (single-shot 89%); replaced with 11 deep-spec tasks (kept base/eval_expr/glob
+which bit; added JSON parser, A1 spreadsheet refs, edit-script diff, nested
+query-string, template engine, money decimal, boolean-expr, bracket validator).
+ALL tasks self-validated with a reference solution passing its own tests (benchmark
+is sound). Result (3 seeds, n=33): single-shot **70%** (a1 0/3, json 0/3 hardest),
+reviewed **100%**, 10 recovered / 0 regressed, **p=0.002**. De-saturated, comparable
+to the original 15-task code suite (66.7->100). Added to the paper code case-study as
+corroboration. (Code uses pytest = already the deterministic instrument; only task
+difficulty needed hardening, no VLM-instrument issue.)
+
 ## Takeaways for the paper
 - Add a real-paper dense-slide result to the geometry section: VLM judge AND VLM
   reviewer are blind to slide layout; deterministic geometry (incl. alignment) is

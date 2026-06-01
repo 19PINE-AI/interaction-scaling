@@ -34,6 +34,11 @@ CATEGORIES = {
         "method": "run_code_task",
         "max_iters": 5,
     },
+    "code_hard": {
+        "task_file": DATA_DIR / "code" / "code_tasks_hard.json",
+        "method": "run_code_task",
+        "max_iters": 5,
+    },
     "slides": {
         "task_file": DATA_DIR / "slides" / "slide_tasks.json",
         "method": "run_slide_task",
