@@ -78,6 +78,25 @@ layout defects all along; the holistic and rubric VLM scores simply could not
 measure it. The improvement was real but invisible to the instrument used to
 report it.
 
+\paragraph{Dense, real-paper slides and alignment.} To stress the failure mode
+that dominates real decks---dense text coexisting with a figure, and rows of
+panels or pillars that must be equal-width and edge-aligned---we built a
+twelve-task suite of slides that reproduce the content of well-known papers
+(Transformer, ResNet, BERT, U-Net, GAN, $\dots$), and we extended the DOM checker
+with a deterministic \emph{alignment} axis (groups of card/pillar boxes flagged
+for unequal size, misaligned far edges, or uneven gutters). The pattern repeats
+and sharpens. The binary VLM rubric again saturates---it rates $29$ of $36$
+single-shot slides perfect ($0.97$ mean)---while deterministic geometry finds only
+half of them clean (mean $1.25$ defects, dominated by text overlap and
+misalignment). Crucially, a VLM-feedback reviewer here \emph{increases} the mean
+defect count ($1.89\to2.44$): blind to the true geometry, its edits break
+alignment as often as they fix it. The deterministic geometric-feedback harness,
+in contrast, reduces mean defects from $1.25$ to $0.33$ (a $73\%$ reduction)
+across three seeds ($n{=}36$), raising the geometrically clean fraction from
+$18/36$ to $29/36$, with $13$ slides improved and only $1$ regressed (sign-test
+$p=0.0018$). Grounded geometric feedback fixes dense real-world slides; ungrounded
+VLM review does not.
+
 \begin{figure*}[t]
   \centering
   \includegraphics[width=0.92\linewidth]{figures/comparison_grid.png}
