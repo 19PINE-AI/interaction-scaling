@@ -141,6 +141,19 @@ to the original 15-task code suite (66.7->100). Added to the paper code case-stu
 corroboration. (Code uses pytest = already the deterministic instrument; only task
 difficulty needed hardening, no VLM-instrument issue.)
 
+## 8. Research (Type-3d factual) -- saturates even when hardened
+The hard research suite (`research_tasks_hard.json`, 15 tasks) ships exact
+ground-truth `requirements` + `trap_claims` (common errors, e.g. mis-attributing
+Penrose's 2020 Nobel). Scored with `checklist_score_text` (binary factual rubric):
+single-shot **0.982**, reviewed 1.000, +0.018, p=0.50, 13/15 perfect -> SATURATED.
+Sonnet 4 does not fall for the traps on well-documented facts, so the Type-3d
+(search-grounded) lift is bounded by the ~0 single-shot factual error rate. This is
+a genuine LIMIT of the factual modality, not a benchmark flaw: to de-saturate one
+would need facts the model truly doesn't know, but then the JUDGE (also a frontier
+model) can't reliably grade them and ground-truth authoring becomes error-prone.
+Reported honestly, consistent with the paper's existing research framing. Script:
+`scripts/rescore_research_hard.py`.
+
 ## Takeaways for the paper
 - Add a real-paper dense-slide result to the geometry section: VLM judge AND VLM
   reviewer are blind to slide layout; deterministic geometry (incl. alignment) is
