@@ -1,0 +1,957 @@
+{
+ "title": "Grounding the Loop on Both Sides",
+ "subtitle": "Interaction as a third test-time compute axis, and why its gains are invisible without grounded evaluation",
+ "thesis": "Test-time compute has a third axis -- interaction with a grounded environment. It is governed by GROUNDING, which must hold on BOTH sides of the loop: grounded FEEDBACK drives quality past the reasoning/sampling ceiling, and grounded EVALUATION is required even to MEASURE the gain. The default VLM-on-a-screenshot judge is structurally blind to layout defects, so the entire visual-modality effect is invisible until the metric is grounded in deterministic DOM geometry.",
+ "geometric": {
+  "note": "One identical configuration: Claude Sonnet 4, T=0, design-principle prompt, 3 seeds, alignment-inclusive reward, propose->measure->feed-exact-defects-back->revise (<=3 iters). Lower defects = better.",
+  "rows": [
+   {
+    "modality": "Academic figures",
+    "n": 60,
+    "ss": 0.57,
+    "rv": 0.15,
+    "delta_pct": -74,
+    "ci": [
+     52,
+     89
+    ],
+    "impr": 17,
+    "regr": 2,
+    "p": "7e-4"
+   },
+   {
+    "modality": "Dense slides",
+    "n": 36,
+    "ss": 1.25,
+    "rv": 0.33,
+    "delta_pct": -73,
+    "ci": [
+     45,
+     93
+    ],
+    "impr": 13,
+    "regr": 1,
+    "p": "1.8e-3"
+   },
+   {
+    "modality": "Web pages",
+    "n": 60,
+    "ss": 16.1,
+    "rv": 8.5,
+    "delta_pct": -47,
+    "ci": [
+     30,
+     62
+    ],
+    "impr": 33,
+    "regr": 2,
+    "p": "4e-8"
+   },
+   {
+    "modality": "Animations",
+    "n": 60,
+    "ss": 16.9,
+    "rv": 10.2,
+    "delta_pct": -40,
+    "ci": [
+     10,
+     64
+    ],
+    "impr": 34,
+    "regr": 7,
+    "p": "3e-5"
+   }
+  ]
+ },
+ "blindness": {
+  "vlm_perfect": 14,
+  "geom_clean": 3,
+  "n": 15,
+  "note": "Same 15 single-shot academic figures: the VLM-on-a-screenshot judge rates 14/15 'perfect'; the deterministic DOM-geometry check finds only 3/15 actually clean."
+ },
+ "baseline_vs_updated": {
+  "note": "How the measurement and prompt changes moved the numbers. The holistic VLM judge mis-states visual quality; the design-principle pipeline raised single-shot quality so suites were hardened to keep headroom.",
+  "rows": [
+   {
+    "item": "Academic figures (geometric \u0394)",
+    "baseline": "-78% (1 seed, no alignment, old prompt)",
+    "updated": "-74% (3 seeds, +alignment, p=7e-4, CI[52,89])"
+   },
+   {
+    "item": "Web harness lift (rubric)",
+    "baseline": "+0.063 (p=0.003, old pipeline)",
+    "updated": "+0.054 n.s. (new design-aware pipeline) -- but deterministic geometry shows -47% (p=4e-8)"
+   },
+   {
+    "item": "Video editing",
+    "baseline": "+0.47 'load-bearing' (holistic; was a missing-moviepy artifact)",
+    "updated": "+0.04 n.s. (Gemini native full-video rubric); saturated"
+   },
+   {
+    "item": "Slides under VLM rubric",
+    "baseline": "noisy holistic, ~saturated",
+    "updated": "rubric saturates (0.97) but deterministic geometry -73% (p=1.8e-3)"
+   }
+  ]
+ },
+ "ablation": {
+  "note": "Same tasks/proposer; only the reviewer's grounding varies. An ungrounded VLM reviewer makes layout WORSE; the deterministic geometric reviewer fixes it.",
+  "rows": [
+   {
+    "modality": "Slides",
+    "vlm_ss": 1.89,
+    "vlm_rv": 2.44,
+    "geom_ss": 1.25,
+    "geom_rv": 0.33
+   },
+   {
+    "modality": "Academic figures",
+    "vlm_ss": 0.52,
+    "vlm_rv": 0.62,
+    "geom_ss": 0.57,
+    "geom_rv": 0.15
+   }
+  ]
+ },
+ "code": {
+  "rows": [
+   {
+    "suite": "Hard code (15)",
+    "ss": "66.7%",
+    "rv": "100.0%",
+    "delta": "+33.3pp",
+    "p": "0.008"
+   },
+   {
+    "suite": "Deep-spec code (11)",
+    "ss": "69.7%",
+    "rv": "100.0%",
+    "delta": "+30.3pp (CI[15,46])",
+    "p": "0.002"
+   }
+  ]
+ },
+ "crossmodel_code": [
+  {
+   "model": "Claude Sonnet 4",
+   "ss": "66.7%",
+   "rv": "100.0%",
+   "delta": "+33.3pp"
+  },
+  {
+   "model": "Qwen3-235B",
+   "ss": "66.7%",
+   "rv": "93.3%",
+   "delta": "+26.7pp"
+  },
+  {
+   "model": "GPT-5",
+   "ss": "86.7%",
+   "rv": "100.0%",
+   "delta": "+13.3pp"
+  }
+ ],
+ "crossmodel_geometry": {
+  "model": "Gemini 3.1 Pro",
+  "modality": "Dense slides",
+  "ss": 3.5,
+  "rv": 0.25,
+  "delta_pct": -93,
+  "impr": 19,
+  "regr": 1,
+  "p": "4e-5",
+  "note": "Grounded geometry replicates off Claude, scored by the same model-free instrument."
+ },
+ "scaling": {
+  "note": "15 hard code tasks, 20K-token budget.",
+  "rows": [
+   {
+    "strategy": "Reasoning-only",
+    "pass": 73.3,
+    "grounded": false
+   },
+   {
+    "strategy": "Best-of-N",
+    "pass": 86.7,
+    "grounded": false
+   },
+   {
+    "strategy": "Single-agent loop",
+    "pass": 97.8,
+    "grounded": true
+   },
+   {
+    "strategy": "Proposer-reviewer harness",
+    "pass": 100.0,
+    "grounded": true
+   }
+  ]
+ },
+ "allocation": {
+  "spread_pp": 86.6,
+  "note": "9-point proposer/reviewer split sweep at B=10K; pass-rate monotone in the proposer's per-call share; optimum is propose-heavy."
+ },
+ "distill": {
+  "note": "8B Qwen3-VL student, SFT on judge-filtered teacher trajectories, ~10x cheaper.",
+  "rows": [
+   {
+    "metric": "pass@1 (18-task hard held-out)",
+    "value": "44%"
+   },
+   {
+    "metric": "pass@3 (18-task hard held-out)",
+    "value": "56%"
+   },
+   {
+    "metric": "mean@1 vs teacher (44-task OOD)",
+    "value": "0.50x"
+   },
+   {
+    "metric": "mean@2 vs teacher (44-task OOD)",
+    "value": "0.70x"
+   }
+  ]
+ },
+ "saturated": [
+  {
+   "modality": "Video editing",
+   "result": "single-shot 0.70 (Gemini native rubric), +0.04 n.s.; hardened suite drops single-shot 'fully correct' 49%->11%"
+  },
+  {
+   "modality": "Deep research",
+   "result": "single-shot 0.982 (exact-fact rubric), +0.018 n.s. -- frontier model knows well-documented facts; a genuine factual-modality limit"
+  }
+ ],
+ "prompts": [
+  {
+   "id": "design",
+   "title": "Design principles (in every visual generation prompt)",
+   "group": "generation",
+   "text": "Apply the four core design principles throughout:\n- PROXIMITY: group related items into a single visual unit with tight\n  internal spacing, and separate unrelated groups with generous whitespace.\n  Related things belong together; unrelated things must be visibly apart.\n- ALIGNMENT: every element shares a strong edge or centerline with\n  another \u2014 nothing is placed arbitrarily. Side-by-side panels/pillars/cards\n  must be equal width, share top and bottom edges, and have uniform gutters;\n  columns and rows of boxes line up exactly.\n- REPETITION: reuse a consistent visual system \u2014 the same heading style,\n  body font, accent color, box style, corner radius, bullet glyph, and spacing\n  unit everywhere. Repetition unifies the slide/page.\n- CONTRAST: if two elements differ in role, make them strongly different\n  (size, weight, color, structure) to build a clear hierarchy and guide the eye\n  \u2014 avoid timid, near-identical styling. The title must dominate.\n- COLOR: choose one deliberate, harmonious palette (complementary, triadic, or\n  analogous) with one accent color used consistently, and keep strong\n  text/background contrast for legibility."
+  },
+  {
+   "id": "slide",
+   "title": "Slide generation system prompt",
+   "group": "generation",
+   "text": "You are an expert presentation designer creating slides as single-page HTML files.\n\nRules:\n- Output a COMPLETE, self-contained HTML file (<!DOCTYPE html> through </html>)\n- Use inline CSS (no external stylesheets)\n- The slide must render at 1920\u00d71080 pixels with NO scrolling needed\n- ALL text must be fully visible \u2014 no overflow, no truncation, no clipping\n- Text elements must NOT overlap each other\n- Use appropriate font sizes (title: 36-48px, body: 16-24px, footnotes: 10-14px)\n\nApply the four core design principles throughout:\n- PROXIMITY: group related items into a single visual unit with tight\n  internal spacing, and separate unrelated groups with generous whitespace.\n  Related things belong together; unrelated things must be visibly apart.\n- ALIGNMENT: every element shares a strong edge or centerline with\n  another \u2014 nothing is placed arbitrarily. Side-by-side panels/pillars/cards\n  must be equal width, share top and bottom edges, and have uniform gutters;\n  columns and rows of boxes line up exactly.\n- REPETITION: reuse a consistent visual system \u2014 the same heading style,\n  body font, accent color, box style, corner radius, bullet glyph, and spacing\n  unit everywhere. Repetition unifies the slide/page.\n- CONTRAST: if two elements differ in role, make them strongly different\n  (size, weight, color, structure) to build a clear hierarchy and guide the eye\n  \u2014 avoid timid, near-identical styling. The title must dominate.\n- COLOR: choose one deliberate, harmonious palette (complementary, triadic, or\n  analogous) with one accent color used consistently, and keep strong\n  text/background contrast for legibility.\n\n- Wrap your complete HTML in a ```html code block"
+  },
+  {
+   "id": "web",
+   "title": "Web-page generation system prompt",
+   "group": "generation",
+   "text": "You are an expert web designer creating webpages as single-page HTML files.\n\nRules:\n- Output a COMPLETE, self-contained HTML file (<!DOCTYPE html> through </html>)\n- Use inline CSS (no external stylesheets)\n- The page is rendered in a 1920px-wide viewport; vertical scrolling is permitted\n- ALL text must be readable \u2014 no unintended overlap, clipping, or truncation\n- Preserve the requested sections and content\n- Use appropriate font sizes and spacing for a desktop landing page\n\nApply the four core design principles throughout:\n- PROXIMITY: group related items into a single visual unit with tight\n  internal spacing, and separate unrelated groups with generous whitespace.\n  Related things belong together; unrelated things must be visibly apart.\n- ALIGNMENT: every element shares a strong edge or centerline with\n  another \u2014 nothing is placed arbitrarily. Side-by-side panels/pillars/cards\n  must be equal width, share top and bottom edges, and have uniform gutters;\n  columns and rows of boxes line up exactly.\n- REPETITION: reuse a consistent visual system \u2014 the same heading style,\n  body font, accent color, box style, corner radius, bullet glyph, and spacing\n  unit everywhere. Repetition unifies the slide/page.\n- CONTRAST: if two elements differ in role, make them strongly different\n  (size, weight, color, structure) to build a clear hierarchy and guide the eye\n  \u2014 avoid timid, near-identical styling. The title must dominate.\n- COLOR: choose one deliberate, harmonious palette (complementary, triadic, or\n  analogous) with one accent color used consistently, and keep strong\n  text/background contrast for legibility.\n\n- Wrap your complete HTML in a ```html code block"
+  },
+  {
+   "id": "anim",
+   "title": "Animation generation system prompt",
+   "group": "generation",
+   "text": "You are an expert motion designer creating animations as single-page HTML files.\n\nRules:\n- Output a COMPLETE, self-contained HTML file with embedded CSS and JavaScript\n- No external dependencies (no CDN links, no imports)\n- The animation should run in a 1920\u00d71080 viewport\n- Build the scene from HTML/SVG/CSS elements (not a <canvas> bitmap), animated\n  with CSS keyframes or requestAnimationFrame, so every element is a real\n  positioned node\n- All visual elements must stay fully within the viewport bounds at EVERY moment\n  of the animation (nothing flies off-screen or gets clipped mid-motion)\n- Elements must not overlap or collide unless the task explicitly calls for it\n\nApply the four core design principles throughout:\n- PROXIMITY: group related items into a single visual unit with tight\n  internal spacing, and separate unrelated groups with generous whitespace.\n  Related things belong together; unrelated things must be visibly apart.\n- ALIGNMENT: every element shares a strong edge or centerline with\n  another \u2014 nothing is placed arbitrarily. Side-by-side panels/pillars/cards\n  must be equal width, share top and bottom edges, and have uniform gutters;\n  columns and rows of boxes line up exactly.\n- REPETITION: reuse a consistent visual system \u2014 the same heading style,\n  body font, accent color, box style, corner radius, bullet glyph, and spacing\n  unit everywhere. Repetition unifies the slide/page.\n- CONTRAST: if two elements differ in role, make them strongly different\n  (size, weight, color, structure) to build a clear hierarchy and guide the eye\n  \u2014 avoid timid, near-identical styling. The title must dominate.\n- COLOR: choose one deliberate, harmonious palette (complementary, triadic, or\n  analogous) with one accent color used consistently, and keep strong\n  text/background contrast for legibility.\n\n- Wrap your complete HTML in a ```html code block"
+  },
+  {
+   "id": "diagram",
+   "title": "Academic-figure generation system prompt",
+   "group": "generation",
+   "text": "You are an expert at producing publication-quality technical diagrams as self-contained HTML files using inline CSS and inline SVG.\n\nRules:\n- Output a COMPLETE, self-contained HTML file (<!DOCTYPE html> through </html>)\n- Draw the diagram with inline SVG (<svg> ... </svg>); use CSS only for page setup\n- No external assets, fonts, scripts, or CDN links\n- The figure must render at 1920x1080 pixels with NO scrolling needed\n- Every label must be fully inside its shape; nothing may overflow or clip\n- Boxes/nodes must NOT overlap each other; arrows must not pass through nodes\n  that are not their endpoints; sibling elements must be evenly spaced\n\nApply the four core design principles throughout:\n- PROXIMITY: group related items into a single visual unit with tight\n  internal spacing, and separate unrelated groups with generous whitespace.\n  Related things belong together; unrelated things must be visibly apart.\n- ALIGNMENT: every element shares a strong edge or centerline with\n  another \u2014 nothing is placed arbitrarily. Side-by-side panels/pillars/cards\n  must be equal width, share top and bottom edges, and have uniform gutters;\n  columns and rows of boxes line up exactly.\n- REPETITION: reuse a consistent visual system \u2014 the same heading style,\n  body font, accent color, box style, corner radius, bullet glyph, and spacing\n  unit everywhere. Repetition unifies the slide/page.\n- CONTRAST: if two elements differ in role, make them strongly different\n  (size, weight, color, structure) to build a clear hierarchy and guide the eye\n  \u2014 avoid timid, near-identical styling. The title must dominate.\n- COLOR: choose one deliberate, harmonious palette (complementary, triadic, or\n  analogous) with one accent color used consistently, and keep strong\n  text/background contrast for legibility.\n\n- Wrap your complete HTML in a ```html code block"
+  },
+  {
+   "id": "code",
+   "title": "Code generation system prompt",
+   "group": "generation",
+   "text": "You are an expert Python programmer. Write correct, efficient solutions.\n\nRules:\n- Output ONLY the function definition with any needed imports\n- Handle ALL edge cases carefully\n- Pay attention to boundary conditions, empty inputs, and special values\n- Wrap your code in a ```python code block"
+  },
+  {
+   "id": "revise",
+   "title": "Revision prompt (proposer, given feedback)",
+   "group": "feedback",
+   "text": "Your previous HTML (shown in the prior turn) had issues when rendered.\n\n## Visual Review Feedback\n{feedback}\n\nApply the SMALLEST edit that fixes only the identified issues.\n- Preserve working layout, colors, typography, and content that was NOT mentioned in the feedback\n- Do not refactor, reorganize, or restyle unrelated code\n- Change only the specific elements called out above\n\nOutput the complete updated HTML in a ```html code block."
+  },
+  {
+   "id": "visualreview",
+   "title": "VLM reviewer prompt (ungrounded baseline)",
+   "group": "feedback",
+   "text": "You are reviewing a rendered screenshot of a presentation slide or web page.\nCarefully examine the image for these specific issues:\n\n1. **Text overflow**: Any text that is cut off, extends beyond its container, or requires scrolling\n2. **Text overlap**: Any text or elements that overlap each other, making content unreadable\n3. **Alignment**: Elements that should share an edge or centerline but don't \u2014 side-by-side panels/pillars/cards of unequal width, misaligned top/bottom edges, uneven gutters, columns/rows that don't line up\n4. **Proximity**: Related items not grouped (scattered, ambiguous spacing) or unrelated groups crowded together with no separating whitespace\n5. **Repetition**: Inconsistent visual system \u2014 heading/body fonts, accent color, box style, corner radius, bullet glyph, or spacing that varies where it should repeat\n6. **Contrast**: Weak hierarchy \u2014 title not dominant, elements of different roles styled too similarly, or poor text/background color contrast\n7. **Readability & layout**: Text too small, missing elements, broken layout, elements outside the visible area\n8. **Content completeness**: All required content is present and visible\n\nThe original requirements were:\n{requirements}\n\nRespond with ONLY a JSON object:\n{{\n  \"issues\": [\n    {{\"description\": \"...\", \"severity\": \"critical|major|minor\", \"location\": \"top-left|center|etc\"}}\n  ],\n  \"quality_score\": 0.0-1.0,\n  \"meets_requirements\": true/false,\n  \"suggestions\": [\"specific fix 1\", \"specific fix 2\"]\n}}"
+  },
+  {
+   "id": "geom",
+   "title": "Deterministic DOM-geometry instrument (grounded feedback + score)",
+   "group": "evaluation",
+   "text": "Deterministic DOM-geometry instrument (no model). Render the HTML headless; via the layout engine read every element's bounding box; compute EXACTLY: text-on-text overlap (>=6px), out-of-bounds/clipping at the viewport, container overflow, document overflow (>16px), and box-group misalignment (rows/columns of card/pillar boxes flagged for unequal size, misaligned far edges, or uneven gutters). Web: horizontal overflow at 1920 and 375 widths, summed. Animations: probe the DOM at each sampled frame, summed. The exact defect list is fed back to the proposer and is also the score."
+  },
+  {
+   "id": "checklistsys",
+   "title": "Binary-rubric judge \u2014 system",
+   "group": "evaluation",
+   "text": "You are a meticulous visual QA inspector trained in the four core graphic-design principles (Robin Williams): PROXIMITY (related items grouped, unrelated items separated by whitespace), ALIGNMENT (every element shares a strong edge/centerline; side-by-side panels/pillars are equal width with aligned top/bottom edges and uniform gutters), REPETITION (a consistent visual system \u2014 fonts, accent color, box style, spacing \u2014 reused throughout), and CONTRAST (clear hierarchy; the title dominates; differing roles look strongly different; legible text/background color contrast). You are given a rendered screenshot and a numbered list of concrete, objectively-checkable requirements. Evaluate EACH requirement independently by looking at the image, applying these principles strictly wherever a requirement concerns layout, alignment, grouping, consistency, or hierarchy. Do not give partial credit and do not let a good overall impression excuse a specific violation: if a requirement says elements must not overlap and ANY two overlap, or panels must be equal width and they are not, that requirement is VIOLATED even if the slide looks nice overall. Respond with ONLY valid JSON."
+  },
+  {
+   "id": "checklist",
+   "title": "Binary-rubric judge \u2014 per-requirement prompt",
+   "group": "evaluation",
+   "text": "Inspect the screenshot and judge each requirement below independently.\n\nRequirements:\n{numbered_requirements}\n\nFor each requirement, decide: is it SATISFIED (true) or VIOLATED (false) in the rendered image? Be strict about overlap, overflow, clipping, scrollbars, even spacing, and alignment \u2014 these are exactly the failures you must catch.\n\nRespond with ONLY a JSON object:\n{{\n  \"verdicts\": [\n    {{\"index\": 1, \"satisfied\": true|false, \"evidence\": \"what you see in the image\"}},\n    ...\n  ]\n}}\nReturn exactly one verdict per requirement, in order."
+  },
+  {
+   "id": "videojudge",
+   "title": "Gemini 3.1 Pro native full-video judge \u2014 system",
+   "group": "evaluation",
+   "text": "You are a meticulous video QA inspector. You are given ONE video and a list of objective binary requirements. Watch the entire video and judge each requirement INDEPENDENTLY as satisfied (true) or not (false), using what you actually observe across the whole clip (content, motion, transitions, duration, color). Respond with ONLY a JSON object: {\"verdicts\":[{\"index\":1,\"satisfied\":true|false,\"evidence\":\"...\"}, ...]} with exactly one verdict per requirement, in order."
+  }
+ ],
+ "galleries": {
+  "Academic figures": [
+   {
+    "task_id": "figure_001",
+    "name": "Transformer Encoder-Decoder",
+    "ss_image": "images/figures/figure_001_ss.jpg",
+    "rv_image": "images/figures/figure_001_rv.jpg",
+    "ss_defects": 3,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_002",
+    "name": "ResNet Bottleneck Residual Block",
+    "ss_image": "images/figures/figure_002_ss.jpg",
+    "rv_image": "images/figures/figure_002_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_003",
+    "name": "GAN Generator + Discriminator",
+    "ss_image": "images/figures/figure_003_ss.jpg",
+    "rv_image": "images/figures/figure_003_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "figure_004",
+    "name": "Feature Pyramid Network (FPN)",
+    "ss_image": "images/figures/figure_004_ss.jpg",
+    "rv_image": "images/figures/figure_004_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_005",
+    "name": "DETR (Detection Transformer)",
+    "ss_image": "images/figures/figure_005_ss.jpg",
+    "rv_image": "images/figures/figure_005_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_006",
+    "name": "Mask R-CNN",
+    "ss_image": "images/figures/figure_006_ss.jpg",
+    "rv_image": "images/figures/figure_006_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_007",
+    "name": "Latent Diffusion U-Net with Timestep + Text Cross-Attention",
+    "ss_image": "images/figures/figure_007_ss.jpg",
+    "rv_image": "images/figures/figure_007_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 1,
+    "iters": 3
+   },
+   {
+    "task_id": "figure_008",
+    "name": "CLIP Dual-Encoder Contrastive Matrix",
+    "ss_image": "images/figures/figure_008_ss.jpg",
+    "rv_image": "images/figures/figure_008_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 1,
+    "iters": 3
+   },
+   {
+    "task_id": "figure_009",
+    "name": "Mixture-of-Experts Layer",
+    "ss_image": "images/figures/figure_009_ss.jpg",
+    "rv_image": "images/figures/figure_009_rv.jpg",
+    "ss_defects": 2,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "figure_010",
+    "name": "Graph Attention Network Message-Passing Step",
+    "ss_image": "images/figures/figure_010_ss.jpg",
+    "rv_image": "images/figures/figure_010_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "figure_011",
+    "name": "WaveNet Dilated Causal Convolution Stack",
+    "ss_image": "images/figures/figure_011_ss.jpg",
+    "rv_image": "images/figures/figure_011_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_012",
+    "name": "Squeeze-and-Excitation Residual Block",
+    "ss_image": "images/figures/figure_012_ss.jpg",
+    "rv_image": "images/figures/figure_012_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_013",
+    "name": "Perceiver-IO Cross-Attention with Latent Array",
+    "ss_image": "images/figures/figure_013_ss.jpg",
+    "rv_image": "images/figures/figure_013_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "figure_014",
+    "name": "Seq2Seq with Attention + Attention Heat-Map Grid",
+    "ss_image": "images/figures/figure_014_ss.jpg",
+    "rv_image": "images/figures/figure_014_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_015",
+    "name": "Evoformer (AlphaFold MSA + Pair Representation)",
+    "ss_image": "images/figures/figure_015_ss.jpg",
+    "rv_image": "images/figures/figure_015_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_016",
+    "name": "Vision Transformer (ViT)",
+    "ss_image": "images/figures/figure_016_ss.jpg",
+    "rv_image": "images/figures/figure_016_rv.jpg",
+    "ss_defects": 3,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "figure_017",
+    "name": "Swin Transformer hierarchical stages",
+    "ss_image": "images/figures/figure_017_ss.jpg",
+    "rv_image": "images/figures/figure_017_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_018",
+    "name": "U-Net segmentation (vanilla)",
+    "ss_image": "images/figures/figure_018_ss.jpg",
+    "rv_image": "images/figures/figure_018_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "figure_019",
+    "name": "Faster R-CNN (RPN + RoI head)",
+    "ss_image": "images/figures/figure_019_ss.jpg",
+    "rv_image": "images/figures/figure_019_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "figure_020",
+    "name": "Flamingo vision-language (gated cross-attention)",
+    "ss_image": "images/figures/figure_020_ss.jpg",
+    "rv_image": "images/figures/figure_020_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   }
+  ],
+  "Dense slides": [
+   {
+    "task_id": "rp_transformer",
+    "name": "rp_transformer",
+    "ss_image": "images/slides/rp_transformer_ss.jpg",
+    "rv_image": "images/slides/rp_transformer_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "rp_resnet",
+    "name": "rp_resnet",
+    "ss_image": "images/slides/rp_resnet_ss.jpg",
+    "rv_image": "images/slides/rp_resnet_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 1,
+    "iters": 3
+   },
+   {
+    "task_id": "rp_bert",
+    "name": "rp_bert",
+    "ss_image": "images/slides/rp_bert_ss.jpg",
+    "rv_image": "images/slides/rp_bert_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "rp_alexnet",
+    "name": "rp_alexnet",
+    "ss_image": "images/slides/rp_alexnet_ss.jpg",
+    "rv_image": "images/slides/rp_alexnet_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "rp_gan",
+    "name": "rp_gan",
+    "ss_image": "images/slides/rp_gan_ss.jpg",
+    "rv_image": "images/slides/rp_gan_rv.jpg",
+    "ss_defects": 6,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "rp_word2vec",
+    "name": "rp_word2vec",
+    "ss_image": "images/slides/rp_word2vec_ss.jpg",
+    "rv_image": "images/slides/rp_word2vec_rv.jpg",
+    "ss_defects": 2,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "rp_unet",
+    "name": "rp_unet",
+    "ss_image": "images/slides/rp_unet_ss.jpg",
+    "rv_image": "images/slides/rp_unet_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "rp_adam",
+    "name": "rp_adam",
+    "ss_image": "images/slides/rp_adam_ss.jpg",
+    "rv_image": "images/slides/rp_adam_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "rp_dropout",
+    "name": "rp_dropout",
+    "ss_image": "images/slides/rp_dropout_ss.jpg",
+    "rv_image": "images/slides/rp_dropout_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "rp_vgg",
+    "name": "rp_vgg",
+    "ss_image": "images/slides/rp_vgg_ss.jpg",
+    "rv_image": "images/slides/rp_vgg_rv.jpg",
+    "ss_defects": 4,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "rp_lstm",
+    "name": "rp_lstm",
+    "ss_image": "images/slides/rp_lstm_ss.jpg",
+    "rv_image": "images/slides/rp_lstm_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "rp_ddpm",
+    "name": "rp_ddpm",
+    "ss_image": "images/slides/rp_ddpm_ss.jpg",
+    "rv_image": "images/slides/rp_ddpm_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 2
+   }
+  ],
+  "Web pages": [
+   {
+    "task_id": "webh_dashboard",
+    "name": "webh_dashboard",
+    "ss_image": "images/web/webh_dashboard_ss.jpg",
+    "rv_image": "images/web/webh_dashboard_rv.jpg",
+    "ss_defects": 2,
+    "rv_defects": 2,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_pricing",
+    "name": "webh_pricing",
+    "ss_image": "images/web/webh_pricing_ss.jpg",
+    "rv_image": "images/web/webh_pricing_rv.jpg",
+    "ss_defects": 27,
+    "rv_defects": 27,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_docs",
+    "name": "webh_docs",
+    "ss_image": "images/web/webh_docs_ss.jpg",
+    "rv_image": "images/web/webh_docs_rv.jpg",
+    "ss_defects": 16,
+    "rv_defects": 2,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_schedule",
+    "name": "webh_schedule",
+    "ss_image": "images/web/webh_schedule_ss.jpg",
+    "rv_image": "images/web/webh_schedule_rv.jpg",
+    "ss_defects": 23,
+    "rv_defects": 19,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_repo",
+    "name": "webh_repo",
+    "ss_image": "images/web/webh_repo_ss.jpg",
+    "rv_image": "images/web/webh_repo_rv.jpg",
+    "ss_defects": 2,
+    "rv_defects": 2,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_status",
+    "name": "webh_status",
+    "ss_image": "images/web/webh_status_ss.jpg",
+    "rv_image": "images/web/webh_status_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 1,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_product",
+    "name": "webh_product",
+    "ss_image": "images/web/webh_product_ss.jpg",
+    "rv_image": "images/web/webh_product_rv.jpg",
+    "ss_defects": 20,
+    "rv_defects": 13,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_news",
+    "name": "webh_news",
+    "ss_image": "images/web/webh_news_ss.jpg",
+    "rv_image": "images/web/webh_news_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "webh_settings",
+    "name": "webh_settings",
+    "ss_image": "images/web/webh_settings_ss.jpg",
+    "rv_image": "images/web/webh_settings_rv.jpg",
+    "ss_defects": 10,
+    "rv_defects": 8,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_papers",
+    "name": "webh_papers",
+    "ss_image": "images/web/webh_papers_ss.jpg",
+    "rv_image": "images/web/webh_papers_rv.jpg",
+    "ss_defects": 2,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "webh_kanban",
+    "name": "webh_kanban",
+    "ss_image": "images/web/webh_kanban_ss.jpg",
+    "rv_image": "images/web/webh_kanban_rv.jpg",
+    "ss_defects": 6,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "webh_email",
+    "name": "webh_email",
+    "ss_image": "images/web/webh_email_ss.jpg",
+    "rv_image": "images/web/webh_email_rv.jpg",
+    "ss_defects": 1,
+    "rv_defects": 1,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_calendar",
+    "name": "webh_calendar",
+    "ss_image": "images/web/webh_calendar_ss.jpg",
+    "rv_image": "images/web/webh_calendar_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "webh_chat",
+    "name": "webh_chat",
+    "ss_image": "images/web/webh_chat_ss.jpg",
+    "rv_image": "images/web/webh_chat_rv.jpg",
+    "ss_defects": 8,
+    "rv_defects": 2,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_invoice",
+    "name": "webh_invoice",
+    "ss_image": "images/web/webh_invoice_ss.jpg",
+    "rv_image": "images/web/webh_invoice_rv.jpg",
+    "ss_defects": 28,
+    "rv_defects": 24,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_profile",
+    "name": "webh_profile",
+    "ss_image": "images/web/webh_profile_ss.jpg",
+    "rv_image": "images/web/webh_profile_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "webh_checkout",
+    "name": "webh_checkout",
+    "ss_image": "images/web/webh_checkout_ss.jpg",
+    "rv_image": "images/web/webh_checkout_rv.jpg",
+    "ss_defects": 6,
+    "rv_defects": 2,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_specs",
+    "name": "webh_specs",
+    "ss_image": "images/web/webh_specs_ss.jpg",
+    "rv_image": "images/web/webh_specs_rv.jpg",
+    "ss_defects": 66,
+    "rv_defects": 18,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_gallery",
+    "name": "webh_gallery",
+    "ss_image": "images/web/webh_gallery_ss.jpg",
+    "rv_image": "images/web/webh_gallery_rv.jpg",
+    "ss_defects": 118,
+    "rv_defects": 2,
+    "iters": 3
+   },
+   {
+    "task_id": "webh_landing",
+    "name": "webh_landing",
+    "ss_image": "images/web/webh_landing_ss.jpg",
+    "rv_image": "images/web/webh_landing_rv.jpg",
+    "ss_defects": 5,
+    "rv_defects": 4,
+    "iters": 3
+   }
+  ],
+  "Animations": [
+   {
+    "task_id": "anc_slidein_row",
+    "name": "anc_slidein_row",
+    "ss_image": "images/animations/anc_slidein_row_ss.jpg",
+    "rv_image": "images/animations/anc_slidein_row_rv.jpg",
+    "ss_defects": 8,
+    "rv_defects": 5,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_reorder_bars",
+    "name": "anc_reorder_bars",
+    "ss_image": "images/animations/anc_reorder_bars_ss.jpg",
+    "rv_image": "images/animations/anc_reorder_bars_rv.jpg",
+    "ss_defects": 70,
+    "rv_defects": 69,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_tab_underline",
+    "name": "anc_tab_underline",
+    "ss_image": "images/animations/anc_tab_underline_ss.jpg",
+    "rv_image": "images/animations/anc_tab_underline_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "anc_toast_stack",
+    "name": "anc_toast_stack",
+    "ss_image": "images/animations/anc_toast_stack_ss.jpg",
+    "rv_image": "images/animations/anc_toast_stack_rv.jpg",
+    "ss_defects": 6,
+    "rv_defects": 24,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_expand_push",
+    "name": "anc_expand_push",
+    "ss_image": "images/animations/anc_expand_push_ss.jpg",
+    "rv_image": "images/animations/anc_expand_push_rv.jpg",
+    "ss_defects": 5,
+    "rv_defects": 5,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_carousel",
+    "name": "anc_carousel",
+    "ss_image": "images/animations/anc_carousel_ss.jpg",
+    "rv_image": "images/animations/anc_carousel_rv.jpg",
+    "ss_defects": 45,
+    "rv_defects": 12,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_kanban_move",
+    "name": "anc_kanban_move",
+    "ss_image": "images/animations/anc_kanban_move_ss.jpg",
+    "rv_image": "images/animations/anc_kanban_move_rv.jpg",
+    "ss_defects": 28,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "anc_drawer",
+    "name": "anc_drawer",
+    "ss_image": "images/animations/anc_drawer_ss.jpg",
+    "rv_image": "images/animations/anc_drawer_rv.jpg",
+    "ss_defects": 9,
+    "rv_defects": 1,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_swap_tiles",
+    "name": "anc_swap_tiles",
+    "ss_image": "images/animations/anc_swap_tiles_ss.jpg",
+    "rv_image": "images/animations/anc_swap_tiles_rv.jpg",
+    "ss_defects": 18,
+    "rv_defects": 5,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_orbit",
+    "name": "anc_orbit",
+    "ss_image": "images/animations/anc_orbit_ss.jpg",
+    "rv_image": "images/animations/anc_orbit_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "anc_stagger_grid",
+    "name": "anc_stagger_grid",
+    "ss_image": "images/animations/anc_stagger_grid_ss.jpg",
+    "rv_image": "images/animations/anc_stagger_grid_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "anc_progress_token",
+    "name": "anc_progress_token",
+    "ss_image": "images/animations/anc_progress_token_ss.jpg",
+    "rv_image": "images/animations/anc_progress_token_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 30,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_fab_menu",
+    "name": "anc_fab_menu",
+    "ss_image": "images/animations/anc_fab_menu_ss.jpg",
+    "rv_image": "images/animations/anc_fab_menu_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "anc_avatar_fan",
+    "name": "anc_avatar_fan",
+    "ss_image": "images/animations/anc_avatar_fan_ss.jpg",
+    "rv_image": "images/animations/anc_avatar_fan_rv.jpg",
+    "ss_defects": 0,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "anc_breadcrumb_grow",
+    "name": "anc_breadcrumb_grow",
+    "ss_image": "images/animations/anc_breadcrumb_grow_ss.jpg",
+    "rv_image": "images/animations/anc_breadcrumb_grow_rv.jpg",
+    "ss_defects": 13,
+    "rv_defects": 8,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_modal_open",
+    "name": "anc_modal_open",
+    "ss_image": "images/animations/anc_modal_open_ss.jpg",
+    "rv_image": "images/animations/anc_modal_open_rv.jpg",
+    "ss_defects": 14,
+    "rv_defects": 16,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_split_resize",
+    "name": "anc_split_resize",
+    "ss_image": "images/animations/anc_split_resize_ss.jpg",
+    "rv_image": "images/animations/anc_split_resize_rv.jpg",
+    "ss_defects": 5,
+    "rv_defects": 0,
+    "iters": 1
+   },
+   {
+    "task_id": "anc_chip_reflow",
+    "name": "anc_chip_reflow",
+    "ss_image": "images/animations/anc_chip_reflow_ss.jpg",
+    "rv_image": "images/animations/anc_chip_reflow_rv.jpg",
+    "ss_defects": 5,
+    "rv_defects": 0,
+    "iters": 2
+   },
+   {
+    "task_id": "anc_sort_rows",
+    "name": "anc_sort_rows",
+    "ss_image": "images/animations/anc_sort_rows_ss.jpg",
+    "rv_image": "images/animations/anc_sort_rows_rv.jpg",
+    "ss_defects": 23,
+    "rv_defects": 13,
+    "iters": 3
+   },
+   {
+    "task_id": "anc_accordion",
+    "name": "anc_accordion",
+    "ss_image": "images/animations/anc_accordion_ss.jpg",
+    "rv_image": "images/animations/anc_accordion_rv.jpg",
+    "ss_defects": 47,
+    "rv_defects": 12,
+    "iters": 3
+   }
+  ]
+ }
+}

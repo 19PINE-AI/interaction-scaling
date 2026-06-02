@@ -14,7 +14,7 @@ results/baselines_v2/
 models/
 backup/
 frames/
-website/
+website/node_modules/
 logs/
 *.log
 texput.log
