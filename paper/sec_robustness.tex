@@ -22,7 +22,7 @@
 \label{fig:crossmodel}
 \end{figure}
 
-\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the grounded-evaluation effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense responsive-web suite, scored by the identical model-free DOM instrument. Because the instrument depends on no model, a reduction here is attributable to the grounded loop rather than to the scorer; it reproduces the direction of \Cref{tab:geometric} on a different model family.
+\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the grounded-evaluation effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces and is in fact larger: mean defects fall $3.50\to0.25$ ($-93\%$) over three seeds ($n{=}36$), geometrically-clean slides rise $17/36\to34/36$, and $19$ of $20$ decisive task-runs improve (sign-test $p=4\times10^{-5}$). Gemini's single-shot slides are \emph{more} defect-prone than Sonnet's ($3.50$ vs.\ $1.25$), and the grounded loop removes almost all of it. Because the instrument depends on no model, this rules out a Claude-specific or scorer-specific explanation.
 
 \paragraph{Held-out generalization.} On a $32$-task held-out code suite constructed after the method was fixed, the harness lifts $90.6\%\to100\%$, recovering $3/3$ first-shot failures with zero regressions---no tuning to the original tasks.
 

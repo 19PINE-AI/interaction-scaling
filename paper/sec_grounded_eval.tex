@@ -63,24 +63,29 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
 \label{fig:geomreduction}
 \end{figure}
 
-\paragraph{An ungrounded \emph{reviewer} makes layout worse (ablation).} Grounding matters on the feedback side too, controllably. On the same dense slides, holding tasks and proposer fixed and varying only the reviewer: a VLM-feedback reviewer \emph{increases} the mean geometric defect count ($1.89\to2.44$)---blind to the true geometry, its edits break alignment as often as they fix it---whereas the deterministic geometric-feedback reviewer reduces it ($1.25\to0.33$). The binary VLM rubric on these slides simultaneously saturates ($0.97$ mean, $29/36$ rated perfect), confirming the judge cannot even see the difference. Both halves of \Cref{fig:concept} are necessary (\Cref{fig:ablation}).
+\paragraph{An ungrounded \emph{reviewer} makes layout worse (ablation, two modalities).} Grounding matters on the feedback side too, controllably. Holding tasks and proposer fixed and varying \emph{only} the reviewer, a VLM-feedback reviewer \emph{increases} mean geometric defects on both modalities tested---slides $1.89\to2.44$ and figures $0.52\to0.62$ (regressions outnumber improvements $10$:$5$ on figures)---because, blind to the true geometry, its edits break alignment as often as they fix it. The deterministic geometric-feedback reviewer instead reduces defects on the same suites ($1.25\to0.33$ on slides, $0.57\to0.15$ on figures). The binary VLM rubric on these slides simultaneously saturates ($0.97$ mean, $29/36$ rated perfect), confirming the judge cannot even see the difference. Both halves of \Cref{fig:concept} are necessary (\Cref{fig:ablation}).
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.66\linewidth,height=3.9cm,
-  ybar,bar width=13pt,ymin=0,ymax=2.9,
-  ylabel={mean geometric defects (slides)},
-  symbolic x coords={VLM-feedback,geometric-feedback},xtick=data,
-  enlarge x limits=0.6,
-  nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=2},
-  ymajorgrids,ytick={0,1,2},
-  legend style={font=\footnotesize,at={(0.5,1.02)},anchor=south,legend columns=2,draw=cGrey!50}]
-  \addplot[draw=cGrey,fill=black!10] coordinates {(VLM-feedback,1.89) (geometric-feedback,1.25)}; \addlegendentry{single-shot}
-  \addplot[draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-feedback,2.44) (geometric-feedback,0.33)}; \addlegendentry{reviewed}
+\begin{axis}[name=axslide,width=0.42\linewidth,height=3.9cm,ybar,bar width=10pt,
+  ylabel={mean defects},title={\footnotesize slides},ymin=0,ymax=2.9,ytick={0,1,2},
+  symbolic x coords={VLM-fb,geom-fb},xtick=data,enlarge x limits=0.6,
+  nodes near coords,nodes near coords style={font=\scriptsize,/pgf/number format/.cd,fixed,precision=2},ymajorgrids]
+  \addplot[draw=cGrey,fill=black!10] coordinates {(VLM-fb,1.89) (geom-fb,1.25)};
+  \addplot[draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-fb,2.44) (geom-fb,0.33)};
+\end{axis}
+\begin{axis}[at={(axslide.right of east)},anchor=left of west,xshift=1.1cm,
+  width=0.42\linewidth,height=3.9cm,ybar,bar width=10pt,
+  title={\footnotesize academic figures},ymin=0,ymax=0.8,ytick={0,0.25,0.5},
+  symbolic x coords={VLM-fb,geom-fb},xtick=data,enlarge x limits=0.6,
+  nodes near coords,nodes near coords style={font=\scriptsize,/pgf/number format/.cd,fixed,precision=2},ymajorgrids,
+  legend style={font=\footnotesize,at={(0.5,1.12)},anchor=south,legend columns=2,draw=cGrey!50}]
+  \addplot[draw=cGrey,fill=black!10] coordinates {(VLM-fb,0.52) (geom-fb,0.57)}; \addlegendentry{single-shot}
+  \addplot[draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-fb,0.62) (geom-fb,0.15)}; \addlegendentry{reviewed}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{An ungrounded reviewer makes layout worse (controlled ablation).} Same modality, same proposer; only the reviewer's grounding varies. A VLM-feedback reviewer \emph{increases} mean geometric defects ($1.89\to2.44$); the deterministic geometric-feedback reviewer reduces them ($1.25\to0.33$). The grounded signal is necessary on the feedback side, not just the metric side.}
+\caption{\textbf{An ungrounded reviewer makes layout worse (controlled ablation, two modalities).} Same tasks and proposer; only the reviewer's grounding varies. A VLM-feedback reviewer (\textsf{VLM-fb}) \emph{increases} mean geometric defects on both slides ($1.89\to2.44$) and figures ($0.52\to0.62$); the deterministic geometric-feedback reviewer (\textsf{geom-fb}) reduces them ($1.25\to0.33$; $0.57\to0.15$). The grounded signal is necessary on the feedback side, not just the metric side.}
 \label{fig:ablation}
 \end{figure}
 

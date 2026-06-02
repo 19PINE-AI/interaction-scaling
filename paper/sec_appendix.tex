@@ -1,0 +1,278 @@
+\appendix
+\section{Detailed Results and Configurations}
+\label{app:detailed}
+This appendix collects the full tables underlying the summaries in the main text: the four-strategy scaling curves, the matched-budget reasoning baseline, the in-modality feedback-type control, the single-agent-vs-harness comparison, cross-model and held-out code, the budget-allocation simplex, token ROI by modality, the distillation ablations, the per-task pass@$k$ breakdown for the $8$B student, and the original six-modality holistic overview (superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}).
+
+\subsection{Four-strategy scaling at a matched 20K-token budget}
+\begin{table}[t]
+\centering
+\caption{\textbf{The headline scaling result (3-seed mean $\pm$ SD).} Pass-rate by strategy~$\times$~budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent on-policy runs; R was run once (extended-thinking variation across seeds is small at temp~0) at the sweep's budget partition (a more generous partition lifts R to $86.7\%$; see footnote and \Cref{tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise on a 3-seed $\times$ 15-task suite; pass@$N$ is non-decreasing in $N$ in expectation but not pointwise across finite-sample on-policy seeds. \emph{Reasoning-only and best-of-$N$ saturate well below 100\%}; all three iteration-with-feedback strategies reach $\geq97.8\%$ at $B{=}20$K (L hit 100\% on 2 of 3 seeds; H on all 3; H is the only variant at strict 100\% across seeds). The architectural ordering across H, L is within seed noise on pass-rate; what separates them is token efficiency and reliability (\Cref{sec:interaction}).}
+\label{tab:scaling-curves}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Budget $B$ & R (reasoning-only) & S (best-of-$N$) & L (single-agent loop) & H (proposer--reviewer) \\
+\midrule
+1K   & 60.0\% & 80.0\% $\pm 0.0$\,pp & 57.8\% $\pm 3.1$\,pp & 62.2\% $\pm 3.1$\,pp \\
+5K   & 73.3\% & 77.8\% $\pm 3.1$\,pp & \textbf{93.3\% $\pm 0.0$\,pp} & 91.1\% $\pm 3.1$\,pp \\
+20K  & 73.3\% & 86.7\% $\pm 0.0$\,pp & 97.8\% $\pm 3.1$\,pp & \textbf{100.0\% $\pm 0.0$\,pp} \\
+\midrule
+Ceiling & 73.3\% & 86.7\% & $\sim$100\% & \textbf{100\% (zero variance)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Reasoning-only at a matched budget}
+\begin{table}[ht]
+\centering
+\caption{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}); the 3-run aggregate is reported in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times$ the harness's token budget.}
+\label{tab:reasoning-baseline}
+\small
+\begin{tabular}{lccc}
+\toprule
+Strategy & Pass-rate & Mean tokens & $\Delta$ vs.\ single-shot \\
+\midrule
+Single-shot                       & 73.3\% (11/15) & 1{,}406  & --- \\
+Reasoning-only (matched budget)   & 86.7\% (13/15) & 4{,}137  & $+13.3$\,pp \\
+\textbf{Proposer--reviewer harness} & \textbf{93.3\% (14/15)} & \textbf{2{,}643}  & $\mathbf{+20.0}$\,pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{In-modality feedback-type control (Type 1/2/3a) on a fixed code suite}
+\begin{table}[ht]
+\centering
+\caption{In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed; the ``SS'' column is the \emph{per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph{reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph{and} Type 3a is $\sim$2.5$\times$ more token-efficient (1.53 vs.\ 2.07 iterations).}
+\label{tab:type-controls}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Type & Reviewer sees & SS & Reviewed & Iters \\
+\midrule
+None (single-shot)             & ---                                  & 11/15 & ---            & --- \\
+Type 1 (cross-review)          & code only                            & 10/15 & 13/15          & 2.07 \\
+Type 2 ($+$\texttt{ruff})      & code $+$ static analysis             & 11/15 & 13/15          & 2.07 \\
+\textbf{Type 3a ($+$exec)}     & code $+$ test stderr/traceback       & 11/15 & \textbf{14/15} & \textbf{1.53} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Single-agent loop vs.\ proposer--reviewer harness}
+\begin{table}[ht]
+\centering
+\caption{Three interaction-strategy variants at $B{=}20$K on the 15 hard code tasks, all using Type 3a execution feedback. Pass-rate is within seed noise (sign-test $p{>}0.6$ on the H--L comparison); the harness wins on \emph{token efficiency} (1{,}029 vs.\ 1{,}431 L vs.\ 1{,}416 IAD mean output tokens) and on \emph{seed variance} (zero across three seeds for H; L hit 100\% in 2 of 3 seeds; IAD was run for one seed only).}
+\label{tab:LvsH}
+\small
+\begin{tabular}{lccc}
+\toprule
+Strategy & Pass-rate & Mean tokens & Notes \\
+\midrule
+L (single-agent loop)              & 97.8\% $\pm 3.1$\,pp (3 seeds)           & 1{,}431          & 1 task in 1 seed \\
+IAD (oracle, K=3, T=0.7)           & 100.0\% (1 seed)                         & 1{,}416          & $+38$\% tokens vs.\ H \\
+\textbf{H (proposer--reviewer)}    & \textbf{100.0\% $\pm 0.0$\,pp (3 seeds)} & \textbf{1{,}029} & zero seed variance \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cross-model replication (code)}
+\begin{table}[ht]
+\centering
+\caption{Cross-model replication on the same 15 hard code tasks. The Claude row is the multi-run reference from \Cref{tab:harness-headline}; Qwen and GPT-5 are single on-policy runs at $T{=}0.7$. The harness lift survives across three families (Anthropic, Alibaba, OpenAI).}
+\label{tab:crossmodel}
+\small
+\begin{tabular}{lccc}
+\toprule
+Model & Single-shot pass & Reviewed pass & $\Delta$ (lift) \\
+\midrule
+Claude Sonnet 4 (3-run mean)        & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\%      & $\mathbf{+33.3}$\,pp \\
+Qwen3-235B-Instruct-2507 (1 run)    & $66.7$\% (10/15)   & $\mathbf{93.3}$\% (14/15)       & $\mathbf{+26.7}$\,pp \\
+GPT-5 (1 run)                       & $86.7$\% (13/15)   & $\mathbf{100.0}$\% (15/15)      & $\mathbf{+13.3}$\,pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Held-out generalization (code)}
+\begin{table}[ht]
+\centering
+\caption{Held-out generalization on 32 newly constructed code tasks (zero overlap with the 15-task development set). The harness recovers 3/3 single-shot failures and regresses zero passing tasks. The smaller absolute $\Delta$ is a baseline-compression effect (single-shot is 90.6\% on the held-out set, leaving at most 9.4\,pp headroom).}
+\label{tab:heldout}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Split & $N$ & Single-shot & Reviewed & $\Delta$ & SS-fail fixes / regressions \\
+\midrule
+Development (3-run mean) & 15 & $66.7 \pm 6.7$\% & $100.0 \pm 0.0$\% & $+33.3$\,pp & 5/5 / 0 \\
+\textbf{Held-out v2}     & 32 & $90.6$\% & $\mathbf{100.0}$\% & $\mathbf{+9.4}$\,pp & $\mathbf{3/3}$ / $\mathbf{0}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Budget-allocation simplex}
+\begin{table}[ht]
+\centering
+\caption{Budget allocation simplex on 15 hard code tasks, $B = 10$K total. Pass-rate is monotone in the proposer's per-call cap; review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.}
+\label{tab:allocation}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Allocation & $b_1$ (prop) & $b_2$ (exec) & $b_3$ (rev) & Pass-rate & Mean tokens \\
+\midrule
+\textbf{A (propose-heavy)} & 0.80 & 0.10 & 0.10 & \textbf{93.3\% (14/15)} & 3{,}101 \\
+\textbf{G (prop-dominant)} & 0.50 & 0.25 & 0.25 & \textbf{93.3\% (14/15)} & 2{,}697 \\
+D (prop+exec)              & 0.40 & 0.40 & 0.20 & 80.0\% (12/15) & 4{,}025 \\
+E (prop+review)            & 0.40 & 0.20 & 0.40 & 80.0\% (12/15) & 4{,}388 \\
+I (equal)                  & 0.33 & 0.34 & 0.33 & 66.7\% (10/15) & 4{,}845 \\
+H (review-dominant)        & 0.25 & 0.25 & 0.50 & 40.0\% (6/15)  & 7{,}485 \\
+F (exec+review)            & 0.20 & 0.40 & 0.40 & 13.3\% (2/15)  & 8{,}771 \\
+B (execute-heavy)          & 0.10 & 0.80 & 0.10 & \phantom{0}6.7\% (1/15)  & 9{,}383 \\
+C (review-heavy)           & 0.10 & 0.10 & 0.80 & \phantom{0}6.7\% (1/15)  & 9{,}383 \\
+\midrule
+\multicolumn{4}{r}{Spread:} & \textbf{86.6\,pp} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Token ROI by modality}
+\begin{table}[ht]
+\centering
+\caption{Per-task token cost and quality return-on-investment for the harness, averaged across three on-policy runs. ``Extra tokens'' is reviewed-minus-single-shot per task. Tokens per 0.01 quality is extra tokens divided by (mean reviewed quality $-$ mean single-shot quality)$\cdot 100$. Code dominates by $100\times$.}
+\label{tab:harness-roi}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+Modality & Single-shot tokens & Reviewed tokens & Extra tokens & Tokens / 0.01 quality \\
+\midrule
+Code        & 3{,}336  & 4{,}575  & 1{,}239  & \textbf{37} \\
+Video       & 3{,}808  & 20{,}584 & 16{,}776 & 359 \\
+Research    & 14{,}116 & 27{,}793 & 13{,}677 & 2{,}415 \\
+Webpages    & 14{,}060 & 80{,}148 & 66{,}088 & 5{,}128 \\
+Animations  & 25{,}491 & 89{,}009 & 63{,}518 & 4{,}331 \\
+Slides      & 10{,}274 & 36{,}956 & 26{,}682 & 4{,}447 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Distillation: headline}
+\begin{table}[ht]
+\centering
+\caption{Distilled 8B student on the 18-task hard held-out suite (teacher's pre-curated single-shot failures, so teacher single-shot is 0/18 by construction). The student lifts judge-keep from 0\% to 44\% at pass@1 and 56\% at pass@3. The $0.50\times$ capability ratio against the teacher is established on a separate 44-task out-of-distribution suite reported next, where teacher single-shot is non-degenerate.}
+\label{tab:distill-headline}
+\small
+\begin{tabular}{lcc}
+\toprule
+Setup & Compute & Judge-keep \\
+\midrule
+1 sample $\times$ 5 turns                                  & $1\times$ & 44\% (8/18) \\
+1 sample $\times$ 8 turns                                  & $1.6\times$ & 28\% (regressed) \\
+\textbf{3 samples $\times$ 5 turns (pass@3)}               & $3\times$ & \textbf{56\% (10/18)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Distillation: capability U-curve over force-close budget}
+\begin{table}[ht]
+\centering
+\caption{Reasoning-cap U-curve on the 18-task hard held-out suite. SFT recipe sweep on Qwen3-VL-8B-Instruct (37 judge-kept teacher traces; same inference protocol). The optimum is at the student's coherence horizon, not the teacher's.}
+\label{tab:distill-ucurve}
+\begin{tabular}{lccc}
+\toprule
+Variant & Reasoning cap (chars) & Judge-keep & Identical-retry \\
+\midrule
+V1 (no reasoning)     & 0    & 6\%  & 67\% \\
+V4                    & 1000 & 11\% & 35\% \\
+V2                    & 3000 & 17\% & 32\% \\
+\textbf{V3 (chosen)}  & \textbf{1500} & \textbf{44\%} & 10\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Distillation: data-scale}
+\begin{table}[ht]
+\centering
+\caption{Three independent attempts to scale the SFT corpus past V3's 37 examples. All regressed. Quality dominates quantity at this scale.}
+\label{tab:distill-datascale}
+\begin{tabular}{lccc}
+\toprule
+Variant & Composition & $n$ examples & Judge-keep \\
+\midrule
+\textbf{V3 (chosen)} & 235B teacher, judge-kept       & 37 & \textbf{44\%} \\
+V5                   & V3 + 13 judge-rejected (235B)  & 50 & 33\% \\
+V6                   & V3 + 20 judge-kept (30B teacher) & 57 & 33\% \\
+RFT v1               & Self-rolled, judge-filtered    & 61 & 39\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Distillation: RFT regresses pass@3}
+\begin{table}[ht]
+\centering
+\caption{RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve; per-task variance collapses; pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph{is} the inference-scaling budget. \textit{Note on notation.} \textbf{mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph{pass@1}=44\% reported in \Cref{tab:distill-headline}, which is just seed~1's accuracy. \emph{pass@2} and \emph{pass@3} are union pass-rates over the first 2 / all 3 seeds.}
+\label{tab:distill-rft}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{Consistency metrics} & \multicolumn{3}{c}{Sampling-aware judge-keep} \\
+\cmidrule(lr){2-4} \cmidrule(lr){5-7}
+& id-retry $\downarrow$ & addresses-rev $\uparrow$ & no-artifact $\downarrow$ & mean@1 & pass@2 & pass@3 \\
+\midrule
+\textbf{V3 (chosen)} & 9\%  & 83\% & 2  & \textbf{31\%} & \textbf{50\%} & \textbf{56\%} \\
+RFT v1               & \textbf{8\%}  & \textbf{89\%} & \textbf{1}  & 28\%   & 39\%   & 39\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Per-task pass@$k$ for the 8B markdown student}
+\begin{table}[ht]
+\centering
+\caption{Per-task judge-keep outcome for the 8B markdown student on the 18-task hard held-out suite. $\checkmark$ = judge-kept; $\cdot$ = judge-rejected.}
+\label{tab:per-task-md}
+\small
+\begin{tabular}{llccccc}
+\toprule
+Category & Task & seed 1 ($T{=}0$) & seed 2 ($T{=}0.7$) & seed 3 ($T{=}0.7$) & pass@3 \\
+\midrule
+\multirow{5}{*}{webpages} & web\_002 & $\checkmark$ & $\cdot$ & $\cdot$ & $\checkmark$ \\
+& web\_003 & $\checkmark$ & $\cdot$ & $\checkmark$ & $\checkmark$ \\
+& web\_005 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& web\_008 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& web\_012 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+\midrule
+\multirow{8}{*}{slides} & slide\_001 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_006 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_007 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_008 & $\checkmark$ & $\cdot$ & $\cdot$ & $\checkmark$ \\
+& slide\_010 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& slide\_014 & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+& slide\_018 & $\checkmark$ & $\checkmark$ & $\cdot$ & $\checkmark$ \\
+& slide\_020 & $\cdot$ & $\checkmark$ & $\cdot$ & $\checkmark$ \\
+\midrule
+\multirow{5}{*}{code} & code\_h001 & $\checkmark$ & $\cdot$ & $\cdot$ & $\checkmark$ \\
+& code\_h002 & $\checkmark$ & $\checkmark$ & $\cdot$ & $\checkmark$ \\
+& code\_h003 & $\cdot$ & $\cdot$ & $\cdot$ & $\cdot$ \\
+& code\_h004 & $\cdot$ & $\cdot$ & $\checkmark$ & $\checkmark$ \\
+& code\_h005 & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+\midrule
+\multicolumn{2}{r}{Total kept:} & 8/18 & 5/18 & 4/18 & \textbf{10/18 (56\%)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Original six-modality holistic overview (historical)}
+\begin{table}[t]
+\centering
+\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf{Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt{pytest}); video by a native full-video rubric (Gemini~3.1~Pro judging the whole rendered clip); the four visual/factual rows use a holistic screenshot judge and serve here as a cross-modal overview, with the precise web and animation figures given by the binary rubric in the binary-rubric results and the academic-figure and slide results by deterministic geometry in \Cref{tab:geometric}.}
+\label{tab:harness-headline}
+\small
+\begin{tabular}{lccccc}
+\toprule
+Modality & $N$ & Feedback type & Single-shot & Reviewed & $\Delta$ (sign-test $p$) \\
+\midrule
+\textbf{Code}          & 15 & 3a       & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\% & $\mathbf{+33.3}$\,pp (0.008) \\
+Video editing          & 15 & 3a+3c    & $0.70 \pm 0.03$    & $0.74 \pm 0.05$   & $+0.04$ (0.64) \\
+Deep research          & 15 & 3d       & $0.63 \pm 0.06$    & $0.69 \pm 0.06$   & $+0.06$ (0.090) \\
+Web pages              & 15 & 3b       & $0.43 \pm 0.03$    & $0.56 \pm 0.01$   & $+0.13$ (0.073) \\
+Animations             & 15 & 3c       & $0.40 \pm 0.03$    & $0.55 \pm 0.01$   & $+0.15$ (0.073) \\
+Slide decks            & 20 & 3b       & $0.73 \pm 0.01$    & $0.79 \pm 0.01$   & $+0.06$ (0.090) \\
+\bottomrule
+\end{tabular}
+\end{table}
