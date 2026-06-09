@@ -34,3 +34,5 @@ Deep research    & 3d    & search-grounded factual rubric                & $15$ 
 \end{table}
 
 All artifacts are produced under a common \emph{design-principle} generation prompt (proximity, alignment, repetition, contrast, deliberate color) so that single-shot quality is already strong; this makes the headroom we measure a property of genuine task difficulty rather than a weak prompt.
+
+\paragraph{Evaluation protocol.} Unless noted, the proposer runs at temperature $0$ and each modality is evaluated over three independent on-policy seeds; the reviewed condition keeps the best-scoring iteration (cap $\le 3$ for geometry, $\le 5$ for code), so it can never score below single-shot under the same metric. The unit of comparison is the (task, seed) pair. For each result we report a two-sided paired sign test over decisive pairs and, for the geometric and code effects, a paired-bootstrap $95\%$ confidence interval ($10$k resamples) on the effect size.
