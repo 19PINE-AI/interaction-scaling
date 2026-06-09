@@ -1,7 +1,7 @@
 \appendix
 \section{Detailed Results and Configurations}
 \label{app:detailed}
-This appendix collects the full tables underlying the summaries in the main text: the four-strategy scaling curves, the matched-budget reasoning baseline, the in-modality feedback-type control, the single-agent-vs-harness comparison, cross-model and held-out code, the budget-allocation simplex, token ROI by modality, the distillation ablations, the per-task pass@$k$ breakdown for the $8$B student, and the original six-modality holistic overview (superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}).
+This appendix collects the full tables underlying the summaries in the main text: the four-strategy scaling curves, the matched-budget reasoning baseline, the in-modality feedback-type control, the single-agent-vs-harness comparison, cross-model and held-out code, the budget-allocation simplex, token ROI by modality, the distillation ablations, the out-of-distribution capability ratio, the per-task pass@$k$ breakdown for the $8$B student, and the original six-modality holistic overview (superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}).
 
 \subsection{Four-strategy scaling at a matched 20K-token budget}
 \begin{table}[t]
@@ -25,7 +25,7 @@ Ceiling & 73.3\% & 86.7\% & $\sim$100\% & \textbf{100\% (zero variance)} \\
 \subsection{Reasoning-only at a matched budget}
 \begin{table}[ht]
 \centering
-\caption{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}); the 3-run aggregate is reported in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times$ the harness's token budget.}
+\caption{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}); the 3-run aggregate is reported in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). \emph{Reading the numbers:} single-shot here is this single seed's $11/15=73.3\%$ (the canonical $3$-seed mean is $66.7\%$), and the reasoning value shown is the \emph{thinking-heavy} partition ($86.7\%$); this coincides numerically with the oracle best-of-$N$ ceiling, while the \emph{default}-partition reasoning ceiling ($73.3\%$, \Cref{tab:scaling-curves}) coincides with this seed's single-shot---both are coincidences of the small suite, not the same run. Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times$ the harness's token budget.}
 \label{tab:reasoning-baseline}
 \small
 \begin{tabular}{lccc}
@@ -33,7 +33,7 @@ Ceiling & 73.3\% & 86.7\% & $\sim$100\% & \textbf{100\% (zero variance)} \\
 Strategy & Pass-rate & Mean tokens & $\Delta$ vs.\ single-shot \\
 \midrule
 Single-shot                       & 73.3\% (11/15) & 1{,}406  & --- \\
-Reasoning-only (matched budget)   & 86.7\% (13/15) & 4{,}137  & $+13.3$\,pp \\
+Reasoning-only (thinking-heavy partition)   & 86.7\% (13/15) & 4{,}137  & $+13.3$\,pp \\
 \textbf{Proposer--reviewer harness} & \textbf{93.3\% (14/15)} & \textbf{2{,}643}  & $\mathbf{+20.0}$\,pp \\
 \bottomrule
 \end{tabular}
@@ -42,7 +42,7 @@ Reasoning-only (matched budget)   & 86.7\% (13/15) & 4{,}137  & $+13.3$\,pp \\
 \subsection{In-modality feedback-type control (Type 1/2/3a) on a fixed code suite}
 \begin{table}[ht]
 \centering
-\caption{In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed; the ``SS'' column is the \emph{per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph{reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph{and} Type 3a is $\sim$2.5$\times$ more token-efficient (1.53 vs.\ 2.07 iterations).}
+\caption{In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed; the ``SS'' column is the \emph{per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph{reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph{and} Type 3a is $\sim$2.5$\times$ more token-efficient (1.53 vs.\ 2.07 iterations). The single task unrecovered in every control row is \texttt{code\_011} (CJK text wrapping); the full harness at $B{=}20$K recovers it across all three seeds (\Cref{tab:scaling-curves}), which is why the headline reviewed rate is the strict $100\%$ of \Cref{tab:harness-headline} while this leaner single-seed control caps at $14/15$.}
 \label{tab:type-controls}
 \small
 \begin{tabular}{lcccc}
@@ -155,7 +155,7 @@ Slides      & 10{,}274 & 36{,}956 & 26{,}682 & 4{,}447 \\
 \subsection{Distillation: headline}
 \begin{table}[ht]
 \centering
-\caption{Distilled 8B student on the 18-task hard held-out suite (teacher's pre-curated single-shot failures, so teacher single-shot is 0/18 by construction). The student lifts judge-keep from 0\% to 44\% at pass@1 and 56\% at pass@3. The $0.50\times$ capability ratio against the teacher is established on a separate 44-task out-of-distribution suite reported next, where teacher single-shot is non-degenerate.}
+\caption{Distilled 8B student on the 18-task hard held-out suite (teacher's pre-curated single-shot failures, so teacher single-shot is 0/18 by construction). The student lifts judge-keep from 0\% to 44\% at pass@1 and 56\% at pass@3. The $0.51\times$ mean@1 capability ratio against the teacher is established on a separate 44-task out-of-distribution suite (\Cref{tab:distill-ood}), where teacher single-shot is non-degenerate.}
 \label{tab:distill-headline}
 \small
 \begin{tabular}{lcc}
@@ -165,6 +165,22 @@ Setup & Compute & Judge-keep \\
 1 sample $\times$ 5 turns                                  & $1\times$ & 44\% (8/18) \\
 1 sample $\times$ 8 turns                                  & $1.6\times$ & 28\% (regressed) \\
 \textbf{3 samples $\times$ 5 turns (pass@3)}               & $3\times$ & \textbf{56\% (10/18)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Distillation: out-of-distribution capability ratio}
+\begin{table}[ht]
+\centering
+\caption{Distilled 8B student (V3 $+$ force-close) on a 44-task out-of-distribution suite where the teacher's single-shot is non-degenerate (teacher $20/44$). Capability ratio is the student's judge-keep divided by the teacher's $20/44$; two sampling seeds, pass@2 is the union over both. This is the suite that establishes the ${\sim}0.51\times$ mean@1 / $0.70\times$ pass@2 ratios quoted in \Cref{sec:distill} and \Cref{fig:distill}.}
+\label{tab:distill-ood}
+\small
+\begin{tabular}{lcccc}
+\toprule
+Metric & sample 1 & sample 2 & mean@1 & pass@2 \\
+\midrule
+Judge-keep                              & $9/44$ ($20\%$) & $11/44$ ($25\%$) & $23\%$        & $\mathbf{32\%}$ \\
+Capability ratio (vs teacher $20/44$)   & $0.45\times$    & $0.55\times$     & $0.51\times$  & $\mathbf{0.70\times}$ \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -260,7 +276,7 @@ Category & Task & seed 1 ($T{=}0$) & seed 2 ($T{=}0.7$) & seed 3 ($T{=}0.7$) & p
 \subsection{Original six-modality holistic overview (historical)}
 \begin{table}[t]
 \centering
-\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf{Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt{pytest}); video by a native full-video rubric (Gemini~3.1~Pro judging the whole rendered clip); the four visual/factual rows use a holistic screenshot judge and serve only as a cross-modal overview. \emph{This table is historical and is superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}}: under the deterministic DOM-geometry instrument (\Cref{tab:geometric}) the figure, slide, web, and animation effects are large and significant, whereas the holistic-judge numbers here cannot see the geometric defects and therefore mis-state them.}
+\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate; other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf{Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt{pytest}); video by a native full-video rubric (Gemini~3.1~Pro judging the whole rendered clip); the four visual/factual rows use a holistic screenshot judge and serve only as a cross-modal overview. \emph{This table is historical and is superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}}: under the deterministic DOM-geometry instrument (\Cref{tab:geometric}) the figure, slide, web, and animation effects are large and significant, whereas the holistic-judge numbers here cannot see the geometric defects and therefore mis-state them. The deep-research and video rows also use \emph{different} instruments than \Cref{sec:grounded_eval}: research here is the old holistic judge ($0.63\to0.69$) rather than the search-grounded factual rubric (single-shot $0.982$), so the large numeric gap is an instrument change, not a contradiction; video uses the same Gemini-native rubric in both places ($0.70\to0.74$).}
 \label{tab:harness-headline}
 \small
 \begin{tabular}{lccccc}

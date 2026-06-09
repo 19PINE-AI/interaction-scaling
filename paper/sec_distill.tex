@@ -3,7 +3,7 @@
 
 Can the harness's interaction-quality behavior be \emph{internalized} so a small model emits high-quality artifacts in fewer passes? We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via SFT.
 
-\paragraph{Result.} The student reaches $0.50\times$ the teacher's mean@1 capability on a $44$-task out-of-distribution suite (rising to $0.70\times$ at pass@2), and $44\%/56\%$ pass@1/pass@3 on an $18$-task hard held-out suite, at ${\sim}10\times$ lower deployment cost than running the harness over a frontier model (\Cref{fig:distill}). Run inside the same harness, the small student recovers more of the gap, confirming that scaffolding and internalization compose.
+\paragraph{Result.} The student reaches $0.51\times$ the teacher's mean@1 capability on a $44$-task out-of-distribution suite (\Cref{tab:distill-ood}; rising to $0.70\times$ at pass@2), and $44\%/56\%$ pass@1/pass@3 on an $18$-task hard held-out suite, at ${\sim}10\times$ lower deployment cost than running the harness over a frontier model (\Cref{fig:distill}). Run inside the same harness, the small student recovers more of the gap, confirming that scaffolding and internalization compose.
 
 \begin{figure}[t]
 \centering
@@ -18,7 +18,7 @@ Can the harness's interaction-quality behavior be \emph{internalized} so a small
   \legend{}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{An $8$B student internalizes interaction quality.} Pass@$1$/pass@$3$ of the distilled $8$B markdown student on the hard held-out suite ($0.50\times$/$0.70\times$ teacher mean@1/@2 on the $44$-task OOD set), at ${\sim}10\times$ lower deployment cost.}
+\caption{\textbf{An $8$B student internalizes interaction quality.} Pass@$1$/pass@$3$ of the distilled $8$B markdown student on the hard held-out suite ($0.51\times$/$0.70\times$ teacher mean@1/@2 on the $44$-task OOD set; \Cref{tab:distill-ood}), at ${\sim}10\times$ lower deployment cost.}
 \label{fig:distill}
 \end{figure}
 

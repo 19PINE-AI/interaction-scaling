@@ -1,4 +1,4 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{24}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -58,6 +58,13 @@ Ryo Kamoi, Yusen Zhang, Nan Zhang, Jiawei Han, and Rui Zhang.
   survey of self-correction of {LLMs}.
 \newblock \emph{Transactions of the Association for Computational Linguistics},
   2025.
+
+\bibitem[Lu et~al.(2025)Lu, Ren, Yang, Wang, Zong, Pan, Zhan, and
+  Li]{webgen2025}
+Zimu Lu, Houxing Ren, Yunqiao Yang, Ke~Wang, Zhuofan Zong, Junting Pan, Mingjie
+  Zhan, and Hongsheng Li.
+\newblock {WebGen-Agent}: Enhancing interactive website generation with
+  multi-level feedback and step-level reinforcement learning, 2025.
 
 \bibitem[Madaan et~al.(2023)Madaan, Tandon, Gupta, Hallinan, Gao, Wiegreffe,
   Alon, Dziri, Prabhumoye, Yang, Welleck, Majumder, Gupta, Yazdanbakhsh, and
