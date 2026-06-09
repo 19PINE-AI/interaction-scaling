@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Layout Preference Study</title>
+<style>
+  :root { --fg:#1a1a1a; --muted:#6b6b6b; --line:#ddd; --accent:#1F6FB2; --bg:#fafafa; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+         color: var(--fg); margin: 0; background: var(--bg); }
+  header { padding: 10px 18px; border-bottom: 1px solid var(--line); background:#fff;
+           display:flex; align-items:center; gap:16px; position:sticky; top:0; z-index:5; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+  .bar { flex:1; height:8px; background:#eee; border-radius:4px; overflow:hidden; }
+  .bar > div { height:100%; background: var(--accent); width:0; transition: width .2s; }
+  #count { font-size: 13px; color: var(--muted); white-space:nowrap; }
+  main { max-width: 1180px; margin: 0 auto; padding: 18px; }
+  .instr { font-size: 15px; margin: 6px 0 14px; }
+  .instr b { color: var(--accent); }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .opt { border:1px solid var(--line); border-radius:8px; background:#fff; padding:10px; }
+  .opt h2 { font-size: 13px; margin:0 0 8px; text-align:center; color:var(--muted); letter-spacing:.04em; }
+  .view-label { font-size: 11px; color: var(--muted); margin: 8px 0 2px; }
+  .opt img { width:100%; height:auto; border:1px solid #eee; border-radius:4px; cursor: zoom-in;
+             background: #fff; display:block; }
+  .web img { max-height: 520px; object-fit: contain; object-position: top; }
+  .actions { display:flex; gap:12px; justify-content:center; margin: 20px 0 8px; flex-wrap:wrap; }
+  button.choice { font-size: 15px; padding: 12px 22px; border-radius: 8px; border:1px solid var(--line);
+                  background:#fff; cursor:pointer; min-width: 190px; }
+  button.choice:hover { border-color: var(--accent); }
+  button.choice.A { border-left: 4px solid var(--accent); }
+  button.choice.B { border-right: 4px solid var(--accent); }
+  button.choice b { display:block; font-size:11px; color:var(--muted); font-weight:400; margin-top:2px; }
+  .toolbar { display:flex; gap:12px; justify-content:space-between; align-items:center; margin-top:14px;
+             font-size: 13px; color: var(--muted); }
+  .toolbar a, .toolbar button { color: var(--accent); background:none; border:none; cursor:pointer; font-size:13px; }
+  #setup, #done { max-width: 640px; margin: 60px auto; background:#fff; padding: 28px 32px;
+                  border:1px solid var(--line); border-radius:10px; }
+  #setup h1 { font-size: 20px; }
+  #setup p, #done p { line-height: 1.55; font-size: 14px; }
+  #setup input { font-size:15px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; width:240px; }
+  #setup button, #done button { font-size:15px; padding:10px 20px; border-radius:8px; border:1px solid var(--accent);
+                                background:var(--accent); color:#fff; cursor:pointer; }
+  kbd { background:#eee; border-radius:3px; padding:1px 6px; font-size:12px; border:1px solid #ccc; }
+  .hidden { display:none; }
+</style>
+</head>
+<body>
+
+<div id="setup">
+  <h1>Layout preference study</h1>
+  <p>You will see <b>pairs of rendered artifacts</b> (figures, slides, web pages, animations).
+     For each pair, judge <b>which side has the cleaner layout</b> &mdash; no overlapping text, no
+     content cut off or spilling out of its box, elements properly aligned. Ignore content/topic and
+     color taste; judge only <b>layout quality</b>.</p>
+  <p>There is no time limit, but answer on first impression. Click any image to open it full-size.
+     Use the buttons or keys <kbd>1</kbd>=left&nbsp;better, <kbd>2</kbd>=no&nbsp;difference,
+     <kbd>3</kbd>=right&nbsp;better. Your progress is saved in this browser; you may stop and resume.</p>
+  <p>Rater ID (any short label, e.g. your initials):<br>
+     <input id="rater" placeholder="e.g. ab12" autocomplete="off"></p>
+  <button onclick="start()">Begin</button>
+</div>
+
+<header class="hidden" id="hdr">
+  <h1>Which layout is cleaner?</h1>
+  <div class="bar"><div id="prog"></div></div>
+  <span id="count"></span>
+</header>
+
+<main class="hidden" id="app">
+  <div class="instr" id="instr"></div>
+  <div class="pair" id="pair"></div>
+  <div class="actions">
+    <button class="choice A" onclick="answer('A')">◀ Left is cleaner <b>key 1</b></button>
+    <button class="choice" onclick="answer('same')">No visible difference <b>key 2</b></button>
+    <button class="choice B" onclick="answer('B')">Right is cleaner ▶ <b>key 3</b></button>
+  </div>
+  <div class="toolbar">
+    <button onclick="back()">&larr; undo last</button>
+    <span id="modtag"></span>
+    <button onclick="download()">download results CSV</button>
+  </div>
+</main>
+
+<div id="done" class="hidden">
+  <h1>Done &mdash; thank you!</h1>
+  <p id="donemsg"></p>
+  <p><button onclick="download()">Download results CSV</button></p>
+  <p style="font-size:13px;color:var(--muted)">Send the downloaded CSV back to the study runner.
+     They will join it with the hidden key and run <code>scripts/analyze_human_study.py</code>.</p>
+</div>
+
+<script src="manifest.js"></script>
+<script>
+let M = window.MANIFEST || [];
+let order = [], idx = 0, raterId = "", responses = {}, shownAt = 0;
+
+// deterministic per-rater shuffle so different raters see different orders
+function seededShuffle(arr, seedStr) {
+  let h = 2166136261;
+  for (const c of seedStr) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+  const rng = () => { h += 0x6D2B79F5; let t = h; t = Math.imul(t ^ (t>>>15), t|1);
+    t ^= t + Math.imul(t ^ (t>>>7), t|61); return ((t ^ (t>>>14)) >>> 0) / 4294967296; };
+  const a = arr.slice();
+  for (let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function storeKey(){ return "layoutstudy::" + raterId; }
+function save(){ localStorage.setItem(storeKey(), JSON.stringify({responses, order})); }
+
+function start(){
+  raterId = (document.getElementById("rater").value || "anon").trim();
+  const saved = localStorage.getItem(storeKey());
+  if (saved){ const s = JSON.parse(saved); responses = s.responses||{}; order = s.order||[]; }
+  if (!order.length) order = seededShuffle(M.map(e=>e.pair_id), raterId);
+  idx = order.findIndex(pid => !(pid in responses));
+  if (idx === -1) idx = order.length;
+  document.getElementById("setup").classList.add("hidden");
+  document.getElementById("hdr").classList.remove("hidden");
+  render();
+}
+
+function curEntry(){ const pid = order[idx]; return M.find(e=>e.pair_id===pid); }
+
+function imgBlock(side, e){
+  const v = e.views, src = e[side];
+  if (v[0]==="full") return `<img src="${src.full}" onclick="window.open(this.src)">`;
+  if (v[0]==="frames") return `<div class="view-label">frames (left = earliest)</div>`+
+                               `<img src="${src.frames}" onclick="window.open(this.src)">`;
+  // web
+  return `<div class="web"><div class="view-label">Desktop (1920)</div>`+
+         `<img src="${src.desktop}" onclick="window.open(this.src)">`+
+         `<div class="view-label">Mobile (375)</div>`+
+         `<img src="${src.mobile}" onclick="window.open(this.src)"></div>`;
+}
+
+function render(){
+  if (idx >= order.length){ finish(); return; }
+  const e = curEntry();
+  document.getElementById("app").classList.remove("hidden");
+  document.getElementById("instr").innerHTML = `<b>${e.label}.</b> ${e.instruction}`;
+  document.getElementById("pair").innerHTML =
+    `<div class="opt">${imgBlock("A",e)}</div><div class="opt">${imgBlock("B",e)}</div>`;
+  const done = Object.keys(responses).length;
+  document.getElementById("count").textContent = `${done} / ${order.length}`;
+  document.getElementById("prog").style.width = (100*done/order.length)+"%";
+  document.getElementById("modtag").textContent = e.modality;
+  shownAt = performance.now();
+  window.scrollTo(0,0);
+}
+
+function answer(choice){
+  const e = curEntry();
+  responses[e.pair_id] = { choice, rt_ms: Math.round(performance.now()-shownAt), ts: new Date().toISOString() };
+  save();
+  idx++; render();
+}
+function back(){
+  if (idx===0) return;
+  idx--; delete responses[order[idx]]; save(); render();
+}
+function finish(){
+  document.getElementById("app").classList.add("hidden");
+  document.getElementById("hdr").classList.add("hidden");
+  const d = document.getElementById("done"); d.classList.remove("hidden");
+  document.getElementById("donemsg").textContent =
+    `You judged ${Object.keys(responses).length} pairs.`;
+}
+
+document.addEventListener("keydown", ev=>{
+  if (document.getElementById("app").classList.contains("hidden")) return;
+  if (ev.key==="1") answer("A");
+  else if (ev.key==="2") answer("same");
+  else if (ev.key==="3") answer("B");
+  else if (ev.key==="Backspace"){ ev.preventDefault(); back(); }
+});
+
+function download(){
+  let rows = ["rater_id,pair_id,modality,choice,rt_ms,ts"];
+  for (const e of M){
+    const r = responses[e.pair_id]; if (!r) continue;
+    rows.push([raterId, e.pair_id, e.modality, r.choice, r.rt_ms, r.ts].join(","));
+  }
+  const blob = new Blob([rows.join("\n")+"\n"], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `responses_${raterId}.csv`;
+  a.click();
+}
+</script>
+</body>
+</html>
