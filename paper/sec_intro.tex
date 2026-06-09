@@ -14,6 +14,7 @@ The second point is not a detail. The default evaluator for visual artifacts is 
 
 \begin{figure}[t]
 \centering
+\resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[font=\small,
   box/.style={rounded corners=2pt,draw=cGrey,thick,minimum height=8mm,minimum width=20mm,align=center,fill=white},
   prop/.style={box,fill=cAccent!12,draw=cAccent},
@@ -40,7 +41,7 @@ The second point is not a detail. The default evaluator for visual artifacts is 
      {\footnotesize VLM reads a\\\footnotesize \emph{screenshot}};
   \node[font=\footnotesize,cSS,below=1.5mm of vlm,align=center,text width=30mm] {\textbf{ungrounded:} overflow cropped off-frame; rates broken figures ``perfect''; as reviewer, breaks layout};
   \draw[ar,cSS,dashed] (art.north) to[out=60,in=180] (vlm.west);
-\end{tikzpicture}
+\end{tikzpicture}}
 \caption{\textbf{Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph{executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph{feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref{sec:framework}). Grounded \emph{evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.}
 \label{fig:concept}
 \end{figure}
