@@ -171,18 +171,20 @@ def _contact_sheet(shots: list[bytes]) -> bytes:
 from io import BytesIO as _BytesIO  # noqa: E402  (kept local to the renderer helpers)
 
 
-def build(modalities: list[str], rng_seed: int = 20260609):
+def build(modalities: list[str], rng_seed: int = 20260609, no_images: bool = False):
     rng = random.Random(rng_seed)
     OUT.mkdir(exist_ok=True)
     manifest: list[dict] = []
     key: dict[str, dict] = {}
-    r = Renderer()
+    r = None if no_images else Renderer()
     counter = 0
     try:
         for mod in modalities:
             cfg = MODALITIES[mod]
             stim_dir = OUT / "stimuli" / mod
             stim_dir.mkdir(parents=True, exist_ok=True)
+            art_dir = OUT / "artifacts" / mod
+            art_dir.mkdir(parents=True, exist_ok=True)
             n_rendered = 0
             for fname in cfg["files"]:
                 fpath = RESULTS / f"{fname}.json"
@@ -209,22 +211,28 @@ def build(modalities: list[str], rng_seed: int = 20260609):
 
                     entry = {"pair_id": pid, "modality": mod, "label": cfg["label"],
                              "instruction": cfg["instruction"], "decisive": decisive}
+                    # live-HTML artifacts (always written; tiny + instant)
+                    for side, cond in sides.items():
+                        hp = art_dir / f"{base}_{side}.html"
+                        hp.write_text(html_for[cond])
+                        entry.setdefault(side, {})["html"] = f"artifacts/{mod}/{hp.name}"
                     try:
                         if cfg["kind"] == "static":
                             entry["views"] = ["full"]
                             for side, cond in sides.items():
                                 p = stim_dir / f"{base}_{side}.png"
-                                p.write_bytes(r.static(html_for[cond]))
-                                entry.setdefault(side, {})["full"] = f"stimuli/{mod}/{p.name}"
+                                if not no_images:
+                                    p.write_bytes(r.static(html_for[cond]))
+                                entry[side]["full"] = f"stimuli/{mod}/{p.name}"
                         elif cfg["kind"] == "web":
                             entry["views"] = ["desktop", "mobile"]
                             for side, cond in sides.items():
-                                d, m = r.web(html_for[cond])
                                 pd = stim_dir / f"{base}_{side}_desktop.png"
                                 pm = stim_dir / f"{base}_{side}_mobile.png"
-                                pd.write_bytes(d)
-                                pm.write_bytes(m)
-                                entry.setdefault(side, {})
+                                if not no_images:
+                                    d, m = r.web(html_for[cond])
+                                    pd.write_bytes(d)
+                                    pm.write_bytes(m)
                                 entry[side]["desktop"] = f"stimuli/{mod}/{pd.name}"
                                 entry[side]["mobile"] = f"stimuli/{mod}/{pm.name}"
                         else:  # anim
@@ -232,8 +240,9 @@ def build(modalities: list[str], rng_seed: int = 20260609):
                             times = rec.get("frame_times_ms") or DEFAULT_FRAME_TIMES
                             for side, cond in sides.items():
                                 p = stim_dir / f"{base}_{side}_frames.png"
-                                p.write_bytes(r.frames(html_for[cond], times))
-                                entry.setdefault(side, {})["frames"] = f"stimuli/{mod}/{p.name}"
+                                if not no_images:
+                                    p.write_bytes(r.frames(html_for[cond], times))
+                                entry[side]["frames"] = f"stimuli/{mod}/{p.name}"
                     except Exception as e:  # pragma: no cover
                         print(f"  [render-fail] {mod}/{base}: {e}")
                         counter -= 1
@@ -249,7 +258,8 @@ def build(modalities: list[str], rng_seed: int = 20260609):
                     n_rendered += 1
             print(f"[{mod}] {n_rendered} pairs rendered")
     finally:
-        r.close()
+        if r is not None:
+            r.close()
 
     rng.shuffle(manifest)
     (OUT / "manifest.js").write_text("window.MANIFEST = " + json.dumps(manifest, indent=1) + ";\n")
@@ -264,5 +274,8 @@ if __name__ == "__main__":
     ap.add_argument("--modalities", nargs="+", default=list(MODALITIES),
                     choices=list(MODALITIES))
     ap.add_argument("--seed", type=int, default=20260609)
+    ap.add_argument("--no-images", action="store_true",
+                    help="skip PNG rendering; reuse existing stimuli, just (re)write "
+                         "the live-HTML artifacts + manifest + key (seconds, no browser)")
     args = ap.parse_args()
-    build(args.modalities, args.seed)
+    build(args.modalities, args.seed, args.no_images)

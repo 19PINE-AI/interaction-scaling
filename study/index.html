@@ -25,6 +25,13 @@
   .opt img { width:100%; height:auto; border:1px solid #eee; border-radius:4px; cursor: zoom-in;
              background: #fff; display:block; }
   .web img { max-height: 520px; object-fit: contain; object-position: top; }
+  .controls { display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin: 2px 0 12px; font-size:13px; }
+  .seg { border:1px solid var(--line); background:#fff; padding:4px 13px; border-radius:6px; cursor:pointer; font-size:13px; }
+  .seg.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .seglabel { color:var(--muted); margin-left:6px; }
+  .hint { color:var(--muted); font-size:12px; margin-left:auto; }
+  .frame-wrap { overflow:hidden; border:1px solid #eee; border-radius:4px; margin:0 auto; background:#fff; }
+  iframe.live { border:0; transform-origin:top left; }
   .actions { display:flex; gap:12px; justify-content:center; margin: 20px 0 8px; flex-wrap:wrap; }
   button.choice { font-size: 15px; padding: 12px 22px; border-radius: 8px; border:1px solid var(--line);
                   background:#fff; cursor:pointer; min-width: 190px; }
@@ -54,7 +61,9 @@
      For each pair, judge <b>which side has the cleaner layout</b> &mdash; no overlapping text, no
      content cut off or spilling out of its box, elements properly aligned. Ignore content/topic and
      color taste; judge only <b>layout quality</b>.</p>
-  <p>There is no time limit, but answer on first impression. Click any image to open it full-size.
+  <p>There is no time limit, but answer on first impression. Each pair defaults to a static
+     <b>Image</b> view (click to open full-size); switch to the <b>Live</b> view to see the
+     real rendered page &mdash; resize web pages between desktop/mobile and watch animations play.
      Use the buttons or keys <kbd>1</kbd>=left&nbsp;better, <kbd>2</kbd>=no&nbsp;difference,
      <kbd>3</kbd>=right&nbsp;better. Your progress is saved in this browser; you may stop and resume.</p>
   <p>Rater ID (any short label, e.g. your initials):<br>
@@ -70,6 +79,7 @@
 
 <main class="hidden" id="app">
   <div class="instr" id="instr"></div>
+  <div class="controls" id="controls"></div>
   <div class="pair" id="pair"></div>
   <div class="actions">
     <button class="choice A" onclick="answer('A')">◀ Left is cleaner <b>key 1</b></button>
@@ -95,6 +105,8 @@
 <script>
 let M = window.MANIFEST || [];
 let order = [], idx = 0, raterId = "", responses = {}, shownAt = 0;
+let viewMode = "image";    // "image" | "live"
+let webWidth = "desktop";  // "desktop" | "mobile"  (live web only)
 
 // deterministic per-rater shuffle so different raters see different orders
 function seededShuffle(arr, seedStr) {
@@ -135,18 +147,63 @@ function imgBlock(side, e){
          `<img src="${src.mobile}" onclick="window.open(this.src)"></div>`;
 }
 
-function render(){
-  if (idx >= order.length){ finish(); return; }
+// scaled live iframe of the real artifact HTML (lw/lh = logical design size)
+function liveFrame(src, lw, lh){
+  const D = 520;                          // display column width budget
+  const scale = Math.min(1, D/lw);
+  const w = Math.round(lw*scale), h = Math.round(lh*scale);
+  return `<div class="frame-wrap" style="width:${w}px;height:${h}px;">`+
+         `<iframe class="live" sandbox="allow-scripts" scrolling="no" src="${src}" `+
+         `style="width:${lw}px;height:${lh}px;transform:scale(${scale});"></iframe></div>`+
+         `<div class="view-label" style="text-align:center">`+
+         `<a href="${src}" target="_blank">open full size ↗</a></div>`;
+}
+
+function liveBlock(side, e){
+  const src = e[side].html;
+  if (e.modality === "web"){
+    return webWidth === "mobile" ? liveFrame(src, 375, 812) : liveFrame(src, 1920, 1200);
+  }
+  return liveFrame(src, 1920, 1080);   // figures / slides / animations at design size
+}
+
+function renderControls(e){
+  let c = `<button class="seg ${viewMode==='image'?'on':''}" onclick="setView('image')">Image</button>`+
+          `<button class="seg ${viewMode==='live'?'on':''}" onclick="setView('live')">Live</button>`;
+  if (viewMode === "live"){
+    if (e.modality === "web")
+      c += `<span class="seglabel">width:</span>`+
+           `<button class="seg ${webWidth==='desktop'?'on':''}" onclick="setWidth('desktop')">Desktop</button>`+
+           `<button class="seg ${webWidth==='mobile'?'on':''}" onclick="setWidth('mobile')">Mobile</button>`;
+    if (e.modality === "animations")
+      c += `<button class="seg" onclick="replay()">↻ Replay</button>`;
+    c += `<span class="hint">Live view requires serving the folder (python -m http.server).</span>`;
+  }
+  return c;
+}
+
+function setView(v){ viewMode = v; draw(); }
+function setWidth(w){ webWidth = w; draw(); }
+function replay(){ document.querySelectorAll("iframe.live").forEach(f=>{ f.src = f.src; }); }
+
+function draw(){   // (re)render current pair without resetting the response timer
   const e = curEntry();
-  document.getElementById("app").classList.remove("hidden");
+  const block = viewMode === "live" ? liveBlock : imgBlock;
   document.getElementById("instr").innerHTML = `<b>${e.label}.</b> ${e.instruction}`;
+  document.getElementById("controls").innerHTML = renderControls(e);
   document.getElementById("pair").innerHTML =
-    `<div class="opt">${imgBlock("A",e)}</div><div class="opt">${imgBlock("B",e)}</div>`;
+    `<div class="opt">${block("A",e)}</div><div class="opt">${block("B",e)}</div>`;
   const done = Object.keys(responses).length;
   document.getElementById("count").textContent = `${done} / ${order.length}`;
   document.getElementById("prog").style.width = (100*done/order.length)+"%";
   document.getElementById("modtag").textContent = e.modality;
+}
+
+function render(){   // advance to current pair (resets timer)
+  if (idx >= order.length){ finish(); return; }
+  document.getElementById("app").classList.remove("hidden");
   shownAt = performance.now();
+  draw();
   window.scrollTo(0,0);
 }
 

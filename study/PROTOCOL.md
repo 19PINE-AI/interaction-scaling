@@ -36,6 +36,15 @@ capture cropped overflow off-frame (the very blindness the paper attributes to t
 VLM), so handing raters that same crop would rig the task toward "no difference."
 Full-page rendering *reveals* the defect and makes the human task fair.
 
+**Live view.** Each pair also has a **Live** toggle that renders the *real*
+artifact HTML in a sandboxed `<iframe>` (no screenshot): web pages can be switched
+between desktop (1920) and mobile (375) widths, and animations play (with a Replay
+button). This removes the static-capture limitation for the responsive/temporal
+modalities — a rater can confirm a defect interactively, not just from a frozen
+frame. The static Image view stays the default for careful side-by-side judgement;
+Live is the cross-check. (Live view loads local files, so the folder must be
+*served*, not opened via `file://` — see "Running it".)
+
 Pairs are labelled **decisive** (DOM scored the two sides differently) or **tie**
 (DOM scored them equal). Tie pairs are retained as a control.
 

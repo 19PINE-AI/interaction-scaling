@@ -15,7 +15,9 @@ python3 scripts/build_human_study.py --modalities figures slides   # subset, fas
 
 # 2. Run the study (raters).
 cd study && python3 -m http.server 8000   # open http://localhost:8000/
-#    or just open study/index.html directly if your browser allows file:// access.
+#    Serving is required for the LIVE view (sandboxed iframes of the real artifact
+#    HTML -- desktop/mobile width toggle + playing animations). The static Image
+#    view also works from a bare file:// open if you prefer.
 
 # 3. Collect each rater's responses_<id>.csv, then analyze.
 python3 scripts/analyze_human_study.py --responses responses_*.csv
