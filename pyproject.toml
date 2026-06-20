@@ -1,7 +1,7 @@
 [project]
-name = "interaction-scaling-paper"
+name = "interaction-scaling"
 version = "0.1.0"
-description = "Add your description here"
+description = "Interaction Scaling: a third test-time compute axis grounded in environment feedback"
 requires-python = ">=3.11"
 dependencies = [
     "anthropic>=0.95.0",
