@@ -26,16 +26,20 @@ Grounded feedback (Type 3) escapes both ceilings by feeding an environment obser
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.82\linewidth,height=4.6cm,
+\begin{axis}[width=0.82\linewidth,height=4.8cm,
   xlabel={test-time compute (relative)},ylabel={quality},
-  xmin=0,xmax=10,ymin=0.55,ymax=1.03,xtick=\empty,
+  xmin=0,xmax=10,ymin=0.55,ymax=1.04,xtick=\empty,clip=false,
   ytick={0.6,0.7,0.8,0.9,1.0},
-  legend style={font=\footnotesize,at={(0.98,0.05)},anchor=south east,draw=cGrey!50},legend cell align=left]
-  \addplot[cGrey,thick,dashed,domain=0.3:10,samples=60]{0.733-0.08*exp(-0.9*x)}; \addlegendentry{reasoning (DPI ceiling $\approx0.73$)}
+  legend style={font=\footnotesize,at={(0.98,0.04)},anchor=south east,draw=cGrey!50},legend cell align=left]
+  \addplot[cRV,very thick,domain=0.3:10,samples=60,name path=inter]{1.0-0.42*exp(-0.65*x)}; \addlegendentry{interaction (grounded)}
   \addplot[cAccent,thick,dotted,domain=0.3:10,samples=60]{0.867-0.12*exp(-0.9*x)}; \addlegendentry{best-of-$N$ (ceiling $\approx0.87$)}
-  \addplot[cRV,very thick,domain=0.3:10,samples=60]{1.0-0.42*exp(-0.65*x)}; \addlegendentry{interaction (grounded)}
+  \addplot[cGrey,thick,dashed,domain=0.3:10,samples=60]{0.733-0.08*exp(-0.9*x)}; \addlegendentry{reasoning (ceiling $\approx0.73$)}
+  \path[name path=ceil] (axis cs:0.3,0.733) -- (axis cs:10,0.733);
+  \addplot[cRV!12,forget plot] fill between[of=inter and ceil, soft clip={domain=0.3:10}];
   \draw[cGrey,densely dotted] (axis cs:0,0.733)--(axis cs:10,0.733);
-  \node[font=\footnotesize,cGrey,anchor=west] at (axis cs:0.2,0.69) {bounded by $I(A^\star;\Theta,X)$};
+  \node[font=\footnotesize,cGrey,anchor=south west] at (axis cs:0.15,0.56) {ceiling $=I(A^\star;\Theta,X)$};
+  \node[font=\footnotesize\itshape,cRV!55!black,align=center] at (axis cs:5.7,0.83)
+     {information imported\\from outside the weights};
 \end{axis}
 \end{tikzpicture}
 \caption{\textbf{The DPI ceiling.} Reasoning and best-of-$N$ are functions of the frozen weights/prompt $(\Theta,X)$ and saturate at the information already present (measured $73.3\%$ and $86.7\%$ on hard code at a $20$K-token budget; \Cref{sec:interaction}). Grounded interaction imports external information each cycle and exceeds the ceiling, reaching strict $100\%$. Schematic; saturation values are the measured ceilings.}
@@ -43,4 +47,4 @@ Grounded feedback (Type 3) escapes both ceilings by feeding an environment obser
 \end{figure}
 
 \subsection{Predictions}
-The framework makes three testable predictions, each tested below: \textbf{(P1)} reasoning- and sampling-only scaling saturate strictly below the interaction ceiling (\Cref{sec:interaction}); \textbf{(P2)} within interaction, more actionable grounded channels lift more, and the \emph{execution} of the artifact---not the extra review pass---is the active ingredient (\Cref{sec:channel}); \textbf{(P3)} on modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:grounded_eval}).
+The framework makes three testable predictions, each tested below: \textbf{(P1)} reasoning- and sampling-only scaling saturate strictly below the interaction ceiling (\Cref{sec:interaction}); \textbf{(P2)} within interaction, more actionable grounded channels lift more, and the \emph{execution} of the artifact---not the extra review pass---is the active ingredient (\Cref{sec:interaction}); \textbf{(P3)} on modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:grounded_eval}).

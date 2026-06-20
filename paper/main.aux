@@ -41,9 +41,9 @@
 \citation{shen2025thinking}
 \citation{trankiela2026singleagent}
 \citation{ruan2025iad}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph  {executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph  {feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref  {sec:framework}). Grounded \emph  {evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.\relax }}{3}{figure.caption.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; a grounded environment \emph  {executes/renders/measures} it, and that same observation does double duty: \textbf  {(1)} as grounded \emph  {feedback}, it becomes a defect list the reviewer turns into a targeted revision---the channel that lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref  {sec:framework}); \textbf  {(2)} as grounded \emph  {evaluation}, it is the score that makes the gain measurable. Substituting the default VLM-on-a-screenshot judge (red lane) breaks \emph  {both}: it is structurally blind to off-canvas overflow and fine overlap, so it neither scores the defect nor (as a reviewer) fixes it.\relax }}{3}{figure.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:concept}{{1}{3}{\textbf {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph {executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph {feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref {sec:framework}). Grounded \emph {evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.\relax }{figure.caption.2}{}}
+\newlabel{fig:concept}{{1}{3}{\textbf {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; a grounded environment \emph {executes/renders/measures} it, and that same observation does double duty: \textbf {(1)} as grounded \emph {feedback}, it becomes a defect list the reviewer turns into a targeted revision---the channel that lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref {sec:framework}); \textbf {(2)} as grounded \emph {evaluation}, it is the score that makes the gain measurable. Substituting the default VLM-on-a-screenshot judge (red lane) breaks \emph {both}: it is structurally blind to off-canvas overflow and fine overlap, so it neither scores the defect nor (as a reviewer) fixes it.\relax }{figure.caption.2}{}}
 \newlabel{fig:concept@cref}{{[figure][1][]1}{[1][2][]3}}
 \@writefile{toc}{\contentsline {paragraph}{Availability.}{3}{paragraph*.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {2}Related Work}{3}{section.2}\protected@file@percent }
@@ -84,29 +84,44 @@
 \newlabel{sec:interaction}{{5}{7}{Interaction Is a Distinct, Unbounded Axis}{section.5}{}}
 \newlabel{sec:interaction@cref}{{[section][5][]5}{[1][7][]7}}
 \@writefile{toc}{\contentsline {paragraph}{Reasoning and sampling saturate; interaction does not (P1).}{7}{paragraph*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Architecture buys efficiency and reliability.}{7}{paragraph*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Built-in early stopping.}{7}{paragraph*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}The Active Ingredient Is Execution, Not Review}{8}{section.6}\protected@file@percent }
-\newlabel{sec:channel}{{6}{8}{The Active Ingredient Is Execution, Not Review}{section.6}{}}
-\newlabel{sec:channel@cref}{{[section][6][]6}{[1][7][]8}}
-\@writefile{toc}{\contentsline {paragraph}{Code as a clean case study.}{8}{paragraph*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{An in-modality control isolates execution (P2).}{8}{paragraph*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Grounding the Evaluation: The Gain Is Invisible to a VLM}{8}{section.7}\protected@file@percent }
-\newlabel{sec:grounded_eval}{{7}{8}{Grounding the Evaluation: The Gain Is Invisible to a VLM}{section.7}{}}
-\newlabel{sec:grounded_eval@cref}{{[section][7][]7}{[1][8][]8}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}The active ingredient is execution, not review (P2)}{7}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Code as a clean case study.}{7}{paragraph*.19}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{An in-modality control isolates execution.}{8}{paragraph*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Architecture buys efficiency and reliability}{8}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Efficiency.}{8}{paragraph*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Built-in early stopping.}{8}{paragraph*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Grounding the Evaluation: The Gain Is Invisible to a VLM}{8}{section.6}\protected@file@percent }
+\newlabel{sec:grounded_eval}{{6}{8}{Grounding the Evaluation: The Gain Is Invisible to a VLM}{section.6}{}}
+\newlabel{sec:grounded_eval@cref}{{[section][6][]6}{[1][8][]8}}
 \@writefile{toc}{\contentsline {paragraph}{The default VLM judge is structurally blind.}{8}{paragraph*.23}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{A deterministic instrument reveals a large, significant effect across four modalities.}{8}{paragraph*.26}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {The VLM judge is structurally blind.} Number of the same $15$ single-shot academic figures rated \emph  {clean/perfect}: the VLM-on-a-screenshot judge passes $14$; the deterministic DOM-geometry instrument passes only $3$. The other $11$ are broken in ways cropped off-frame or below VLM acuity.\relax }}{9}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:blind}{{4}{9}{\textbf {The VLM judge is structurally blind.} Number of the same $15$ single-shot academic figures rated \emph {clean/perfect}: the VLM-on-a-screenshot judge passes $14$; the deterministic DOM-geometry instrument passes only $3$. The other $11$ are broken in ways cropped off-frame or below VLM acuity.\relax }{figure.caption.24}{}}
-\newlabel{fig:blind@cref}{{[figure][4][]4}{[1][8][]9}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet\nobreakspace  {}4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta $ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta \%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.\relax }}{9}{table.caption.27}\protected@file@percent }
-\newlabel{tab:geometric}{{2}{9}{Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet~4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta $ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta \%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.\relax }{table.caption.27}{}}
-\newlabel{tab:geometric@cref}{{[table][2][]2}{[1][9][]9}}
+\newlabel{fig:blind}{{4a}{9}{The VLM passes $14/15$; the deterministic instrument passes only $3/15$.\relax }{figure.caption.24}{}}
+\newlabel{fig:blind@cref}{{[subfigure][1][4]4a}{[1][8][]9}}
+\newlabel{sub@fig:blind}{{a}{9}{The VLM passes $14/15$; the deterministic instrument passes only $3/15$.\relax }{figure.caption.24}{}}
+\newlabel{sub@fig:blind@cref}{{[subfigure][1][4]4a}{[1][8][]9}}
+\newlabel{fig:evoformer}{{4b}{9}{A single-shot figure the VLM rated ``perfect'': both section titles are superimposed (``MSA Processing'' over ``MSA Representation''; ``Pair Processing'' over ``Pair Representation'') and axis labels collide with the matrix borders.\relax }{figure.caption.24}{}}
+\newlabel{fig:evoformer@cref}{{[subfigure][2][4]4b}{[1][8][]9}}
+\newlabel{sub@fig:evoformer}{{b}{9}{A single-shot figure the VLM rated ``perfect'': both section titles are superimposed (``MSA Processing'' over ``MSA Representation''; ``Pair Processing'' over ``Pair Representation'') and axis labels collide with the matrix borders.\relax }{figure.caption.24}{}}
+\newlabel{sub@fig:evoformer@cref}{{[subfigure][2][4]4b}{[1][8][]9}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces \textbf  {The default VLM judge is structurally blind to layout defects.} \textbf  {(\subref  {fig:blind})} On the same $15$ single-shot academic figures, the VLM-on-a-screenshot judge rates $14$ ``perfect'' while the deterministic DOM-geometry instrument finds only $3$ actually clean; the other $11$ are broken in ways cropped off-frame or below VLM acuity. \textbf  {(\subref  {fig:evoformer})} A representative ``perfect''-rated render whose text-on-text overlaps ($\ge 6$\,px) are exactly what the geometry check flags and the screenshot judge misses.\relax }}{9}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:blindpair}{{4}{9}{\textbf {The default VLM judge is structurally blind to layout defects.} \textbf {(\subref {fig:blind})} On the same $15$ single-shot academic figures, the VLM-on-a-screenshot judge rates $14$ ``perfect'' while the deterministic DOM-geometry instrument finds only $3$ actually clean; the other $11$ are broken in ways cropped off-frame or below VLM acuity. \textbf {(\subref {fig:evoformer})} A representative ``perfect''-rated render whose text-on-text overlaps ($\ge 6$\,px) are exactly what the geometry check flags and the screenshot judge misses.\relax }{figure.caption.24}{}}
+\newlabel{fig:blindpair@cref}{{[figure][4][]4}{[1][8][]9}}
 \@writefile{toc}{\contentsline {paragraph}{An ungrounded \emph  {reviewer} fails to fix layout---and on slides makes it worse (ablation, two modalities).}{9}{paragraph*.29}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {A single-shot figure the VLM judge rated ``perfect.''} The two section titles are superimposed---``MSA Processing'' overprints ``MSA Representation'' (top left), and ``Pair Processing'' overprints ``Pair Representation'' (top right)---and axis annotations collide with the matrix borders. These text-on-text overlaps are exactly what the deterministic DOM-geometry check flags ($\ge 6$\,px overlap) and what a screenshot judge misses.\relax }}{10}{figure.caption.25}\protected@file@percent }
-\newlabel{fig:evoformer}{{5}{10}{\textbf {A single-shot figure the VLM judge rated ``perfect.''} The two section titles are superimposed---``MSA Processing'' overprints ``MSA Representation'' (top left), and ``Pair Processing'' overprints ``Pair Representation'' (top right)---and axis annotations collide with the matrix borders. These text-on-text overlaps are exactly what the deterministic DOM-geometry check flags ($\ge 6$\,px overlap) and what a screenshot judge misses.\relax }{figure.caption.25}{}}
-\newlabel{fig:evoformer@cref}{{[figure][5][]5}{[1][8][]10}}
-\@writefile{toc}{\contentsline {paragraph}{Is the reduction circular? The caveat, and why it is not vacuous.}{10}{paragraph*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Is the reduction circular?}{9}{paragraph*.31}\protected@file@percent }
+\newlabel{fig:ba-ss}{{5a}{10}{\textbf {Single-shot.} Conditioning blocks crowd the down-block column, edges route through boxes and tangle at the center, and the legend collides with the decoder---defects the geometry instrument flags but the VLM cannot see.\relax }{figure.caption.25}{}}
+\newlabel{fig:ba-ss@cref}{{[subfigure][1][5]5a}{[1][8][]10}}
+\newlabel{sub@fig:ba-ss}{{a}{10}{\textbf {Single-shot.} Conditioning blocks crowd the down-block column, edges route through boxes and tangle at the center, and the legend collides with the decoder---defects the geometry instrument flags but the VLM cannot see.\relax }{figure.caption.25}{}}
+\newlabel{sub@fig:ba-ss@cref}{{[subfigure][1][5]5a}{[1][8][]10}}
+\newlabel{fig:ba-rv}{{5b}{10}{\textbf {After grounded feedback.} The same task: conditioning blocks lifted clear, columns spaced and aligned, skip connections deconflicted, legend boxed in free space.\relax }{figure.caption.25}{}}
+\newlabel{fig:ba-rv@cref}{{[subfigure][2][5]5b}{[1][8][]10}}
+\newlabel{sub@fig:ba-rv}{{b}{10}{\textbf {After grounded feedback.} The same task: conditioning blocks lifted clear, columns spaced and aligned, skip connections deconflicted, legend boxed in free space.\relax }{figure.caption.25}{}}
+\newlabel{sub@fig:ba-rv@cref}{{[subfigure][2][5]5b}{[1][8][]10}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {What grounded geometric feedback actually fixes.} The same academic-figure task, single-shot (\subref  {fig:ba-ss}) vs.\ after the propose$\to $measure$\to $revise loop (\subref  {fig:ba-rv}). This is the per-artifact reality behind the $-74\%$ mean defect reduction in \Cref  {tab:geometric}---and exactly the difference a screenshot judge is blind to.\relax }}{10}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:beforeafter}{{5}{10}{\textbf {What grounded geometric feedback actually fixes.} The same academic-figure task, single-shot (\subref {fig:ba-ss}) vs.\ after the propose$\to $measure$\to $revise loop (\subref {fig:ba-rv}). This is the per-artifact reality behind the $-74\%$ mean defect reduction in \Cref {tab:geometric}---and exactly the difference a screenshot judge is blind to.\relax }{figure.caption.25}{}}
+\newlabel{fig:beforeafter@cref}{{[figure][5][]5}{[1][8][]10}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet\nobreakspace  {}4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta $ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta \%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.\relax }}{10}{table.caption.27}\protected@file@percent }
+\newlabel{tab:geometric}{{2}{10}{Deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet~4, $T{=}0$, $3$ seeds, alignment-inclusive reward). $\Delta $ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta \%$ ($10$k resamples); $p$ is a two-sided paired sign test. Web is summed over $1920/375$ widths; animations over sampled frames.\relax }{table.caption.27}{}}
+\newlabel{tab:geometric@cref}{{[table][2][]2}{[1][9][]10}}
 \@writefile{toc}{\contentsline {paragraph}{Two modalities where the honest answer is ``no headroom.''}{10}{paragraph*.32}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction; whiskers are paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.\relax }}{11}{figure.caption.28}\protected@file@percent }
 \newlabel{fig:geomreduction}{{6}{11}{\textbf {Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction; whiskers are paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.\relax }{figure.caption.28}{}}
@@ -114,9 +129,9 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {An ungrounded reviewer fails to fix layout; a grounded one does (controlled ablation, two modalities).} Same task suite and proposer model; only the reviewer's grounding varies. The two arms are separate runs, so each is plotted against its \emph  {own} single-shot (hence the differing single-shot bars). The VLM-feedback reviewer (\textsf  {VLM-fb}) does not reduce defects and on slides increases them ($1.89\to 2.44$; figures $0.52\to 0.62$, directional/n.s.); the deterministic geometric-feedback reviewer (\textsf  {geom-fb}) reduces them ($1.25\to 0.33$; $0.57\to 0.15$). The grounded signal is necessary on the feedback side, not just the metric side.\relax }}{11}{figure.caption.30}\protected@file@percent }
 \newlabel{fig:ablation}{{7}{11}{\textbf {An ungrounded reviewer fails to fix layout; a grounded one does (controlled ablation, two modalities).} Same task suite and proposer model; only the reviewer's grounding varies. The two arms are separate runs, so each is plotted against its \emph {own} single-shot (hence the differing single-shot bars). The VLM-feedback reviewer (\textsf {VLM-fb}) does not reduce defects and on slides increases them ($1.89\to 2.44$; figures $0.52\to 0.62$, directional/n.s.); the deterministic geometric-feedback reviewer (\textsf {geom-fb}) reduces them ($1.25\to 0.33$; $0.57\to 0.15$). The grounded signal is necessary on the feedback side, not just the metric side.\relax }{figure.caption.30}{}}
 \newlabel{fig:ablation@cref}{{[figure][7][]7}{[1][9][]11}}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Robustness}{11}{section.8}\protected@file@percent }
-\newlabel{sec:robustness}{{8}{11}{Robustness}{section.8}{}}
-\newlabel{sec:robustness@cref}{{[section][8][]8}{[1][11][]11}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Robustness}{11}{section.7}\protected@file@percent }
+\newlabel{sec:robustness}{{7}{11}{Robustness}{section.7}{}}
+\newlabel{sec:robustness@cref}{{[section][7][]7}{[1][11][]11}}
 \@writefile{toc}{\contentsline {paragraph}{Cross-model, code.}{11}{paragraph*.33}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Cross-model, grounded geometry.}{11}{paragraph*.35}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families ($+33.3$/$+26.7$/$+13.3$\,pp).\relax }}{12}{figure.caption.34}\protected@file@percent }
@@ -124,17 +139,17 @@
 \newlabel{fig:crossmodel@cref}{{[figure][8][]8}{[1][11][]12}}
 \@writefile{toc}{\contentsline {paragraph}{Held-out generalization.}{12}{paragraph*.36}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Budget allocation.}{12}{paragraph*.37}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Internalizing the Harness into a Small Student}{12}{section.9}\protected@file@percent }
-\newlabel{sec:distill}{{9}{12}{Internalizing the Harness into a Small Student}{section.9}{}}
-\newlabel{sec:distill@cref}{{[section][9][]9}{[1][12][]12}}
+\@writefile{toc}{\contentsline {section}{\numberline {8}Internalizing the Harness into a Small Student}{12}{section.8}\protected@file@percent }
+\newlabel{sec:distill}{{8}{12}{Internalizing the Harness into a Small Student}{section.8}{}}
+\newlabel{sec:distill@cref}{{[section][8][]8}{[1][12][]12}}
 \@writefile{toc}{\contentsline {paragraph}{Result.}{12}{paragraph*.38}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Variance is a budget (a cautionary finding).}{12}{paragraph*.40}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {An $8$B student internalizes interaction quality.} Pass@$1$/pass@$3$ of the distilled $8$B markdown student on the hard held-out suite ($0.51\times $/$0.70\times $ teacher mean@1/@2 on the $44$-task OOD set; \Cref  {tab:distill-ood}), at ${\sim }10\times $ lower deployment cost.\relax }}{13}{figure.caption.39}\protected@file@percent }
 \newlabel{fig:distill}{{9}{13}{\textbf {An $8$B student internalizes interaction quality.} Pass@$1$/pass@$3$ of the distilled $8$B markdown student on the hard held-out suite ($0.51\times $/$0.70\times $ teacher mean@1/@2 on the $44$-task OOD set; \Cref {tab:distill-ood}), at ${\sim }10\times $ lower deployment cost.\relax }{figure.caption.39}{}}
 \newlabel{fig:distill@cref}{{[figure][9][]9}{[1][12][]13}}
-\@writefile{toc}{\contentsline {section}{\numberline {10}Discussion and Conclusion}{13}{section.10}\protected@file@percent }
-\newlabel{sec:discussion}{{10}{13}{Discussion and Conclusion}{section.10}{}}
-\newlabel{sec:discussion@cref}{{[section][10][]10}{[1][12][]13}}
+\@writefile{toc}{\contentsline {section}{\numberline {9}Discussion and Conclusion}{13}{section.9}\protected@file@percent }
+\newlabel{sec:discussion}{{9}{13}{Discussion and Conclusion}{section.9}{}}
+\newlabel{sec:discussion@cref}{{[section][9][]9}{[1][12][]13}}
 \@writefile{toc}{\contentsline {paragraph}{Grounding is the load-bearing variable.}{13}{paragraph*.41}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{A methodological warning for the field.}{13}{paragraph*.42}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Limits, honestly stated.}{13}{paragraph*.43}\protected@file@percent }

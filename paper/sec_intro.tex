@@ -16,40 +16,48 @@ The second point is not a detail. The default evaluator for visual artifacts is 
 \centering
 \resizebox{\linewidth}{!}{%
 \begin{tikzpicture}[font=\small,
-  box/.style={rounded corners=2pt,draw=cGrey,thick,minimum height=8mm,minimum width=20mm,align=center,fill=white},
+  box/.style={rounded corners=2pt,draw=cGrey,thick,minimum height=8mm,align=center,fill=white,inner sep=4pt},
   prop/.style={box,fill=cAccent!12,draw=cAccent},
   env/.style={box,fill=black!4},
-  gnd/.style={box,fill=cRV!14,draw=cRV},
-  ung/.style={box,fill=cSS!12,draw=cSS},
-  ar/.style={-{Latex[length=2mm]},thick,cGrey}]
+  gnd/.style={box,fill=cRV!12,draw=cRV},
+  ung/.style={box,fill=cSS!10,draw=cSS},
+  ar/.style={-{Latex[length=2mm]},thick,cGrey},
+  gar/.style={-{Latex[length=2mm]},very thick,cRV},
+  uar/.style={-{Latex[length=2mm]},thick,cSS,dashed}]
   \node[prop] (prop) {Proposer\\\footnotesize(frozen LLM)};
-  \node[env, right=16mm of prop] (art) {Artifact\\\footnotesize code / HTML / SVG};
-  \node[gnd, right=16mm of art] (inst) {Environment\\\footnotesize \emph{execute / render}\\\footnotesize \emph{/ measure}};
-  \node[prop, below=11mm of art] (rev) {Reviewer};
+  \node[env, right=14mm of prop] (art) {Artifact\\\footnotesize code / HTML / SVG};
+  % GROUNDED lane (top)
+  \node[gnd, right=15mm of art, yshift=9mm] (inst)
+     {Environment\\\footnotesize\emph{execute / render / measure}};
+  \node[gnd, right=13mm of inst] (score) {\footnotesize\textbf{(2)} grounded\\\footnotesize evaluation};
+  \node[prop, below=7mm of inst, xshift=6mm] (rev) {Reviewer};
+  % UNGROUNDED lane (bottom)
+  \node[ung, below=15mm of art, xshift=3mm] (vlm) {VLM reads a \emph{screenshot}};
+  \node[ung, right=10mm of vlm] (uscore) {\footnotesize blind feedback\\\footnotesize \& blind score};
+  % loop arrows
   \draw[ar] (prop) -- node[above,font=\footnotesize]{generate} (art);
-  \draw[ar] (art) -- node[above,font=\footnotesize]{} (inst);
-  \draw[ar,cRV] (inst) |- node[pos=0.25,right,font=\footnotesize,cRV]{\textbf{grounded}}
-        node[pos=0.75,above,font=\footnotesize,cRV]{exact defects / verdict} (rev);
-  \draw[ar] (rev) -- node[below,font=\footnotesize,align=center]{targeted\\revision} (prop);
-  % two-sided grounding callouts
-  \node[gnd,below=7mm of rev,xshift=-2mm,minimum width=34mm] (f) {\footnotesize\textbf{(1) grounded feedback}\\\footnotesize drives revision past the DPI ceiling};
-  \node[gnd,right=10mm of f,minimum width=34mm] (e) {\footnotesize\textbf{(2) grounded evaluation}\\\footnotesize is needed to \emph{measure} the gain};
+  \draw[ar] (art.east) -- (inst.west);
+  \draw[gar] (inst) -- (score);
+  \draw[gar] (inst.south) -- node[left,font=\footnotesize,cRV,align=center,pos=0.45]{\textbf{(1)}\\defects} (rev.north);
+  \draw[ar] (rev.south) |- ([yshift=-9mm]art.south) -| node[pos=0.25,below,font=\footnotesize]{targeted revision} (prop);
+  % ungrounded branch
+  \draw[uar] (art.south) -- (vlm.north);
+  \draw[uar] (vlm) -- (uscore);
   \begin{scope}[on background layer]
-    \node[draw=cRV!50,dashed,rounded corners,fit=(inst)(rev)(f)(e),inner sep=4mm,label={[cRV,font=\footnotesize]above right:GROUNDED (DOM geometry, \texttt{pytest}, search)}] {};
+    \node[draw=cRV!60,dashed,rounded corners,fill=cRV!4,fit=(inst)(score)(rev),inner sep=3mm,
+      label={[cRV,font=\footnotesize\bfseries]above:GROUNDED — measure the rendered DOM / run \texttt{pytest}}] {};
+    \node[draw=cSS!60,dashed,rounded corners,fill=cSS!4,fit=(vlm)(uscore),inner sep=2.5mm,
+      label={[cSS,font=\footnotesize\bfseries]below:UNGROUNDED — overflow cropped off-frame; rates broken figures ``perfect''}] {};
   \end{scope}
-  \node[ung,right=10mm of inst,yshift=0mm,minimum width=26mm,align=center] (vlm)
-     {\footnotesize VLM reads a\\\footnotesize \emph{screenshot}};
-  \node[font=\footnotesize,cSS,below=1.5mm of vlm,align=center,text width=30mm] {\textbf{ungrounded:} overflow cropped off-frame; rates broken figures ``perfect''; as reviewer, breaks layout};
-  \draw[ar,cSS,dashed] (art.north) to[out=60,in=180] (vlm.west);
 \end{tikzpicture}}
-\caption{\textbf{Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; an environment \emph{executes/renders/measures} it and returns a grounded signal that the reviewer turns into a targeted revision. Grounded \emph{feedback} (1) is what lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref{sec:framework}). Grounded \emph{evaluation} (2) is what makes the gain measurable: the default VLM-on-a-screenshot evaluator (red) is structurally blind to off-canvas overflow and fine overlap, so it neither measures nor (as a reviewer) fixes the defects.}
+\caption{\textbf{Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact; a grounded environment \emph{executes/renders/measures} it, and that same observation does double duty: \textbf{(1)} as grounded \emph{feedback}, it becomes a defect list the reviewer turns into a targeted revision---the channel that lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref{sec:framework}); \textbf{(2)} as grounded \emph{evaluation}, it is the score that makes the gain measurable. Substituting the default VLM-on-a-screenshot judge (red lane) breaks \emph{both}: it is structurally blind to off-canvas overflow and fine overlap, so it neither scores the defect nor (as a reviewer) fixes it.}
 \label{fig:concept}
 \end{figure}
 
 \paragraph{Contributions.}
 \begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
 \item \textbf{A grounding framework (\Cref{sec:framework}).} A Type~0--3 feedback taxonomy and a data-processing-inequality argument that motivates why ungrounded review and reasoning (and best-of-$N$ selection) saturate while grounded feedback need not---plus the symmetric observation that ungrounded \emph{evaluation} cannot measure the gain. Beyond the documented \emph{biases} of model-as-judge evaluation \citep{zheng2023judging}, we isolate a sharper failure: for artifacts whose quality is a measurable physical property, a screenshot judge is \emph{structurally blind} (not merely noisy), which silently hides a real interaction-scaling effect.
-\item \textbf{Interaction is a distinct, unbounded axis (\Cref{sec:interaction,sec:channel}).} At a matched $20$K-token budget, reasoning and best-of-$N$ saturate ($73.3\%$/$86.7\%$) while every interaction strategy reaches $\geq 97.8\%$; an in-modality control isolates test \emph{execution} as the active ingredient, and the harness is the most token-efficient, zero-variance strategy.
+\item \textbf{Interaction is a distinct, unbounded axis (\Cref{sec:interaction}).} At a matched $20$K-token budget, reasoning and best-of-$N$ saturate ($73.3\%$/$86.7\%$) while every interaction strategy reaches $\geq 97.8\%$; an in-modality control isolates test \emph{execution} as the active ingredient, and the harness is the most token-efficient, zero-variance strategy.
 \item \textbf{Grounded evaluation, and a deterministic instrument (\Cref{sec:grounded_eval}).} We show the VLM judge is structurally blind, build a deterministic DOM-geometry+alignment instrument, and report large, significant, CI-backed defect reductions under grounded feedback across four visual modalities measured identically---gains the standard metric cannot even see---plus a controlled ablation in which VLM feedback makes layout \emph{worse}.
 \item \textbf{Robustness and internalization (\Cref{sec:robustness,sec:distill}).} The effects replicate across model families (including grounded geometry on Gemini~3.1~Pro), to held-out tasks, and under a propose-heavy budget allocation; and the harness's behavior partially distills into an $8$B student at ${\sim}10\times$ lower deployment cost.
 \end{enumerate}
