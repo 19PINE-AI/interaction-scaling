@@ -1,4 +1,4 @@
-\begin{thebibliography}{24}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -43,6 +43,13 @@ Zhibin Gou, Zhihong Shao, Yeyun Gong, Yelong Shen, Yujiu Yang, Nan Duan, and
 \newblock {CRITIC}: Large language models can self-correct with
   tool-interactive critiquing.
 \newblock In \emph{International Conference on Learning Representations}, 2024.
+
+\bibitem[Hong(2026)]{hong2026aicoding}
+Dingkun Hong.
+\newblock The practice and exploration of {AI} coding.
+\newblock Keynote, {ByteDance}/{Volcano Engine} Force Conference, Beijing;
+  speaker is VP of Engineering at {ByteDance}, 2026.
+\newblock \url{https://mp.weixin.qq.com/s/tJAinVKzZAqZrhiEvGU2Dg}.
 
 \bibitem[Huang et~al.(2024)Huang, Chen, Mishra, Zheng, Yu, Song, and
   Zhou]{huang2024selfcorrect}
