@@ -29,8 +29,8 @@ and it must hold on *both* sides of the loop:
 - **Grounded feedback** drives improvement past the reasoning/sampling ceiling.
 - **Grounded evaluation** is required even to *measure* that improvement. A default VLM
   judge is structurally blind to the geometric defects the loop fixes (it rates 14 of 15
-  broken academic figures "perfect"); a deterministic DOM-geometry instrument reveals the
-  real gains.
+  single-shot academic figures "perfect" when only 3 are actually clean); a deterministic
+  DOM-geometry instrument reveals the real gains.
 
 ## Headline results
 
@@ -43,7 +43,7 @@ and it must hold on *both* sides of the loop:
 | SVG/CSS animations | **−40%** |
 | Reasoning-only at matched 20K-token budget (code) | saturates at 73.3% / best-of-*N* 86.7% |
 | Every interaction strategy at 20K budget | **≥ 97.8%**; proposer–reviewer wins on token cost, zero seed variance |
-| Cross-model replication | Sonnet +33.3 pp / Qwen3-235B +26.7 pp / GPT-5 +13.3 pp |
+| Cross-model replication (3 seeds each) | Sonnet +33.3 pp / Qwen3-235B +22.2 pp / GPT-5 +20.0 pp (reviewed ceiling has zero seed variance) |
 | Held-out code suite (32 tasks, zero overlap) | 90.6% → 100.0% |
 | Distillation into 8B student | partial transfer of harness behavior |
 
@@ -95,17 +95,47 @@ interaction-scaling/
 ├── paper/                    # LaTeX source, figures, refs, built PDF
 ├── study/                    # Human-preference study kit (protocol + static site)
 ├── website/                  # Results website (Vite)
-├── results/                  # Eval outputs (gitignored)
+├── results/                  # Eval outputs (small summaries in git; large dumps via Git LFS)
 └── docs/                     # Architecture & usage documentation
 ```
 
-> **Note on artifacts.** Model checkpoints, rendered images, large training dumps, and raw
-> eval results are intentionally **not** version-controlled (see [`.gitignore`](.gitignore)).
-> The repository tracks code, task definitions, small data splits, notes, and the paper.
+> **Note on artifacts.** Model checkpoints and large training dumps remain
+> **not** version-controlled (see [`.gitignore`](.gitignore)). The eval **results** behind
+> every table and figure *are* tracked: small summary outputs live in normal git, while the
+> large per-run dumps (`results/hard_benchmarks/`, `results/phase5/`, `results/phase6/`, and
+> rendered result images) are stored via **Git LFS** — see [Getting the data](#getting-the-data-git-lfs).
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for a deeper tour of the modules and the
 proposer–reviewer loop, and [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) for how to
 reproduce the main results.
+
+---
+
+## Getting the data (Git LFS)
+
+The eval results behind every paper table and figure are committed to the repository. The
+large per-run dumps (`results/hard_benchmarks/`, `results/phase5/`, `results/phase6/`, and
+rendered result images, ~560 MB) are stored with [Git LFS](https://git-lfs.com); the small
+summary outputs are in normal git and need no special handling.
+
+To fetch the full data, install Git LFS **once per machine**, then clone or pull:
+
+```bash
+# 1. Install git-lfs
+#    macOS:  brew install git-lfs
+#    Ubuntu: sudo apt-get install git-lfs
+git lfs install
+
+# 2a. Fresh clone — LFS objects download automatically
+git clone git@github.com:19PINE-AI/interaction-scaling.git
+
+# 2b. Already cloned (or cloned without git-lfs installed)? Fetch the large objects:
+git lfs pull
+```
+
+Without Git LFS the large files appear as small text *pointer stubs* instead of the real
+data; `git lfs pull` replaces them with the actual result dumps. The code, task suites,
+paper source, and small summary results all work fine without LFS.
 
 ---
 
