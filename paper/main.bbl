@@ -1,4 +1,4 @@
-\begin{thebibliography}{25}
+\begin{thebibliography}{27}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -93,6 +93,12 @@ Yangjun Ruan, Eleftheria Briakou, Charles~Xie Han, Yu~Chen, Yufan Jiao, et~al.
 \newblock Iterative agent decoding for detecting compounding errors in {LLM}
   agents, 2025.
 
+\bibitem[Runkle(2026)]{langchain2026loopeng}
+Sydney Runkle.
+\newblock The art of loop engineering.
+\newblock LangChain (blog), 2026.
+\newblock \url{https://www.langchain.com/blog/the-art-of-loop-engineering}.
+
 \bibitem[Schick et~al.(2023)Schick, Dwivedi-Yu, Dess{\'\i}, Raileanu, Lomeli,
   Zettlemoyer, Cancedda, and Scialom]{schick2023toolformer}
 Timo Schick, Jane Dwivedi-Yu, Roberto Dess{\'\i}, Roberta Raileanu, Maria
@@ -120,6 +126,13 @@ Charlie Snell, Jaehoon Lee, Kelvin Xu, and Aviral Kumar.
 \newblock Scaling {LLM} test-time compute optimally can be more effective than
   scaling model parameters.
 \newblock In \emph{International Conference on Learning Representations}, 2025.
+
+\bibitem[{swyx} and {Latent Space}(2026)]{swyx2026loopcraft}
+{swyx} and {Latent Space}.
+\newblock Loopcraft: The art of stacking loops.
+\newblock Latent Space (blog), 2026.
+\newblock
+  \url{https://www.latent.space/p/ainews-loopcraft-the-art-of-stacking}.
 
 \bibitem[Team(2025)]{kimi2025k15}
 Kimi Team.

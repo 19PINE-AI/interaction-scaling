@@ -1,7 +1,7 @@
 \section{Robustness}
 \label{sec:robustness}
 
-\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the $15$ hard code tasks the harness lifts Sonnet~4 by $+33.3$\,pp (to $100\%$), Qwen3-235B by $+26.7$\,pp, and GPT-5 by $+13.3$\,pp (on a higher single-shot baseline; \Cref{fig:crossmodel}). All three families benefit from the same execution-grounded loop.
+\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the $15$ hard code tasks, over \emph{three} independent on-policy seeds per family, the harness lifts Sonnet~4 by $+33.3$\,pp, Qwen3-235B by $+22.2$\,pp, and GPT-5 by $+20.0$\,pp (on a higher single-shot baseline; \Cref{fig:crossmodel}). The reviewed ceiling has \emph{zero} seed variance for every family (Sonnet $100.0$, GPT-5 $100.0$, Qwen $93.3\%$, all $\pm0.0$\,pp) while single-shot fluctuates seed-to-seed: the grounded loop converges to the same ceiling regardless of the starting draw. All three families benefit from the same execution-grounded loop.
 
 \begin{figure}[t]
 \centering
@@ -14,11 +14,13 @@
   nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=1},
   ymajorgrids,ytick={60,80,100},
   legend style={font=\footnotesize,at={(0.5,1.02)},anchor=south,legend columns=2,draw=cGrey!50}]
-  \addplot[draw=cSS!60!black,fill=cSS!30] coordinates {(Sonnet 4,66.7) (Qwen3-235B,66.7) (GPT-5,86.7)}; \addlegendentry{single-shot}
-  \addplot[draw=cRV!60!black,fill=cRV!35] coordinates {(Sonnet 4,100) (Qwen3-235B,93.3) (GPT-5,100)}; \addlegendentry{reviewed}
+  \addplot[draw=cSS!60!black,fill=cSS!30,error bars/.cd,y dir=both,y explicit]
+    coordinates {(Sonnet 4,66.7) +- (0,6.7) (Qwen3-235B,71.1) +- (0,3.8) (GPT-5,80.0) +- (0,6.7)}; \addlegendentry{single-shot}
+  \addplot[draw=cRV!60!black,fill=cRV!35,error bars/.cd,y dir=both,y explicit]
+    coordinates {(Sonnet 4,100) +- (0,0) (Qwen3-235B,93.3) +- (0,0) (GPT-5,100) +- (0,0)}; \addlegendentry{reviewed}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families ($+33.3$/$+26.7$/$+13.3$\,pp).}
+\caption{\textbf{The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families, each over three independent on-policy seeds ($+33.3$/$+22.2$/$+20.0$\,pp). Whiskers are $\pm1$ SD across seeds; the reviewed bars carry \emph{zero} seed variance for all three families.}
 \label{fig:crossmodel}
 \end{figure}
 

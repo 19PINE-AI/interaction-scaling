@@ -116,10 +116,15 @@ def main():
                         help="Parallel worker threads (OpenRouter handles concurrency well)")
     parser.add_argument("--limit", type=int, default=None,
                         help="Run only the first N tasks (for smoke tests)")
+    parser.add_argument("--run-id", default=None,
+                        help="Optional suffix for the output file, e.g. 'seed2'. "
+                             "Each run at temperature 0.7 is an independent on-policy "
+                             "draw; use distinct run-ids to collect seed variance.")
     args = parser.parse_args()
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
-    out_file = OUT_DIR / f"code_{args.model}.json"
+    suffix = f"_{args.run_id}" if args.run_id else ""
+    out_file = OUT_DIR / f"code_{args.model}{suffix}.json"
 
     with open(DATA_FILE) as f:
         tasks = json.load(f)

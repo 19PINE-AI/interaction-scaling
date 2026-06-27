@@ -77,16 +77,16 @@ IAD (oracle, K=3, T=0.7)           & 100.0\% (1 seed)                         & 
 \subsection{Cross-model replication (code)}
 \begin{table}[ht]
 \centering
-\caption{Cross-model replication on the same 15 hard code tasks. The Claude row is the multi-run reference from \Cref{tab:harness-headline}; Qwen and GPT-5 are single on-policy runs at $T{=}0.7$. The harness lift survives across three families (Anthropic, Alibaba, OpenAI).}
+\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:harness-headline}). The reviewed ceiling has zero seed variance for all three families; the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass-rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
 \label{tab:crossmodel}
 \small
 \begin{tabular}{lccc}
 \toprule
 Model & Single-shot pass & Reviewed pass & $\Delta$ (lift) \\
 \midrule
-Claude Sonnet 4 (3-run mean)        & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\%      & $\mathbf{+33.3}$\,pp \\
-Qwen3-235B-Instruct-2507 (1 run)    & $66.7$\% (10/15)   & $\mathbf{93.3}$\% (14/15)       & $\mathbf{+26.7}$\,pp \\
-GPT-5 (1 run)                       & $86.7$\% (13/15)   & $\mathbf{100.0}$\% (15/15)      & $\mathbf{+13.3}$\,pp \\
+Claude Sonnet 4 (3 seeds)            & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\%      & $\mathbf{+33.3}$\,pp \\
+Qwen3-235B-Instruct-2507 (3 seeds)   & $71.1 \pm 3.8$\%   & $\mathbf{93.3 \pm 0.0}$\%       & $\mathbf{+22.2}$\,pp \\
+GPT-5 (3 seeds)                      & $80.0 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\%      & $\mathbf{+20.0}$\,pp \\
 \bottomrule
 \end{tabular}
 \end{table}
