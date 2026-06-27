@@ -1,24 +1,26 @@
 \section{Internalizing the Harness into a Small Student}
 \label{sec:distill}
 
-Can the harness's interaction-quality behavior be \emph{internalized} so a small model emits high-quality artifacts in fewer passes? We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via SFT.
+Two things could carry the harness's gains: the grounded scaffolding, or behavior absorbed into the weights. This section asks how much is the latter---whether the loop's interaction-quality behavior can be \emph{internalized} so a small model emits high-quality artifacts in fewer passes. It is a complement to the thesis, not a substitute: the cheaper internalized proposer is still meant to run \emph{inside} the same grounded harness, so internalization and grounding compose. We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via SFT.
 
 \paragraph{Result.} The student reaches $0.51\times$ the teacher's mean@1 capability on a $44$-task out-of-distribution suite (\Cref{tab:distill-ood}; rising to $0.70\times$ at pass@2), and $44\%/56\%$ pass@1/pass@3 on an $18$-task hard held-out suite, at ${\sim}10\times$ lower deployment cost than running the harness over a frontier model (\Cref{fig:distill}). Run inside the same harness, the small student recovers more of the gap, confirming that scaffolding and internalization compose.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.66\linewidth,height=3.8cm,
-  ybar,bar width=16pt,ymin=0,ymax=0.62,
-  ylabel={pass-rate (18-task hard held-out)},
-  symbolic x coords={pass@1,pass@3},xtick=data,enlarge x limits=0.6,
-  nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=2},
-  ymajorgrids,ytick={0,0.2,0.4,0.6}]
-  \addplot[draw=cAccent!60!black,fill=cAccent!30] coordinates {(pass@1,0.44) (pass@3,0.56)};
+\begin{axis}[width=0.62\linewidth,height=4.2cm,clip=false,
+  ybar,bar width=24pt,ymin=0,ymax=1.18,
+  ylabel={capability vs.\ teacher ($\times$)},
+  symbolic x coords={mean@1,pass@2},xtick=data,enlarge x limits=0.55,
+  nodes near coords,nodes near coords style={font=\footnotesize,anchor=south,/pgf/number format/.cd,fixed,fixed zerofill,precision=2},
+  ymajorgrids,ytick={0,0.25,0.5,0.75,1.0},yticklabel={\pgfmathprintnumber{\tick}$\times$}]
+  \draw[cGrey,densely dashed,thick] (axis cs:mean@1,1.0) -- (axis cs:pass@2,1.0);
+  \node[font=\footnotesize,cGrey,anchor=south east] at (axis cs:pass@2,1.01) {teacher ($1\times$)};
+  \addplot[draw=cAccent!60!black,fill=cAccent!30] coordinates {(mean@1,0.51) (pass@2,0.70)};
   \legend{}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{An $8$B student internalizes interaction quality.} Pass@$1$/pass@$3$ of the distilled $8$B markdown student on the hard held-out suite ($0.51\times$/$0.70\times$ teacher mean@1/@2 on the $44$-task OOD set; \Cref{tab:distill-ood}), at ${\sim}10\times$ lower deployment cost.}
+\caption{\textbf{An $8$B student internalizes most of the teacher's interaction quality.} Distilled $8$B markdown student as a fraction of the frontier teacher on the $44$-task OOD suite (\Cref{tab:distill-ood}): a single sample recovers $0.51\times$ and two samples $0.70\times$ of teacher capability---sampling closes the gap---at ${\sim}10\times$ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$/$56\%$ at pass@$1$/pass@$3$.}
 \label{fig:distill}
 \end{figure}
 
