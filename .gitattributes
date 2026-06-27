@@ -1,0 +1,9 @@
+# Large eval-result dumps tracked via Git LFS (keeps clones fast; data still
+# downloadable by reproducers via `git lfs pull`). Small summary dirs under
+# results/ (cross_model, feedback_types, allocation_sweep, scaling_curves,
+# iad_baseline, heldout_phase1, interaction_scaling, autonomous_review) stay
+# in normal git so they remain diffable.
+results/hard_benchmarks/** filter=lfs diff=lfs merge=lfs -text
+results/phase5/**          filter=lfs diff=lfs merge=lfs -text
+results/phase6/**          filter=lfs diff=lfs merge=lfs -text
+results/**/*.png           filter=lfs diff=lfs merge=lfs -text

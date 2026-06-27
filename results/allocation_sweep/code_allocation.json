@@ -1,0 +1,1498 @@
+{
+  "config": {
+    "total_budget": 10000,
+    "max_iterations": 5,
+    "model": "claude-sonnet-4-20250514",
+    "temperature": 0.0,
+    "use_thinking": false,
+    "n_tasks": 15,
+    "note": "b1 and b3 control per-call max_tokens caps on proposer/reviewer (scaled by B/max_iter). b2 is reserved budget \u2014 slack for additional iterations since the execute phase consumes 0 LLM tokens (pytest subprocess). Total cumulative tokens capped at B by BudgetTracker."
+  },
+  "cells": [
+    {
+      "allocation_label": "A_propose_heavy",
+      "b1_propose": 0.8,
+      "b2_execute": 0.1,
+      "b3_review": 0.1,
+      "n_tasks": 15,
+      "n_passed": 14,
+      "pass_rate": 0.9333333333333333,
+      "mean_tokens": 3100.6,
+      "mean_iterations": 1.47,
+      "propose_cap": 1600,
+      "review_cap": 256,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": true,
+          "tokens": 5542,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 33.3
+        },
+        {
+          "task_id": "code_002",
+          "passed": true,
+          "tokens": 1388,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 11.7
+        },
+        {
+          "task_id": "code_003",
+          "passed": true,
+          "tokens": 3377,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 16.7
+        },
+        {
+          "task_id": "code_004",
+          "passed": true,
+          "tokens": 1298,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 6.6
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 4.8
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 3.2
+        },
+        {
+          "task_id": "code_007",
+          "passed": true,
+          "tokens": 1217,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 5.2
+        },
+        {
+          "task_id": "code_008",
+          "passed": true,
+          "tokens": 4602,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 21.5
+        },
+        {
+          "task_id": "code_009",
+          "passed": true,
+          "tokens": 1524,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 6.5
+        },
+        {
+          "task_id": "code_010",
+          "passed": true,
+          "tokens": 1683,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 8.0
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 42.3
+        },
+        {
+          "task_id": "code_012",
+          "passed": true,
+          "tokens": 1658,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 6.5
+        },
+        {
+          "task_id": "code_013",
+          "passed": true,
+          "tokens": 8852,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 25.8
+        },
+        {
+          "task_id": "code_014",
+          "passed": true,
+          "tokens": 1322,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 6.7
+        },
+        {
+          "task_id": "code_015",
+          "passed": true,
+          "tokens": 2487,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1600,
+          "review_cap": 256,
+          "wall_time_s": 5.8
+        }
+      ]
+    },
+    {
+      "allocation_label": "B_execute_heavy",
+      "b1_propose": 0.1,
+      "b2_execute": 0.8,
+      "b3_review": 0.1,
+      "n_tasks": 15,
+      "n_passed": 1,
+      "pass_rate": 0.06666666666666667,
+      "mean_tokens": 9383.1,
+      "mean_iterations": 3.87,
+      "propose_cap": 256,
+      "review_cap": 256,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "max_iterations",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 53.7
+        },
+        {
+          "task_id": "code_002",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 39.7
+        },
+        {
+          "task_id": "code_003",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 38.1
+        },
+        {
+          "task_id": "code_004",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 37.9
+        },
+        {
+          "task_id": "code_005",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 38.3
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 3.8
+        },
+        {
+          "task_id": "code_007",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 41.6
+        },
+        {
+          "task_id": "code_008",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 70.4
+        },
+        {
+          "task_id": "code_009",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 38.3
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 38.8
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 37.5
+        },
+        {
+          "task_id": "code_012",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 30.8
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 22.9
+        },
+        {
+          "task_id": "code_014",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 35.1
+        },
+        {
+          "task_id": "code_015",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 256,
+          "wall_time_s": 23.2
+        }
+      ]
+    },
+    {
+      "allocation_label": "C_review_heavy",
+      "b1_propose": 0.1,
+      "b2_execute": 0.1,
+      "b3_review": 0.8,
+      "n_tasks": 15,
+      "n_passed": 1,
+      "pass_rate": 0.06666666666666667,
+      "mean_tokens": 9383.1,
+      "mean_iterations": 3.87,
+      "propose_cap": 256,
+      "review_cap": 1600,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 47.6
+        },
+        {
+          "task_id": "code_002",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 38.0
+        },
+        {
+          "task_id": "code_003",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 42.5
+        },
+        {
+          "task_id": "code_004",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 39.2
+        },
+        {
+          "task_id": "code_005",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 38.9
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 3.1
+        },
+        {
+          "task_id": "code_007",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 39.4
+        },
+        {
+          "task_id": "code_008",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 44.9
+        },
+        {
+          "task_id": "code_009",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 37.0
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 31.5
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 39.6
+        },
+        {
+          "task_id": "code_012",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 29.2
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 24.3
+        },
+        {
+          "task_id": "code_014",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 41.4
+        },
+        {
+          "task_id": "code_015",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 256,
+          "review_cap": 1600,
+          "wall_time_s": 20.7
+        }
+      ]
+    },
+    {
+      "allocation_label": "D_prop_exec",
+      "b1_propose": 0.4,
+      "b2_execute": 0.4,
+      "b3_review": 0.2,
+      "n_tasks": 15,
+      "n_passed": 12,
+      "pass_rate": 0.8,
+      "mean_tokens": 4024.9,
+      "mean_iterations": 1.67,
+      "propose_cap": 800,
+      "review_cap": 400,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": true,
+          "tokens": 5624,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 37.5
+        },
+        {
+          "task_id": "code_002",
+          "passed": true,
+          "tokens": 1358,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 11.5
+        },
+        {
+          "task_id": "code_003",
+          "passed": true,
+          "tokens": 3454,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 18.1
+        },
+        {
+          "task_id": "code_004",
+          "passed": true,
+          "tokens": 1298,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 6.7
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 7.2
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 2.9
+        },
+        {
+          "task_id": "code_007",
+          "passed": true,
+          "tokens": 1217,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 5.3
+        },
+        {
+          "task_id": "code_008",
+          "passed": true,
+          "tokens": 8873,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 42.3
+        },
+        {
+          "task_id": "code_009",
+          "passed": true,
+          "tokens": 1524,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 5.9
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 39.7
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 41.0
+        },
+        {
+          "task_id": "code_012",
+          "passed": true,
+          "tokens": 1658,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 6.1
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 32.1
+        },
+        {
+          "task_id": "code_014",
+          "passed": true,
+          "tokens": 1322,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 6.7
+        },
+        {
+          "task_id": "code_015",
+          "passed": true,
+          "tokens": 2487,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 400,
+          "wall_time_s": 5.8
+        }
+      ]
+    },
+    {
+      "allocation_label": "E_prop_review",
+      "b1_propose": 0.4,
+      "b2_execute": 0.2,
+      "b3_review": 0.4,
+      "n_tasks": 15,
+      "n_passed": 12,
+      "pass_rate": 0.8,
+      "mean_tokens": 4387.9,
+      "mean_iterations": 1.8,
+      "propose_cap": 800,
+      "review_cap": 800,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": true,
+          "tokens": 8122,
+          "iterations": 4,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 55.3
+        },
+        {
+          "task_id": "code_002",
+          "passed": true,
+          "tokens": 1358,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 11.8
+        },
+        {
+          "task_id": "code_003",
+          "passed": true,
+          "tokens": 6386,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 39.0
+        },
+        {
+          "task_id": "code_004",
+          "passed": true,
+          "tokens": 1313,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 6.7
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 5.2
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 3.1
+        },
+        {
+          "task_id": "code_007",
+          "passed": true,
+          "tokens": 1217,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 5.2
+        },
+        {
+          "task_id": "code_008",
+          "passed": true,
+          "tokens": 8872,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 37.9
+        },
+        {
+          "task_id": "code_009",
+          "passed": true,
+          "tokens": 1524,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 6.8
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 36.8
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 42.7
+        },
+        {
+          "task_id": "code_012",
+          "passed": true,
+          "tokens": 1658,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 6.1
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 32.2
+        },
+        {
+          "task_id": "code_014",
+          "passed": true,
+          "tokens": 1322,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 6.6
+        },
+        {
+          "task_id": "code_015",
+          "passed": true,
+          "tokens": 2487,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 800,
+          "review_cap": 800,
+          "wall_time_s": 6.0
+        }
+      ]
+    },
+    {
+      "allocation_label": "F_exec_review",
+      "b1_propose": 0.2,
+      "b2_execute": 0.4,
+      "b3_review": 0.4,
+      "n_tasks": 15,
+      "n_passed": 2,
+      "pass_rate": 0.13333333333333333,
+      "mean_tokens": 8770.6,
+      "mean_iterations": 3.2,
+      "propose_cap": 400,
+      "review_cap": 800,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 53.9
+        },
+        {
+          "task_id": "code_002",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 37.3
+        },
+        {
+          "task_id": "code_003",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 47.9
+        },
+        {
+          "task_id": "code_004",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 41.9
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 5.0
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 2.9
+        },
+        {
+          "task_id": "code_007",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 43.9
+        },
+        {
+          "task_id": "code_008",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 49.1
+        },
+        {
+          "task_id": "code_009",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 31.0
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 33.6
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 48.8
+        },
+        {
+          "task_id": "code_012",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 40.1
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 31.6
+        },
+        {
+          "task_id": "code_014",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 43.4
+        },
+        {
+          "task_id": "code_015",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 400,
+          "review_cap": 800,
+          "wall_time_s": 22.2
+        }
+      ]
+    },
+    {
+      "allocation_label": "G_prop_dominant",
+      "b1_propose": 0.5,
+      "b2_execute": 0.25,
+      "b3_review": 0.25,
+      "n_tasks": 15,
+      "n_passed": 14,
+      "pass_rate": 0.9333333333333333,
+      "mean_tokens": 2697.0,
+      "mean_iterations": 1.4,
+      "propose_cap": 1000,
+      "review_cap": 500,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": true,
+          "tokens": 5839,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 38.9
+        },
+        {
+          "task_id": "code_002",
+          "passed": true,
+          "tokens": 1317,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 11.1
+        },
+        {
+          "task_id": "code_003",
+          "passed": true,
+          "tokens": 3343,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 16.3
+        },
+        {
+          "task_id": "code_004",
+          "passed": true,
+          "tokens": 1308,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 6.7
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 5.0
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 2.9
+        },
+        {
+          "task_id": "code_007",
+          "passed": true,
+          "tokens": 1217,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 5.4
+        },
+        {
+          "task_id": "code_008",
+          "passed": true,
+          "tokens": 4588,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 23.8
+        },
+        {
+          "task_id": "code_009",
+          "passed": true,
+          "tokens": 1524,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 6.5
+        },
+        {
+          "task_id": "code_010",
+          "passed": true,
+          "tokens": 1683,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 7.5
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 39.5
+        },
+        {
+          "task_id": "code_012",
+          "passed": true,
+          "tokens": 1658,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 6.3
+        },
+        {
+          "task_id": "code_013",
+          "passed": true,
+          "tokens": 2610,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 10.6
+        },
+        {
+          "task_id": "code_014",
+          "passed": true,
+          "tokens": 1322,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 9.1
+        },
+        {
+          "task_id": "code_015",
+          "passed": true,
+          "tokens": 2487,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 1000,
+          "review_cap": 500,
+          "wall_time_s": 6.3
+        }
+      ]
+    },
+    {
+      "allocation_label": "H_review_dominant",
+      "b1_propose": 0.25,
+      "b2_execute": 0.25,
+      "b3_review": 0.5,
+      "n_tasks": 15,
+      "n_passed": 6,
+      "pass_rate": 0.4,
+      "mean_tokens": 7484.6,
+      "mean_iterations": 2.6,
+      "propose_cap": 500,
+      "review_cap": 1000,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": true,
+          "tokens": 10000,
+          "iterations": 5,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 65.6
+        },
+        {
+          "task_id": "code_002",
+          "passed": true,
+          "tokens": 4494,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 20.9
+        },
+        {
+          "task_id": "code_003",
+          "passed": true,
+          "tokens": 3729,
+          "iterations": 2,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 18.1
+        },
+        {
+          "task_id": "code_004",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 40.2
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 5.0
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 3.0
+        },
+        {
+          "task_id": "code_007",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 36.0
+        },
+        {
+          "task_id": "code_008",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 4,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 45.8
+        },
+        {
+          "task_id": "code_009",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 33.9
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 33.8
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 38.3
+        },
+        {
+          "task_id": "code_012",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 35.0
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 25.4
+        },
+        {
+          "task_id": "code_014",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 37.4
+        },
+        {
+          "task_id": "code_015",
+          "passed": true,
+          "tokens": 2487,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 500,
+          "review_cap": 1000,
+          "wall_time_s": 6.0
+        }
+      ]
+    },
+    {
+      "allocation_label": "I_equal",
+      "b1_propose": 0.33,
+      "b2_execute": 0.34,
+      "b3_review": 0.33,
+      "n_tasks": 15,
+      "n_passed": 10,
+      "pass_rate": 0.6666666666666666,
+      "mean_tokens": 4845.3,
+      "mean_iterations": 1.87,
+      "propose_cap": 660,
+      "review_cap": 660,
+      "per_task": [
+        {
+          "task_id": "code_001",
+          "passed": true,
+          "tokens": 5779,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 37.8
+        },
+        {
+          "task_id": "code_002",
+          "passed": true,
+          "tokens": 1251,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 9.8
+        },
+        {
+          "task_id": "code_003",
+          "passed": true,
+          "tokens": 6220,
+          "iterations": 3,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 31.5
+        },
+        {
+          "task_id": "code_004",
+          "passed": true,
+          "tokens": 1321,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 7.1
+        },
+        {
+          "task_id": "code_005",
+          "passed": true,
+          "tokens": 812,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 5.1
+        },
+        {
+          "task_id": "code_006",
+          "passed": true,
+          "tokens": 747,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 3.1
+        },
+        {
+          "task_id": "code_007",
+          "passed": true,
+          "tokens": 1217,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 5.2
+        },
+        {
+          "task_id": "code_008",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 48.4
+        },
+        {
+          "task_id": "code_009",
+          "passed": true,
+          "tokens": 1524,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 6.2
+        },
+        {
+          "task_id": "code_010",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 30.8
+        },
+        {
+          "task_id": "code_011",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 42.1
+        },
+        {
+          "task_id": "code_012",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 3,
+          "stopped_reason": "budget_exhausted_after_propose",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 31.3
+        },
+        {
+          "task_id": "code_013",
+          "passed": false,
+          "tokens": 10000,
+          "iterations": 2,
+          "stopped_reason": "budget_exhausted",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 26.2
+        },
+        {
+          "task_id": "code_014",
+          "passed": true,
+          "tokens": 1322,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 6.7
+        },
+        {
+          "task_id": "code_015",
+          "passed": true,
+          "tokens": 2487,
+          "iterations": 1,
+          "stopped_reason": "tests_passed",
+          "propose_cap": 660,
+          "review_cap": 660,
+          "wall_time_s": 6.0
+        }
+      ]
+    }
+  ]
+}

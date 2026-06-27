@@ -1,0 +1,474 @@
+{
+  "note": "Post-hoc re-score using forgiving parser. Only recovers pass credit for blocks the student emitted with invalid-JSON that contained code passing the ground-truth tests.",
+  "original_metrics": {
+    "base": {
+      "mean_pass_rate": 0.21333333333333335,
+      "pass_at_k_rate": 0.4,
+      "mean_tool_call_rate": 0.6666666666666666,
+      "tool_call_at_k_rate": 0.9333333333333333
+    },
+    "sft_review_v2": {
+      "mean_pass_rate": 0.24,
+      "pass_at_k_rate": 0.4,
+      "mean_tool_call_rate": 0.88,
+      "tool_call_at_k_rate": 0.9333333333333333
+    }
+  },
+  "fixed_metrics": {
+    "base": {
+      "mean_pass": 0.22666666666666666,
+      "pass@5": 0.4,
+      "mean_tool": 0.8666666666666667,
+      "tool@5": 1.0,
+      "recovered_blocks": 15,
+      "recovered_passed_tests": 1,
+      "flipped_samples": [
+        [
+          "code_h009",
+          0
+        ]
+      ]
+    },
+    "sft_review_v2": {
+      "mean_pass": 0.24,
+      "pass@5": 0.4,
+      "mean_tool": 1.0,
+      "tool@5": 1.0,
+      "recovered_blocks": 9,
+      "recovered_passed_tests": 0,
+      "flipped_samples": []
+    }
+  },
+  "per_task_pass_lists": {
+    "base": {
+      "code_h001": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h002": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h003": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h004": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h005": [
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h006": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h007": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h008": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h009": [
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "code_h010": [
+        true,
+        false,
+        false,
+        true,
+        false
+      ],
+      "code_h011": [
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "code_h012": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h013": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h014": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h015": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    },
+    "sft_review_v2": {
+      "code_h001": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h002": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h003": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h004": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h005": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h006": [
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "code_h007": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h008": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h009": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "code_h010": [
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "code_h011": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h012": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "code_h013": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "code_h014": [
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "code_h015": [
+        false,
+        false,
+        false,
+        false,
+        false
+      ]
+    }
+  },
+  "per_task_tool_lists": {
+    "base": {
+      "code_h001": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h002": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h003": [
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "code_h004": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h005": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h006": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h007": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h008": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h009": [
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "code_h010": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h011": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h012": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h013": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h014": [
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "code_h015": [
+        true,
+        false,
+        false,
+        true,
+        false
+      ]
+    },
+    "sft_review_v2": {
+      "code_h001": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h002": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h003": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h004": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h005": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h006": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h007": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h008": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h009": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h010": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h011": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h012": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h013": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h014": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "code_h015": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ]
+    }
+  }
+}

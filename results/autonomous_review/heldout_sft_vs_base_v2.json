@@ -1,0 +1,978 @@
+{
+  "base": {
+    "label": "base",
+    "num_tasks": 15,
+    "num_samples": 1,
+    "mean_pass_rate": 0.26666666666666666,
+    "pass_at_k_rate": 0.26666666666666666,
+    "mean_tool_call_rate": 0.6666666666666666,
+    "tool_call_at_k_rate": 0.6666666666666666,
+    "results": [
+      {
+        "task_id": "code_h001",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h001",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 3857,
+                "gen_s": 43.34,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h002",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h002",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 5873,
+                "gen_s": 51.25,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5873,
+                "gen_s": 69.44,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5873,
+                "gen_s": 71.25,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1868,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 1178
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h003",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h003",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 5152,
+                "gen_s": 51.1,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h004",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h004",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4081,
+                "gen_s": 39.15,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4145,
+                "gen_s": 40.48,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4140,
+                "gen_s": 43.2,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4155,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h005",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h005",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 4365,
+                "gen_s": 42.36,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h006",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h006",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3022,
+                "gen_s": 33.69,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3040,
+                "gen_s": 34.28,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3042,
+                "gen_s": 34.62,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 900,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 579
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h007",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h007",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4619,
+                "gen_s": 38.24,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4619,
+                "gen_s": 38.06,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4619,
+                "gen_s": 37.9,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4619,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h008",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h008",
+            "passed": true,
+            "any_tool_pass": true,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3317,
+                "gen_s": 25.77,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1503,
+                "gen_s": 9.45,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1182
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h009",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h009",
+            "passed": true,
+            "any_tool_pass": true,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3959,
+                "gen_s": 38.92,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 2187,
+                "gen_s": 16.87,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1641
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h010",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h010",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4379,
+                "gen_s": 36.48,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4384,
+                "gen_s": 36.62,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4384,
+                "gen_s": 37.06,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 2833,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 2270
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h011",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h011",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 5427,
+                "gen_s": 48.73,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5437,
+                "gen_s": 49.76,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5437,
+                "gen_s": 49.41,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1805,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 1239
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h012",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h012",
+            "passed": true,
+            "any_tool_pass": true,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3202,
+                "gen_s": 26.52,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1453,
+                "gen_s": 8.91,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1126
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h013",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h013",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 5041,
+                "gen_s": 53.05,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h014",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h014",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 5068,
+                "gen_s": 53.09,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5073,
+                "gen_s": 53.64,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5073,
+                "gen_s": 53.0,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1258,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 975
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h015",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h015",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 6854,
+                "gen_s": 53.27,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      }
+    ]
+  },
+  "sft_review": {
+    "label": "sft_review",
+    "num_tasks": 15,
+    "num_samples": 1,
+    "mean_pass_rate": 0.26666666666666666,
+    "pass_at_k_rate": 0.26666666666666666,
+    "mean_tool_call_rate": 0.8666666666666667,
+    "tool_call_at_k_rate": 0.8666666666666667,
+    "results": [
+      {
+        "task_id": "code_h001",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h001",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 2244,
+                "gen_s": 30.36,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h002",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h002",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2738,
+                "gen_s": 37.74,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1094,
+                "gen_s": 10.46,
+                "num_tool_calls": 0,
+                "code_in_text_len": 816
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h003",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h003",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 3342,
+                "gen_s": 41.8,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h004",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h004",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2151,
+                "gen_s": 34.61,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 835,
+                "gen_s": 9.03,
+                "num_tool_calls": 0,
+                "code_in_text_len": 618
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h005",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h005",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2258,
+                "gen_s": 36.1,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1087,
+                "gen_s": 11.0,
+                "num_tool_calls": 0,
+                "code_in_text_len": 405
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h006",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h006",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2425,
+                "gen_s": 47.05,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 792,
+                "gen_s": 12.23,
+                "num_tool_calls": 0,
+                "code_in_text_len": 576
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h007",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h007",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4169,
+                "gen_s": 58.04,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 2578,
+                "gen_s": 29.26,
+                "num_tool_calls": 0,
+                "code_in_text_len": 2301
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h008",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h008",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3267,
+                "gen_s": 43.16,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1460,
+                "gen_s": 15.71,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1171
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h009",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h009",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3728,
+                "gen_s": 62.49,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1906,
+                "gen_s": 26.77,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1583
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h010",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h010",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3818,
+                "gen_s": 126.67,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1942,
+                "gen_s": 48.36,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1736
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h011",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h011",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3581,
+                "gen_s": 58.14,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1554,
+                "gen_s": 16.79,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1233
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h012",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h012",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3194,
+                "gen_s": 43.87,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1458,
+                "gen_s": 15.38,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1115
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h013",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h013",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2797,
+                "gen_s": 44.71,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4347,
+                "gen_s": 87.8,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h014",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h014",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2914,
+                "gen_s": 48.67,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3112,
+                "gen_s": 51.33,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3111,
+                "gen_s": 51.27,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3111,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h015",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h015",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4171,
+                "gen_s": 53.26,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1692,
+                "gen_s": 18.24,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1465
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      }
+    ]
+  }
+}

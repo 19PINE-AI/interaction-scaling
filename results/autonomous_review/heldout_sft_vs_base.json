@@ -1,0 +1,966 @@
+{
+  "base": {
+    "label": "base",
+    "num_tasks": 15,
+    "num_samples": 1,
+    "mean_pass_rate": 0.2,
+    "pass_at_k_rate": 0.2,
+    "mean_tool_call_rate": 0.6666666666666666,
+    "tool_call_at_k_rate": 0.6666666666666666,
+    "results": [
+      {
+        "task_id": "code_h001",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h001",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 3857,
+                "gen_s": 50.74,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h002",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h002",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 5873,
+                "gen_s": 65.63,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5873,
+                "gen_s": 77.45,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5873,
+                "gen_s": 58.21,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1897,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 1178
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h003",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h003",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 5152,
+                "gen_s": 59.95,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h004",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h004",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4081,
+                "gen_s": 63.15,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4145,
+                "gen_s": 55.7,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4140,
+                "gen_s": 63.95,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4156,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h005",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h005",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 4365,
+                "gen_s": 60.54,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h006",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h006",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3022,
+                "gen_s": 54.14,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3040,
+                "gen_s": 51.2,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3042,
+                "gen_s": 36.77,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3040,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h007",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h007",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4619,
+                "gen_s": 43.95,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4619,
+                "gen_s": 40.38,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4619,
+                "gen_s": 43.44,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 3034,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 2627
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h008",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h008",
+            "passed": true,
+            "any_tool_pass": true,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3317,
+                "gen_s": 28.75,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1503,
+                "gen_s": 10.12,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1182
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h009",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h009",
+            "passed": true,
+            "any_tool_pass": true,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3959,
+                "gen_s": 40.84,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4108,
+                "gen_s": 39.47,
+                "num_tool_calls": 0,
+                "code_in_text_len": 3562
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h010",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h010",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4379,
+                "gen_s": 37.77,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4384,
+                "gen_s": 38.0,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4384,
+                "gen_s": 38.31,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4507,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 4142
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h011",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h011",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 5427,
+                "gen_s": 51.01,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5437,
+                "gen_s": 51.32,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5435,
+                "gen_s": 51.24,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5435,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h012",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h012",
+            "passed": true,
+            "any_tool_pass": true,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3202,
+                "gen_s": 27.72,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1453,
+                "gen_s": 9.24,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1126
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h013",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h013",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 5041,
+                "gen_s": 97.46,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h014",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h014",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 3,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 5068,
+                "gen_s": 106.98,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5073,
+                "gen_s": 56.06,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 5073,
+                "gen_s": 55.72,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1542,
+                "note": "final after tool budget",
+                "num_tool_calls": 0,
+                "code_in_text_len": 953
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h015",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h015",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 6854,
+                "gen_s": 56.26,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      }
+    ]
+  },
+  "sft_review": {
+    "label": "sft_review",
+    "num_tasks": 15,
+    "num_samples": 1,
+    "mean_pass_rate": 0.26666666666666666,
+    "pass_at_k_rate": 0.26666666666666666,
+    "mean_tool_call_rate": 0.8666666666666667,
+    "tool_call_at_k_rate": 0.8666666666666667,
+    "results": [
+      {
+        "task_id": "code_h001",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h001",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 2244,
+                "gen_s": 32.37,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h002",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h002",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2738,
+                "gen_s": 41.35,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 947,
+                "gen_s": 9.6,
+                "num_tool_calls": 0,
+                "code_in_text_len": 698
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h003",
+        "any_pass": false,
+        "any_tool_call": false,
+        "samples": [
+          {
+            "task_id": "code_h003",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 0,
+            "autonomous_tool_called": false,
+            "turns": [
+              {
+                "response_len": 3342,
+                "gen_s": 43.74,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h004",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h004",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2151,
+                "gen_s": 37.72,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 841,
+                "gen_s": 11.88,
+                "num_tool_calls": 0,
+                "code_in_text_len": 618
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h005",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h005",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2258,
+                "gen_s": 80.0,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1087,
+                "gen_s": 23.58,
+                "num_tool_calls": 0,
+                "code_in_text_len": 405
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h006",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h006",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2425,
+                "gen_s": 104.09,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 792,
+                "gen_s": 26.13,
+                "num_tool_calls": 0,
+                "code_in_text_len": 576
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h007",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h007",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4169,
+                "gen_s": 132.18,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 2659,
+                "gen_s": 62.53,
+                "num_tool_calls": 0,
+                "code_in_text_len": 2301
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h008",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h008",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3267,
+                "gen_s": 43.72,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1443,
+                "gen_s": 15.7,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1174
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h009",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h009",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3728,
+                "gen_s": 64.81,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1906,
+                "gen_s": 27.39,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1583
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h010",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h010",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3818,
+                "gen_s": 58.08,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1942,
+                "gen_s": 23.23,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1736
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h011",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h011",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3581,
+                "gen_s": 58.78,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1537,
+                "gen_s": 16.9,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1238
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h012",
+        "any_pass": true,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h012",
+            "passed": true,
+            "any_tool_pass": false,
+            "final_pass": true,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 3194,
+                "gen_s": 46.52,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1391,
+                "gen_s": 15.14,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1115
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h013",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h013",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2797,
+                "gen_s": 47.14,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 4290,
+                "gen_s": 92.49,
+                "num_tool_calls": 0,
+                "code_in_text_len": 0
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h014",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h014",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 2914,
+                "gen_s": 50.94,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1168,
+                "gen_s": 14.52,
+                "num_tool_calls": 0,
+                "code_in_text_len": 994
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      },
+      {
+        "task_id": "code_h015",
+        "any_pass": false,
+        "any_tool_call": true,
+        "samples": [
+          {
+            "task_id": "code_h015",
+            "passed": false,
+            "any_tool_pass": false,
+            "final_pass": false,
+            "tool_calls_made": 1,
+            "autonomous_tool_called": true,
+            "turns": [
+              {
+                "response_len": 4171,
+                "gen_s": 59.31,
+                "num_tool_calls": 1,
+                "code_in_text_len": 0
+              },
+              {
+                "response_len": 1692,
+                "gen_s": 18.69,
+                "num_tool_calls": 0,
+                "code_in_text_len": 1465
+              }
+            ],
+            "sample": 0
+          }
+        ]
+      }
+    ]
+  }
+}

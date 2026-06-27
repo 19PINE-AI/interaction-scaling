@@ -40,8 +40,9 @@ data/training/rft_tasks*.json
 data/training/code_tasks_v2*.json
 data/training/heldout_phase5*.json
 
-# Eval results
-results/
+# Eval results are now tracked (large dumps via Git LFS; see .gitattributes).
+# Scratch/baseline result dirs remain excluded (see results/baselines* etc. above).
+!results/**/*.png
 
 # Claude runtime locks
 .claude/scheduled_tasks.lock

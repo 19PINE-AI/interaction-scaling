@@ -1,0 +1,1019 @@
+{
+  "records": {
+    "code_001": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_001",
+      "passed": true,
+      "input_tokens": 1476,
+      "output_tokens": 1679,
+      "tokens_used": 1679,
+      "wall_time_seconds": 25.5,
+      "num_iterations": 1,
+      "num_candidates_total": 3,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 518,
+              "score": {
+                "all_pass": false,
+                "n_pass": 0,
+                "n_fail": 0,
+                "n_error": 12,
+                "n_total": 12,
+                "first_error": "NameError: name 'in_quotes' is not defined",
+                "stderr_full": "Traceback (most recent call last):\n  File \"/tmp/tmpxn9bkfmx.py\", line 1, in <module>\n    if not in_quotes:\nNameError: name 'in_quotes' is not defined\n"
+              },
+              "error": null
+            },
+            {
+              "k": 1,
+              "output_tokens": 639,
+              "score": {
+                "all_pass": false,
+                "n_pass": 0,
+                "n_fail": 0,
+                "n_error": 12,
+                "n_total": 12,
+                "first_error": "NameError: name 'in_quotes' is not defined",
+                "stderr_full": "Traceback (most recent call last):\n  File \"/tmp/tmpd3z6s32c.py\", line 1, in <module>\n    if in_quotes:\nNameError: name 'in_quotes' is not defined\n"
+              },
+              "error": null
+            },
+            {
+              "k": 2,
+              "output_tokens": 522,
+              "score": {
+                "all_pass": true,
+                "n_pass": 12,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 12,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 2,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 12,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 12,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "def parse_csv_line(line):\n    \"\"\"Parse a single CSV line into a list of field values.\n    Handles quoted fields, escaped quotes (\"\"), and commas inside quotes.\n    \"\"\"\n    fields = []\n    current = []\n    in_quotes = False\n    i = 0\n    while i < len(line):\n        ch = line[i]\n        if ch == '\"':\n            if in_quotes:\n                if i + 1 < len(line) and line[i + 1] == '\"':\n                    # Escaped quote inside quoted field\n                    current.append('\"')\n                    i += 1\n                else:\n                    # End of quoted field\n                    in_quotes = False\n            else:\n                if len(current) == 0:\n                    # Start of quoted field\n                    in_quotes = True\n                # If we're not in quotes and current is not empty,\n                # this is an invalid quote placement - ignore it per RFC 4180\n        elif ch == ',' and not in_quotes:\n            fields.append(''.join(current))\n            current = []\n        elif ch == '\\n' and not in_quotes:\n            break\n        else:\n            current.append(ch)\n        i += 1\n    fields.append(''.join(current))\n    return fields",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_002": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_002",
+      "passed": true,
+      "input_tokens": 553,
+      "output_tokens": 752,
+      "tokens_used": 752,
+      "wall_time_seconds": 10.29,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 752,
+              "score": {
+                "all_pass": true,
+                "n_pass": 24,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 24,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 24,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 24,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "class Router:\n    def __init__(self):\n        self.routes = []\n\n    def add_route(self, pattern, handler):\n        \"\"\"Add a route pattern like '/users/{id}' mapped to a handler string.\"\"\"\n        # Handle empty pattern\n        if not pattern or pattern == '/':\n            parts = []\n        else:\n            parts = pattern.strip('/').split('/')\n        self.routes.append((parts, handler))\n\n    def match(self, path):\n        \"\"\"Match a path to a handler. Returns (handler, params_dict) or None.\n        Static segments take priority over parameterized ones.\n        More specific routes (more static segments) take priority.\n        \"\"\"\n        # Handle empty path\n        if not path or path == '/':\n            path_parts = []\n        else:\n            path_parts = path.strip('/').split('/')\n        \n        best_match = None\n        best_params = None\n        best_score = -1\n\n        for route_parts, handler in self.routes:\n            if len(route_parts) != len(path_parts):\n                continue\n            \n            params = {}\n            match = True\n            score = 0\n            \n            for rp, pp in zip(route_parts, path_parts):\n                if rp.startswith('{') and rp.endswith('}'):\n                    # Parameterized segment\n                    param_name = rp[1:-1]\n                    params[param_name] = pp\n                    # Don't increment score for parameterized segments\n                elif rp == pp:\n                    # Static segment match\n                    score += 1\n                else:\n                    # No match\n                    match = False\n                    break\n            \n            if match and score > best_score:\n                best_match = handler\n                best_params = params\n                best_score = score\n\n        if best_match is not None:\n            return (best_match, best_params)\n        return None",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_003": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_003",
+      "passed": true,
+      "input_tokens": 2345,
+      "output_tokens": 2882,
+      "tokens_used": 2882,
+      "wall_time_seconds": 34.08,
+      "num_iterations": 2,
+      "num_candidates_total": 4,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 601,
+              "score": {
+                "all_pass": false,
+                "n_pass": 10,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": "AssertionError: Zero-length range should not overlap",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 1,
+              "output_tokens": 685,
+              "score": {
+                "all_pass": false,
+                "n_pass": 10,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": "AssertionError: Zero-length range should not overlap",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 2,
+              "output_tokens": 266,
+              "score": {
+                "all_pass": false,
+                "n_pass": 10,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": "AssertionError: Zero-length range should not overlap",
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": false,
+            "n_pass": 10,
+            "n_fail": 1,
+            "n_error": 0,
+            "n_total": 11,
+            "first_error": "AssertionError: Zero-length range should not overlap",
+            "stderr_full": ""
+          }
+        },
+        {
+          "iter": 1,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 1330,
+              "score": {
+                "all_pass": true,
+                "n_pass": 11,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 11,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 11,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "from datetime import datetime, timedelta, timezone\n\ndef ranges_overlap(start1, end1, start2, end2):\n    \"\"\"Check if two datetime ranges [start1, end1) and [start2, end2) overlap.\n    Handles both naive and timezone-aware datetimes.\n    Returns True if there is any overlap.\n    \"\"\"\n    # Convert timezone-aware datetimes to UTC, keep naive datetimes as-is\n    def to_comparable(dt):\n        if dt.tzinfo is not None:\n            return dt.utctimetuple()\n        return dt.timetuple()\n    \n    # Check if we have mixed naive/aware datetimes\n    datetimes = [start1, end1, start2, end2]\n    aware_count = sum(1 for dt in datetimes if dt.tzinfo is not None)\n    \n    if 0 < aware_count < 4:\n        # Mixed case: convert all to UTC for comparison\n        # Treat naive datetimes as UTC\n        def to_utc_comparable(dt):\n            if dt.tzinfo is not None:\n                return dt.utctimetuple()\n            else:\n                return dt.timetuple()  # Assume naive is UTC\n        \n        s1 = to_utc_comparable(start1)\n        e1 = to_utc_comparable(end1)\n        s2 = to_utc_comparable(start2)\n        e2 = to_utc_comparable(end2)\n    else:\n        # All same type (all naive or all aware)\n        s1 = to_comparable(start1)\n        e1 = to_comparable(end1)\n        s2 = to_comparable(start2)\n        e2 = to_comparable(end2)\n    \n    # Check for zero-length ranges first\n    if s1 >= e1 or s2 >= e2:\n        return False\n    \n    # Check overlap: ranges [s1, e1) and [s2, e2) overlap if s1 < e2 and s2 < e1\n    return s1 < e2 and s2 < e1",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_004": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_004",
+      "passed": true,
+      "input_tokens": 689,
+      "output_tokens": 787,
+      "tokens_used": 787,
+      "wall_time_seconds": 10.64,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 787,
+              "score": {
+                "all_pass": true,
+                "n_pass": 13,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 13,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 13,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 13,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "import copy\nimport json\n\ndef apply_patch(document, patches):\n    \"\"\"Apply a list of JSON Patch operations (RFC 6902 subset) to a document.\n    Supports: add, remove, replace operations.\n    Path format: '/key/index/nested' (JSON Pointer, RFC 6901)\n    Returns the modified document.\n    \"\"\"\n    result = copy.deepcopy(document)\n\n    def unescape_json_pointer(token):\n        \"\"\"Unescape JSON Pointer token according to RFC 6901\"\"\"\n        return token.replace('~1', '/').replace('~0', '~')\n\n    def parse_path(path):\n        \"\"\"Parse JSON Pointer path into tokens\"\"\"\n        if path == '':\n            return []\n        if not path.startswith('/'):\n            raise ValueError(f\"Invalid JSON Pointer: {path}\")\n        \n        # Split and unescape each part\n        parts = path[1:].split('/')\n        return [unescape_json_pointer(part) for part in parts]\n\n    for patch in patches:\n        op = patch['op']\n        path = patch['path']\n        value = patch.get('value')\n\n        # Parse JSON pointer\n        parts = parse_path(path)\n        \n        # Handle root document operations\n        if not parts:\n            if op == 'add' or op == 'replace':\n                result = value\n            elif op == 'remove':\n                result = None\n            continue\n\n        # Navigate to parent\n        parent = result\n        for part in parts[:-1]:\n            if isinstance(parent, list):\n                parent = parent[int(part)]\n            else:\n                parent = parent[part]\n\n        target = parts[-1]\n\n        if op == 'add':\n            if isinstance(parent, list):\n                if target == '-':\n                    parent.append(value)\n                else:\n                    parent.insert(int(target), value)\n            else:\n                parent[target] = value\n\n        elif op == 'remove':\n            if isinstance(parent, list):\n                del parent[int(target)]\n            else:\n                del parent[target]\n\n        elif op == 'replace':\n            if isinstance(parent, list):\n                parent[int(target)] = value\n            else:\n                parent[target] = value\n\n    return result",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_005": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_005",
+      "passed": true,
+      "input_tokens": 468,
+      "output_tokens": 287,
+      "tokens_used": 287,
+      "wall_time_seconds": 5.86,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 287,
+              "score": {
+                "all_pass": true,
+                "n_pass": 15,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 15,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 15,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 15,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "import time\n\nclass TokenBucketRateLimiter:\n    \"\"\"Rate limiter using token bucket algorithm.\n    max_tokens: maximum burst size\n    refill_rate: tokens added per second\n    \"\"\"\n    def __init__(self, max_tokens, refill_rate):\n        self.max_tokens = max_tokens\n        self.refill_rate = refill_rate\n        self.tokens = max_tokens\n        self.last_refill = time.monotonic()\n\n    def _refill(self):\n        now = time.monotonic()\n        elapsed = now - self.last_refill\n        new_tokens = elapsed * self.refill_rate\n        self.tokens = min(self.max_tokens, self.tokens + new_tokens)\n        self.last_refill = now\n\n    def allow_request(self):\n        \"\"\"Returns True if request is allowed, False if rate limited.\"\"\"\n        self._refill()\n        if self.tokens >= 1:\n            self.tokens -= 1\n            return True\n        return False\n\n    def get_tokens(self):\n        \"\"\"Return current token count (for testing).\"\"\"\n        self._refill()\n        return self.tokens",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_006": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_006",
+      "passed": true,
+      "input_tokens": 453,
+      "output_tokens": 465,
+      "tokens_used": 465,
+      "wall_time_seconds": 6.47,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 465,
+              "score": {
+                "all_pass": true,
+                "n_pass": 16,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 16,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 16,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 16,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "class EventEmitter:\n    def __init__(self):\n        self._listeners = {}  # event_name -> list of callbacks\n\n    def on(self, event, callback):\n        \"\"\"Register a listener for an event.\"\"\"\n        if event not in self._listeners:\n            self._listeners[event] = []\n        self._listeners[event].append(callback)\n\n    def off(self, event, callback):\n        \"\"\"Remove a listener for an event.\"\"\"\n        if event in self._listeners:\n            try:\n                self._listeners[event].remove(callback)\n            except ValueError:\n                pass  # Callback not in list, ignore\n\n    def emit(self, event, *args, **kwargs):\n        \"\"\"Emit an event, calling all registered listeners.\"\"\"\n        if event not in self._listeners:\n            return\n        # Create a copy of the listeners list to avoid iterator invalidation\n        for listener in self._listeners[event][:]:\n            listener(*args, **kwargs)\n\n    def listener_count(self, event):\n        \"\"\"Return number of listeners for an event.\"\"\"\n        return len(self._listeners.get(event, []))",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_007": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_007",
+      "passed": true,
+      "input_tokens": 670,
+      "output_tokens": 683,
+      "tokens_used": 683,
+      "wall_time_seconds": 6.74,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 683,
+              "score": {
+                "all_pass": true,
+                "n_pass": 19,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 19,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 19,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 19,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "import threading\nfrom collections import deque\n\n\nclass Connection:\n    \"\"\"Simulated database connection.\"\"\"\n    _counter = 0\n    _lock = threading.Lock()\n\n    def __init__(self):\n        with Connection._lock:\n            Connection._counter += 1\n            self.id = Connection._counter\n        self.closed = False\n\n    def execute(self, query):\n        if self.closed:\n            raise RuntimeError('Connection is closed')\n        return f'Result of {query} on conn {self.id}'\n\n    def close(self):\n        self.closed = True\n\n\nclass ConnectionPool:\n    \"\"\"A simple connection pool with a fixed size.\"\"\"\n    def __init__(self, max_size=5):\n        self.max_size = max_size\n        self._pool = deque()\n        self._in_use = set()\n        self._lock = threading.Lock()\n        # Pre-fill pool\n        for _ in range(max_size):\n            self._pool.append(Connection())\n\n    def acquire(self):\n        \"\"\"Get a connection from the pool.\"\"\"\n        with self._lock:\n            if not self._pool:\n                raise RuntimeError('No connections available')\n            conn = self._pool.popleft()\n            self._in_use.add(conn)\n            return conn\n\n    def release(self, conn):\n        \"\"\"Return a connection to the pool.\"\"\"\n        with self._lock:\n            if conn in self._in_use:\n                self._in_use.remove(conn)\n                self._pool.append(conn)\n\n    def __enter__(self):\n        self._current_conn = self.acquire()\n        return self._current_conn\n\n    def __exit__(self, exc_type, exc_val, exc_tb):\n        # Always release the connection, regardless of whether an exception occurred\n        if hasattr(self, '_current_conn'):\n            self.release(self._current_conn)\n        return False\n\n    @property\n    def available(self):\n        with self._lock:\n            return len(self._pool)\n\n    @property\n    def in_use_count(self):\n        with self._lock:\n            return len(self._in_use)",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_008": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_008",
+      "passed": true,
+      "input_tokens": 2385,
+      "output_tokens": 2898,
+      "tokens_used": 2898,
+      "wall_time_seconds": 37.06,
+      "num_iterations": 2,
+      "num_candidates_total": 4,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 688,
+              "score": {
+                "all_pass": false,
+                "n_pass": 16,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 17,
+                "first_error": "AssertionError: Double backtick failed: ['``a', 'b``', 'c']",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 1,
+              "output_tokens": 660,
+              "score": {
+                "all_pass": false,
+                "n_pass": 16,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 17,
+                "first_error": "AssertionError: Double backtick failed: ['``a', 'b``', 'c']",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 2,
+              "output_tokens": 687,
+              "score": {
+                "all_pass": false,
+                "n_pass": 16,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 17,
+                "first_error": "AssertionError: Double backtick failed: ['``a', 'b``', 'c']",
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": false,
+            "n_pass": 16,
+            "n_fail": 1,
+            "n_error": 0,
+            "n_total": 17,
+            "first_error": "AssertionError: Double backtick failed: ['``a', 'b``', 'c']",
+            "stderr_full": ""
+          }
+        },
+        {
+          "iter": 1,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 863,
+              "score": {
+                "all_pass": true,
+                "n_pass": 17,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 17,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 17,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 17,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "def parse_markdown_table(text):\n    \"\"\"Parse a markdown table into a list of rows, where each row is a list of cell strings.\n    Handles:\n    - Leading/trailing pipes\n    - Separator rows (---) are skipped\n    - Whitespace trimming in cells\n    - Inline code spans with backticks\n    \"\"\"\n    def split_respecting_code_spans(line):\n        \"\"\"Split line on pipes, but ignore pipes inside backtick code spans.\"\"\"\n        cells = []\n        current_cell = \"\"\n        i = 0\n        \n        while i < len(line):\n            char = line[i]\n            \n            if char == '`':\n                # Count consecutive backticks\n                backtick_count = 0\n                j = i\n                while j < len(line) and line[j] == '`':\n                    backtick_count += 1\n                    j += 1\n                \n                # Add the backticks to current cell\n                current_cell += '`' * backtick_count\n                \n                # Look for matching closing backticks\n                k = j\n                while k < len(line):\n                    if line[k] == '`':\n                        # Count consecutive closing backticks\n                        closing_count = 0\n                        m = k\n                        while m < len(line) and line[m] == '`':\n                            closing_count += 1\n                            m += 1\n                        \n                        if closing_count == backtick_count:\n                            # Found matching closing backticks\n                            # Add everything between opening and closing backticks\n                            current_cell += line[j:k] + '`' * closing_count\n                            i = m - 1  # Will be incremented at end of loop\n                            break\n                        else:\n                            k = m\n                    else:\n                        k += 1\n                else:\n                    # No matching closing backticks found, treat as literal\n                    i = j - 1  # Will be incremented at end of loop\n            elif char == '|':\n                # Found a table delimiter pipe (not in code span)\n                cells.append(current_cell)\n                current_cell = \"\"\n            else:\n                current_cell += char\n            \n            i += 1\n        \n        # Add the last cell\n        cells.append(current_cell)\n        return cells\n    \n    rows = []\n    for line in text.strip().split('\\n'):\n        line = line.strip()\n        if not line:\n            continue\n\n        # Skip separator rows\n        stripped = line.replace('|', '').replace('-', '').replace(':', '').strip()\n        if stripped == '':\n            # It's a separator row like |---|---|\n            continue\n\n        # Remove leading and trailing pipes\n        if line.startswith('|'):\n            line = line[1:]\n        if line.endswith('|'):\n            line = line[:-1]\n\n        # Split on pipes while respecting code spans\n        cells = split_respecting_code_spans(line)\n        cells = [c.strip() for c in cells]\n        rows.append(cells)\n\n    return rows",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_009": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_009",
+      "passed": true,
+      "input_tokens": 846,
+      "output_tokens": 863,
+      "tokens_used": 863,
+      "wall_time_seconds": 10.22,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 863,
+              "score": {
+                "all_pass": true,
+                "n_pass": 27,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 27,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 27,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 27,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "def compare_versions(v1, v2):\n    \"\"\"Compare two semver strings. Returns:\n    -1 if v1 < v2\n     0 if v1 == v2\n     1 if v1 > v2\n    Handles pre-release versions per semver spec.\n    \"\"\"\n    def parse(v):\n        # Remove leading 'v' if present\n        if v.lower().startswith('v'):\n            v = v[1:]\n        \n        # Split off build metadata (ignore it per semver spec)\n        if '+' in v:\n            v = v.split('+', 1)[0]\n        \n        # Split off pre-release\n        if '-' in v:\n            main, pre = v.split('-', 1)\n        else:\n            main, pre = v, None\n        \n        parts = list(map(int, main.split('.')))\n        return parts, pre\n\n    main1, pre1 = parse(v1)\n    main2, pre2 = parse(v2)\n\n    # Compare main version\n    for a, b in zip(main1, main2):\n        if a < b:\n            return -1\n        if a > b:\n            return 1\n\n    if len(main1) != len(main2):\n        return -1 if len(main1) < len(main2) else 1\n\n    # Compare pre-release\n    if pre1 is None and pre2 is None:\n        return 0\n    if pre1 is None:\n        return 1  # No pre-release > pre-release\n    if pre2 is None:\n        return -1  # Pre-release < no pre-release\n\n    # Compare pre-release identifiers\n    ids1 = pre1.split('.')\n    ids2 = pre2.split('.')\n\n    for a, b in zip(ids1, ids2):\n        # Both numeric\n        if a.isdigit() and b.isdigit():\n            if int(a) != int(b):\n                return -1 if int(a) < int(b) else 1\n        # Numeric < non-numeric\n        elif a.isdigit():\n            return -1\n        elif b.isdigit():\n            return 1\n        else:\n            # Lexical comparison\n            if a < b:\n                return -1\n            if a > b:\n                return 1\n\n    # All compared identifiers are equal, shorter pre-release is less\n    if len(ids1) != len(ids2):\n        return -1 if len(ids1) < len(ids2) else 1\n\n    return 0",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_010": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_010",
+      "passed": true,
+      "input_tokens": 835,
+      "output_tokens": 1234,
+      "tokens_used": 1234,
+      "wall_time_seconds": 14.66,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 1234,
+              "score": {
+                "all_pass": true,
+                "n_pass": 31,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 31,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 31,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 31,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "def glob_match(pattern, text):\n    \"\"\"Match a glob pattern against text.\n    Supports:\n    - * matches any sequence of characters (except /)\n    - ? matches any single character\n    - {a,b,c} matches any of the alternatives (can be nested)\n    - \\\\ escapes the next character\n    Returns True if the entire text matches the pattern.\n    \"\"\"\n    def _expand_braces(pattern):\n        \"\"\"Expand brace expressions and return list of expanded patterns.\"\"\"\n        # Find first '{'\n        start = pattern.find('{')\n        if start == -1:\n            return [pattern]\n\n        # Find matching '}' by counting braces\n        brace_count = 0\n        end = -1\n        i = start\n        while i < len(pattern):\n            if pattern[i] == '\\\\':\n                # Skip escaped character\n                i += 2\n                continue\n            elif pattern[i] == '{':\n                brace_count += 1\n            elif pattern[i] == '}':\n                brace_count -= 1\n                if brace_count == 0:\n                    end = i\n                    break\n            i += 1\n        \n        if end == -1:\n            return [pattern]\n\n        prefix = pattern[:start]\n        suffix = pattern[end + 1:]\n        \n        # Split alternatives, respecting nested braces\n        alternatives = []\n        current_alt = \"\"\n        brace_count = 0\n        i = start + 1\n        \n        while i < end:\n            if pattern[i] == '\\\\':\n                # Add escaped character as-is\n                current_alt += pattern[i:i+2]\n                i += 2\n                continue\n            elif pattern[i] == '{':\n                brace_count += 1\n                current_alt += pattern[i]\n            elif pattern[i] == '}':\n                brace_count -= 1\n                current_alt += pattern[i]\n            elif pattern[i] == ',' and brace_count == 0:\n                # This comma is at the top level, so it separates alternatives\n                alternatives.append(current_alt)\n                current_alt = \"\"\n                i += 1\n                continue\n            else:\n                current_alt += pattern[i]\n            i += 1\n        \n        # Add the last alternative\n        alternatives.append(current_alt)\n\n        results = []\n        for alt in alternatives:\n            for expanded in _expand_braces(prefix + alt + suffix):\n                results.append(expanded)\n        return results\n\n    def _match(pattern, text):\n        pi = 0\n        ti = 0\n        while pi < len(pattern) and ti < len(text):\n            if pattern[pi] == '\\\\':\n                pi += 1\n                if pi < len(pattern) and ti < len(text) and pattern[pi] == text[ti]:\n                    pi += 1\n                    ti += 1\n                else:\n                    return False\n            elif pattern[pi] == '?':\n                pi += 1\n                ti += 1\n            elif pattern[pi] == '*':\n                # Try matching zero or more characters\n                pi += 1\n                for end in range(ti, len(text) + 1):\n                    if _match(pattern[pi:], text[end:]):\n                        return True\n                return False\n            elif pattern[pi] == text[ti]:\n                pi += 1\n                ti += 1\n            else:\n                return False\n        # Consume trailing *'s\n        while pi < len(pattern) and pattern[pi] == '*':\n            pi += 1\n        return pi == len(pattern) and ti == len(text)\n\n    # Expand braces first, then match each alternative\n    for expanded in _expand_braces(pattern):\n        if _match(expanded, text):\n            return True\n    return False",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_011": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_011",
+      "passed": true,
+      "input_tokens": 5410,
+      "output_tokens": 4794,
+      "tokens_used": 4794,
+      "wall_time_seconds": 48.42,
+      "num_iterations": 2,
+      "num_candidates_total": 5,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 890,
+              "score": {
+                "all_pass": false,
+                "n_pass": 10,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": "AssertionError: Long word should be preserved",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 1,
+              "output_tokens": 893,
+              "score": {
+                "all_pass": false,
+                "n_pass": 10,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": "AssertionError: Long word should be preserved",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 2,
+              "output_tokens": 869,
+              "score": {
+                "all_pass": false,
+                "n_pass": 10,
+                "n_fail": 1,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": "AssertionError: Long word should be preserved",
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": false,
+            "n_pass": 10,
+            "n_fail": 1,
+            "n_error": 0,
+            "n_total": 11,
+            "first_error": "AssertionError: Long word should be preserved",
+            "stderr_full": ""
+          }
+        },
+        {
+          "iter": 1,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 827,
+              "score": {
+                "all_pass": false,
+                "n_pass": 7,
+                "n_fail": 4,
+                "n_error": 2,
+                "n_total": 11,
+                "first_error": "AssertionError: CJK wrapping should split: ['\u4f60\u597d\u4e16\u754c']",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 1,
+              "output_tokens": 1315,
+              "score": {
+                "all_pass": true,
+                "n_pass": 11,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 11,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 1,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 11,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 11,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "def wrap_text(text, width):\n    \"\"\"Wrap text to the specified display width.\n    CJK characters should be treated as width 2.\n    Words should not be broken in the middle unless they exceed the line width.\n    CJK characters can be broken at any point (no word boundaries).\n    Returns a list of lines.\n    \"\"\"\n    def char_width(c):\n        \"\"\"Return display width of a character.\"\"\"\n        cp = ord(c)\n        # CJK Unified Ideographs and common CJK ranges\n        if (0x4E00 <= cp <= 0x9FFF or  # CJK Unified Ideographs\n            0x3400 <= cp <= 0x4DBF or  # CJK Extension A\n            0xF900 <= cp <= 0xFAFF or  # CJK Compatibility Ideographs\n            0x3000 <= cp <= 0x303F or  # CJK Symbols and Punctuation\n            0xFF00 <= cp <= 0xFFEF or  # Fullwidth Forms\n            0xAC00 <= cp <= 0xD7AF):   # Hangul Syllables\n            return 2\n        return 1\n\n    def string_width(s):\n        \"\"\"Return display width of a string.\"\"\"\n        return sum(char_width(c) for c in s)\n\n    def is_cjk_char(c):\n        \"\"\"Check if character is CJK.\"\"\"\n        cp = ord(c)\n        return (0x4E00 <= cp <= 0x9FFF or  # CJK Unified Ideographs\n                0x3400 <= cp <= 0x4DBF or  # CJK Extension A\n                0xF900 <= cp <= 0xFAFF or  # CJK Compatibility Ideographs\n                0x3000 <= cp <= 0x303F or  # CJK Symbols and Punctuation\n                0xFF00 <= cp <= 0xFFEF or  # Fullwidth Forms\n                0xAC00 <= cp <= 0xD7AF)    # Hangul Syllables\n\n    def has_cjk_chars(s):\n        \"\"\"Check if string contains any CJK characters.\"\"\"\n        return any(is_cjk_char(c) for c in s)\n\n    def break_cjk_text(text, max_width):\n        \"\"\"Break CJK text at character boundaries.\"\"\"\n        if string_width(text) <= max_width:\n            return [text]\n        \n        pieces = []\n        current_piece = ''\n        current_width = 0\n        \n        for char in text:\n            char_w = char_width(char)\n            if current_width + char_w <= max_width:\n                current_piece += char\n                current_width += char_w\n            else:\n                if current_piece:\n                    pieces.append(current_piece)\n                current_piece = char\n                current_width = char_w\n        \n        if current_piece:\n            pieces.append(current_piece)\n        \n        return pieces\n\n    lines = []\n    for paragraph in text.split('\\n'):\n        if not paragraph:\n            lines.append('')\n            continue\n\n        words = paragraph.split(' ')\n        current_line = ''\n        current_width = 0\n\n        for word in words:\n            word_width = string_width(word)\n            \n            # If word exceeds width and contains CJK characters, break it\n            if word_width > width and has_cjk_chars(word):\n                # First, add current line if it exists\n                if current_line:\n                    lines.append(current_line)\n                    current_line = ''\n                    current_width = 0\n                \n                # Break the CJK text and add pieces\n                word_pieces = break_cjk_text(word, width)\n                for i, piece in enumerate(word_pieces):\n                    if i == len(word_pieces) - 1:  # Last piece\n                        current_line = piece\n                        current_width = string_width(piece)\n                    else:\n                        lines.append(piece)\n            else:\n                # Regular word processing - don't break non-CJK words\n                if current_width == 0:\n                    current_line = word\n                    current_width = word_width\n                elif current_width + 1 + word_width <= width:\n                    current_line += ' ' + word\n                    current_width += 1 + word_width\n                else:\n                    lines.append(current_line)\n                    current_line = word\n                    current_width = word_width\n\n        if current_line:\n            lines.append(current_line)\n\n    return lines",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_012": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_012",
+      "passed": true,
+      "input_tokens": 932,
+      "output_tokens": 688,
+      "tokens_used": 688,
+      "wall_time_seconds": 6.23,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 688,
+              "score": {
+                "all_pass": true,
+                "n_pass": 28,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 28,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 28,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 28,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "class IntervalTree:\n    \"\"\"Interval tree supporting insertion and point queries.\n    Intervals are inclusive on both ends: [lo, hi].\n    \"\"\"\n    class Node:\n        def __init__(self, lo, hi, data):\n            self.lo = lo\n            self.hi = hi\n            self.data = data\n            self.max_hi = hi\n            self.left = None\n            self.right = None\n\n    def __init__(self):\n        self.root = None\n\n    def insert(self, lo, hi, data):\n        \"\"\"Insert interval [lo, hi] with associated data.\"\"\"\n        self.root = self._insert(self.root, lo, hi, data)\n\n    def _insert(self, node, lo, hi, data):\n        if node is None:\n            return self.Node(lo, hi, data)\n        if lo < node.lo:\n            node.left = self._insert(node.left, lo, hi, data)\n        else:\n            node.right = self._insert(node.right, lo, hi, data)\n        node.max_hi = max(node.max_hi, hi)\n        return node\n\n    def query(self, point):\n        \"\"\"Return list of data for all intervals containing the point.\"\"\"\n        results = []\n        self._query(self.root, point, results)\n        return results\n\n    def _query(self, node, point, results):\n        if node is None:\n            return\n        # If point is to the left of this node's interval, no need to check right\n        if point < node.lo:\n            self._query(node.left, point, results)\n            return\n        # Check if point is in this node's interval\n        if node.lo <= point <= node.hi:  # Fixed: now includes right endpoint\n            results.append(node.data)\n        # Check left subtree if it could contain matching intervals\n        if node.left and node.left.max_hi >= point:  # Fixed: now includes equality\n            self._query(node.left, point, results)\n        # Check right subtree\n        self._query(node.right, point, results)\n\n    def query_range(self, lo, hi):\n        \"\"\"Return list of data for all intervals that overlap with [lo, hi].\"\"\"\n        results = []\n        self._query_range(self.root, lo, hi, results)\n        return results\n\n    def _query_range(self, node, lo, hi, results):\n        if node is None:\n            return\n        if node.lo <= hi and lo <= node.hi:\n            results.append(node.data)\n        if node.left and node.left.max_hi >= lo:\n            self._query_range(node.left, lo, hi, results)\n        if node.right and node.lo <= hi:\n            self._query_range(node.right, lo, hi, results)",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_013": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_013",
+      "passed": true,
+      "input_tokens": 3384,
+      "output_tokens": 1948,
+      "tokens_used": 1948,
+      "wall_time_seconds": 27.15,
+      "num_iterations": 1,
+      "num_candidates_total": 2,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 897,
+              "score": {
+                "all_pass": false,
+                "n_pass": 26,
+                "n_fail": 0,
+                "n_error": 3,
+                "n_total": 28,
+                "first_error": "AttributeError: 'WildcardTrie' object has no attribute 'get_all_words'",
+                "stderr_full": ""
+              },
+              "error": null
+            },
+            {
+              "k": 1,
+              "output_tokens": 1051,
+              "score": {
+                "all_pass": true,
+                "n_pass": 28,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 28,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 1,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 28,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 28,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "class WildcardTrie:\n    def __init__(self):\n        self.children = {}\n        self.is_end = False\n        self._words = []  # Track all words for verification\n\n    def insert(self, word):\n        if word not in self._words:\n            self._words.append(word)\n        node = self\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = WildcardTrie()\n            node = node.children[ch]\n        node.is_end = True\n\n    def search(self, pattern):\n        \"\"\"Search for pattern where '.' matches any character.\"\"\"\n        return self._search(self, pattern, 0)\n\n    def _search(self, node, pattern, index):\n        if node is None:\n            return False\n        if index == len(pattern):\n            return node.is_end\n\n        ch = pattern[index]\n        if ch == '.':\n            # Try each child\n            for child_key in node.children:\n                if self._search(node.children[child_key], pattern, index + 1):\n                    return True\n            return False\n        else:\n            child = node.children.get(ch)\n            if child is None:\n                return False\n            return self._search(child, pattern, index + 1)\n\n    def get_all_words(self):\n        \"\"\"Return all inserted words.\"\"\"\n        return self._words[:]\n\n    def starts_with(self, prefix):\n        \"\"\"Return True if any word starts with the given prefix.\"\"\"\n        node = self\n        for ch in prefix:\n            if ch not in node.children:\n                return False\n            node = node.children[ch]\n        return self._has_words_below(node)\n\n    def _has_words_below(self, node):\n        \"\"\"Check if there are any complete words at or below this node.\"\"\"\n        if node.is_end:\n            return True\n        for child in node.children.values():\n            if self._has_words_below(child):\n                return True\n        return False\n\n    def delete(self, word):\n        \"\"\"Delete a word from the trie.\"\"\"\n        if word in self._words:\n            self._words.remove(word)\n            self._delete(self, word, 0)\n\n    def _delete(self, node, word, index):\n        \"\"\"Delete word and return True if this node should be deleted.\"\"\"\n        if index == len(word):\n            node.is_end = False\n            # Return True if this node has no children and is not end of another word\n            return len(node.children) == 0 and not node.is_end\n        \n        ch = word[index]\n        if ch not in node.children:\n            return False\n        \n        should_delete_child = self._delete(node.children[ch], word, index + 1)\n        \n        if should_delete_child:\n            del node.children[ch]\n        \n        # Return True if this node should be deleted\n        # (has no children, is not end of word, and we're not at root)\n        return len(node.children) == 0 and not node.is_end and index > 0",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_014": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_014",
+      "passed": true,
+      "input_tokens": 702,
+      "output_tokens": 572,
+      "tokens_used": 572,
+      "wall_time_seconds": 7.38,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 572,
+              "score": {
+                "all_pass": true,
+                "n_pass": 22,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 22,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 22,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 22,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "import time\nfrom collections import OrderedDict\n\n\nclass TTLCache:\n    \"\"\"LRU cache with per-entry TTL (time-to-live).\n    When the cache is full, the least recently used entry is evicted.\n    Expired entries should be treated as non-existent.\n    \"\"\"\n    def __init__(self, max_size):\n        self.max_size = max_size\n        self._cache = OrderedDict()  # key -> (value, expiry_time)\n\n    def _cleanup_expired(self):\n        \"\"\"Remove all expired entries from the cache.\"\"\"\n        current_time = time.monotonic()\n        expired_keys = []\n        for key, (value, expiry) in self._cache.items():\n            if current_time > expiry:\n                expired_keys.append(key)\n        \n        for key in expired_keys:\n            del self._cache[key]\n\n    def get(self, key):\n        \"\"\"Get a value. Returns None if key doesn't exist or is expired.\"\"\"\n        if key not in self._cache:\n            return None\n        value, expiry = self._cache[key]\n        if time.monotonic() > expiry:\n            # Entry has expired\n            del self._cache[key]\n            return None\n        # Move to end (most recently used)\n        self._cache.move_to_end(key)\n        return value\n\n    def put(self, key, value, ttl_seconds=60):\n        \"\"\"Put a value with a TTL. Evicts LRU entry if cache is full.\"\"\"\n        if key in self._cache:\n            # Update existing\n            self._cache[key] = (value, time.monotonic() + ttl_seconds)\n            self._cache.move_to_end(key)\n            return\n\n        # Clean up expired entries first\n        self._cleanup_expired()\n\n        # If still at capacity after cleanup, evict LRU (first item)\n        if len(self._cache) >= self.max_size:\n            self._cache.popitem(last=False)\n\n        self._cache[key] = (value, time.monotonic() + ttl_seconds)\n\n    def size(self):\n        \"\"\"Return number of non-expired entries.\"\"\"\n        self._cleanup_expired()\n        return len(self._cache)\n\n    def clear(self):\n        \"\"\"Clear all entries.\"\"\"\n        self._cache.clear()",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    },
+    "code_015": {
+      "strategy": "IAD",
+      "budget": 20000,
+      "task_id": "code_015",
+      "passed": true,
+      "input_tokens": 1984,
+      "output_tokens": 704,
+      "tokens_used": 704,
+      "wall_time_seconds": 11.63,
+      "num_iterations": 1,
+      "num_candidates_total": 1,
+      "iters": [
+        {
+          "iter": 0,
+          "candidates": [
+            {
+              "k": 0,
+              "output_tokens": 704,
+              "score": {
+                "all_pass": true,
+                "n_pass": 20,
+                "n_fail": 0,
+                "n_error": 0,
+                "n_total": 20,
+                "first_error": null,
+                "stderr_full": ""
+              },
+              "error": null
+            }
+          ],
+          "selected_k": 0,
+          "selected_score": {
+            "all_pass": true,
+            "n_pass": 20,
+            "n_fail": 0,
+            "n_error": 0,
+            "n_total": 20,
+            "first_error": null,
+            "stderr_full": ""
+          }
+        }
+      ],
+      "code_emitted": "def topo_sort(edges):\n    \"\"\"Topological sort of a directed graph.\n    edges: list of (from_node, to_node) tuples\n    Returns a list of nodes in topological order.\n    Raises ValueError if the graph contains a cycle.\n    \"\"\"\n    if not edges:\n        return []\n\n    graph = {}\n    in_degree = {}\n    all_nodes = set()\n\n    # Collect all nodes\n    for src, dst in edges:\n        all_nodes.add(src)\n        all_nodes.add(dst)\n\n    # Initialize graph and in_degree for all nodes\n    for node in all_nodes:\n        graph[node] = set()  # Use set to deduplicate parallel edges\n        in_degree[node] = 0\n\n    # Build adjacency list (deduplicating parallel edges)\n    for src, dst in edges:\n        graph[src].add(dst)\n\n    # Calculate in-degrees based on deduplicated graph\n    for src in graph:\n        for dst in graph[src]:\n            in_degree[dst] += 1\n\n    # Kahn's algorithm\n    queue = [node for node in all_nodes if in_degree[node] == 0]\n    result = []\n\n    while queue:\n        node = queue.pop(0)\n        result.append(node)\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    if len(result) != len(all_nodes):\n        raise ValueError('Graph contains a cycle')\n\n    return result",
+      "error_message": null,
+      "hyperparams": {
+        "K": 3,
+        "N": 3,
+        "temperature": 0.7,
+        "per_sample_max_tokens": 2200,
+        "budget": 20000
+      }
+    }
+  },
+  "hyperparams": {
+    "K": 3,
+    "N": 3,
+    "temperature": 0.7,
+    "per_sample_max_tokens": 2200,
+    "budget": 20000,
+    "model": "claude-sonnet-4-20250514"
+  }
+}
