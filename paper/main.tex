@@ -43,9 +43,14 @@
 
 \title{Grounding the Loop on Both Sides:\texorpdfstring{\\}{ }Interaction as a Third Test-Time Compute Axis,\texorpdfstring{\\}{ }and Why Its Gains Are Invisible Without Grounded Evaluation}
 
-\author{Bojie Li\\ Pine AI \\ \texttt{boj@19pine.ai}}
-\runningtitle{Grounding the Loop on Both Sides}
+\author{%
+  \begin{tabular}{@{}c@{\hspace{4em}}c@{}}
+    Bojie Li & Noah Shi \\
+    Pine AI & University of Washington
+  \end{tabular}%
+}
 \date{}
+\runningtitle{Grounding the Loop on Both Sides: Interaction as a Third Test-Time Compute Axis, and Why Its Gains Are Invisible Without Grounded Evaluation}
 
 \begin{document}
 \maketitle
@@ -65,6 +70,11 @@ On execution-grounded code the harness lifts a frontier model from a two-thirds 
 \input{sec_robustness}
 \input{sec_distill}
 \input{sec_discussion}
+
+\section*{Acknowledgements}
+
+This paper was produced using a voice-directed \emph{whisper coding} workflow~\citep{pineai2025whispercoding}, in which the author specifies and reviews the work by voice while AI agents carry out the coding and experiments. AI tools including Pine Copilot and Claude Code with Claude Opus 4.8 were used during this research.
+We thank BSQL Networking for hosting the NVIDIA RTX PRO 6000 Blackwell Workstation Edition GPU.
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
