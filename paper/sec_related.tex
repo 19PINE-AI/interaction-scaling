@@ -1,6 +1,8 @@
 \section{Related Work}
 \label{sec:related}
 
+We now place the framework and results above against the literature on test-time scaling, self-correction, grounded feedback, and model-as-judge evaluation.
+
 \paragraph{Test-time compute scaling.} Two axes are established. \emph{Reasoning} scaling (chain-of-thought, tree search, and extended thinking \citep{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling,kimi2025k15}) spends more tokens before committing. \emph{Sampling} scaling (self-consistency and best-of-$N$ \citep{wang2023selfconsistency,brown2024large}) draws multiple attempts and selects. Both transform the same frozen weights and prompt. We make precise (\Cref{sec:framework}) the sense in which they are bounded, and position \emph{interaction} as a third axis that imports external information.
 
 \paragraph{Self-correction and critique.} Iterative refinement with model-generated feedback (Reflexion \citep{shinn2023reflexion}, ReAct \citep{yao2023react}, Self-Refine \citep{madaan2023selfrefine}, CRITIC \citep{gou2024critic}) is widely used, but its reliability is contested: \citet{huang2024selfcorrect} show models often cannot self-correct reasoning without an external signal, and \citet{kamoi2025correct} chart when correction does and does not help. Our taxonomy makes the distinction explicit. \emph{Ungrounded} critique (Type 1) is bounded, whereas refinement against an executed/measured result (Type 3) is not. And our in-modality control (\Cref{sec:interaction}) shows it is the external execution, not the extra critique pass, that carries the gain.
