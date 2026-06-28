@@ -61,5 +61,3 @@ The second point is not a detail. The default evaluator for visual artifacts is 
 \item \textbf{Grounded evaluation, and a deterministic instrument (\Cref{sec:grounded_eval}).} We show the VLM judge is structurally blind, build a deterministic DOM-geometry+alignment instrument, and report large, significant, CI-backed defect reductions under grounded feedback across four visual modalities measured identically (gains the standard metric cannot even see), plus a controlled ablation in which VLM feedback makes layout \emph{worse}.
 \item \textbf{Robustness and internalization (\Cref{sec:robustness,sec:distill}).} The effects replicate across model families (including grounded geometry on Gemini~3.1~Pro), to held-out tasks, and under a propose-heavy budget allocation. The harness's behavior also partially distills into an $8$B student at ${\sim}10\times$ lower deployment cost.
 \end{enumerate}
-
-\paragraph{Availability.} All code, task suites, prompts, the deterministic instruments, and an interactive results browser with per-task single-shot-vs-reviewed renders are available at \url{https://github.com/bojieli/interaction-scaling-paper}.
