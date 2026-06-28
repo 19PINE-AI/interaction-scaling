@@ -60,6 +60,12 @@ Test-time compute is dominated by two scaling axes that both operate inside a mo
 
 On execution-grounded code the harness lifts a frontier model from a two-thirds pass-rate to a strict $100\%$. An in-modality control isolates the \emph{execution} of tests, not the extra reviewing pass, as the cause. The effect replicates across three model families (each over three seeds) and a held-out suite, with the grounded-geometry result reproduced on a second proposer (Gemini~3.1~Pro) under the same model-free instrument. At a fixed token budget, reasoning-only and best-of-$N$ saturate while every interaction strategy approaches a perfect pass-rate, the proposer--reviewer harness doing so at the lowest token cost with zero seed variance. Finally, the harness's behavior partially distills into an $8$B student. Interaction scaling is real, distinct, and predictable. But its gains are visible only when both the feedback and the metric are grounded.
 \end{abstract}
+\begin{center}
+\small
+Code: \url{https://github.com/19PINE-AI/interaction-scaling} \\[2pt]
+Website: \url{https://01.me/research/interaction-scaling}
+\end{center}
+\vspace{-0.6em}
 
 \input{sec_intro}
 \input{sec_related}
