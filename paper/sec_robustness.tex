@@ -1,7 +1,7 @@
 \section{Robustness}
 \label{sec:robustness}
 
-\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the $15$ hard code tasks, over \emph{three} independent on-policy seeds per family, the harness lifts all three families---Sonnet~4, Qwen3-235B, and GPT-5 (the last from a higher single-shot baseline; \Cref{fig:crossmodel}). The reviewed ceiling has \emph{zero} seed variance for every family while single-shot fluctuates seed-to-seed: the grounded loop converges to the same ceiling regardless of the starting draw.
+\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the $15$ hard code tasks, over \emph{three} independent on-policy seeds per family, the harness lifts all three families: Sonnet~4, Qwen3-235B, and GPT-5 (the last from a higher single-shot baseline, \Cref{fig:crossmodel}). The reviewed ceiling has \emph{zero} seed variance for every family while single-shot fluctuates seed-to-seed: the grounded loop converges to the same ceiling regardless of the starting draw.
 
 \begin{figure}[t]
 \centering
@@ -20,12 +20,12 @@
     coordinates {(Sonnet 4,100) +- (0,0) (Qwen3-235B,93.3) +- (0,0) (GPT-5,100) +- (0,0)}; \addlegendentry{reviewed}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families, each over three independent on-policy seeds ($+33.3$/$+22.2$/$+20.0$\,pp). Whiskers are $\pm1$ SD across seeds; the reviewed bars carry \emph{zero} seed variance for all three families.}
+\caption{\textbf{The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families, each over three independent on-policy seeds ($+33.3$/$+22.2$/$+20.0$\,pp). Whiskers are $\pm1$ SD across seeds. The reviewed bars carry \emph{zero} seed variance for all three families.}
 \label{fig:crossmodel}
 \end{figure}
 
-\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the grounded-evaluation effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces and is in fact larger: Gemini's single-shot slides are \emph{more} defect-prone than Sonnet's, and the grounded loop removes almost all of the excess (a $93\%$ mean reduction; $19$ of $20$ decisive task-runs improve). Since the instrument depends on no model, the effect is neither Claude- nor scorer-specific.
+\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the grounded-evaluation effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces and is in fact larger: Gemini's single-shot slides are \emph{more} defect-prone than Sonnet's, and the grounded loop removes almost all of the excess (a $93\%$ mean reduction, $19$ of $20$ decisive task-runs improve). Since the instrument depends on no model, the effect is neither Claude- nor scorer-specific.
 
 \paragraph{Held-out generalization.} On a $32$-task held-out code suite constructed after the method was fixed, the harness again recovers all first-shot failures with zero regressions and reaches a perfect pass-rate, with no tuning to the original tasks (\Cref{tab:heldout}).
 
-\paragraph{Budget allocation.} Sweeping the proposer/reviewer token split on a fixed budget produces a large pass-rate spread, monotone in the proposer's per-call share (\Cref{tab:allocation}): the optimum is \emph{propose-heavy}---allocate the majority to generation, reserving enough for the reviewer to localize defects. Extra inference compute is better spent on additional samples than on deeper iteration past the early-stop point.
+\paragraph{Budget allocation.} Sweeping the proposer/reviewer token split on a fixed budget produces a large pass-rate spread, monotone in the proposer's per-call share (\Cref{tab:allocation}). The optimum is \emph{propose-heavy}: allocate the majority to generation, reserving enough for the reviewer to localize defects. Extra inference compute is better spent on additional samples than on deeper iteration past the early-stop point.
