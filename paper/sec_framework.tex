@@ -17,43 +17,11 @@ Let $A^\star$ be the (task-determined) correct artifact and $A$ a candidate. The
 \[
 I(A^\star; R)\ \le\ I(A^\star; (\Theta,X)),
 \]
-so \emph{no} amount of reasoning or ungrounded review (Type 0--2) can recover more information about $A^\star$ than is already in $(\Theta,X)$. This bounds reasoning-only scaling. Sampling is bounded differently but no less tightly: for any finite $N$, best-of-$N$ can only \emph{select} among the $N$ candidates the proposer actually draws, so even an oracle (grounded) verifier cannot return a correct artifact the proposer is too unlikely to sample within the budget. Its practical ceiling is the high-probability support of the proposer's own output distribution, not a new information channel. Both ceilings appear empirically (\Cref{fig:dpi}): on hard code, both reasoning-only and oracle best-of-$N$ saturate well short of completion. The inequality bounds the \emph{information channel}, not achievable quality directly; we use it to \emph{motivate} the saturation we then measure and treat as the evidence.
+so \emph{no} amount of reasoning or ungrounded review (Type 0--2) can recover more information about $A^\star$ than is already in $(\Theta,X)$. This bounds reasoning-only scaling. Sampling is bounded differently but no less tightly: for any finite $N$, best-of-$N$ can only \emph{select} among the $N$ candidates the proposer actually draws, so even an oracle (grounded) verifier cannot return a correct artifact the proposer is too unlikely to sample within the budget. Its practical ceiling is the high-probability support of the proposer's own output distribution, not a new information channel. Both ceilings appear empirically once we measure them (\Cref{fig:dpi} in \Cref{sec:interaction}): on hard code, both reasoning-only and oracle best-of-$N$ saturate well short of completion. The inequality bounds the \emph{information channel}, not achievable quality directly; we use it to \emph{motivate} the saturation we then measure and treat as the evidence.
 
 Grounded feedback (Type 3) escapes both ceilings by feeding an environment observation $E=g(A,\,\mathrm{world})$ (a test outcome, a measured bounding box, a search verdict) back into \emph{generation}. Conditioning the next proposal on $E$ lets the proposer synthesize a candidate it would not otherwise have sampled: formally $I(A^\star;(R,E))$ can exceed $I(A^\star;(\Theta,X))$ because $E$ carries information obtained by \emph{running} the artifact against reality. This is the crucial difference from selection (best-of-$N$ cannot create a missing candidate) and from reasoning (which adds no information), and it is why interaction is a distinct axis rather than a constant-factor speedup.
 
 \paragraph{The symmetric claim: ungrounded evaluation cannot measure the gain.} The same inequality applies to the \emph{scorer}. A metric $M$ that is itself a function of $(\Theta,X)$ (e.g.\ a VLM judging a screenshot, whose view of $A$ is a lossy, cropped image) satisfies $I(A^\star; M)\le I(A^\star;(\Theta,X))$ and cannot certify an improvement that lives in the part of $A$ it cannot observe. Grounding the evaluation (measure the artifact directly) is therefore not optional polish: it is a precondition for \emph{detecting} interaction scaling on any modality whose quality is not fully visible to the default judge. \Cref{sec:grounded_eval} shows this is exactly the situation for rendered visual artifacts.
-
-\begin{figure}[t]
-\centering
-\begin{tikzpicture}
-\begin{axis}[width=0.84\linewidth,height=5.2cm,
-  xmode=log,log basis x=10,
-  xlabel={per-task token budget $B$},ylabel={code pass-rate (\%)},
-  xmin=820,xmax=26000,ymin=54,ymax=104,clip=false,
-  xtick={1000,5000,20000},xticklabels={1K,5K,20K},
-  ytick={60,70,80,90,100},ymajorgrids,
-  legend style={font=\footnotesize,at={(0.97,0.04)},anchor=south east,draw=cGrey!50},legend cell align=left]
-  % shade the region only interaction reaches (above the oracle ceiling)
-  \fill[cRV!8] (axis cs:820,86.7) rectangle (axis cs:26000,104);
-  \node[font=\footnotesize\itshape,cRV!70!black,anchor=north east] at (axis cs:24000,103.4)
-     {reached only by interaction};
-  % in-token-space ceiling: best-of-N with an oracle verifier
-  \draw[cGrey,densely dotted] (axis cs:820,86.7)--(axis cs:26000,86.7);
-  \node[font=\footnotesize,cGrey,anchor=south west] at (axis cs:870,86.9)
-     {in-token-space ceiling (oracle best-of-$N$)};
-  \addplot[cRV,very thick,mark=*,mark size=1.7] coordinates {(1000,62.2)(5000,91.1)(20000,100.0)};
-    \addlegendentry{proposer--reviewer (interaction)}
-  \addplot[cRV!55!black,thick,mark=square*,mark size=1.5] coordinates {(1000,57.8)(5000,93.3)(20000,97.8)};
-    \addlegendentry{single-agent loop (interaction)}
-  \addplot[cAccent,thick,dotted,mark=triangle*,mark size=2] coordinates {(1000,80.0)(5000,77.8)(20000,86.7)};
-    \addlegendentry{best-of-$N$ (oracle verifier)}
-  \addplot[cSS,thick,dashed,mark=diamond*,mark size=2] coordinates {(1000,60.0)(5000,73.3)(20000,73.3)};
-    \addlegendentry{reasoning-only}
-\end{axis}
-\end{tikzpicture}
-\caption{\textbf{Two in-token-space axes saturate. Interaction does not.} Measured code pass-rate vs.\ per-task token budget on the $15$ hard tasks ($3$-seed means, full table with SDs in \Cref{tab:scaling-curves}). Reasoning-only plateaus at its information ceiling ($73.3\%$), and best-of-$N$ plateaus at $86.7\%$ even with an oracle (ground-truth) verifier (dotted). Both are functions of the frozen $(\Theta,X)$ and flatten with budget, the latter at the high-probability support of the proposer's own output distribution. The two feedback-iterating strategies instead climb past the oracle-sampling ceiling to $\ge97.8\%$ (harness: strict $100\%$), importing information from execution each cycle, the DPI prediction made concrete. These are measured points, not a schematic.}
-\label{fig:dpi}
-\end{figure}
 
 \subsection{Predictions}
 The framework makes three testable predictions, each tested below. \textbf{(P1)} Reasoning- and sampling-only scaling saturate strictly below the interaction ceiling (\Cref{sec:interaction}). \textbf{(P2)} Within interaction, more actionable grounded channels lift more, and the \emph{execution} of the artifact, not the extra review pass, is the active ingredient (\Cref{sec:interaction}). \textbf{(P3)} On modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:grounded_eval}).

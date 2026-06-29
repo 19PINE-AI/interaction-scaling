@@ -1,30 +1,38 @@
 \section{Interaction Is a Distinct Axis Beyond the In-Token-Space Ceiling}
 \label{sec:interaction}
 
-\paragraph{Reasoning and sampling saturate while interaction does not (P1).} On the $15$ hard code tasks at a fixed $20$K-token budget we compare four strategies: reasoning-only (extended thinking), best-of-$N$ sampling with an oracle verifier, a single-agent loop, and the proposer--reviewer harness. The two in-token-space axes plateau well short of completion while \emph{every} feedback-iterating strategy approaches a perfect pass-rate (\Cref{fig:strategies}, full curves in \Cref{tab:scaling-curves}). The best-of-$N$ comparison is the sharpest: its verifier is an \emph{oracle} (the ground-truth tests), so its ceiling is effectively pass@$N$. The unsolved tasks never yield a passing sample within the budget, yet the harness solves them. A perfect selector cannot return a candidate the proposer never draws. The loop reaches it by conditioning the next draw on execution feedback. This is the separation the framework predicts, and it is information-theoretic, not a tuning artifact.
+\paragraph{Reasoning and sampling saturate while interaction does not (P1).} On the $15$ hard code tasks at a fixed $20$K-token budget we compare four strategies: reasoning-only (extended thinking), best-of-$N$ sampling with an oracle verifier, a single-agent loop, and the proposer--reviewer harness. The two in-token-space axes plateau well short of completion while \emph{every} feedback-iterating strategy approaches a perfect pass-rate (\Cref{fig:dpi}, full table in \Cref{tab:scaling-curves}). The best-of-$N$ comparison is the sharpest: its verifier is an \emph{oracle} (the ground-truth tests), so its ceiling is effectively pass@$N$. The unsolved tasks never yield a passing sample within the budget, yet the harness solves them. A perfect selector cannot return a candidate the proposer never draws. The loop reaches it by conditioning the next draw on execution feedback. This is the separation the framework predicts, and it is information-theoretic, not a tuning artifact.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.82\linewidth,height=4.4cm,
-  xbar,xmin=60,xmax=103,
-  bar width=9pt,enlarge y limits=0.2,
-  xlabel={pass-rate at $20$K-token budget (\%)},
-  symbolic y coords={reasoning,sampling,loop,harness},
-  ytick=data,
-  yticklabels={reasoning,best-of-$N$,single-agent loop,proposer--reviewer},
-  nodes near coords,nodes near coords style={font=\footnotesize},
-  every node near coord/.append style={/pgf/number format/.cd,fixed,precision=1},
-  xtick={60,70,80,90,100},xmajorgrids]
-  \addplot[draw=cSS!60!black,fill=cSS!35,error bars/.cd,x dir=both,x explicit]
-    coordinates {(73.3,reasoning) (86.7,sampling)+-(0,0)};
-  \addplot[draw=cRV!60!black,fill=cRV!35,error bars/.cd,x dir=both,x explicit]
-    coordinates {(97.8,loop)+-(3.1,0) (100.0,harness)+-(0,0)};
-  \draw[cGrey,densely dotted,thick] (axis cs:86.7,reasoning) -- (axis cs:86.7,harness);
+\begin{axis}[width=0.84\linewidth,height=5.2cm,
+  xmode=log,log basis x=10,
+  xlabel={per-task token budget $B$},ylabel={code pass-rate (\%)},
+  xmin=820,xmax=26000,ymin=54,ymax=104,clip=false,
+  xtick={1000,5000,20000},xticklabels={1K,5K,20K},
+  ytick={60,70,80,90,100},ymajorgrids,
+  legend style={font=\footnotesize,at={(0.97,0.04)},anchor=south east,draw=cGrey!50},legend cell align=left]
+  % shade the region only interaction reaches (above the oracle ceiling)
+  \fill[cRV!8] (axis cs:820,86.7) rectangle (axis cs:26000,104);
+  \node[font=\footnotesize\itshape,cRV!70!black,anchor=north east] at (axis cs:24000,103.4)
+     {reached only by interaction};
+  % in-token-space ceiling: best-of-N with an oracle verifier
+  \draw[cGrey,densely dotted] (axis cs:820,86.7)--(axis cs:26000,86.7);
+  \node[font=\footnotesize,cGrey,anchor=south west] at (axis cs:870,86.9)
+     {in-token-space ceiling (oracle best-of-$N$)};
+  \addplot[cRV,very thick,mark=*,mark size=1.7] coordinates {(1000,62.2)(5000,91.1)(20000,100.0)};
+    \addlegendentry{proposer--reviewer (interaction)}
+  \addplot[cRV!55!black,thick,mark=square*,mark size=1.5] coordinates {(1000,57.8)(5000,93.3)(20000,97.8)};
+    \addlegendentry{single-agent loop (interaction)}
+  \addplot[cAccent,thick,dotted,mark=triangle*,mark size=2] coordinates {(1000,80.0)(5000,77.8)(20000,86.7)};
+    \addlegendentry{best-of-$N$ (oracle verifier)}
+  \addplot[cSS,thick,dashed,mark=diamond*,mark size=2] coordinates {(1000,60.0)(5000,73.3)(20000,73.3)};
+    \addlegendentry{reasoning-only}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{Two axes saturate. The third does not.} The $20$K-token snapshot of \Cref{fig:dpi}: the two in-token-space axes (red) plateau below the interaction strategies (green), which all reach $\geq 97.8\%$. Whiskers are $\pm1$ SD over three seeds (reasoning was run once): the single-agent loop carries seed variance ($\pm3.1$\,pp, $100\%$ in $2$ of $3$ seeds) while the proposer--reviewer harness reaches strict $100\%$ with \emph{zero} seed variance. Dotted line: oracle best-of-$N$ ceiling.}
-\label{fig:strategies}
+\caption{\textbf{Two in-token-space axes saturate; interaction does not (P1).} Measured code pass-rate vs.\ per-task token budget on the $15$ hard tasks ($3$-seed means, full table with SDs in \Cref{tab:scaling-curves}). Reasoning-only plateaus at its information ceiling ($73.3\%$) and best-of-$N$ plateaus at $86.7\%$ even with an \emph{oracle} (ground-truth) verifier (dotted): both are functions of the frozen $(\Theta,X)$ and flatten with budget, the latter at the high-probability support of the proposer's own output distribution. The two feedback-iterating strategies instead climb past the oracle-sampling ceiling, importing information from execution each cycle---the harness to a strict $100\%$ with \emph{zero} seed variance, the single-agent loop to $\ge97.8\%$ ($100\%$ in $2$ of $3$ seeds). The DPI prediction, made concrete.}
+\label{fig:dpi}
 \end{figure}
 
 \subsection{The active ingredient is execution, not review (P2)}
