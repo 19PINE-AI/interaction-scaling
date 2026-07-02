@@ -12,7 +12,8 @@
   xmin=820,xmax=26000,ymin=54,ymax=104,clip=false,
   xtick={1000,5000,20000},xticklabels={1K,5K,20K},
   ytick={60,70,80,90,100},ymajorgrids,
-  legend style={font=\footnotesize,at={(0.97,0.04)},anchor=south east,draw=cGrey!50},legend cell align=left]
+  legend style={font=\footnotesize,at={(0.5,-0.32)},anchor=north,legend columns=2,
+    draw=cGrey!50,/tikz/every even column/.append style={column sep=0.5cm}},legend cell align=left]
   % shade the region only interaction reaches (above the oracle ceiling)
   \fill[cRV!8] (axis cs:820,86.7) rectangle (axis cs:26000,104);
   \node[font=\footnotesize\itshape,cRV!70!black,anchor=east] at (axis cs:13500,102.3)

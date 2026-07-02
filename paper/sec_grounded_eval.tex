@@ -13,13 +13,14 @@ The visual modalities expose the symmetric half of the framework (P3): even when
 \begin{axis}[width=\linewidth,height=4.2cm,
   ybar,bar width=20pt,ymin=0,ymax=16,
   ylabel={\footnotesize figures rated clean (of 15)},
-  symbolic x coords={VLM judge,DOM geom.},xtick=data,
+  symbolic x coords={VLM judge,DOM geom.},xtick={VLM judge,DOM geom.},
+  xtick pos=bottom,ytick pos=left,
   enlarge x limits=0.55,nodes near coords,
   nodes near coords style={font=\footnotesize},
   ymajorgrids,ytick={0,5,10,15},
   every node near coord/.append style={anchor=south}]
-  \addplot[draw=cSS!60!black,fill=cSS!35] coordinates {(VLM judge,14)};
-  \addplot[draw=cRV!60!black,fill=cRV!35] coordinates {(DOM geom.,3)};
+  \addplot[draw=cSS!60!black,fill=cSS!35,bar shift=0pt] coordinates {(VLM judge,14)};
+  \addplot[draw=cRV!60!black,fill=cRV!35,bar shift=0pt] coordinates {(DOM geom.,3)};
   \legend{}
 \end{axis}
 \end{tikzpicture}
@@ -79,11 +80,7 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
   xbar,xmin=0,xmax=100,bar width=14pt,enlarge y limits=0.28,
   xlabel={geometric-defect reduction under grounded feedback (\%), bootstrap 95\% CI},
   symbolic y coords={Animations,Web pages,Dense slides,Academic figures},
-  ytick=data,xtick={0,20,40,60,80,100},xmajorgrids,
-  nodes near coords={\pgfmathprintnumber{\pgfplotspointmeta}\%},
-  nodes near coords style={font=\footnotesize\bfseries,text=white,
-    /pgf/number format/.cd,precision=0},
-  nodes near coords align={anchor=east}]
+  ytick=data,xtick={0,20,40,60,80,100},xmajorgrids]
   \addplot[draw=cRV!65!black,fill=cRV!55,
     error bars/.cd,x dir=both,x explicit,
     error bar style={cRV!60!black,line width=0.6pt},
@@ -92,6 +89,11 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
                  (73,Dense slides)+=(20,0)-=(28,0)
                  (47,Web pages)+=(15,0)-=(17,0)
                  (40,Animations)+=(24,0)-=(30,0)};
+  % value labels at the bar base, clear of the CI whiskers
+  \node[font=\footnotesize\bfseries,white,anchor=west] at (axis cs:1.8,Academic figures) {74\%};
+  \node[font=\footnotesize\bfseries,white,anchor=west] at (axis cs:1.8,Dense slides) {73\%};
+  \node[font=\footnotesize\bfseries,white,anchor=west] at (axis cs:1.8,Web pages) {47\%};
+  \node[font=\footnotesize\bfseries,white,anchor=west] at (axis cs:1.8,Animations) {40\%};
 \end{axis}
 \end{tikzpicture}
 \caption{\textbf{Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction, with whiskers the paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.}
@@ -115,7 +117,7 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
   title={\footnotesize academic figures},ymin=0,ymax=0.8,ytick={0,0.25,0.5},
   symbolic x coords={VLM-fb,geom-fb},xtick=data,enlarge x limits=0.6,
   nodes near coords,nodes near coords style={font=\scriptsize,/pgf/number format/.cd,fixed,precision=2},ymajorgrids,
-  legend style={font=\footnotesize,at={(0.5,1.12)},anchor=south,legend columns=2,draw=cGrey!50}]
+  legend style={font=\footnotesize,at={(-0.14,1.26)},anchor=south,legend columns=2,draw=cGrey!50}]
   \addplot[draw=cGrey,fill=black!10] coordinates {(VLM-fb,0.52) (geom-fb,0.57)}; \addlegendentry{single-shot}
   \addplot[draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-fb,0.62) (geom-fb,0.15)}; \addlegendentry{reviewed}
 \end{axis}

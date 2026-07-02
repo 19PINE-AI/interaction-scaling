@@ -7,14 +7,16 @@
 \centering
 \begin{tikzpicture}
 \begin{axis}[width=0.82\linewidth,height=3.8cm,
-  ybar,bar width=11pt,ymin=50,ymax=104,
+  ybar,bar width=11pt,ymin=50,ymax=112,
   ylabel={code pass-rate (\%)},
   symbolic x coords={Sonnet 4,Qwen3-235B,GPT-5},xtick=data,
   enlarge x limits=0.28,
   nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=1},
   ymajorgrids,ytick={60,80,100},
   legend style={font=\footnotesize,at={(0.5,1.02)},anchor=south,legend columns=2,draw=cGrey!50}]
-  \addplot[draw=cSS!60!black,fill=cSS!30,error bars/.cd,y dir=both,y explicit]
+  \addplot[draw=cSS!60!black,fill=cSS!30,
+    every node near coord/.append style={/tikz/xshift=-11pt},
+    error bars/.cd,y dir=both,y explicit]
     coordinates {(Sonnet 4,66.7) +- (0,6.7) (Qwen3-235B,71.1) +- (0,3.8) (GPT-5,80.0) +- (0,6.7)}; \addlegendentry{single-shot}
   \addplot[draw=cRV!60!black,fill=cRV!35,error bars/.cd,y dir=both,y explicit]
     coordinates {(Sonnet 4,100) +- (0,0) (Qwen3-235B,93.3) +- (0,0) (GPT-5,100) +- (0,0)}; \addlegendentry{reviewed}
