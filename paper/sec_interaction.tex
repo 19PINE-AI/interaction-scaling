@@ -15,12 +15,12 @@
   legend style={font=\footnotesize,at={(0.97,0.04)},anchor=south east,draw=cGrey!50},legend cell align=left]
   % shade the region only interaction reaches (above the oracle ceiling)
   \fill[cRV!8] (axis cs:820,86.7) rectangle (axis cs:26000,104);
-  \node[font=\footnotesize\itshape,cRV!70!black,anchor=north east] at (axis cs:24000,103.4)
+  \node[font=\footnotesize\itshape,cRV!70!black,anchor=east] at (axis cs:13500,102.3)
      {reached only by interaction};
   % in-token-space ceiling: best-of-N with an oracle verifier
   \draw[cGrey,densely dotted] (axis cs:820,86.7)--(axis cs:26000,86.7);
   \node[font=\footnotesize,cGrey,anchor=south west] at (axis cs:870,86.9)
-     {in-token-space ceiling (oracle best-of-$N$)};
+     {in-token-space ceiling};
   \addplot[cRV,very thick,mark=*,mark size=1.7] coordinates {(1000,62.2)(5000,91.1)(20000,100.0)};
     \addlegendentry{proposer--reviewer (interaction)}
   \addplot[cRV!55!black,thick,mark=square*,mark size=1.5] coordinates {(1000,57.8)(5000,93.3)(20000,97.8)};
