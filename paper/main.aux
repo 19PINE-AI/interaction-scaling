@@ -22,7 +22,7 @@
 \citation{hong2026aicoding}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{2}{section.1}\protected@file@percent }
 \newlabel{sec:intro}{{1}{2}{Introduction}{section.1}{}}
-\newlabel{sec:intro@cref}{{[section][1][]1}{[1][2][]2}}
+\newlabel{sec:intro@cref}{{[section][1][]1}{[1][1][]2}}
 \@writefile{toc}{\contentsline {paragraph}{Grounding is the variable, on both sides of the loop.}{2}{paragraph*.1}\protected@file@percent }
 \citation{zheng2023judging}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces \textbf  {Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact, and a grounded environment \emph  {executes/renders/measures} it. That same observation does double duty. \textbf  {(1)} As grounded \emph  {feedback}, it becomes a defect list the reviewer turns into a targeted revision, the channel that lets interaction import information from outside the weights and exceed the reasoning/sampling ceiling (\Cref  {sec:framework}). \textbf  {(2)} As grounded \emph  {evaluation}, it is the score that makes the gain measurable. Substituting the default VLM-on-a-screenshot judge (red lane) breaks \emph  {both}: it is structurally blind to off-canvas overflow and fine overlap, so it neither scores the defect nor (as a reviewer) fixes it.\relax }}{3}{figure.caption.2}\protected@file@percent }
@@ -35,7 +35,7 @@
 \newlabel{sec:framework@cref}{{[section][2][]2}{[1][3][]4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}A feedback taxonomy by grounding}{4}{subsection.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Why grounding breaks the ceiling: a DPI bound}{4}{subsection.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{The symmetric claim: ungrounded evaluation cannot measure the gain.}{4}{paragraph*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The symmetric claim: ungrounded evaluation cannot measure the gain.}{5}{paragraph*.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Predictions}{5}{subsection.2.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {3}Method: A Budget-Aware Proposer--Reviewer Harness}{5}{section.3}\protected@file@percent }
 \newlabel{sec:method}{{3}{5}{Method: A Budget-Aware Proposer--Reviewer Harness}{section.3}{}}
@@ -93,29 +93,27 @@
 \newlabel{tab:geometric@cref}{{[table][2][]2}{[1][8][]10}}
 \@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces \textbf  {Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction, with whiskers the paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.\relax }}{10}{figure.caption.21}\protected@file@percent }
 \newlabel{fig:geomreduction}{{5}{10}{\textbf {Grounded geometric feedback removes real layout defects on all four visual modalities} (mean reduction, with whiskers the paired-bootstrap 95\% CIs, all excluding zero). The standard VLM-on-a-screenshot metric measures none of this.\relax }{figure.caption.21}{}}
-\newlabel{fig:geomreduction@cref}{{[figure][5][]5}{[1][8][]10}}
+\newlabel{fig:geomreduction@cref}{{[figure][5][]5}{[1][9][]10}}
 \@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces \textbf  {An ungrounded reviewer fails to fix layout, while a grounded one does (controlled ablation, two modalities).} Same task suite and proposer model, with only the reviewer's grounding varying. The two arms are separate runs, so each is plotted against its \emph  {own} single-shot (hence the differing single-shot bars). The VLM-feedback reviewer (\textsf  {VLM-fb}) does not reduce defects and on slides increases them (slides $1.89\to 2.44$, figures $0.52\to 0.62$, directional/n.s.). The deterministic geometric-feedback reviewer (\textsf  {geom-fb}) reduces them (slides $1.25\to 0.33$, figures $0.57\to 0.15$). The grounded signal is necessary on the feedback side, not just the metric side.\relax }}{10}{figure.caption.23}\protected@file@percent }
 \newlabel{fig:ablation}{{6}{10}{\textbf {An ungrounded reviewer fails to fix layout, while a grounded one does (controlled ablation, two modalities).} Same task suite and proposer model, with only the reviewer's grounding varying. The two arms are separate runs, so each is plotted against its \emph {own} single-shot (hence the differing single-shot bars). The VLM-feedback reviewer (\textsf {VLM-fb}) does not reduce defects and on slides increases them (slides $1.89\to 2.44$, figures $0.52\to 0.62$, directional/n.s.). The deterministic geometric-feedback reviewer (\textsf {geom-fb}) reduces them (slides $1.25\to 0.33$, figures $0.57\to 0.15$). The grounded signal is necessary on the feedback side, not just the metric side.\relax }{figure.caption.23}{}}
 \newlabel{fig:ablation@cref}{{[figure][6][]6}{[1][10][]10}}
-\@writefile{toc}{\contentsline {paragraph}{Is the reduction circular?}{10}{paragraph*.24}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families, each over three independent on-policy seeds ($+33.3$/$+22.2$/$+20.0$\,pp). Whiskers are $\pm 1$ SD across seeds. The reviewed bars carry \emph  {zero} seed variance for all three families.\relax }}{11}{figure.caption.27}\protected@file@percent }
 \newlabel{fig:crossmodel}{{7}{11}{\textbf {The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families, each over three independent on-policy seeds ($+33.3$/$+22.2$/$+20.0$\,pp). Whiskers are $\pm 1$ SD across seeds. The reviewed bars carry \emph {zero} seed variance for all three families.\relax }{figure.caption.27}{}}
 \newlabel{fig:crossmodel@cref}{{[figure][7][]7}{[1][11][]11}}
+\@writefile{toc}{\contentsline {paragraph}{Is the reduction circular?}{11}{paragraph*.24}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Two modalities where the honest answer is ``no headroom.''}{11}{paragraph*.25}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {6}Robustness}{11}{section.6}\protected@file@percent }
 \newlabel{sec:robustness}{{6}{11}{Robustness}{section.6}{}}
 \newlabel{sec:robustness@cref}{{[section][6][]6}{[1][11][]11}}
 \@writefile{toc}{\contentsline {paragraph}{Cross-model, code.}{11}{paragraph*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Cross-model, grounded geometry.}{11}{paragraph*.28}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {An $8$B student internalizes most of the teacher's interaction quality.} Distilled $8$B markdown student as a fraction of the frontier teacher on the $44$-task OOD suite (\Cref  {tab:distill-ood}): a single sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability (sampling closes the gap), at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$/$56\%$ at pass@$1$/pass@$3$.\relax }}{12}{figure.caption.32}\protected@file@percent }
-\newlabel{fig:distill}{{8}{12}{\textbf {An $8$B student internalizes most of the teacher's interaction quality.} Distilled $8$B markdown student as a fraction of the frontier teacher on the $44$-task OOD suite (\Cref {tab:distill-ood}): a single sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability (sampling closes the gap), at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$/$56\%$ at pass@$1$/pass@$3$.\relax }{figure.caption.32}{}}
-\newlabel{fig:distill@cref}{{[figure][8][]8}{[1][12][]12}}
+\@writefile{toc}{\contentsline {paragraph}{Cross-model, grounded geometry.}{12}{paragraph*.28}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Held-out generalization.}{12}{paragraph*.29}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Budget allocation.}{12}{paragraph*.30}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {7}Internalizing the Harness into a Small Student}{12}{section.7}\protected@file@percent }
 \newlabel{sec:distill}{{7}{12}{Internalizing the Harness into a Small Student}{section.7}{}}
 \newlabel{sec:distill@cref}{{[section][7][]7}{[1][12][]12}}
 \@writefile{toc}{\contentsline {paragraph}{Result.}{12}{paragraph*.31}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variance is a budget (a cautionary finding).}{12}{paragraph*.33}\protected@file@percent }
 \citation{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling,kimi2025k15}
 \citation{wang2023selfconsistency,brown2024large}
 \citation{shinn2023reflexion}
@@ -134,17 +132,18 @@
 \citation{ruan2025iad}
 \citation{zheng2023judging}
 \citation{casper2023open}
-\citation{hong2026aicoding}
-\@writefile{toc}{\contentsline {paragraph}{Variance is a budget (a cautionary finding).}{13}{paragraph*.33}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {An $8$B student internalizes much of the teacher's interaction quality.} Distilled $8$B markdown student as a fraction of the frontier teacher on the $44$-task OOD suite (\Cref  {tab:distill-ood}): a single sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability (sampling closes the gap), at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$/$56\%$ at pass@$1$/pass@$3$.\relax }}{13}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:distill}{{8}{13}{\textbf {An $8$B student internalizes much of the teacher's interaction quality.} Distilled $8$B markdown student as a fraction of the frontier teacher on the $44$-task OOD suite (\Cref {tab:distill-ood}): a single sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability (sampling closes the gap), at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$/$56\%$ at pass@$1$/pass@$3$.\relax }{figure.caption.32}{}}
+\newlabel{fig:distill@cref}{{[figure][8][]8}{[1][12][]13}}
 \@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{13}{section.8}\protected@file@percent }
 \newlabel{sec:related}{{8}{13}{Related Work}{section.8}{}}
-\newlabel{sec:related@cref}{{[section][8][]8}{[1][13][]13}}
+\newlabel{sec:related@cref}{{[section][8][]8}{[1][12][]13}}
 \@writefile{toc}{\contentsline {paragraph}{Test-time compute scaling.}{13}{paragraph*.34}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Self-correction and critique.}{13}{paragraph*.35}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Grounded and execution feedback.}{13}{paragraph*.36}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Model-as-judge reliability.}{13}{paragraph*.37}\protected@file@percent }
+\citation{hong2026aicoding}
 \citation{cover2006elements}
-\citation{swyx2026loopcraft,langchain2026loopeng}
 \@writefile{toc}{\contentsline {paragraph}{Practitioner evidence at scale.}{14}{paragraph*.38}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Information theory.}{14}{paragraph*.39}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {9}Discussion and Conclusion}{14}{section.9}\protected@file@percent }
@@ -152,11 +151,12 @@
 \newlabel{sec:discussion@cref}{{[section][9][]9}{[1][14][]14}}
 \@writefile{toc}{\contentsline {paragraph}{Grounding is the load-bearing variable.}{14}{paragraph*.40}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{A methodological warning for the field.}{14}{paragraph*.41}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Grounding is the theory under ``loop engineering.''}{14}{paragraph*.42}\protected@file@percent }
-\citation{pineai2025whispercoding}
+\citation{swyx2026loopcraft,langchain2026loopeng}
+\@writefile{toc}{\contentsline {paragraph}{Grounding is the theory under ``loop engineering.''}{15}{paragraph*.42}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Limits, honestly stated.}{15}{paragraph*.43}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Future work and broader impact.}{15}{paragraph*.44}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Operational recipe.}{15}{paragraph*.45}\protected@file@percent }
+\citation{pineai2025whispercoding}
 \bibstyle{plainnat}
 \bibdata{refs}
 \bibcite{brown2024large}{{1}{2024}{{Brown et~al.}}{{Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and Mirhoseini}}}

@@ -117,9 +117,10 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
   title={\footnotesize academic figures},ymin=0,ymax=0.8,ytick={0,0.25,0.5},
   symbolic x coords={VLM-fb,geom-fb},xtick=data,enlarge x limits=0.6,
   nodes near coords,nodes near coords style={font=\scriptsize,/pgf/number format/.cd,fixed,precision=2},ymajorgrids,
-  legend style={font=\footnotesize,at={(-0.14,1.26)},anchor=south,legend columns=2,draw=cGrey!50}]
-  \addplot[draw=cGrey,fill=black!10] coordinates {(VLM-fb,0.52) (geom-fb,0.57)}; \addlegendentry{single-shot}
-  \addplot[draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-fb,0.62) (geom-fb,0.15)}; \addlegendentry{reviewed}
+  legend style={font=\footnotesize,at={(-0.14,1.28)},anchor=south,legend columns=2,draw=cGrey!50,
+    /tikz/every odd column/.append style={column sep=2pt}}]
+  \addplot[swatch,draw=cGrey,fill=black!10] coordinates {(VLM-fb,0.52) (geom-fb,0.57)}; \addlegendentry{single-shot}
+  \addplot[swatch,draw=cAccent!60!black,fill=cAccent!25] coordinates {(VLM-fb,0.62) (geom-fb,0.15)}; \addlegendentry{reviewed}
 \end{axis}
 \end{tikzpicture}
 \caption{\textbf{An ungrounded reviewer fails to fix layout, while a grounded one does (controlled ablation, two modalities).} Same task suite and proposer model, with only the reviewer's grounding varying. The two arms are separate runs, so each is plotted against its \emph{own} single-shot (hence the differing single-shot bars). The VLM-feedback reviewer (\textsf{VLM-fb}) does not reduce defects and on slides increases them (slides $1.89\to2.44$, figures $0.52\to0.62$, directional/n.s.). The deterministic geometric-feedback reviewer (\textsf{geom-fb}) reduces them (slides $1.25\to0.33$, figures $0.57\to0.15$). The grounded signal is necessary on the feedback side, not just the metric side.}

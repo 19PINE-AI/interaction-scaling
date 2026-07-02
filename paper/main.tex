@@ -3,8 +3,6 @@
 \usepackage{arxiv}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage{lmodern}
-\usepackage{microtype}
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{booktabs}
@@ -41,9 +39,12 @@
 \pgfplotsset{
   every axis/.append style={font=\small, axis line style={cGrey}, tick style={cGrey},
     label style={font=\small}, tick label style={font=\footnotesize}, major grid style={dotted,cGrey!40}},
+  % single clean swatch for bar-chart legends (default ybar legend draws doubled bars)
+  swatch/.style={legend image code/.code={%
+    \draw[##1] (0cm,-0.09cm) rectangle (0.28cm,0.14cm);}},
 }
 
-\title{Grounding the Loop on Both Sides:\texorpdfstring{\\}{ }Interaction as a Third Test-Time Compute Axis,\texorpdfstring{\\}{ }and Why Its Gains Are Invisible Without Grounded Evaluation}
+\title{Grounding the Loop on Both Sides:\texorpdfstring{\\}{ }Interaction as a Third Test-Time Compute Axis,\texorpdfstring{\\}{ }and Why Its Gains Are Invisible\texorpdfstring{\\}{ }Without Grounded Evaluation}
 
 \author{%
   \begin{tabular}{@{}c@{\hspace{4em}}c@{}}
@@ -58,9 +59,9 @@
 \maketitle
 
 \begin{abstract}
-Test-time compute is dominated by two scaling axes that both operate inside a model's own token space: \emph{reasoning} (longer chains of thought) and \emph{sampling} (best-of-$N$). Both are bounded by the information already in the weights and prompt, a limit that follows from the data-processing inequality (DPI). A third axis, \emph{interaction} with an environment that returns grounded feedback, can exceed that bound by importing information from outside the model. We argue that one variable, \textbf{grounding}, governs this axis, and that it must hold on \emph{both} sides of the loop: grounded \emph{feedback} drives improvement past the reasoning/sampling ceiling, and grounded \emph{evaluation} is required even to \emph{measure} it. We formalize the first claim as a DPI argument over a Type~0--3 feedback taxonomy. For the second, we show two things on rendered visual artifacts. The default vision--language-model (VLM) judge is structurally blind to the geometric defects the loop fixes: it rates $14$ of $15$ single-shot academic figures ``perfect'' when only $3$ are actually clean. And a VLM \emph{reviewer} even makes layouts worse. A deterministic DOM-geometry instrument (overlap, clipping, overflow, and box-group misalignment, measured exactly from the rendered layout) instead reveals large, significant defect reductions under grounded feedback across \textbf{four} visual modalities measured identically (academic figures, dense slides, responsive web pages, and SVG/CSS animations), spanning a $40$--$74\%$ defect reduction. Every paired sign-test gives $p<0.002$ and every bootstrap 95\% CI excludes zero.
+Test-time compute is dominated by two scaling axes that both operate inside a model's own token space: \emph{reasoning} (longer chains of thought) and \emph{sampling} (best-of-$N$). Both are bounded by the information already in the weights and prompt, a limit that follows from the data-processing inequality (DPI). A third axis, \emph{interaction} with an environment that returns grounded feedback, can exceed that bound by importing information from outside the model. We argue that one variable, \textbf{grounding}, governs this axis, and that it must hold on \emph{both} sides of the loop: grounded \emph{feedback} drives improvement past the reasoning/sampling ceiling, and grounded \emph{evaluation} is required even to \emph{measure} it. We formalize the first claim as a DPI argument over a Type~0--3 feedback taxonomy, and establish the second on rendered visual artifacts: the default vision--language-model (VLM) judge is structurally blind to the geometric defects the loop fixes, rating $14$ of $15$ single-shot academic figures ``perfect'' when only $3$ are actually clean, and a VLM \emph{reviewer} even makes layouts worse. A deterministic DOM-geometry instrument (overlap, clipping, overflow, and misalignment, measured exactly from the rendered layout) instead reveals $40$--$74\%$ defect reductions under grounded feedback across \textbf{four} visual modalities measured identically (academic figures, dense slides, responsive web pages, and SVG/CSS animations), with every paired sign test at $p<0.002$ and every bootstrap 95\% CI excluding zero.
 
-On execution-grounded code the harness lifts a frontier model from a two-thirds pass-rate to a strict $100\%$. An in-modality control isolates the \emph{execution} of tests, not the extra reviewing pass, as the cause. The effect replicates across three model families (each over three seeds) and a held-out suite, with the grounded-geometry result reproduced on a second proposer (Gemini~3.1~Pro) under the same model-free instrument. At a fixed token budget, reasoning-only and best-of-$N$ saturate while every interaction strategy approaches a perfect pass-rate, the proposer--reviewer harness doing so at the lowest token cost with zero seed variance. Finally, the harness's behavior partially distills into an $8$B student. Interaction scaling is real, distinct, and predictable. But its gains are visible only when both the feedback and the metric are grounded.
+On execution-grounded code the harness lifts a frontier model from a two-thirds pass-rate to a strict $100\%$, an in-modality control isolates the \emph{execution} of tests, not the extra reviewing pass, as the cause, and the effect replicates across three model families (three seeds each) and a held-out suite; the geometry result reproduces with Gemini~3.1~Pro as proposer under the same model-free instrument. At a fixed token budget, reasoning-only and best-of-$N$ saturate while every interaction strategy approaches a perfect pass-rate, the proposer--reviewer harness doing so at the lowest token cost with zero seed variance. Finally, the harness's behavior partially distills into an $8$B student. Interaction scaling is real, distinct, and predictable, but its gains are visible only when both the feedback and the metric are grounded.
 \end{abstract}
 \begin{center}
 \small
