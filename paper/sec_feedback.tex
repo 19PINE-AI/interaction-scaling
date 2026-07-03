@@ -20,7 +20,7 @@ The saturation experiment compared strategies. This section holds everything els
   \addplot[draw=none,fill=cGnd!80,bar shift=0pt] coordinates {(execution,93.3)};
   \node[font=\scriptsize,cMut,anchor=south] at (axis cs:critique,87.5) {86.7};
   \node[font=\scriptsize,cMut,anchor=south] at (axis cs:linter,87.5) {86.7};
-  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:execution,94) {93.3};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south,fill=white,inner sep=1.5pt] at (axis cs:execution,94) {93.3};
 \end{axis}
 \begin{axis}[paperbar,at={($(axpass.east)+(1.7cm,0)$)},anchor=west,
   width=0.42\linewidth,height=4.4cm,
@@ -60,12 +60,12 @@ The saturation experiment compared strategies. This section holds everything els
   % VLM arm: 1.89 -> 2.44 (worse, orange, up)
   \draw[dumb,cUng] (axis cs:1,1.89) -- (axis cs:1,2.44);
   \node[ssdot] at (axis cs:1,1.89) {};
-  \node[font=\scriptsize,cMut,anchor=east,inner sep=3pt] at (axis cs:1,1.89) {1.89};
+  \node[font=\scriptsize,cMut,anchor=east,inner sep=6pt] at (axis cs:1,1.89) {1.89};
   \node[font=\scriptsize\bfseries,cUng!85!black,anchor=west,inner sep=4pt] at (axis cs:1,2.44) {2.44 \ worse};
   % geom arm: 1.25 -> 0.33 (better, blue, down)
   \draw[dumb,cGnd] (axis cs:2,1.25) -- (axis cs:2,0.33);
   \node[ssdot] at (axis cs:2,1.25) {};
-  \node[font=\scriptsize,cMut,anchor=west,inner sep=3pt] at (axis cs:2,1.25) {1.25};
+  \node[font=\scriptsize,cMut,anchor=west,inner sep=6pt] at (axis cs:2,1.25) {1.25};
   \node[font=\scriptsize\bfseries,cGnd,anchor=east,inner sep=4pt] at (axis cs:2,0.33) {0.33 \ fixed};
 \end{axis}
 \begin{axis}[at={($(axslide.east)+(1.5cm,0)$)},anchor=west,
@@ -77,11 +77,11 @@ The saturation experiment compared strategies. This section holds everything els
   ymajorgrids,axis x line*=bottom,axis y line*=left]
   \draw[dumb,cUng] (axis cs:1,0.52) -- (axis cs:1,0.62);
   \node[ssdot] at (axis cs:1,0.52) {};
-  \node[font=\scriptsize,cMut,anchor=east,inner sep=3pt] at (axis cs:1,0.52) {0.52};
-  \node[font=\scriptsize,cUng!85!black,anchor=west,inner sep=4pt] at (axis cs:1,0.62) {0.62 \ worse (n.s.)};
+  \node[font=\scriptsize,cMut,anchor=east,inner sep=6pt] at (axis cs:1,0.52) {0.52};
+  \node[font=\scriptsize,cUng!85!black,anchor=south,inner sep=3pt] at (axis cs:1,0.64) {0.62 \ worse (n.s.)};
   \draw[dumb,cGnd] (axis cs:2,0.57) -- (axis cs:2,0.15);
   \node[ssdot] at (axis cs:2,0.57) {};
-  \node[font=\scriptsize,cMut,anchor=west,inner sep=3pt] at (axis cs:2,0.57) {0.57};
+  \node[font=\scriptsize,cMut,anchor=west,inner sep=6pt] at (axis cs:2,0.57) {0.57};
   \node[font=\scriptsize\bfseries,cGnd,anchor=east,inner sep=4pt] at (axis cs:2,0.15) {0.15 \ fixed};
 \end{axis}
 \end{tikzpicture}
