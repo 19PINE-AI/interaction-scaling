@@ -1,12 +1,27 @@
 \appendix
+\section{Formal Statement of the Internal Ceiling}
+\label{app:ceiling}
+
+This appendix formalizes the one-sentence argument of \Cref{sec:ceiling}. Let $A^\star$ be the (task-determined) correct artifact and $A$ a candidate. The proposer is a channel from its inputs $\Theta$ (weights) and prompt $X$ to $A$. A \emph{reviewer} that only re-reads $A$ and reasons---ungrounded critique---forms the Markov chain $A^\star \to (\Theta,X) \to A \to R$, where $R$ is its critique. By the data-processing inequality \citep{cover2006elements},
+\[
+I(A^\star; R)\ \le\ I(A^\star; (\Theta,X)),
+\]
+so no amount of reasoning or ungrounded review can recover more information about $A^\star$ than is already in $(\Theta,X)$. This bounds reasoning-only scaling. Sampling is bounded differently but no less tightly: for any finite $N$, best-of-$N$ can only \emph{select} among the $N$ candidates the proposer actually draws, so even an oracle (grounded) verifier cannot return a correct artifact the proposer is too unlikely to sample within the budget. Its practical ceiling is the high-probability support of the proposer's own output distribution, not a new information channel.
+
+Grounded feedback escapes both ceilings by feeding an instrument observation $E=g(A,\,\mathrm{world})$---a test outcome, a measured bounding box, a search verdict---back into \emph{generation}. Conditioning the next proposal on $E$ lets the proposer synthesize a candidate it would not otherwise have sampled: formally, $I(A^\star;(R,E))$ can exceed $I(A^\star;(\Theta,X))$ because $E$ carries information obtained by running the artifact against reality (the tests encode the specification; the layout engine encodes real rendering semantics the model only approximates). The \emph{coverage} qualification of \Cref{sec:taxonomy} enters here: $E$ helps only to the extent that $g$'s observation is informative about the defect classes actually present---a linter's $g$ observes form, so on runtime-logic bugs $I(A^\star;E)$ adds nothing actionable, which is what \Cref{fig:typecontrol} measures.
+
+The symmetric claim covers the scorer. A metric $M$ that is itself a model's function of a lossy view of $A$ (a VLM judging a cropped screenshot) cannot certify an improvement that lives in the part of $A$ its channel drops. Grounding the evaluation is therefore a precondition for \emph{detecting} interaction scaling on any modality whose quality is not fully visible to the default judge.
+
+Two cautions. The inequality bounds the \emph{information channel}, not achievable quality directly; we use it to motivate the saturation that \Cref{fig:scaling} then measures, and treat the measurement as the evidence. And grounded interaction is of course still bounded---by what the instrument exposes and by the proposer's ability to act on it.
+
 \section{Detailed Results and Configurations}
 \label{app:detailed}
-This appendix collects the full tables underlying the summaries in the main text, from the four-strategy scaling curves through the distillation ablations to the original six-modality holistic overview (the last superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}).
+This appendix collects the full tables underlying the figures in the main text, from the four-strategy scaling curves through the distillation ablations to the original six-modality holistic overview (the last superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}).
 
 \subsection{Four-strategy scaling at a matched 20K-token budget}
 \begin{table}[H]
 \centering
-\caption{\textbf{The headline scaling result (3-seed mean $\pm$ SD).} Pass-rate by strategy~$\times$~budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent on-policy runs. R was run once (extended-thinking variation across seeds is small at temp~0) at the sweep's budget partition (a more generous partition lifts R to $86.7\%$, see footnote and \Cref{tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise on a 3-seed $\times$ 15-task suite, since pass@$N$ is non-decreasing in $N$ in expectation but not pointwise across finite-sample on-policy seeds. \emph{Reasoning-only and best-of-$N$ saturate well below 100\%}, while all three iteration-with-feedback strategies reach $\geq97.8\%$ at $B{=}20$K (L hit 100\% on 2 of 3 seeds, H on all 3, so H is the only variant at strict 100\% across seeds). The architectural ordering across H, L is within seed noise on pass-rate. What separates them is token efficiency and reliability (\Cref{sec:interaction}).}
+\caption{\textbf{The headline scaling result (3-seed mean $\pm$ SD), underlying \Cref{fig:scaling}.} Pass rate by strategy~$\times$~budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent on-policy runs. R was run once (extended-thinking variation across seeds is small at temp~0) at the sweep's budget partition (a more generous partition lifts R to $86.7\%$, see \Cref{tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise on a 3-seed $\times$ 15-task suite, since pass@$N$ is non-decreasing in $N$ in expectation but not pointwise across finite-sample on-policy seeds. \emph{Reasoning-only and best-of-$N$ saturate well below 100\%}, while all three iteration-with-feedback strategies reach $\geq97.8\%$ at $B{=}20$K (L hit 100\% on 2 of 3 seeds, H on all 3, so H is the only variant at strict 100\% across seeds). The architectural ordering across H, L is within seed noise on pass rate; what separates them is token efficiency and reliability (\Cref{fig:efficiency}).}
 \label{tab:scaling-curves}
 \small
 \begin{tabular}{lcccc}
@@ -25,12 +40,12 @@ Ceiling & 73.3\% & 86.7\% & $\sim$100\% & \textbf{100\% (zero variance)} \\
 \subsection{Reasoning-only at a matched budget}
 \begin{table}[H]
 \centering
-\caption{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}). The 3-run aggregate is reported in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). \emph{Reading the numbers:} single-shot here is this single seed's $11/15=73.3\%$ (the canonical $3$-seed mean is $66.7\%$), and the reasoning value shown is the \emph{thinking-heavy} partition ($86.7\%$). This coincides numerically with the oracle best-of-$N$ ceiling, while the \emph{default}-partition reasoning ceiling ($73.3\%$, \Cref{tab:scaling-curves}) coincides with this seed's single-shot. Both are coincidences of the small suite, not the same run. Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass-rate even at $1.57\times$ the harness's token budget.}
+\caption{Reasoning-only at matched budget vs.\ single-shot and the harness on the 15 hard code tasks. Single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}). The 3-run aggregate is reported in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). \emph{Reading the numbers:} single-shot here is this single seed's $11/15=73.3\%$ (the canonical $3$-seed mean is $66.7\%$), and the reasoning value shown is the \emph{thinking-heavy} partition ($86.7\%$). This coincides numerically with the oracle best-of-$N$ ceiling, while the \emph{default}-partition reasoning ceiling ($73.3\%$, \Cref{tab:scaling-curves}) coincides with this seed's single-shot. Both are coincidences of the small suite, not the same run. Reasoning closes two-thirds of the harness's gap over single-shot but falls 6.7\,pp short of the harness's pass rate even at $1.57\times$ the harness's token budget.}
 \label{tab:reasoning-baseline}
 \small
 \begin{tabular}{lccc}
 \toprule
-Strategy & Pass-rate & Mean tokens & $\Delta$ vs.\ single-shot \\
+Strategy & Pass rate & Mean tokens & $\Delta$ vs.\ single-shot \\
 \midrule
 Single-shot                       & 73.3\% (11/15) & 1{,}406  & --- \\
 Reasoning-only (thinking-heavy partition)   & 86.7\% (13/15) & 4{,}137  & $+13.3$\,pp \\
@@ -39,20 +54,20 @@ Reasoning-only (thinking-heavy partition)   & 86.7\% (13/15) & 4{,}137  & $+13.3
 \end{tabular}
 \end{table}
 
-\subsection{In-modality feedback-type control (Type 1/2/3a) on a fixed code suite}
+\subsection{Feedback-channel control on a fixed code suite}
 \begin{table}[H]
 \centering
-\caption{In-modality feedback-type controls on 15 hard code tasks (Sonnet 4 proposer and reviewer). Each row is a single on-policy seed. The ``SS'' column is the \emph{per-seed} single-shot pass-rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph{reviewed} ceiling: Type 3a reaches 14/15, Type 1/2 reach 13/15 ($+6.7$\,pp), \emph{and} Type 3a is $\sim$2.5$\times$ more token-efficient ($2{,}643$ vs.\ ${\sim}7{,}100$ tokens/task, 1.53 vs.\ 2.07 iterations). The single task unrecovered in every control row is \texttt{code\_011} (CJK text wrapping). The full harness at $B{=}20$K recovers it across all three seeds (\Cref{tab:scaling-curves}), which is why the headline reviewed rate is the strict $100\%$ of \Cref{tab:harness-headline} while this leaner single-seed control caps at $14/15$.}
+\caption{Feedback-channel controls on 15 hard code tasks (Sonnet 4 proposer and reviewer), underlying \Cref{fig:typecontrol}. Each row is a single on-policy seed. The ``SS'' column is the \emph{per-seed} single-shot pass rate (not held constant across rows) and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution that gives \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (i.e.\ within the $\pm 1$\,SD band centered on 10/15). Because the SS column varies by row, the load-bearing comparison is the \emph{reviewed} ceiling: execution reaches 14/15, critique and critique+linter reach 13/15 ($+6.7$\,pp), \emph{and} execution is $\sim$2.5$\times$ more token-efficient ($2{,}643$ vs.\ ${\sim}7{,}100$ tokens/task, 1.53 vs.\ 2.07 iterations). The single task unrecovered in every control row is \texttt{code\_011} (CJK text wrapping). The full harness at $B{=}20$K recovers it across all three seeds (\Cref{tab:scaling-curves}), which is why the headline reviewed rate is the strict $100\%$ of \Cref{tab:harness-headline} while this leaner single-seed control caps at $14/15$.}
 \label{tab:type-controls}
 \small
 \begin{tabular}{lcccc}
 \toprule
-Type & Reviewer sees & SS & Reviewed & Iters \\
+Feedback channel & Reviewer sees & SS & Reviewed & Iters \\
 \midrule
 None (single-shot)             & ---                                  & 11/15 & ---            & --- \\
-Type 1 (cross-review)          & code only                            & 10/15 & 13/15          & 2.07 \\
-Type 2 ($+$\texttt{ruff})      & code $+$ static analysis             & 11/15 & 13/15          & 2.07 \\
-\textbf{Type 3a ($+$exec)}     & code $+$ test stderr/traceback       & 11/15 & \textbf{14/15} & \textbf{1.53} \\
+Ungrounded critique            & code only                            & 10/15 & 13/15          & 2.07 \\
+$+$ linter (static form)       & code $+$ \texttt{ruff} output        & 11/15 & 13/15          & 2.07 \\
+\textbf{$+$ execution}         & code $+$ test stderr/traceback       & 11/15 & \textbf{14/15} & \textbf{1.53} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -60,12 +75,12 @@ Type 2 ($+$\texttt{ruff})      & code $+$ static analysis             & 11/15 & 
 \subsection{Single-agent loop vs.\ proposer--reviewer harness}
 \begin{table}[H]
 \centering
-\caption{Three interaction-strategy variants at $B{=}20$K on the 15 hard code tasks, all using Type 3a execution feedback. Pass-rate is within seed noise (sign-test $p{>}0.6$ on the H--L comparison). The harness wins on \emph{token efficiency} (1{,}029 vs.\ 1{,}431 L vs.\ 1{,}416 IAD mean output tokens) and on \emph{seed variance} (zero across three seeds for H, while L hit 100\% in 2 of 3 seeds and IAD was run for one seed only).}
+\caption{Three interaction-strategy variants at $B{=}20$K on the 15 hard code tasks, all using execution feedback; underlying \Cref{fig:efficiency}. Pass rate is within seed noise (sign-test $p{>}0.6$ on the H--L comparison). The harness wins on \emph{token efficiency} (1{,}029 vs.\ 1{,}431 L vs.\ 1{,}416 IAD mean output tokens) and on \emph{seed variance} (zero across three seeds for H, while L hit 100\% in 2 of 3 seeds and IAD was run for one seed only).}
 \label{tab:LvsH}
 \small
 \begin{tabular}{lccc}
 \toprule
-Strategy & Pass-rate & Mean tokens & Notes \\
+Strategy & Pass rate & Mean tokens & Notes \\
 \midrule
 L (single-agent loop)              & 97.8\% $\pm 3.1$\,pp (3 seeds)           & 1{,}431          & 1 task in 1 seed \\
 IAD (oracle, K=3, T=0.7)           & 100.0\% (1 seed)                         & 1{,}416          & $+38$\% tokens vs.\ H \\
@@ -74,10 +89,27 @@ IAD (oracle, K=3, T=0.7)           & 100.0\% (1 seed)                         & 
 \end{tabular}
 \end{table}
 
+\subsection{Deterministic geometric-feedback statistics}
+\begin{table}[H]
+\centering\small
+\caption{Full statistics for \Cref{fig:geomreduction}: deterministic geometric-feedback results, one identical configuration across four visual modalities (Sonnet~4, $T{=}0$, $3$ seeds, alignment-inclusive reward). SS/Rev.\ are mean defects per artifact, single-shot vs.\ reviewed; $\Delta$ is the mean defect reduction; CI is a paired bootstrap 95\% interval on $\Delta\%$ ($10$k resamples); $p$ is a two-sided paired sign test over decisive (task, seed) pairs. Web is summed over $1920/375$ widths, animations over sampled frames.}
+\label{tab:geometric}
+\begin{tabular}{lcccccc}
+\toprule
+Modality & $n$ & SS & Rev. & $\Delta$ & 95\% CI & impr./regr.\ ($p$) \\
+\midrule
+Academic figures (20) & 60 & $0.57$ & $0.15$ & $-74\%$ & $[52,89]\%$ & $17/2$\;($7{\times}10^{-4}$) \\
+Dense slides (12)     & 36 & $1.25$ & $0.33$ & $-73\%$ & $[45,93]\%$ & $13/1$\;($1.8{\times}10^{-3}$) \\
+Web pages (20)        & 60 & $16.1$ & $8.5$  & $-47\%$ & $[30,62]\%$ & $33/2$\;($4{\times}10^{-8}$) \\
+Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;($3{\times}10^{-5}$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \subsection{Cross-model replication (code)}
 \begin{table}[H]
 \centering
-\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:harness-headline}). The reviewed ceiling has zero seed variance for all three families, and the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass-rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
+\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:harness-headline}); underlying \Cref{fig:crossmodel}a. The reviewed ceiling has zero seed variance for all three families, and the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
 \label{tab:crossmodel}
 \small
 \begin{tabular}{lccc}
@@ -110,12 +142,12 @@ Development (3-run mean) & 15 & $66.7 \pm 6.7$\% & $100.0 \pm 0.0$\% & $+33.3$\,
 \subsection{Budget-allocation simplex}
 \begin{table}[H]
 \centering
-\caption{Budget allocation simplex on 15 hard code tasks, $B = 10$K total. Pass-rate is monotone in the proposer's per-call cap, and review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.}
+\caption{Budget allocation simplex on 15 hard code tasks, $B = 10$K total; underlying \Cref{fig:allocation}. Pass rate is monotone in the proposer's per-call cap, and review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.}
 \label{tab:allocation}
 \small
 \begin{tabular}{lccccc}
 \toprule
-Allocation & $b_1$ (prop) & $b_2$ (exec) & $b_3$ (rev) & Pass-rate & Mean tokens \\
+Allocation & $b_1$ (prop) & $b_2$ (exec) & $b_3$ (rev) & Pass rate & Mean tokens \\
 \midrule
 \textbf{A (propose-heavy)} & 0.80 & 0.10 & 0.10 & \textbf{93.3\% (14/15)} & 3{,}101 \\
 \textbf{G (prop-dominant)} & 0.50 & 0.25 & 0.25 & \textbf{93.3\% (14/15)} & 2{,}697 \\
@@ -222,7 +254,7 @@ RFT v1               & Self-rolled, judge-filtered    & 61 & 39\% \\
 \subsection{Distillation: RFT regresses pass@3}
 \begin{table}[H]
 \centering
-\caption{RFT polishes consistency at the cost of pass@$k$. Per-turn metrics improve, per-task variance collapses, and pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph{is} the inference-scaling budget. \textit{Note on notation.} \textbf{mean@1} is the expected pass-rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph{pass@1}=44\% reported in \Cref{tab:distill-headline}, which is just seed~1's accuracy. \emph{pass@2} and \emph{pass@3} are union pass-rates over the first 2 / all 3 seeds.}
+\caption{RFT polishes consistency at the cost of pass@$k$; underlying \Cref{fig:variance}. Per-turn metrics improve, per-task variance collapses, and pass@3 regresses by 17\,pp. For deployment with sampling, the model's variance \emph{is} the inference-scaling budget. \textit{Note on notation.} \textbf{mean@1} is the expected pass rate of a single random sample, computed as the mean accuracy across the three sampling seeds (one $T{=}0$ greedy + two $T{=}0.7$). This is the natural variance-sensitive metric and differs from the greedy single-seed \emph{pass@1}=44\% reported in \Cref{tab:distill-headline}, which is just seed~1's accuracy. \emph{pass@2} and \emph{pass@3} are union pass rates over the first 2 / all 3 seeds.}
 \label{tab:distill-rft}
 \small
 \begin{tabular}{lcccccc}
@@ -276,19 +308,19 @@ Category & Task & seed 1 ($T{=}0$) & seed 2 ($T{=}0.7$) & seed 3 ($T{=}0.7$) & p
 \subsection{Original six-modality holistic overview (historical)}
 \begin{table}[H]
 \centering
-\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass-rate, and other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf{Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt{pytest}), video by a native full-video rubric (Gemini~3.1~Pro judging the whole rendered clip), and the four visual/factual rows use a holistic screenshot judge and serve only as a cross-modal overview. \emph{This table is historical and is superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}}: under the deterministic DOM-geometry instrument (\Cref{tab:geometric}) the figure, slide, web, and animation effects are large and significant, whereas the holistic-judge numbers here cannot see the geometric defects and therefore mis-state them. The visual rows here also use the earlier, smaller task sets ($15$ web and $15$ animation tasks, $20$ generic slides), not the hardened suites of \Cref{tab:geometric} ($20$/$20$/$12$ real-paper), which is why the per-modality $N$ differs between the two tables. The deep-research and video rows also use \emph{different} instruments than \Cref{sec:grounded_eval}. Research here is the old holistic judge ($0.63\to0.69$) rather than the search-grounded factual rubric (single-shot $0.982$), so the large numeric gap is an instrument change, not a contradiction. Video uses the same Gemini-native rubric in both places ($0.70\to0.74$).}
+\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4. Means and standard deviations are computed across three independent on-policy runs (per-run means, then aggregated). Code is binary pass rate, and other modalities are continuous in $[0,1]$. $p$-values: one-sided paired sign test on per-task means. \textbf{Bold} marks rows where the lift clears $p < 0.05$. Code is scored by execution (\texttt{pytest}), video by a native full-video rubric (Gemini~3.1~Pro judging the whole rendered clip), and the four visual/factual rows use a holistic screenshot judge and serve only as a cross-modal overview. \emph{This table is historical and is superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}}: under the deterministic DOM-geometry instrument (\Cref{tab:geometric}) the figure, slide, web, and animation effects are large and significant, whereas the holistic-judge numbers here cannot see the geometric defects and therefore mis-state them. The visual rows here also use the earlier, smaller task sets ($15$ web and $15$ animation tasks, $20$ generic slides), not the hardened suites of \Cref{tab:geometric} ($20$/$20$/$12$ real-paper), which is why the per-modality $N$ differs between the two tables. The deep-research and video rows also use \emph{different} instruments than \Cref{sec:grounded_eval}. Research here is the old holistic judge ($0.63\to0.69$) rather than the search-grounded factual rubric (single-shot $0.982$), so the large numeric gap is an instrument change, not a contradiction. Video uses the same Gemini-native rubric in both places ($0.70\to0.74$).}
 \label{tab:harness-headline}
 \small
 \begin{tabular}{lccccc}
 \toprule
-Modality & $N$ & Feedback type & Single-shot & Reviewed & $\Delta$ (sign-test $p$) \\
+Modality & $N$ & Feedback channel & Single-shot & Reviewed & $\Delta$ (sign-test $p$) \\
 \midrule
-\textbf{Code}          & 15 & 3a       & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\% & $\mathbf{+33.3}$\,pp (0.008) \\
-Video editing          & 15 & 3a+3c    & $0.70 \pm 0.03$    & $0.74 \pm 0.05$   & $+0.04$ (0.64) \\
-Deep research          & 15 & 3d       & $0.63 \pm 0.06$    & $0.69 \pm 0.06$   & $+0.06$ (0.090) \\
-Web pages              & 15 & 3b       & $0.43 \pm 0.03$    & $0.56 \pm 0.01$   & $+0.13$ (0.073) \\
-Animations             & 15 & 3c       & $0.40 \pm 0.03$    & $0.55 \pm 0.01$   & $+0.15$ (0.073) \\
-Slide decks            & 20 & 3b       & $0.73 \pm 0.01$    & $0.79 \pm 0.01$   & $+0.06$ (0.090) \\
+\textbf{Code}          & 15 & execution       & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\% & $\mathbf{+33.3}$\,pp (0.008) \\
+Video editing          & 15 & exec.+temporal  & $0.70 \pm 0.03$    & $0.74 \pm 0.05$   & $+0.04$ (0.64) \\
+Deep research          & 15 & external facts  & $0.63 \pm 0.06$    & $0.69 \pm 0.06$   & $+0.06$ (0.090) \\
+Web pages              & 15 & geometry        & $0.43 \pm 0.03$    & $0.56 \pm 0.01$   & $+0.13$ (0.073) \\
+Animations             & 15 & temporal        & $0.40 \pm 0.03$    & $0.55 \pm 0.01$   & $+0.15$ (0.073) \\
+Slide decks            & 20 & geometry        & $0.73 \pm 0.01$    & $0.79 \pm 0.01$   & $+0.06$ (0.090) \\
 \bottomrule
 \end{tabular}
 \end{table}

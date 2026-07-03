@@ -1,27 +1,76 @@
-\section{The Grounded-Feedback Framework}
+\section{Two Internal Axes, One External Axis}
 \label{sec:framework}
 
-Our contribution is not a new self-correction method but an account of \emph{why} interaction is a separate axis, \emph{when} it helps (a feedback-actionability taxonomy), and a previously-missing requirement: that the \emph{evaluation} be grounded too, without which the effect is unmeasurable.
+Our contribution is not a new self-correction method but an account of \emph{why} interaction is a separate scaling axis, \emph{when} a feedback channel helps (a coverage principle over a simple taxonomy), and a previously-missing requirement: that the \emph{evaluation} be grounded too, without which the effect is unmeasurable.
 
-\subsection{A feedback taxonomy by grounding}
-We classify the reviewer's feedback channel by how much external, task-conditional information it injects:
+\subsection{Internal vs.\ external test-time compute}
+\label{sec:internal-external}
+
+Reasoning and sampling differ in mechanics but not in kind. A longer chain of thought re-derives consequences of what the weights and prompt already contain; best-of-$N$ re-draws from the same distribution and selects. In both, every token is manufactured from the same two sources---frozen weights, fixed prompt---so we call them \textbf{internal} scaling. \textbf{External} scaling is different in kind: the artifact is handed to an instrument outside the model---a test runner, a layout engine, a search index---and the instrument's observation is fed back into generation. The observation is manufactured from the \emph{artifact's actual behavior}, not from the model's beliefs about it.
+
+\subsection{A feedback taxonomy, and the coverage principle}
+\label{sec:taxonomy}
+
+We classify a reviewer's feedback channel by \emph{who produces the signal} (\Cref{fig:taxonomy}):
 \begin{itemize}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
-\item \textbf{Type 0 -- none.} Single-shot, no feedback.
-\item \textbf{Type 1 -- ungrounded critique.} An LLM/VLM critiques the artifact from its weights (``looks wrong''). No execution, no measurement.
-\item \textbf{Type 2 -- static analysis.} Linters/type-checkers: signal about the artifact's \emph{form}, not its behavior.
-\item \textbf{Type 3 -- grounded.} The artifact is exercised and the result observed: \textbf{3a} execution (run tests, read tracebacks), \textbf{3b} rendered geometry (measure the DOM), \textbf{3c} temporal (sample animation frames), \textbf{3d} factual (search and verify claims).
+\item \textbf{Ungrounded feedback} is a model's opinion. An LLM re-reads its own artifact and critiques it; a VLM looks at a screenshot and rates it. No instrument touches the artifact.
+\item \textbf{Grounded feedback} is an instrument's observation. Its subtypes are named by \emph{what the instrument observes}: \textbf{static form} (linters and type checkers inspect the source), \textbf{execution behavior} (tests run it and report the failing assertion), \textbf{rendered geometry} (a layout engine reports every element's true bounding box), \textbf{temporal behavior} (the same measurement per animation frame), and \textbf{external facts} (a search engine checks a claim against the world).
 \end{itemize}
+Grounding alone, however, is not sufficient, and this is the second half of the taxonomy:
 
-\subsection{Why grounding breaks the ceiling: a DPI bound}
-Let $A^\star$ be the (task-determined) correct artifact and $A$ a candidate. The proposer is a channel from its inputs $\Theta$ (weights) and prompt $X$ to $A$. A \emph{reviewer} that only reads $A$ and reasons forms the Markov chain $A^\star \to (\Theta,X) \to A \to R$, where $R$ is its critique. By the data-processing inequality,
-\[
-I(A^\star; R)\ \le\ I(A^\star; (\Theta,X)),
-\]
-so \emph{no} amount of reasoning or ungrounded review (Type 0--2) can recover more information about $A^\star$ than is already in $(\Theta,X)$. This bounds reasoning-only scaling. Sampling is bounded differently but no less tightly: for any finite $N$, best-of-$N$ can only \emph{select} among the $N$ candidates the proposer actually draws, so even an oracle (grounded) verifier cannot return a correct artifact the proposer is too unlikely to sample within the budget. Its practical ceiling is the high-probability support of the proposer's own output distribution, not a new information channel. Both ceilings appear empirically once we measure them (\Cref{fig:dpi} in \Cref{sec:interaction}): on hard code, both reasoning-only and oracle best-of-$N$ saturate well short of completion. The inequality bounds the \emph{information channel}, not achievable quality directly; we use it to \emph{motivate} the saturation we then measure and treat as the evidence.
+\begin{center}
+\begin{tikzpicture}
+\node[draw=cGnd!70,fill=cGnd!5,rounded corners=3pt,inner sep=8pt,text width=0.9\linewidth]{%
+\textbf{The coverage principle.} A feedback channel helps exactly as far as its instrument's observational reach. A linter is grounded but observes only form, so it cannot see a runtime bug; a screenshot is an observation whose channel crops the defect out, so a VLM judging it cannot see broken geometry. The instrument must \emph{observe the property that is broken}.};
+\end{tikzpicture}
+\end{center}
 
-Grounded feedback (Type 3) escapes both ceilings by feeding an environment observation $E=g(A,\,\mathrm{world})$ (a test outcome, a measured bounding box, a search verdict) back into \emph{generation}. Conditioning the next proposal on $E$ lets the proposer synthesize a candidate it would not otherwise have sampled: formally $I(A^\star;(R,E))$ can exceed $I(A^\star;(\Theta,X))$ because $E$ carries information obtained by \emph{running} the artifact against reality. This is the crucial difference from selection (best-of-$N$ cannot create a missing candidate) and from reasoning (which adds no information), and it is why interaction is a distinct axis rather than a constant-factor speedup.
+The coverage principle is what unifies the paper's results: it predicts that execution feedback beats critique on behavioral bugs while a linter does not (\Cref{sec:feedback}), that a screenshot-fed VLM fails both as a reviewer (\Cref{sec:feedback}) and as a judge (\Cref{sec:grounded_eval}), and that a deterministic geometry instrument succeeds at both.
 
-\paragraph{The symmetric claim: ungrounded evaluation cannot measure the gain.} The same inequality applies to the \emph{scorer}. A metric $M$ that is itself a function of $(\Theta,X)$ (e.g.\ a VLM judging a screenshot, whose view of $A$ is a lossy, cropped image) satisfies $I(A^\star; M)\le I(A^\star;(\Theta,X))$ and cannot certify an improvement that lives in the part of $A$ it cannot observe. Grounding the evaluation (measure the artifact directly) is therefore not optional polish: it is a precondition for \emph{detecting} interaction scaling on any modality whose quality is not fully visible to the default judge. \Cref{sec:grounded_eval} shows this is exactly the situation for rendered visual artifacts.
+\begin{figure}[t]
+\centering
+\resizebox{\linewidth}{!}{%
+\begin{tikzpicture}[font=\small,
+  ubox/.style={rounded corners=2pt,draw=cUng,fill=cUng!8,minimum height=10mm,align=center,inner sep=5pt},
+  gbox/.style={rounded corners=2pt,draw=cGnd,fill=cGnd!8,minimum height=10mm,align=center,inner sep=5pt},
+  lab/.style={font=\footnotesize\bfseries}]
+  % ---- ungrounded lane (top) ----
+  \node[ubox] (crit) at (0,0) {LLM critique\\\footnotesize re-reads its own output};
+  \node[ubox, right=5mm of crit] (vlmshot) {VLM on a screenshot\\\footnotesize channel drops the defect};
+  \node[font=\footnotesize\itshape,cUng!85!black,right=8mm of vlmshot,align=left]
+    {bounded by what the model already knows\\(the internal ceiling, \Cref{sec:ceiling})};
+  % ---- grounded lane (bottom) ----
+  \node[gbox] (lint) at (0,-3.1) {static form\\\footnotesize linter, type checker};
+  \node[gbox, right=4mm of lint] (exec) {execution\\\footnotesize tests, tracebacks};
+  \node[gbox, right=4mm of exec] (geom) {rendered geometry\\\footnotesize DOM bounding boxes};
+  \node[gbox, right=4mm of geom] (temp) {temporal\\\footnotesize per-frame geometry};
+  \node[gbox, right=4mm of temp] (fact) {external facts\\\footnotesize search verification};
+  % coverage arrow under grounded row
+  \draw[-{Latex[length=2.2mm]},thick,cGnd!70!black]
+    ([yshift=-3.5mm]lint.south west) -- ([yshift=-3.5mm]fact.south east)
+    node[midway,below=2pt,font=\footnotesize,cGnd!70!black]
+    {coverage --- what the instrument can observe: \ form $\rightarrow$ behavior $\rightarrow$ world};
+  \begin{scope}[on background layer]
+    \node[draw=cUng!60,dashed,rounded corners,fill=cUng!3,fit=(crit)(vlmshot),inner sep=2.5mm,
+      label={[cUng!85!black,lab]above:UNGROUNDED: a model's opinion}] (ug) {};
+    \node[draw=cGnd!60,dashed,rounded corners,fill=cGnd!3,fit=(lint)(fact),inner sep=2.5mm,yshift=-2mm,
+      label={[cGnd,lab]above:{GROUNDED: an instrument's observation --- \normalfont\itshape imports new information, as far as it can observe}}] (gd) {};
+  \end{scope}
+\end{tikzpicture}}
+\caption{\textbf{The feedback taxonomy.} Feedback is either a model's opinion (\emph{ungrounded}, left) or an instrument's observation of the artifact (\emph{grounded}, right); grounded subtypes are named by what the instrument observes, and the \emph{coverage} axis orders them by reach. Ungrounded feedback is subject to the internal ceiling (\Cref{sec:ceiling}); grounded feedback escapes it, but only for defects inside the instrument's coverage---a linter cannot see a runtime bug, and a screenshot cannot see off-canvas overflow.}
+\label{fig:taxonomy}
+\end{figure}
 
-\subsection{Predictions}
-The framework makes three testable predictions, each tested below. \textbf{(P1)} Reasoning- and sampling-only scaling saturate strictly below the interaction ceiling (\Cref{sec:interaction}). \textbf{(P2)} Within interaction, more actionable grounded channels lift more, and the \emph{execution} of the artifact, not the extra review pass, is the active ingredient (\Cref{sec:interaction}). \textbf{(P3)} On modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:grounded_eval}).
+\subsection{Why internal scaling saturates}
+\label{sec:ceiling}
+
+The reason is one sentence long: \emph{a model re-reading its own output cannot learn anything it did not already know.} A critique produced by the same weights that produced the artifact is post-processing, and post-processing cannot add information about the correct answer beyond what the weights and prompt already carried. Sampling is bounded for a different but equally simple reason: best-of-$N$ can only \emph{select} among the candidates the model actually draws, so even a perfect verifier cannot return a program the model was never going to write. Longer thinking rearranges the known; more samples explore the already-likely. We call the resulting plateau the \textbf{internal ceiling}. The formal version is a three-line data-processing-inequality argument, and we defer it to \Cref{app:ceiling}; the inequality bounds an information channel, not achievable quality directly, so throughout the paper the evidence is experimental. \Cref{sec:interaction} measures the ceiling directly: on hard code, reasoning-only and \emph{oracle-verified} best-of-$N$ both flatten with budget while interaction strategies climb past them to a perfect pass rate (\Cref{fig:scaling}).
+
+Grounded feedback escapes the ceiling because the instrument's observation is computed from the artifact's real behavior---a failing assertion, a measured bounding box, a search verdict---and conditioning the \emph{next} proposal on that observation lets the model synthesize a candidate it would never have sampled unaided. This is the crucial difference from selection (which cannot create a missing candidate) and from reasoning (which adds no information): interaction is a new information channel, not a constant-factor speedup.
+
+\paragraph{The symmetric claim: an ungrounded metric cannot measure the gain.} The same argument applies to the \emph{scorer}. A judge that is itself a model looking at a lossy view of the artifact---a VLM reading a cropped screenshot---cannot certify an improvement that lives in the part of the artifact its channel drops. Grounding the evaluation is therefore not optional polish: it is a precondition for \emph{detecting} interaction scaling on any modality whose quality is not fully visible to the default judge. \Cref{sec:grounded_eval} shows this is exactly the situation for rendered visual artifacts.
+
+\subsection{Three testable predictions}
+\label{sec:predictions}
+
+\textbf{(P1)} At a matched token budget, reasoning-only and best-of-$N$ scaling saturate strictly below what interaction reaches (\Cref{sec:interaction}). \textbf{(P2)} Holding the task suite fixed and swapping only the reviewer's feedback channel, improvement tracks the instrument's \emph{coverage} of the defects present---not the act of reviewing (\Cref{sec:feedback}). \textbf{(P3)} On modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:feedback,sec:grounded_eval}).

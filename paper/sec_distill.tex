@@ -1,34 +1,57 @@
 \section{Internalizing the Harness into a Small Student}
 \label{sec:distill}
 
-Two things could carry the harness's gains: the grounded scaffolding, or behavior absorbed into the weights. This section asks how much is the latter: whether the loop's interaction-quality behavior can be \emph{internalized} so a small model emits high-quality artifacts in fewer passes. It is a complement to the thesis, not a substitute: the cheaper internalized proposer is still meant to run \emph{inside} the same grounded harness, so internalization and grounding compose. We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via SFT.
+Two things could carry the harness's gains: the grounded scaffolding, or behavior absorbed into the weights. This section asks how much is the latter---whether the loop's interaction quality can be \emph{internalized} so a small model emits high-quality artifacts in fewer passes. It is a complement to the thesis, not a substitute: the cheaper internalized proposer is still meant to run \emph{inside} the same grounded harness, so internalization and grounding compose. We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via supervised fine-tuning.
 
-\paragraph{Result.} The student recovers about half the teacher's mean@1 capability on a $44$-task out-of-distribution suite, rising with a second sample (\Cref{tab:distill-ood}), and passes a substantial fraction of an $18$-task hard held-out suite (\Cref{tab:distill-headline}), at roughly $10\times$ lower deployment cost than running the harness over a frontier model (\Cref{fig:distill}). Run back inside the harness, the student recovers still more of the gap.
+\paragraph{Result.} The student recovers about half the teacher's single-sample capability on an out-of-distribution suite, and a second sample closes much of the remaining gap (\Cref{fig:distill})---at roughly $10\times$ lower deployment cost than running the harness over a frontier model. On a harder held-out suite of the teacher's own pre-curated failures it passes a substantial fraction (\Cref{tab:distill-headline}), and run back inside the harness it recovers still more.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.66\linewidth,height=4.4cm,clip=false,
-  ybar,bar width=30pt,ymin=0,ymax=1.2,
+\begin{axis}[paperbar,width=0.6\linewidth,height=4.6cm,clip=false,
+  ybar,bar width=26pt,ymin=0,ymax=1.2,
   ylabel={capability vs.\ teacher ($\times$)},
   symbolic x coords={mean@1,pass@2},xtick=data,enlarge x limits=0.6,
-  nodes near coords={\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}$\times$},
-  nodes near coords style={font=\footnotesize\bfseries,anchor=south},
+  x tick label style={font=\footnotesize,color=cMut},
   ymajorgrids,ytick={0,0.25,0.5,0.75,1.0},yticklabel={\pgfmathprintnumber{\tick}$\times$}]
   % teacher reference band spanning the full plot width
-  \fill[cGrey!7] ({rel axis cs:0,0}|-{axis cs:mean@1,1.0}) rectangle ({rel axis cs:1,0}|-{axis cs:mean@1,1.2});
-  \draw[cGrey,densely dashed,thick] ({rel axis cs:0,0}|-{axis cs:mean@1,1.0}) -- ({rel axis cs:1,0}|-{axis cs:mean@1,1.0});
-  \node[font=\footnotesize,cGrey,anchor=south east] at ({rel axis cs:0.99,0}|-{axis cs:mean@1,1.01}) {teacher ($1\times$)};
-  \addplot[draw=cAccent!60!black,fill=cAccent!30] coordinates {(mean@1,0.51) (pass@2,0.70)};
-  % sampling-lift annotation in the empty band between the bar tops and the teacher line
-  \node[font=\scriptsize,cRV!45!black,anchor=center]
+  \fill[black!5] ({rel axis cs:0,0}|-{axis cs:mean@1,1.0}) rectangle ({rel axis cs:1,0}|-{axis cs:mean@1,1.2});
+  \draw[cMut,densely dashed,line width=0.7pt] ({rel axis cs:0,0}|-{axis cs:mean@1,1.0}) -- ({rel axis cs:1,0}|-{axis cs:mean@1,1.0});
+  \node[font=\footnotesize,cMut,anchor=south east] at ({rel axis cs:0.99,0}|-{axis cs:mean@1,1.01}) {teacher ($1\times$)};
+  \addplot[draw=none,fill=cStu!65] coordinates {(mean@1,0.51) (pass@2,0.70)};
+  \node[font=\footnotesize\bfseries,cInk,anchor=south] at (axis cs:mean@1,0.52) {0.51$\times$};
+  \node[font=\footnotesize\bfseries,cInk,anchor=south] at (axis cs:pass@2,0.71) {0.70$\times$};
+  \node[font=\scriptsize,cGnd!80!black,anchor=center]
     at ($(axis cs:mean@1,0.90)!0.5!(axis cs:pass@2,0.90)$)
     {sampling adds $+0.19\times$};
-  \legend{}
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{An $8$B student internalizes much of the teacher's interaction quality.} Distilled $8$B markdown student as a fraction of the frontier teacher on the $44$-task OOD suite (\Cref{tab:distill-ood}): a single sample recovers $0.51\times$ and two samples $0.70\times$ of teacher capability (sampling closes the gap), at ${\sim}10\times$ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$/$56\%$ at pass@$1$/pass@$3$.}
+\caption{\textbf{An $8$B student internalizes much of the teacher's interaction quality.} Distilled student as a fraction of the frontier teacher on the $44$-task out-of-distribution suite (\Cref{tab:distill-ood}): one sample recovers $0.51\times$ and two samples $0.70\times$ of teacher capability, at ${\sim}10\times$ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$ at pass@$1$ and $56\%$ at pass@$3$ (\Cref{tab:distill-headline}).}
 \label{fig:distill}
 \end{figure}
 
-\paragraph{Variance is a budget (a cautionary finding).} Reinforcement fine-tuning (RFT) on top of SFT improves every per-turn consistency metric we measure \emph{and} regresses pass@3 (\Cref{tab:distill-rft}). For sampling-based deployment, output-distribution variance \emph{is} the inference-scaling lever, and any post-training that reduces it spends from the same budget best-of-$N$ draws on. Variance is not noise to minimize. It is the resource sampling converts into quality. The operational recipe is therefore: SFT to internalize interaction quality, keep the proposer's sampling temperature, and run it inside the grounded harness.
+\paragraph{Variance is a budget (a cautionary finding).} Reinforcement fine-tuning (RFT) on top of SFT improves every per-turn consistency metric we measure \emph{and} regresses pass@$k$ (\Cref{fig:variance}). The two students start nearly tied on a single sample; as samples are added, the SFT student keeps converting draws into new solved tasks while the RFT student's curve goes flat. The reading is that for sampling-based deployment, output-distribution variance \emph{is} the inference-scaling lever, and any post-training that reduces it spends from the same budget best-of-$N$ draws on. Variance is not noise to minimize; it is the resource sampling converts into quality. The operational recipe is therefore: SFT to internalize interaction quality, keep the proposer's sampling temperature, and run it inside the grounded harness.
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.56\linewidth,height=4.6cm,
+  xlabel={samples $k$},ylabel={held-out judge-keep (\%)},
+  xmin=0.8,xmax=3.6,ymin=20,ymax=62,clip=false,
+  xtick={1,2,3},xticklabels={mean@1,pass@2,pass@3},
+  x tick label style={font=\footnotesize,color=cMut},
+  ytick={25,35,45,55},ymajorgrids,
+  axis x line*=bottom,axis y line*=left]
+  \addplot[cStu,line width=1.4pt,mark=*,mark size=1.9,
+    mark options={fill=cStu,draw=white,line width=0.5pt}]
+    coordinates {(1,31)(2,50)(3,56)};
+  \addplot[cUng,line width=1.1pt,mark=square*,mark size=1.7,
+    mark options={fill=cUng,draw=white,line width=0.5pt}]
+    coordinates {(1,28)(2,39)(3,39)};
+  \node[font=\scriptsize\bfseries,cStu,anchor=west,inner sep=3pt] at (axis cs:3,56) {SFT student: 56};
+  \node[font=\scriptsize,cUng!85!black,anchor=west,inner sep=3pt] at (axis cs:3,39) {+\,RFT: 39};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{RFT polishes consistency but spends the variance that sampling needs.} Judge-keep vs.\ number of samples on the $18$-task hard held-out suite for the chosen SFT student and the same student after RFT. RFT improves every per-turn consistency metric (\Cref{tab:distill-rft}) yet regresses pass@$3$ by $17$\,pp: the near-tie at one sample and the flat curve past it show the lost quality is exactly the distributional spread best-of-$N$ converts into solved tasks.}
+\label{fig:variance}
+\end{figure}

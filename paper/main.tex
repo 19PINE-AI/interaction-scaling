@@ -31,18 +31,42 @@
 \hyphenpenalty=1000
 \tolerance=2000
 
-% ---- shared figure styling (NeurIPS-ish, clean) ----
-\definecolor{cSS}{HTML}{D1495B}     % single-shot / ungrounded (red)
-\definecolor{cRV}{HTML}{2E8B57}     % reviewed / grounded (green)
-\definecolor{cAccent}{HTML}{1F6FB2} % accent blue
-\definecolor{cGrey}{HTML}{6B6B6B}
+% ---- palette (validated: CVD-safe, worst adjacent pair dE 31.9) ----
+% blue  = grounded / external / reviewed  (the hero hue)
+% orange= internal / ungrounded           (the bounded family)
+% red   = second internal series
+% violet= distilled student
+\definecolor{cGnd}{HTML}{2A78D6}    % grounded / external (blue)
+\definecolor{cGndDk}{HTML}{1B5A9E}  % second external series (darker blue, same family)
+\definecolor{cUng}{HTML}{EB6834}    % ungrounded / internal (orange)
+\definecolor{cUngDk}{HTML}{D1495B}  % second internal series (red)
+\definecolor{cStu}{HTML}{4A3AA7}    % distilled student (violet)
+\definecolor{cInk}{HTML}{262626}    % primary ink
+\definecolor{cMut}{HTML}{6E6E6E}    % secondary ink
+\definecolor{cGrid}{HTML}{DDDDDD}   % hairline grid
+
+% ---- shared figure styling: open frame, hairline solid grid, thin marks ----
 \pgfplotsset{
-  every axis/.append style={font=\small, axis line style={cGrey}, tick style={cGrey},
-    label style={font=\small}, tick label style={font=\footnotesize}, major grid style={dotted,cGrey!40}},
+  every axis/.append style={
+    font=\small,
+    axis line style={draw=cMut!70, line width=0.5pt},
+    tick style={draw=cMut!70, line width=0.5pt},
+    label style={font=\footnotesize, color=cInk},
+    tick label style={font=\footnotesize, color=cMut},
+    major grid style={solid, cGrid, line width=0.4pt},
+    legend style={font=\footnotesize, draw=none, fill=white, fill opacity=0.85, text opacity=1},
+  },
+  paperbar/.style={% open frame for bar charts: left+bottom spines only
+    axis x line*=bottom, axis y line*=left,
+  },
   % single clean swatch for bar-chart legends (default ybar legend draws doubled bars)
   swatch/.style={legend image code/.code={%
     \draw[##1] (0cm,-0.09cm) rectangle (0.28cm,0.14cm);}},
+  lineswatch/.style={legend image code/.code={%
+    \draw[##1] (0cm,0.03cm) -- (0.42cm,0.03cm);}},
 }
+% direct-label helper for line endpoints
+\newcommand{\serieslabel}[3]{\node[font=\scriptsize, anchor=west, text=#1, inner sep=1.5pt] at (axis cs:#2) {#3};}
 
 \title{Grounding the Loop on Both Sides:\texorpdfstring{\\}{ }Interaction as a Third Test-Time Compute Axis,\texorpdfstring{\\}{ }and Why Its Gains Are Invisible\texorpdfstring{\\}{ }Without Grounded Evaluation}
 
@@ -59,9 +83,9 @@
 \maketitle
 
 \begin{abstract}
-Test-time compute is dominated by two scaling axes that both operate inside a model's own token space: \emph{reasoning} (longer chains of thought) and \emph{sampling} (best-of-$N$). Both are bounded by the information already in the weights and prompt, a limit that follows from the data-processing inequality (DPI). A third axis, \emph{interaction} with an environment that returns grounded feedback, can exceed that bound by importing information from outside the model. We argue that one variable, \textbf{grounding}, governs this axis, and that it must hold on \emph{both} sides of the loop: grounded \emph{feedback} drives improvement past the reasoning/sampling ceiling, and grounded \emph{evaluation} is required even to \emph{measure} it. We formalize the first claim as a DPI argument over a Type~0--3 feedback taxonomy, and establish the second on rendered visual artifacts: the default vision--language-model (VLM) judge is structurally blind to the geometric defects the loop fixes, rating $14$ of $15$ single-shot academic figures ``perfect'' when only $3$ are actually clean, and a VLM \emph{reviewer} even makes layouts worse. A deterministic DOM-geometry instrument (overlap, clipping, overflow, and misalignment, measured exactly from the rendered layout) instead reveals $40$--$74\%$ defect reductions under grounded feedback across \textbf{four} visual modalities measured identically (academic figures, dense slides, responsive web pages, and SVG/CSS animations), with every paired sign test at $p<0.002$ and every bootstrap 95\% CI excluding zero.
+Test-time compute is scaled today along two axes---longer \emph{reasoning} and more \emph{sampling}---that share a hidden property: both are \emph{internal}. Every additional token is generated from the same frozen weights and the same prompt, so neither axis can tell the model anything it does not already know. A third axis, \emph{interaction}---propose an artifact, observe it with an external instrument, revise---is not subject to that internal ceiling, because each cycle imports a real observation of the artifact's behavior.
 
-On execution-grounded code the harness lifts a frontier model from a two-thirds pass-rate to a strict $100\%$, an in-modality control isolates the \emph{execution} of tests, not the extra reviewing pass, as the cause, and the effect replicates across three model families (three seeds each) and a held-out suite; the geometry result reproduces with Gemini~3.1~Pro as proposer under the same model-free instrument. At a fixed token budget, reasoning-only and best-of-$N$ saturate while every interaction strategy approaches a perfect pass-rate, the proposer--reviewer harness doing so at the lowest token cost with zero seed variance. Finally, the harness's behavior partially distills into an $8$B student. Interaction scaling is real, distinct, and predictable, but its gains are visible only when both the feedback and the metric are grounded.
+We argue that a single variable, \textbf{grounding}, governs this third axis, and that it must hold on \emph{both} sides of the loop: the feedback that drives revision must come from an instrument that actually observes the defect, and so must the metric that scores the result. We state the argument in one paragraph of information theory (formalized in the appendix) and then test it experimentally. On hard coding tasks at a matched token budget, reasoning-only and best-of-$N$ scaling saturate---the latter even with an \emph{oracle} verifier---while every interaction strategy keeps climbing, the proposer--reviewer harness reaching a strict $100\%$ pass rate with zero seed variance, an effect that replicates across three model families and a held-out suite. On rendered visual artifacts we show that the standard vision--language-model judge is \emph{structurally blind} to the defects the loop fixes---it rates $14$ of $15$ broken single-shot figures ``perfect''---while a deterministic DOM-geometry instrument reveals $40$--$74\%$ defect reductions across four modalities, every one statistically decisive. Swapping only the reviewer's instrument exposes the same asymmetry on the feedback side: a VLM reviewer makes slide layout \emph{worse}, while a geometric reviewer repairs it. Finally, the harness's behavior partially distills into an $8$B student. Interaction scaling is real, distinct from reasoning and sampling, and predictable---but its gains are visible only when both the feedback and the metric are grounded.
 \end{abstract}
 \begin{center}
 \small
@@ -74,6 +98,7 @@ Website (with an interactive single-shot-vs-reviewed results browser): \url{http
 \input{sec_framework}
 \input{sec_method}
 \input{sec_interaction}
+\input{sec_feedback}
 \input{sec_grounded_eval}
 \input{sec_robustness}
 \input{sec_distill}

@@ -1,34 +1,76 @@
 \section{Robustness}
 \label{sec:robustness}
 
-\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the $15$ hard code tasks, over \emph{three} independent on-policy seeds per family, the harness lifts all three families: Sonnet~4, Qwen3-235B, and GPT-5 (the last from a higher single-shot baseline, \Cref{fig:crossmodel}). The reviewed ceiling has \emph{zero} seed variance for every family while single-shot fluctuates seed-to-seed: the grounded loop converges to the same ceiling regardless of the starting draw.
+\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the hard code suite, over three independent on-policy seeds per family, the harness lifts all three families we test---Sonnet~4, Qwen3-235B, and GPT-5, the last from a higher single-shot baseline (\Cref{fig:crossmodel}a). The signature detail is the variance: single-shot fluctuates seed-to-seed for every family, while the reviewed ceiling has \emph{zero} seed variance for all three. The grounded loop converges to the same ceiling regardless of the starting draw.
+
+\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the geometric effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces and is in fact larger (\Cref{fig:crossmodel}b): Gemini's single-shot slides are more defect-prone than Sonnet's, and the grounded loop removes almost all of the excess. Since the instrument depends on no model, the effect is neither proposer- nor scorer-specific.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.82\linewidth,height=3.8cm,
-  ybar,bar width=11pt,ymin=50,ymax=112,
-  ylabel={code pass-rate (\%)},
+\begin{axis}[paperbar,name=axcm,width=0.52\linewidth,height=4.6cm,
+  ybar,bar width=10pt,ymin=0,ymax=118,
+  xlabel={\footnotesize (a) execution loop, three model families},
+  ylabel={code pass rate (\%)},
   symbolic x coords={Sonnet 4,Qwen3-235B,GPT-5},xtick=data,
-  enlarge x limits=0.28,
-  nodes near coords,nodes near coords style={font=\footnotesize,/pgf/number format/.cd,fixed,precision=1},
-  ymajorgrids,ytick={60,80,100},
-  legend style={font=\footnotesize,at={(0.5,1.02)},anchor=south,legend columns=2,draw=cGrey!50,
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.25,ymajorgrids,ytick={0,25,50,75,100},
+  legend style={at={(0.5,1.03)},anchor=south,legend columns=2,
     /tikz/every odd column/.append style={column sep=2pt}}]
-  \addplot[swatch,draw=cSS!60!black,fill=cSS!30,
-    every node near coord/.append style={/tikz/xshift=-11pt},
+  \addplot[swatch,draw=none,fill=black!22,
+    error bars/.cd,y dir=both,y explicit,error bar style={cInk!60,line width=0.6pt}]
+    coordinates {(Sonnet 4,66.7) +- (0,6.7) (Qwen3-235B,71.1) +- (0,3.8) (GPT-5,80.0) +- (0,6.7)};
+    \addlegendentry{single-shot}
+  \addplot[swatch,draw=none,fill=cGnd!80,
     error bars/.cd,y dir=both,y explicit]
-    coordinates {(Sonnet 4,66.7) +- (0,6.7) (Qwen3-235B,71.1) +- (0,3.8) (GPT-5,80.0) +- (0,6.7)}; \addlegendentry{single-shot}
-  \addplot[swatch,draw=cRV!60!black,fill=cRV!35,error bars/.cd,y dir=both,y explicit]
-    coordinates {(Sonnet 4,100) +- (0,0) (Qwen3-235B,93.3) +- (0,0) (GPT-5,100) +- (0,0)}; \addlegendentry{reviewed}
+    coordinates {(Sonnet 4,100) +- (0,0) (Qwen3-235B,93.3) +- (0,0) (GPT-5,100) +- (0,0)};
+    \addlegendentry{reviewed}
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:Sonnet 4,101) {\hspace{10pt}100};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:Qwen3-235B,94.3) {\hspace{10pt}93.3};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:GPT-5,101) {\hspace{10pt}100};
+\end{axis}
+\begin{axis}[paperbar,at={($(axcm.east)+(3.1cm,0)$)},anchor=west,
+  width=0.32\linewidth,height=4.6cm,
+  xbar,xmin=0,xmax=100,bar width=13pt,enlarge y limits=0.55,
+  xlabel={\footnotesize (b) slide-defect reduction (\%), two proposers},
+  symbolic y coords={Gemini 3.1 Pro,Sonnet 4},ytick=data,
+  y tick label style={font=\footnotesize,color=cInk},
+  xtick={0,25,50,75,100},xmajorgrids]
+  \addplot[draw=none,fill=cGnd!75] coordinates {(73,Sonnet 4) (93,Gemini 3.1 Pro)};
+  \node[font=\footnotesize\bfseries,white,anchor=west] at (axis cs:2,Sonnet 4) {$-$73\%};
+  \node[font=\footnotesize\bfseries,white,anchor=west] at (axis cs:2,Gemini 3.1 Pro) {$-$93\%};
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{The execution-grounded loop helps every model family.} Single-shot vs.\ harness-reviewed code pass-rate for three model families, each over three independent on-policy seeds ($+33.3$/$+22.2$/$+20.0$\,pp). Whiskers are $\pm1$ SD across seeds. The reviewed bars carry \emph{zero} seed variance for all three families.}
+\caption{\textbf{Both grounded loops replicate across model families.} \textbf{(a)}~Single-shot vs.\ harness-reviewed code pass rate for three families, three seeds each (lifts $+33.3$/$+22.2$/$+20.0$\,pp; whiskers $\pm1$\,SD across seeds). The reviewed bars carry \emph{zero} seed variance for all three families. \textbf{(b)}~The deterministic geometric loop on dense real-paper slides, scored by the same model-free DOM instrument, reproduces with Gemini~3.1~Pro as proposer and is larger there ($19$ of $20$ decisive task-runs improve): Gemini starts more defect-prone and the loop removes almost all of the excess.}
 \label{fig:crossmodel}
 \end{figure}
 
-\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the grounded-evaluation effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces and is in fact larger: Gemini's single-shot slides are \emph{more} defect-prone than Sonnet's, and the grounded loop removes almost all of the excess (a $93\%$ mean reduction, $19$ of $20$ decisive task-runs improve). Since the instrument depends on no model, the effect is neither Claude- nor scorer-specific.
+\paragraph{Held-out generalization.} On a $32$-task held-out code suite constructed after the method was fixed, the harness again recovers every first-shot failure with zero regressions and reaches a perfect pass rate, with no tuning to the original tasks (\Cref{tab:heldout}). The absolute lift is smaller only because the held-out single-shot baseline is higher, leaving less headroom.
 
-\paragraph{Held-out generalization.} On a $32$-task held-out code suite constructed after the method was fixed, the harness again recovers all first-shot failures with zero regressions and reaches a perfect pass-rate, with no tuning to the original tasks (\Cref{tab:heldout}).
+\paragraph{Budget allocation.} Sweeping how a fixed token budget is split between proposer, execution, and reviewer produces an enormous pass-rate spread (\Cref{fig:allocation}). The pattern is monotone in the proposer's share: review-heavy corners collapse almost to zero, while propose-heavy allocations plateau at the top. The optimum is \emph{propose-heavy}---allocate the majority to generation, reserving just enough for the reviewer to localize defects---and extra inference compute is better spent on additional samples than on deeper iteration past the early-stop point.
 
-\paragraph{Budget allocation.} Sweeping the proposer/reviewer token split on a fixed budget produces a large pass-rate spread, monotone in the proposer's per-call share (\Cref{tab:allocation}). The optimum is \emph{propose-heavy}: allocate the majority to generation, reserving enough for the reviewer to localize defects. Extra inference compute is better spent on additional samples than on deeper iteration past the early-stop point.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.7\linewidth,height=5.0cm,
+  xlabel={proposer share of the fixed budget},ylabel={code pass rate (\%)},
+  xmin=0.04,xmax=0.9,ymin=0,ymax=105,clip=false,
+  xtick={0.1,0.2,0.33,0.5,0.8},
+  xticklabels={0.10,0.20,0.33,0.50,0.80},
+  ytick={0,25,50,75,100},ymajorgrids,
+  axis x line*=bottom,axis y line*=left]
+  \addplot[cGnd,line width=1.4pt,mark=*,mark size=1.9,
+    mark options={fill=cGnd,draw=white,line width=0.5pt}]
+    coordinates {(0.10,6.7)(0.20,13.3)(0.25,40.0)(0.33,66.7)(0.40,80.0)(0.50,93.3)(0.80,93.3)};
+  % duplicate-allocation companions at the same share (open markers)
+  \addplot[only marks,mark=o,mark size=2.1,cGnd!60,line width=0.9pt]
+    coordinates {(0.10,6.7)(0.40,80.0)};
+  \node[font=\scriptsize,cMut,anchor=west,align=left] at (axis cs:0.34,12)
+    {review- and execute-heavy corners collapse};
+  \node[font=\scriptsize\bfseries,cGnd,anchor=south east,align=right] at (axis cs:0.86,95.5)
+    {propose-heavy plateau: 93.3\%};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Pass rate is monotone in the proposer's budget share.} Nine allocations of a fixed $10$K-token budget across proposer / execution / reviewer, on the hard code suite (open markers: second allocation with the same proposer share but a different execution/review split---the proposer share alone predicts the outcome). The spread across the sweep is $86.6$\,pp; full simplex in \Cref{tab:allocation}.}
+\label{fig:allocation}
+\end{figure}

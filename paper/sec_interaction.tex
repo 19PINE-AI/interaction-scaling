@@ -1,49 +1,104 @@
-\section{Interaction Is a Distinct Axis Beyond the In-Token-Space Ceiling}
+\section{External Scaling Keeps Going Where Internal Scaling Stops}
 \label{sec:interaction}
 
-\paragraph{Reasoning and sampling saturate while interaction does not (P1).} On the $15$ hard code tasks at a fixed $20$K-token budget we compare four strategies: reasoning-only (extended thinking), best-of-$N$ sampling with an oracle verifier, a single-agent loop, and the proposer--reviewer harness. The two in-token-space axes plateau well short of completion while \emph{every} feedback-iterating strategy approaches a perfect pass-rate (\Cref{fig:dpi}, full table in \Cref{tab:scaling-curves}). The best-of-$N$ comparison is the sharpest: its verifier is an \emph{oracle} (the ground-truth tests), so its ceiling is effectively pass@$N$. The unsolved tasks never yield a passing sample within the budget, yet the harness solves them. A perfect selector cannot return a candidate the proposer never draws. The loop reaches it by conditioning the next draw on execution feedback. This is the separation the framework predicts, and it is information-theoretic, not a tuning artifact.
+\paragraph{The saturation experiment (P1).} On the hard code suite at a fixed per-task token budget we compare four strategies: reasoning-only (extended thinking), best-of-$N$ sampling with an \emph{oracle} verifier, a single-agent loop, and the proposer--reviewer harness. \Cref{fig:scaling} shows the result, which is the experimental content of the internal ceiling (\Cref{sec:ceiling}): both internal strategies flatten as the budget grows, while \emph{every} feedback-iterating strategy climbs past them toward a perfect pass rate. The best-of-$N$ comparison is the sharpest, because its verifier is the ground-truth test suite itself---its ceiling is effectively pass@$N$. The tasks it never solves are tasks where no passing sample exists among anything the model draws within the budget; a perfect selector cannot return a candidate the proposer never writes. The harness solves those same tasks by conditioning the next draw on execution feedback. The separation is information-theoretic, not a tuning artifact.
 
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}
-\begin{axis}[width=0.84\linewidth,height=5.2cm,
+\begin{axis}[width=0.86\linewidth,height=5.6cm,
   xmode=log,log basis x=10,
-  xlabel={per-task token budget $B$},ylabel={code pass-rate (\%)},
+  xlabel={per-task token budget $B$},ylabel={code pass rate (\%)},
   xmin=820,xmax=26000,ymin=54,ymax=104,clip=false,
   xtick={1000,5000,20000},xticklabels={1K,5K,20K},
   ytick={60,70,80,90,100},ymajorgrids,
-  legend style={font=\footnotesize,at={(0.5,-0.32)},anchor=north,legend columns=2,
-    draw=cGrey!50,/tikz/every even column/.append style={column sep=0.5cm}},legend cell align=left]
-  % shade the region only interaction reaches (above the oracle ceiling)
-  \fill[cRV!8] (axis cs:820,86.7) rectangle (axis cs:26000,104);
-  \node[font=\footnotesize\itshape,cRV!70!black,anchor=east] at (axis cs:13500,102.3)
+  legend style={at={(0.5,-0.30)},anchor=north,legend columns=2,
+    /tikz/every even column/.append style={column sep=0.5cm}},legend cell align=left]
+  % region only interaction reaches (above the oracle-sampling ceiling)
+  \fill[cGnd!8] (axis cs:820,86.7) rectangle (axis cs:26000,104);
+  \node[font=\footnotesize\itshape,cGnd!80!black,anchor=east] at (axis cs:13500,102.3)
      {reached only by interaction};
-  % in-token-space ceiling: best-of-N with an oracle verifier
-  \draw[cGrey,densely dotted] (axis cs:820,86.7)--(axis cs:26000,86.7);
-  \node[font=\footnotesize,cGrey,anchor=south west] at (axis cs:870,86.9)
-     {in-token-space ceiling};
-  \addplot[cRV,very thick,mark=*,mark size=1.7] coordinates {(1000,62.2)(5000,91.1)(20000,100.0)};
-    \addlegendentry{proposer--reviewer (interaction)}
-  \addplot[cRV!55!black,thick,mark=square*,mark size=1.5] coordinates {(1000,57.8)(5000,93.3)(20000,97.8)};
-    \addlegendentry{single-agent loop (interaction)}
-  \addplot[cAccent,thick,dotted,mark=triangle*,mark size=2] coordinates {(1000,80.0)(5000,77.8)(20000,86.7)};
-    \addlegendentry{best-of-$N$ (oracle verifier)}
-  \addplot[cSS,thick,dashed,mark=diamond*,mark size=2] coordinates {(1000,60.0)(5000,73.3)(20000,73.3)};
-    \addlegendentry{reasoning-only}
+  \draw[cMut,densely dotted] (axis cs:820,86.7)--(axis cs:26000,86.7);
+  \node[font=\footnotesize,cMut,anchor=south west] at (axis cs:870,86.9)
+     {internal ceiling (oracle best-of-$N$)};
+  \addplot[cGnd,line width=1.4pt,mark=*,mark size=1.9,mark options={fill=cGnd,draw=white,line width=0.5pt}]
+    coordinates {(1000,62.2)(5000,91.1)(20000,100.0)};
+    \addlegendentry{proposer--reviewer \emph{(external)}}
+  \addplot[cGndDk,line width=1.1pt,mark=square*,mark size=1.7,mark options={fill=cGndDk,draw=white,line width=0.5pt}]
+    coordinates {(1000,57.8)(5000,93.3)(20000,97.8)};
+    \addlegendentry{single-agent loop \emph{(external)}}
+  \addplot[cUng,line width=1.1pt,mark=triangle*,mark size=2.2,mark options={fill=cUng,draw=white,line width=0.5pt}]
+    coordinates {(1000,80.0)(5000,77.8)(20000,86.7)};
+    \addlegendentry{best-of-$N$, oracle verifier \emph{(internal)}}
+  \addplot[cUngDk,line width=1.1pt,mark=diamond*,mark size=2.2,mark options={fill=cUngDk,draw=white,line width=0.5pt}]
+    coordinates {(1000,60.0)(5000,73.3)(20000,73.3)};
+    \addlegendentry{reasoning-only \emph{(internal)}}
+  % selective end labels: the two ceilings and the harness endpoint
+  \node[font=\scriptsize\bfseries,cGnd,anchor=south east,inner sep=1pt] at (axis cs:20000,100.4) {100.0};
+  \node[font=\scriptsize,cUngDk,anchor=north west,inner sep=2pt] at (axis cs:20000,73.0) {73.3};
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{Two in-token-space axes saturate; interaction does not (P1).} Measured code pass-rate vs.\ per-task token budget on the $15$ hard tasks ($3$-seed means, full table with SDs in \Cref{tab:scaling-curves}). Reasoning-only plateaus at its information ceiling ($73.3\%$) and best-of-$N$ plateaus at $86.7\%$ even with an \emph{oracle} (ground-truth) verifier (dotted): both are functions of the frozen $(\Theta,X)$ and flatten with budget, the latter at the high-probability support of the proposer's own output distribution. The two feedback-iterating strategies instead climb past the oracle-sampling ceiling, importing information from execution each cycle---the harness to a strict $100\%$ with \emph{zero} seed variance, the single-agent loop to $\ge97.8\%$ ($100\%$ in $2$ of $3$ seeds). The DPI prediction, made concrete.}
-\label{fig:dpi}
+\caption{\textbf{Internal scaling saturates; external scaling does not (P1).} Code pass rate vs.\ per-task token budget on the $15$ hard tasks ($3$-seed means; full table with SDs in \Cref{tab:scaling-curves}). The two internal strategies flatten with budget: reasoning-only at its information ceiling, and best-of-$N$ at $86.7\%$ \emph{even with an oracle (ground-truth-test) verifier}---the high-probability support of the model's own output distribution. The two external strategies import execution feedback each cycle and climb past the oracle-sampling ceiling, the proposer--reviewer harness to a strict $100\%$ with zero seed variance. This is the internal-ceiling prediction of \Cref{sec:ceiling}, made concrete.}
+\label{fig:scaling}
 \end{figure}
 
-\subsection{The active ingredient is execution, not review (P2)}
+\paragraph{Code as the clean case study.} Code is the cleanest demonstration because the instrument is exact and the score is objective. The harness recovers every first-shot failure with zero regressions on both the development suite and a harder deep-spec suite of from-scratch implementations (a JSON parser, a spreadsheet-reference resolver, a minimal edit-script diff, an expression evaluator, each validated against a reference solution), lifting both suites to a strict $100\%$ pass rate (\Cref{fig:code}). The mechanism is consistent across recovered traces. Turn~1 emits code that compiles but mishandles an edge case---off-by-one boundaries, semantic-version comparison, CIDR arithmetic. Turn~2 receives the failing assertion, the offending input, and the expected-vs-actual values, and rewrites the localized block. Turn~3 confirms. Reasoning alone cannot supply this: the model has no way to know its boundary condition is wrong until a concrete test exercises it.
 
-\paragraph{Code as a clean case study.} Code is the cleanest demonstration because the channel is binary and the score is objective: the harness recovers every first-shot failure with zero regressions, lifting single-shot to a strict $100\%$ across all runs (\Cref{tab:harness-headline}). The mechanism is consistent across recovered traces. Turn~1 emits code that compiles but mishandles an edge case (off-by-one boundaries, semantic-version comparison, CIDR arithmetic). Turn~2 receives the \texttt{pytest} traceback (the failing assertion, the offending input, expected vs.\ actual) and rewrites the localized block. Turn~3 confirms. Reasoning alone cannot supply this: the model has no way to know its boundary condition is wrong until a concrete test exercises it. A second, harder suite of deep-spec implementations (a from-scratch JSON parser, an A1 spreadsheet-reference resolver, a minimal edit-script diff, an arithmetic/boolean expression evaluator, each validated against a reference solution) corroborates the effect at larger headroom: single-shot $69.7\%\to$ strict $100\%$ ($+30.3$\,pp, sign-test $p=0.002$), every failing run recovered with no regressions.
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[paperbar,width=0.62\linewidth,height=4.8cm,
+  ybar,bar width=15pt,ymin=0,ymax=118,
+  ylabel={pass rate (\%)},
+  symbolic x coords={dev,deepspec},xtick=data,
+  xticklabels={development suite (15 tasks),deep-spec suite (11 tasks)},
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.45,ytick={0,25,50,75,100},ymajorgrids,
+  legend style={at={(0.5,1.03)},anchor=south,legend columns=2,
+    /tikz/every odd column/.append style={column sep=2pt}}]
+  \addplot[swatch,draw=none,fill=black!22,
+    error bars/.cd,y dir=both,y explicit,error bar style={cInk!60,line width=0.6pt}]
+    coordinates {(dev,66.7) +- (0,6.7) (deepspec,69.7) +- (0,0)};
+    \addlegendentry{single-shot}
+  \addplot[swatch,draw=none,fill=cGnd!80]
+    coordinates {(dev,100) (deepspec,100)};
+    \addlegendentry{reviewed (execution feedback)}
+  % selective labels: the reviewed endpoints and the lifts
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:dev,101) {\hspace{15pt}100.0};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:deepspec,101) {\hspace{15pt}100.0};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:dev,76) {\hspace{-15pt}66.7};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:deepspec,71) {\hspace{-15pt}69.7};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Execution feedback recovers every first-shot failure on both code suites.} Single-shot vs.\ harness-reviewed pass rate (development suite: $3$-seed mean, whisker $\pm1$\,SD; deep-spec: sign test $p=0.002$). Every failing run is recovered and no passing run regresses; the reviewed bars carry zero seed variance.}
+\label{fig:code}
+\end{figure}
 
-\paragraph{An in-modality control isolates execution.} The cross-modal ordering could be confounded by task difficulty, so we fix the task suite and vary \emph{only} the feedback channel: a Type~1 reviewer (LLM cross-review, no execution), a Type~2 reviewer (LLM~$+$~\texttt{ruff} static analysis, still no execution), and the Type~3a execution baseline. All three arms run \emph{exactly one} reviewing pass, so any separation isolates the \emph{grounding} of the signal, not the act of reviewing (\Cref{tab:type-controls}). The pass-rate gap is modest and we read it cautiously, since it rests on a single task at a single leaner-budget seed. But the \emph{unambiguous} separation is efficiency: execution feedback converges roughly $2.5\times$ cheaper and in fewer iterations, because a concrete failing assertion localizes the fix where an ungrounded critique gropes. The decisive form of this control is the geometry ablation (\Cref{sec:grounded_eval}), where an ungrounded reviewer not only fails to help but actively \emph{worsens} slide layout: one reviewing pass, opposite sign, set entirely by whether the signal is grounded.\footnote{Type~1 and Type~2 do not separate here because the seeded bugs are runtime-logic errors a linter cannot see. Testing the predicted Type~2~$>$~Type~1 ordering would need a \texttt{mypy}/\texttt{semgrep}-catchable bug set, so the taxonomy's static-analysis tier remains, by our own data, untested.}
+\paragraph{Architecture buys efficiency and reliability, not ceiling.} Among interaction strategies the ceiling pass rate ties within seed noise; what separates them is cost and variance (\Cref{fig:efficiency}). The proposer--reviewer harness is the most token-efficient and the only variant that reaches $100\%$ in \emph{every} seed. Context isolation (the reviewer sees only what it needs to localize defects), structured critique (a typed defect list, not raw stderr), and role specialization explain the efficiency.
 
-\subsection{Architecture buys efficiency and reliability}
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[paperbar,width=0.52\linewidth,height=3.6cm,
+  xbar,xmin=0,xmax=1600,bar width=11pt,enlarge y limits=0.3,
+  xlabel={mean output tokens per task at $B{=}20$K},
+  symbolic y coords={loop,iad,harness},ytick={loop,iad,harness},
+  yticklabels={single-agent loop,sample-and-select (IAD),proposer--reviewer},
+  y tick label style={font=\footnotesize,color=cInk},
+  xtick={0,500,1000,1500},xticklabels={0,500,1000,1500},xmajorgrids,clip=false]
+  \addplot[draw=none,fill=cGnd!80] coordinates {(1029,harness)};
+  \addplot[draw=none,fill=cGnd!45] coordinates {(1416,iad) (1431,loop)};
+  % token value at each bar tip; reliability as a right-hand column
+  \node[font=\scriptsize\bfseries,cInk,anchor=west,inner sep=2pt] at (axis cs:1029,harness) {1{,}029};
+  \node[font=\scriptsize,cMut,anchor=west,inner sep=2pt] at (axis cs:1416,iad) {1{,}416};
+  \node[font=\scriptsize,cMut,anchor=west,inner sep=2pt] at (axis cs:1431,loop) {1{,}431};
+  \node[font=\scriptsize\bfseries,cGnd,anchor=west] at (axis cs:1680,harness) {100\% in 3/3 seeds};
+  \node[font=\scriptsize,cMut,anchor=west] at (axis cs:1680,iad) {100\% (1 seed)};
+  \node[font=\scriptsize,cMut,anchor=west] at (axis cs:1680,loop) {100\% in 2/3 seeds};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Same ceiling, different cost and reliability.} All three interaction strategies use execution feedback and tie on pass rate within seed noise (sign test $p>0.6$); the proposer--reviewer harness converges with ${\sim}28\%$ fewer tokens and is the only variant at $100\%$ across all seeds (\Cref{tab:LvsH}).}
+\label{fig:efficiency}
+\end{figure}
 
-\paragraph{Efficiency.} Among interaction strategies the gap is not in ceiling pass-rate (they tie within seed noise) but in cost and variance: the proposer--reviewer harness is the most token-efficient and the only variant at a strict $100\%$ with \emph{zero} seed variance, while the single-agent loop reaches $100\%$ in only two of three seeds (\Cref{tab:LvsH}). Context isolation (the reviewer sees only what it needs to localize defects), structured critique (a typed defect list, not raw stderr), and role specialization explain the efficiency.
-
-\paragraph{Built-in early stopping.} The loop does not over-revise: on code, \emph{every} already-passing single-shot task is submitted at iteration~1 with no revision and no wasted tokens. The grounded signal, a failing test, is the trigger. Without it the loop is silent. This is why code's token overhead over single-shot is modest despite a generous iteration cap.
+\paragraph{Built-in early stopping.} The loop does not over-revise: on code, \emph{every} already-passing single-shot task is submitted at iteration~1 with no revision and no wasted tokens. The grounded signal---a failing test---is the trigger; without it the loop is silent. This is why the harness's token overhead over single-shot stays modest despite a generous iteration cap.

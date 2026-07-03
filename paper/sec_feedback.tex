@@ -1,0 +1,92 @@
+\section{The Feedback Side: The Instrument Must Observe the Defect}
+\label{sec:feedback}
+
+The saturation experiment compared strategies. This section holds everything else fixed---task suite, proposer model, number of reviewing passes---and swaps \emph{only the reviewer's feedback channel}, testing the coverage principle (P2) directly on both a textual and a visual modality.
+
+\paragraph{On code: execution feedback wins where its coverage lies.} We run three arms on the fixed code suite, each with \emph{exactly one} reviewing pass: an ungrounded critique reviewer (the LLM re-reads the code), a static-form reviewer (the same critique plus \texttt{ruff} linter output), and an execution reviewer (the same critique plus the failing test's traceback). Any separation therefore isolates the \emph{signal}, not the act of reviewing. \Cref{fig:typecontrol} shows both outcomes. The pass-rate separation is modest and we read it cautiously, since it rests on a single leaner-budget seed. The unambiguous separation is \emph{cost}: the execution arm converges roughly $2.5\times$ cheaper and in fewer iterations, because a concrete failing assertion localizes the fix where an ungrounded critique gropes. The static-form arm is the coverage principle's cleanest prediction: the linter is a genuinely grounded instrument, but the seeded bugs are runtime-logic errors that leave no trace in form, so it buys nothing over bare critique---grounding helps only as far as the instrument can see.\footnote{Symmetrically, the principle predicts a static-form lift on a bug set that \emph{is} visible in form (type confusions catchable by \texttt{mypy}, taint patterns catchable by \texttt{semgrep}). Constructing that suite is future work; on our behavioral bug set the null result is the prediction.}
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}
+\begin{axis}[paperbar,name=axpass,width=0.42\linewidth,height=4.4cm,
+  ybar,bar width=13pt,ymin=0,ymax=105,
+  title={\footnotesize reviewed pass rate (\%)},
+  symbolic x coords={critique,linter,execution},xtick={critique,linter,execution},
+  xticklabels={critique,{+ linter},{+ execution}},
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.32,ytick={0,25,50,75,100},ymajorgrids]
+  \addplot[draw=none,fill=cUng!75,bar shift=0pt] coordinates {(critique,86.7)};
+  \addplot[draw=none,fill=cGnd!40,bar shift=0pt] coordinates {(linter,86.7)};
+  \addplot[draw=none,fill=cGnd!80,bar shift=0pt] coordinates {(execution,93.3)};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:critique,87.5) {86.7};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:linter,87.5) {86.7};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:execution,94) {93.3};
+\end{axis}
+\begin{axis}[paperbar,at={($(axpass.east)+(1.7cm,0)$)},anchor=west,
+  width=0.42\linewidth,height=4.4cm,
+  ybar,bar width=13pt,ymin=0,ymax=8600,
+  title={\footnotesize tokens per task to converge},
+  symbolic x coords={critique,linter,execution},xtick={critique,linter,execution},
+  xticklabels={critique,{+ linter},{+ execution}},
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.32,ytick={0,2000,4000,6000,8000},
+  yticklabels={0,2K,4K,6K,8K},ymajorgrids]
+  \addplot[draw=none,fill=cUng!75,bar shift=0pt] coordinates {(critique,7100)};
+  \addplot[draw=none,fill=cGnd!40,bar shift=0pt] coordinates {(linter,7100)};
+  \addplot[draw=none,fill=cGnd!80,bar shift=0pt] coordinates {(execution,2643)};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:critique,7200) {$\sim$7.1K};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:linter,7200) {$\sim$7.1K};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:execution,2750) {2.6K};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Swapping only the feedback signal on a fixed code suite: improvement tracks coverage, and cost tracks it decisively.} One reviewing pass per arm. Ungrounded critique (orange), critique + linter (light blue: grounded, but observing only \emph{form}), and critique + test execution (blue: grounded, observing \emph{behavior}). The linter arm matches bare critique on these runtime-logic bugs---exactly what the coverage principle predicts---while the execution arm reaches a higher ceiling at ${\sim}2.5\times$ lower cost and fewer iterations ($1.53$ vs.\ $2.07$; per-seed detail in \Cref{tab:type-controls}).}
+\label{fig:typecontrol}
+\end{figure}
+
+\paragraph{On slides and figures: an uncovered instrument makes things worse.} The decisive form of the control is visual. We fix the task suite and the proposer, and give the reviewer either (i) the deterministic geometry report---measured boxes, exact overlaps---or (ii) a VLM's reading of a screenshot, an instrument whose channel crops the very defects at issue. Because the two arms are separate runs, each is compared against its \emph{own} single-shot baseline, and the load-bearing contrast is the \emph{direction} each reviewer moves that baseline (\Cref{fig:ablation}). The geometric reviewer sharply reduces real layout defects on both modalities. The VLM reviewer does not: it \emph{increases} defects on slides and is directionally worse on figures. Blind to the true geometry, its edits break alignment about as often as they fix it---one reviewing pass, opposite sign, set entirely by whether the signal's coverage includes the defect. (On the same slides the binary VLM \emph{rubric} simultaneously saturates, which is the evaluation-side half of the story; \Cref{sec:grounded_eval} takes it up.)
+
+\begin{figure}[t]
+\centering
+\begin{tikzpicture}[
+  dumb/.style={line width=1.6pt,-{Latex[length=2.6mm,width=2.2mm]}},
+  ssdot/.style={circle,draw=cMut,fill=white,line width=1pt,inner sep=0pt,minimum size=7pt}]
+\begin{axis}[name=axslide,width=0.44\linewidth,height=5.0cm,
+  title={\footnotesize dense slides},
+  ylabel={mean geometric defects per artifact},
+  xmin=0.35,xmax=2.65,ymin=0,ymax=2.9,ytick={0,1,2},
+  xtick={1,2},xticklabels={VLM\\reviewer,geometric\\reviewer},
+  x tick label style={font=\footnotesize,color=cMut,align=center},
+  ymajorgrids,axis x line*=bottom,axis y line*=left]
+  % VLM arm: 1.89 -> 2.44 (worse, orange, up)
+  \draw[dumb,cUng] (axis cs:1,1.89) -- (axis cs:1,2.44);
+  \node[ssdot] at (axis cs:1,1.89) {};
+  \node[font=\scriptsize,cMut,anchor=east,inner sep=3pt] at (axis cs:1,1.89) {1.89};
+  \node[font=\scriptsize\bfseries,cUng!85!black,anchor=west,inner sep=4pt] at (axis cs:1,2.44) {2.44 \ worse};
+  % geom arm: 1.25 -> 0.33 (better, blue, down)
+  \draw[dumb,cGnd] (axis cs:2,1.25) -- (axis cs:2,0.33);
+  \node[ssdot] at (axis cs:2,1.25) {};
+  \node[font=\scriptsize,cMut,anchor=west,inner sep=3pt] at (axis cs:2,1.25) {1.25};
+  \node[font=\scriptsize\bfseries,cGnd,anchor=east,inner sep=4pt] at (axis cs:2,0.33) {0.33 \ fixed};
+\end{axis}
+\begin{axis}[at={($(axslide.east)+(1.5cm,0)$)},anchor=west,
+  width=0.44\linewidth,height=5.0cm,
+  title={\footnotesize academic figures},
+  xmin=0.35,xmax=2.65,ymin=0,ymax=0.8,ytick={0,0.25,0.5,0.75},
+  xtick={1,2},xticklabels={VLM\\reviewer,geometric\\reviewer},
+  x tick label style={font=\footnotesize,color=cMut,align=center},
+  ymajorgrids,axis x line*=bottom,axis y line*=left]
+  \draw[dumb,cUng] (axis cs:1,0.52) -- (axis cs:1,0.62);
+  \node[ssdot] at (axis cs:1,0.52) {};
+  \node[font=\scriptsize,cMut,anchor=east,inner sep=3pt] at (axis cs:1,0.52) {0.52};
+  \node[font=\scriptsize,cUng!85!black,anchor=west,inner sep=4pt] at (axis cs:1,0.62) {0.62 \ worse (n.s.)};
+  \draw[dumb,cGnd] (axis cs:2,0.57) -- (axis cs:2,0.15);
+  \node[ssdot] at (axis cs:2,0.57) {};
+  \node[font=\scriptsize,cMut,anchor=west,inner sep=3pt] at (axis cs:2,0.57) {0.57};
+  \node[font=\scriptsize\bfseries,cGnd,anchor=east,inner sep=4pt] at (axis cs:2,0.15) {0.15 \ fixed};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Same tasks, same proposer, one reviewing pass---the arrow's direction is set by the reviewer's instrument.} Each arrow runs from that arm's own single-shot baseline (open circle; the arms are separate runs, hence differing baselines) to its reviewed result, in mean geometric defects per artifact (lower is better; note the differing $y$ scales). The screenshot-fed VLM reviewer moves \emph{up} on slides and directionally up on figures; the deterministic geometric reviewer moves sharply \emph{down} on both (slides $-73\%$, $p=0.0018$; figures $-74\%$, $p=7{\times}10^{-4}$).}
+\label{fig:ablation}
+\end{figure}
+
+\paragraph{What this establishes.} On the feedback side, grounding is necessary but the operative quantity is \emph{coverage}: a grounded instrument that cannot observe the defect class (the linter, on runtime bugs) matches ungrounded critique, and an instrument whose channel actively drops the defect (the screenshot) is worse than no reviewer at all. The remaining question is symmetric: what happens when the \emph{metric} is such an instrument.
