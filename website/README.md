@@ -1,41 +1,58 @@
-# Interaction Scaling — Visual Generations Gallery
+# Grounding the Loop — interactive companion site
 
-Single-page React (Vite) companion site for the paper. It shows every visual
-test case (academic figures, slides, web pages, animations) as a **single-shot
-vs. reviewed** pair, with per-case scores and a side-by-side / draggable-slider
-comparison.
+Single-page React (Vite) explainer for the paper, aimed at first-time readers.
+Three sections:
+
+1. **The idea** — a jargon-free walkthrough of the three test-time compute axes
+   (reasoning, sampling, interaction), the internal ceiling, and the
+   grounding-on-both-sides claim, ending with a real before/after case.
+2. **Results** — eight figure cards built from the real experiment logs:
+   scaling curves with seed spread, VLM-blindness, the reviewer-swap ablation,
+   per-modality defect reductions with bootstrap CIs, cross-model replication,
+   budget allocation, and distillation. Every chart has hover tooltips and most
+   have a table view.
+3. **Explorer / trajectory visualizer** — all 98 exported cases (figures,
+   slides, web pages, animations, code) with the task spec, single-shot vs.
+   reviewed comparison slider, per-seed instrument measurements, the full
+   interaction trajectory (draft → instrument feedback → revision, including
+   the model's raw output and thinking), the 4-strategy × 3-budget pass matrix
+   for dev code tasks, cross-model final code, and a catalog of all 9 task
+   suites (162 tasks) including the scoped video/research suites.
 
 ## Run
 
 ```bash
 cd website
-npm install        # once
-npm run dev        # dev server (hot reload)
-# or
+npm install
+npm run dev            # dev server
 npm run build && npm run preview   # production build + static preview
 ```
 
-Open the printed `localhost` URL.
-
-## Contents
-
-- `src/App.jsx` — the SPA (hero + summary stats, category tabs, card grid, comparison modal with side-by-side and slider modes).
-- `src/styles.css` — styling.
-- `public/data/manifest.json` — all 65 test cases with metadata (category, task description, scores, image paths).
-- `public/images/<category>/<task>_{ss,rv}.png` — rendered single-shot / reviewed artifacts.
-
 ## Regenerating the data
 
-From the repo root, after the experiments have produced
-`results/hard_benchmarks/*.json`:
+From the repo root, after experiments have produced `results/**`:
 
 ```bash
-python -m scripts.export_gallery     # writes public/data/manifest.json + public/images/
+python -m scripts.build_site_v2_data
 ```
 
-## Metrics shown
+This writes:
 
-- **Academic figures, Slides** — deterministic DOM-geometry defect count (lower is better; 0 = clean).
-- **Web pages, Animations** — binary per-requirement rubric (fraction satisfied).
+- `public/data/v2/site.json` — chart aggregates (computed from raw result JSON
+  where available in-repo; a few headline stats transcribed from the paper are
+  marked `"source": "paper"`) plus the explorer index and task catalog.
+- `public/data/v2/cases/<modality>/<task_id>.json` — per-case dossiers
+  (task spec, per-seed geometry measurements, final artifacts, trimmed
+  interaction traces). Loaded lazily by the case view.
 
-Summary lifts: figures −78 % defects (p=0.008), slides −91 %, web +0.063 (p=0.003), animations +0.192 (p=0.008).
+Before/after JPEGs in `public/images/` were exported from the same result
+files by `scripts/build_site_data.py` (v1 pipeline) and are reused.
+
+## Structure
+
+- `src/App.jsx` — nav, hero, hash router (`#/case/<mod>/<id>` opens a dossier)
+- `src/Idea.jsx` / `src/Results.jsx` / `src/Explorer.jsx` / `src/CaseView.jsx`
+- `src/charts.jsx` — hand-rolled SVG charts (tooltips, seed whiskers, table twins)
+- `src/bits.jsx` — loop diagram, compare slider, trace step, stat tiles
+- `src/theme.css` — the design system (paper surface, Fraunces + IBM Plex,
+  blue = grounded/external, orange = internal/ungrounded)
