@@ -20,7 +20,7 @@ Or `latexmk -pdf main.tex`.
 
 **Interaction Scaling: A Third Test-Time Compute Axis Grounded in Environment Feedback**
 
-Author: Bojie Li (Pine AI, `boj@19pine.ai`)
+Authors: Bojie Li (Pine AI, `boj@19pine.ai`) and Noah Shi (University of Washington)
 
 ## Headline numbers
 

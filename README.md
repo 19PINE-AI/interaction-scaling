@@ -9,7 +9,7 @@ or sampling more.
 
 > **Paper:** *Grounding the Loop on Both Sides: Interaction as a Third Test-Time Compute
 > Axis, and Why Its Gains Are Invisible Without Grounded Evaluation*
-> Bojie Li, Pine AI (`boj@19pine.ai`). Source in [`paper/`](paper/).
+> Bojie Li, Pine AI (`boj@19pine.ai`) and Noah Shi, University of Washington. Source in [`paper/`](paper/).
 
 ---
 
@@ -191,7 +191,7 @@ latexmk -pdf main.tex     # or: pdflatex main && bibtex main && pdflatex main &&
 @misc{li2026interactionscaling,
   title  = {Grounding the Loop on Both Sides: Interaction as a Third Test-Time
             Compute Axis, and Why Its Gains Are Invisible Without Grounded Evaluation},
-  author = {Li, Bojie},
+  author = {Li, Bojie and Shi, Noah},
   year   = {2026},
   note   = {Pine AI},
 }
