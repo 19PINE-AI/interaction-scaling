@@ -83,21 +83,21 @@ The coverage principle is what unifies the paper's results: it predicts that exe
   \addplot[cGnd,line width=1.4pt,mark=*,mark size=1.9,mark options={fill=cGnd,draw=white,line width=0.5pt}]
     coordinates {(1000,62.2)(5000,91.1)(20000,100.0)};
     \addlegendentry{proposer--reviewer \emph{(external)}}
-  \addplot[cGndDk,line width=1.1pt,mark=square*,mark size=1.7,mark options={fill=cGndDk,draw=white,line width=0.5pt}]
+  \addplot[cGnd2,line width=1.1pt,densely dashed,mark=square*,mark size=1.7,mark options={solid,fill=cGnd2,draw=white,line width=0.5pt}]
     coordinates {(1000,57.8)(5000,93.3)(20000,97.8)};
     \addlegendentry{single-agent loop \emph{(external)}}
   \addplot[cUng,line width=1.1pt,mark=triangle*,mark size=2.2,mark options={fill=cUng,draw=white,line width=0.5pt}]
     coordinates {(1000,80.0)(5000,77.8)(20000,86.7)};
     \addlegendentry{best-of-$N$, oracle verifier \emph{(internal)}}
-  \addplot[cUngDk,line width=1.1pt,mark=diamond*,mark size=2.2,mark options={fill=cUngDk,draw=white,line width=0.5pt}]
+  \addplot[cUng2,line width=1.1pt,densely dashed,mark=diamond*,mark size=2.2,mark options={solid,fill=cUng2,draw=white,line width=0.5pt}]
     coordinates {(1000,60.0)(5000,73.3)(20000,73.3)};
     \addlegendentry{reasoning-only \emph{(internal)}}
   % selective end labels: the two ceilings and the harness endpoint
   \node[font=\scriptsize\bfseries,cGnd,anchor=south east,inner sep=1pt] at (axis cs:20000,100.4) {100.0};
-  \node[font=\scriptsize,cUngDk,anchor=north west,inner sep=2pt] at (axis cs:20000,73.0) {73.3};
+  \node[font=\scriptsize,cUng2,anchor=north west,inner sep=2pt] at (axis cs:20000,73.0) {73.3};
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{Internal scaling saturates; external scaling does not (P1).} Code pass rate vs.\ per-task token budget on the $15$ hard tasks ($3$-seed means; full table in \Cref{tab:scaling-curves}). Both internal strategies flatten as the budget grows: reasoning-only at its information ceiling, and best-of-$N$ at $86.7\%$ \emph{even with an oracle (ground-truth-test) verifier}, capped by the high-probability part of the model's own output distribution. The two external strategies import execution feedback each cycle and climb past that ceiling, the proposer--reviewer harness to a strict $100\%$ with zero seed variance. We run this experiment in \Cref{sec:interaction}.}
+\caption{\textbf{Internal scaling saturates; external scaling does not (Prediction 1).} Code pass rate vs.\ per-task token budget on the $15$ hard tasks ($3$-seed means; full table in \Cref{tab:scaling-curves}). Both internal strategies flatten as the budget grows: reasoning-only at its information ceiling, and best-of-$N$ at $86.7\%$ \emph{even with an oracle (ground-truth-test) verifier}, capped by the high-probability part of the model's own output distribution. The two external strategies import execution feedback each cycle and climb past that ceiling, the proposer--reviewer harness to a strict $100\%$ with zero seed variance. We run this experiment in \Cref{sec:interaction}.}
 \label{fig:scaling}
 \end{figure}
 
@@ -108,4 +108,4 @@ The argument is one sentence long: \emph{a model re-reading its own output canno
 \subsection{Three testable predictions}
 \label{sec:predictions}
 
-\textbf{(P1)} At a matched token budget, reasoning-only and best-of-$N$ scaling saturate strictly below what interaction reaches (\Cref{sec:interaction}). \textbf{(P2)} Holding the task suite fixed and swapping only the reviewer's feedback channel, improvement tracks the instrument's \emph{coverage} of the defects present, not the act of reviewing (\Cref{sec:feedback}). \textbf{(P3)} On modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:feedback,sec:grounded_eval}).
+\textbf{Prediction 1.} At a matched token budget, reasoning-only and best-of-$N$ scaling saturate strictly below what interaction reaches (\Cref{sec:interaction}). \textbf{Prediction 2.} Holding the task suite fixed and swapping only the reviewer's feedback channel, improvement tracks the instrument's \emph{coverage} of the defects present, not the act of reviewing (\Cref{sec:feedback}). \textbf{Prediction 3.} On modalities whose quality is invisible to the default judge, the gain is only detectable with a grounded metric, and an ungrounded reviewer can even regress quality (\Cref{sec:feedback,sec:grounded_eval}).
