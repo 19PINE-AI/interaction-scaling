@@ -1,4 +1,4 @@
-\begin{thebibliography}{28}
+\begin{thebibliography}{29}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -82,6 +82,10 @@ Aman Madaan, Niket Tandon, Prakhar Gupta, Skyler Hallinan, Luyu Gao, Sarah
   Peter Clark.
 \newblock Self-refine: Iterative refinement with self-feedback.
 \newblock In \emph{Advances in Neural Information Processing Systems}, 2023.
+
+\bibitem[{OpenAI}(2024)]{openai2024o1}
+{OpenAI}.
+\newblock {OpenAI} o1 system card, 2024.
 
 \bibitem[Patil et~al.(2024)Patil, Zhang, Wang, and Gonzalez]{patil2024gorilla}
 Shishir~G. Patil, Tianjun Zhang, Xin Wang, and Joseph~E. Gonzalez.
