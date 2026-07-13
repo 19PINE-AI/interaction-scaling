@@ -35,6 +35,7 @@
 \newlabel{fig:headline@cref}{{[figure][2][]2}{[1][3][]3}}
 \@writefile{toc}{\contentsline {paragraph}{What the loop delivers, at a glance.}{3}{paragraph*.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Contributions.}{3}{paragraph*.6}\protected@file@percent }
+\citation{openai2024o1,snell2024scaling}
 \newlabel{fig:ba-ss}{{3a}{4}{\textbf {Single-shot} ($6$ measured defects): the content overflows the $16{:}9$ slide frame (dashed line) by more than half the frame's height: exactly the defect class a screenshot judge never sees, because the capture crops at the frame.\relax }{figure.caption.5}{}}
 \newlabel{fig:ba-ss@cref}{{[subfigure][1][3]3a}{[1][3][]4}}
 \newlabel{sub@fig:ba-ss}{{a}{4}{\textbf {Single-shot} ($6$ measured defects): the content overflows the $16{:}9$ slide frame (dashed line) by more than half the frame's height: exactly the defect class a screenshot judge never sees, because the capture crops at the frame.\relax }{figure.caption.5}{}}
@@ -73,7 +74,7 @@
 \newlabel{tab:setup@cref}{{[table][1][]1}{[1][7][]7}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Setup: A Budget-Aware Proposer--Reviewer Harness}{7}{section.3}\protected@file@percent }
 \newlabel{sec:method}{{3}{7}{Setup: A Budget-Aware Proposer--Reviewer Harness}{section.3}{}}
-\newlabel{sec:method@cref}{{[section][3][]3}{[1][6][]7}}
+\newlabel{sec:method@cref}{{[section][3][]3}{[1][7][]7}}
 \@writefile{toc}{\contentsline {paragraph}{Architecture.}{7}{paragraph*.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{The three grounded instruments.}{7}{paragraph*.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Budget and protocol.}{8}{paragraph*.13}\protected@file@percent }
@@ -90,17 +91,17 @@
 \@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces \textbf  {Same ceiling, different cost and reliability.} All three interaction strategies use execution feedback and tie on pass rate within seed noise (sign test $p>0.6$); the proposer--reviewer harness converges with ${\sim }28\%$ fewer tokens and is the only variant at $100\%$ across all seeds (\Cref  {tab:LvsH}).\relax }}{9}{figure.caption.18}\protected@file@percent }
 \newlabel{fig:efficiency}{{7}{9}{\textbf {Same ceiling, different cost and reliability.} All three interaction strategies use execution feedback and tie on pass rate within seed noise (sign test $p>0.6$); the proposer--reviewer harness converges with ${\sim }28\%$ fewer tokens and is the only variant at $100\%$ across all seeds (\Cref {tab:LvsH}).\relax }{figure.caption.18}{}}
 \newlabel{fig:efficiency@cref}{{[figure][7][]7}{[1][8][]9}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {The execution loop replicates across model families.} Single-shot vs.\ harness-reviewed code pass rate for three families, three seeds each (lifts $+33.3$/$+22.2$/$+20.0$\,pp; whiskers $\pm 1$\,SD across seeds). The reviewed bars carry \emph  {zero} seed variance for all three families.\relax }}{9}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:crossmodel-code}{{8}{9}{\textbf {The execution loop replicates across model families.} Single-shot vs.\ harness-reviewed code pass rate for three families, three seeds each (lifts $+33.3$/$+22.2$/$+20.0$\,pp; whiskers $\pm 1$\,SD across seeds). The reviewed bars carry \emph {zero} seed variance for all three families.\relax }{figure.caption.21}{}}
-\newlabel{fig:crossmodel-code@cref}{{[figure][8][]8}{[1][9][]9}}
 \@writefile{toc}{\contentsline {paragraph}{The effect is architectural, not Claude-specific.}{9}{paragraph*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Feedback-Side Grounding: Swapping the Reviewer's Instrument}{9}{section.5}\protected@file@percent }
+\newlabel{sec:feedback}{{5}{9}{Feedback-Side Grounding: Swapping the Reviewer's Instrument}{section.5}{}}
+\newlabel{sec:feedback@cref}{{[section][5][]5}{[1][9][]9}}
+\@writefile{toc}{\contentsline {paragraph}{On code: execution feedback wins where its coverage lies.}{9}{paragraph*.22}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces \textbf  {The execution loop replicates across model families.} Single-shot vs.\ harness-reviewed code pass rate for three families, three seeds each (lifts $+33.3$/$+22.2$/$+20.0$\,pp; whiskers $\pm 1$\,SD across seeds). The reviewed bars carry \emph  {zero} seed variance for all three families.\relax }}{10}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:crossmodel-code}{{8}{10}{\textbf {The execution loop replicates across model families.} Single-shot vs.\ harness-reviewed code pass rate for three families, three seeds each (lifts $+33.3$/$+22.2$/$+20.0$\,pp; whiskers $\pm 1$\,SD across seeds). The reviewed bars carry \emph {zero} seed variance for all three families.\relax }{figure.caption.21}{}}
+\newlabel{fig:crossmodel-code@cref}{{[figure][8][]8}{[1][9][]10}}
 \@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces \textbf  {Swapping only the feedback signal on a fixed code suite: improvement tracks coverage, and cost tracks it decisively.} One reviewing pass per configuration. Ungrounded critique (orange), critique + linter (light blue: grounded, but observing only \emph  {form}), and critique + test execution (blue: grounded, observing \emph  {behavior}). The linter configuration matches bare critique on these runtime-logic bugs (exactly what the coverage principle predicts) while the execution configuration reaches a higher ceiling at ${\sim }2.5\times $ lower cost and fewer iterations ($1.53$ vs.\ $2.07$; per-seed detail in \Cref  {tab:type-controls}).\relax }}{10}{figure.caption.23}\protected@file@percent }
 \newlabel{fig:typecontrol}{{9}{10}{\textbf {Swapping only the feedback signal on a fixed code suite: improvement tracks coverage, and cost tracks it decisively.} One reviewing pass per configuration. Ungrounded critique (orange), critique + linter (light blue: grounded, but observing only \emph {form}), and critique + test execution (blue: grounded, observing \emph {behavior}). The linter configuration matches bare critique on these runtime-logic bugs (exactly what the coverage principle predicts) while the execution configuration reaches a higher ceiling at ${\sim }2.5\times $ lower cost and fewer iterations ($1.53$ vs.\ $2.07$; per-seed detail in \Cref {tab:type-controls}).\relax }{figure.caption.23}{}}
 \newlabel{fig:typecontrol@cref}{{[figure][9][]9}{[1][10][]10}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Feedback-Side Grounding: Swapping the Reviewer's Instrument}{10}{section.5}\protected@file@percent }
-\newlabel{sec:feedback}{{5}{10}{Feedback-Side Grounding: Swapping the Reviewer's Instrument}{section.5}{}}
-\newlabel{sec:feedback@cref}{{[section][5][]5}{[1][10][]10}}
-\@writefile{toc}{\contentsline {paragraph}{On code: execution feedback wins where its coverage lies.}{10}{paragraph*.22}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{On slides and figures: an uncovered instrument makes things worse.}{10}{paragraph*.24}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces \textbf  {Same tasks, same proposer, one reviewing pass: the arrow's direction is set by the reviewer's instrument.} Each arrow runs from that configuration's own single-shot baseline (open circle; the configurations are separate runs, hence differing baselines) to its reviewed result, in mean geometric defects per artifact (lower is better; note the differing $y$ scales). The screenshot-fed VLM reviewer moves \emph  {up} on slides and directionally up on figures; the deterministic geometric reviewer moves sharply \emph  {down} on both (slides $-73\%$, $p=0.0018$; figures $-74\%$, $p=7{\times }10^{-4}$).\relax }}{11}{figure.caption.25}\protected@file@percent }
 \newlabel{fig:ablation}{{10}{11}{\textbf {Same tasks, same proposer, one reviewing pass: the arrow's direction is set by the reviewer's instrument.} Each arrow runs from that configuration's own single-shot baseline (open circle; the configurations are separate runs, hence differing baselines) to its reviewed result, in mean geometric defects per artifact (lower is better; note the differing $y$ scales). The screenshot-fed VLM reviewer moves \emph {up} on slides and directionally up on figures; the deterministic geometric reviewer moves sharply \emph {down} on both (slides $-73\%$, $p=0.0018$; figures $-74\%$, $p=7{\times }10^{-4}$).\relax }{figure.caption.25}{}}
@@ -111,16 +112,16 @@
 \newlabel{sec:grounded_eval@cref}{{[section][6][]6}{[1][11][]11}}
 \@writefile{toc}{\contentsline {paragraph}{The default VLM judge is structurally blind.}{11}{paragraph*.27}\protected@file@percent }
 \newlabel{fig:blind}{{11a}{12}{The VLM passes $14/15$; the deterministic instrument, $3/15$.\relax }{figure.caption.28}{}}
-\newlabel{fig:blind@cref}{{[subfigure][1][11]11a}{[1][11][]12}}
+\newlabel{fig:blind@cref}{{[subfigure][1][11]11a}{[1][12][]12}}
 \newlabel{sub@fig:blind}{{a}{12}{The VLM passes $14/15$; the deterministic instrument, $3/15$.\relax }{figure.caption.28}{}}
-\newlabel{sub@fig:blind@cref}{{[subfigure][1][11]11a}{[1][11][]12}}
+\newlabel{sub@fig:blind@cref}{{[subfigure][1][11]11a}{[1][12][]12}}
 \newlabel{fig:evoformer}{{11b}{12}{A single-shot figure the VLM rated ``perfect'': both section titles are superimposed (``MSA Processing'' over ``MSA Representation''; ``Pair Processing'' over ``Pair Representation'') and axis labels collide with the matrix borders.\relax }{figure.caption.28}{}}
-\newlabel{fig:evoformer@cref}{{[subfigure][2][11]11b}{[1][11][]12}}
+\newlabel{fig:evoformer@cref}{{[subfigure][2][11]11b}{[1][12][]12}}
 \newlabel{sub@fig:evoformer}{{b}{12}{A single-shot figure the VLM rated ``perfect'': both section titles are superimposed (``MSA Processing'' over ``MSA Representation''; ``Pair Processing'' over ``Pair Representation'') and axis labels collide with the matrix borders.\relax }{figure.caption.28}{}}
-\newlabel{sub@fig:evoformer@cref}{{[subfigure][2][11]11b}{[1][11][]12}}
+\newlabel{sub@fig:evoformer@cref}{{[subfigure][2][11]11b}{[1][12][]12}}
 \@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces \textbf  {The default VLM judge is structurally blind to layout defects.} \textbf  {(\subref  {fig:blind})} On the same $15$ single-shot academic figures, the VLM-on-a-screenshot judge rates $14$ ``perfect'' while the DOM-geometry instrument finds only $3$ actually clean; the other $11$ are broken in ways cropped off-frame or below VLM acuity. \textbf  {(\subref  {fig:evoformer})} A representative ``perfect''-rated render whose text-on-text overlaps are exactly what the geometry check flags and the screenshot judge misses.\relax }}{12}{figure.caption.28}\protected@file@percent }
 \newlabel{fig:blindpair}{{11}{12}{\textbf {The default VLM judge is structurally blind to layout defects.} \textbf {(\subref {fig:blind})} On the same $15$ single-shot academic figures, the VLM-on-a-screenshot judge rates $14$ ``perfect'' while the DOM-geometry instrument finds only $3$ actually clean; the other $11$ are broken in ways cropped off-frame or below VLM acuity. \textbf {(\subref {fig:evoformer})} A representative ``perfect''-rated render whose text-on-text overlaps are exactly what the geometry check flags and the screenshot judge misses.\relax }{figure.caption.28}{}}
-\newlabel{fig:blindpair@cref}{{[figure][11][]11}{[1][11][]12}}
+\newlabel{fig:blindpair@cref}{{[figure][11][]11}{[1][12][]12}}
 \@writefile{toc}{\contentsline {paragraph}{A grounded instrument reveals a large, decisive effect on all four modalities.}{12}{paragraph*.29}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Is the reduction circular?}{12}{paragraph*.31}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces \textbf  {Grounded geometric feedback removes real layout defects on all four visual modalities.} Mean defect reduction under one identical configuration ($3$ seeds; whiskers are paired-bootstrap 95\% CIs, all excluding zero; right column counts improved vs.\ regressed task-runs; all paired sign tests $p<2{\times }10^{-3}$; full statistics in \Cref  {tab:geometric}). The standard VLM-on-a-screenshot metric measures none of this.\relax }}{13}{figure.caption.30}\protected@file@percent }
@@ -133,20 +134,22 @@
 \newlabel{sec:distill@cref}{{[section][7][]7}{[1][13][]13}}
 \citation{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling,kimi2025k15}
 \citation{wang2023selfconsistency,brown2024large}
-\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces \textbf  {An $8$B student internalizes much of the teacher's interaction quality.} Distilled student as a fraction of the frontier teacher on the $44$-task out-of-distribution suite (\Cref  {tab:distill-ood}): one sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability, at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$ at pass@$1$ and $56\%$ at pass@$3$ (\Cref  {tab:distill-headline}).\relax }}{14}{figure.caption.35}\protected@file@percent }
-\newlabel{fig:distill}{{13}{14}{\textbf {An $8$B student internalizes much of the teacher's interaction quality.} Distilled student as a fraction of the frontier teacher on the $44$-task out-of-distribution suite (\Cref {tab:distill-ood}): one sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability, at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$ at pass@$1$ and $56\%$ at pass@$3$ (\Cref {tab:distill-headline}).\relax }{figure.caption.35}{}}
-\newlabel{fig:distill@cref}{{[figure][13][]13}{[1][14][]14}}
-\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces \textbf  {RFT polishes consistency but spends the variance that sampling needs.} Judge-keep vs.\ number of samples on the $18$-task hard held-out suite for the chosen SFT student and the same student after RFT. RFT improves every per-turn consistency metric (\Cref  {tab:distill-rft}) yet regresses pass@$3$ by $17$\,pp: the near-tie at one sample and the flat curve past it show the lost quality is exactly the distributional spread best-of-$N$ converts into solved tasks.\relax }}{14}{figure.caption.37}\protected@file@percent }
-\newlabel{fig:variance}{{14}{14}{\textbf {RFT polishes consistency but spends the variance that sampling needs.} Judge-keep vs.\ number of samples on the $18$-task hard held-out suite for the chosen SFT student and the same student after RFT. RFT improves every per-turn consistency metric (\Cref {tab:distill-rft}) yet regresses pass@$3$ by $17$\,pp: the near-tie at one sample and the flat curve past it show the lost quality is exactly the distributional spread best-of-$N$ converts into solved tasks.\relax }{figure.caption.37}{}}
-\newlabel{fig:variance@cref}{{[figure][14][]14}{[1][14][]14}}
-\@writefile{toc}{\contentsline {paragraph}{Result.}{14}{paragraph*.34}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Variance is a budget (a cautionary finding).}{14}{paragraph*.36}\protected@file@percent }
 \citation{shinn2023reflexion}
 \citation{yao2023react}
 \citation{madaan2023selfrefine}
 \citation{gou2024critic}
 \citation{huang2024selfcorrect}
 \citation{kamoi2025correct}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces \textbf  {An $8$B student internalizes much of the teacher's interaction quality.} Distilled student as a fraction of the frontier teacher on the $44$-task out-of-distribution suite (\Cref  {tab:distill-ood}): one sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability, at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$ at pass@$1$ and $56\%$ at pass@$3$ (\Cref  {tab:distill-headline}).\relax }}{14}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:distill}{{13}{14}{\textbf {An $8$B student internalizes much of the teacher's interaction quality.} Distilled student as a fraction of the frontier teacher on the $44$-task out-of-distribution suite (\Cref {tab:distill-ood}): one sample recovers $0.51\times $ and two samples $0.70\times $ of teacher capability, at ${\sim }10\times $ lower deployment cost. On the $18$-task hard held-out suite the same student passes $44\%$ at pass@$1$ and $56\%$ at pass@$3$ (\Cref {tab:distill-headline}).\relax }{figure.caption.35}{}}
+\newlabel{fig:distill@cref}{{[figure][13][]13}{[1][14][]14}}
+\@writefile{toc}{\contentsline {paragraph}{Result.}{14}{paragraph*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Variance is a budget (a cautionary finding).}{14}{paragraph*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{14}{section.8}\protected@file@percent }
+\newlabel{sec:related}{{8}{14}{Related Work}{section.8}{}}
+\newlabel{sec:related@cref}{{[section][8][]8}{[1][14][]14}}
+\@writefile{toc}{\contentsline {paragraph}{Test-time compute scaling.}{14}{paragraph*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Self-correction and critique.}{14}{paragraph*.39}\protected@file@percent }
 \citation{schick2023toolformer}
 \citation{patil2024gorilla}
 \citation{wang2023voyager}
@@ -158,19 +161,15 @@
 \citation{zheng2023judging}
 \citation{casper2023open}
 \citation{hong2026aicoding}
-\@writefile{toc}{\contentsline {section}{\numberline {8}Related Work}{15}{section.8}\protected@file@percent }
-\newlabel{sec:related}{{8}{15}{Related Work}{section.8}{}}
-\newlabel{sec:related@cref}{{[section][8][]8}{[1][14][]15}}
-\@writefile{toc}{\contentsline {paragraph}{Test-time compute scaling.}{15}{paragraph*.38}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Self-correction and critique.}{15}{paragraph*.39}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces \textbf  {RFT polishes consistency but spends the variance that sampling needs.} Judge-keep vs.\ number of samples on the $18$-task hard held-out suite for the chosen SFT student and the same student after RFT. RFT improves every per-turn consistency metric (\Cref  {tab:distill-rft}) yet regresses pass@$3$ by $17$\,pp: the near-tie at one sample and the flat curve past it show the lost quality is exactly the distributional spread best-of-$N$ converts into solved tasks.\relax }}{15}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:variance}{{14}{15}{\textbf {RFT polishes consistency but spends the variance that sampling needs.} Judge-keep vs.\ number of samples on the $18$-task hard held-out suite for the chosen SFT student and the same student after RFT. RFT improves every per-turn consistency metric (\Cref {tab:distill-rft}) yet regresses pass@$3$ by $17$\,pp: the near-tie at one sample and the flat curve past it show the lost quality is exactly the distributional spread best-of-$N$ converts into solved tasks.\relax }{figure.caption.37}{}}
+\newlabel{fig:variance@cref}{{[figure][14][]14}{[1][14][]15}}
 \@writefile{toc}{\contentsline {paragraph}{Grounded and execution feedback.}{15}{paragraph*.40}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Model-as-judge reliability.}{15}{paragraph*.41}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Practitioner evidence at scale.}{15}{paragraph*.42}\protected@file@percent }
 \citation{cover2006elements}
 \citation{swyx2026loopcraft,langchain2026loopeng}
 \citation{pineai2026whispercoding}
-\bibstyle{plainnat}
-\bibdata{refs}
 \@writefile{toc}{\contentsline {paragraph}{Information theory.}{16}{paragraph*.43}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {9}Limitations}{16}{section.9}\protected@file@percent }
 \newlabel{sec:limitations}{{9}{16}{Limitations}{section.9}{}}
@@ -178,6 +177,8 @@
 \@writefile{toc}{\contentsline {section}{\numberline {10}Conclusion}{16}{section.10}\protected@file@percent }
 \newlabel{sec:conclusion}{{10}{16}{Conclusion}{section.10}{}}
 \newlabel{sec:conclusion@cref}{{[section][10][]10}{[1][16][]16}}
+\bibstyle{plainnat}
+\bibdata{refs}
 \bibcite{brown2024large}{{1}{2024}{{Brown et~al.}}{{Brown, Juravsky, Ehrlich, Clark, Le, R{\'e}, and Mirhoseini}}}
 \bibcite{casper2023open}{{2}{2023}{{Casper et~al.}}{{Casper, Davies, Shi, Gilbert, et~al.}}}
 \bibcite{cover2006elements}{{3}{2006}{{Cover and Thomas}}{{}}}
@@ -213,7 +214,7 @@
 \newlabel{app:ceiling@cref}{{[appendix][1][2147483647]A}{[1][19][]19}}
 \@writefile{toc}{\contentsline {section}{\numberline {B}Detailed Results and Configurations}{20}{appendix.B}\protected@file@percent }
 \newlabel{app:detailed}{{B}{20}{Detailed Results and Configurations}{appendix.B}{}}
-\newlabel{app:detailed@cref}{{[appendix][2][2147483647]B}{[1][19][]20}}
+\newlabel{app:detailed@cref}{{[appendix][2][2147483647]B}{[1][20][]20}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Four-strategy scaling at a matched 20K-token budget}{20}{subsection.B.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces \textbf  {The headline scaling result (3-seed mean $\pm $ SD), underlying \Cref  {fig:scaling}.} Pass rate by strategy\nobreakspace  {}$\times $\nobreakspace  {}budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent seeds; R was run once (its seed-to-seed variation is small at temp\nobreakspace  {}0), at the sweep's budget partition (a more generous partition lifts R to $86.7\%$; see \Cref  {tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise: pass@$N$ is non-decreasing in $N$ in expectation, but not on every finite sample. Reasoning-only and best-of-$N$ both saturate well below 100\%, while all three feedback-iterating strategies reach $\geq 97.8\%$ at $B{=}20$K (L hits 100\% on 2 of 3 seeds, H on all 3, so H is the only variant at a strict 100\% across seeds). H and L tie on pass rate within seed noise; what separates them is token efficiency and reliability (\Cref  {fig:efficiency}).\relax }}{20}{table.caption.44}\protected@file@percent }
 \newlabel{tab:scaling-curves}{{2}{20}{\textbf {The headline scaling result (3-seed mean $\pm $ SD), underlying \Cref {fig:scaling}.} Pass rate by strategy~$\times $~budget on 15 hard code tasks, Sonnet 4. S, L, and H are averaged over three independent seeds; R was run once (its seed-to-seed variation is small at temp~0), at the sweep's budget partition (a more generous partition lifts R to $86.7\%$; see \Cref {tab:reasoning-baseline}). S's small dip from $B{=}1$K (80.0\%) to $B{=}5$K (77.8\%) is within the $\pm 3.1$\,pp seed noise: pass@$N$ is non-decreasing in $N$ in expectation, but not on every finite sample. Reasoning-only and best-of-$N$ both saturate well below 100\%, while all three feedback-iterating strategies reach $\geq 97.8\%$ at $B{=}20$K (L hits 100\% on 2 of 3 seeds, H on all 3, so H is the only variant at a strict 100\% across seeds). H and L tie on pass rate within seed noise; what separates them is token efficiency and reliability (\Cref {fig:efficiency}).\relax }{table.caption.44}{}}
