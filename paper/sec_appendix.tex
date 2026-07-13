@@ -16,7 +16,7 @@ Two cautions. The inequality bounds the \emph{information channel}, not achievab
 
 \section{Detailed Results and Configurations}
 \label{app:detailed}
-This appendix collects the full tables underlying the figures in the main text, from the four-strategy scaling curves through the distillation ablations to the original six-modality holistic overview (the last superseded for the visual modalities by the grounded measurements of \Cref{sec:grounded_eval}).
+This appendix collects the full tables underlying the figures in the main text, from the four-strategy scaling curves through the distillation ablations.
 
 \subsection{Four-strategy scaling at a matched 20K-token budget}
 \begin{table}[H]
@@ -40,7 +40,7 @@ Ceiling & 73.3\% & 86.7\% & $\sim$100\% & \textbf{100\% (zero variance)} \\
 \subsection{Reasoning-only at a matched budget}
 \begin{table}[H]
 \centering
-\caption{Reasoning-only at a matched budget vs.\ single-shot and the harness on the 15 hard code tasks. These are single-seed numbers (the Phase-1 reference seed, also used in \Cref{tab:type-controls}); the 3-run aggregate is in \Cref{tab:harness-headline} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). \emph{Reading the numbers:} single-shot on this seed is $11/15 = 73.3\%$ (the canonical 3-seed mean is $66.7\%$), and the reasoning value shown is the \emph{thinking-heavy} partition ($86.7\%$). Two numeric coincidences of this small suite can mislead: $86.7\%$ here matches the oracle best-of-$N$ ceiling, and the \emph{default}-partition reasoning ceiling ($73.3\%$, \Cref{tab:scaling-curves}) matches this seed's single-shot; neither is the same run. Reasoning closes two-thirds of the harness's gain over single-shot, but stays 6.7\,pp short of the harness even at $1.57\times$ its token budget.}
+\caption{Reasoning-only at a matched budget vs.\ single-shot and the harness on the 15 hard code tasks. These are single-seed numbers (the reference seed, also used in \Cref{tab:type-controls}); the 3-run aggregate is in \Cref{tab:heldout} ($66.7 \pm 6.7$\% single-shot, $100.0 \pm 0.0$\% reviewed). \emph{Reading the numbers:} single-shot on this seed is $11/15 = 73.3\%$ (the canonical 3-seed mean is $66.7\%$), and the reasoning value shown is the \emph{thinking-heavy} partition ($86.7\%$). Two numeric coincidences of this small suite can mislead: $86.7\%$ here matches the oracle best-of-$N$ ceiling, and the \emph{default}-partition reasoning ceiling ($73.3\%$, \Cref{tab:scaling-curves}) matches this seed's single-shot; neither is the same run. Reasoning closes two-thirds of the harness's gain over single-shot, but stays 6.7\,pp short of the harness even at $1.57\times$ its token budget.}
 \label{tab:reasoning-baseline}
 \small
 \begin{tabular}{lccc}
@@ -57,7 +57,7 @@ Reasoning-only (thinking-heavy partition)   & 86.7\% (13/15) & 4{,}137  & $+13.3
 \subsection{Feedback-channel control on a fixed code suite}
 \begin{table}[H]
 \centering
-\caption{Feedback-channel controls on 15 hard code tasks (Sonnet 4 proposer and reviewer), underlying \Cref{fig:typecontrol}. Each row is a single seed. ``SS'' is that seed's single-shot pass rate (it varies by row), and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution behind \Cref{tab:harness-headline}'s 3-run mean of $66.7 \pm 6.7$\% (within $\pm 1$\,SD of 10/15). Since SS varies by row, the comparison that matters is the \emph{reviewed} ceiling: execution reaches 14/15, critique and critique+linter reach 13/15 ($+6.7$\,pp), \emph{and} execution is ${\sim}2.5\times$ more token-efficient ($2{,}643$ vs.\ ${\sim}7{,}100$ tokens/task, 1.53 vs.\ 2.07 iterations). The one task no control row recovers is \texttt{code\_011} (CJK text wrapping); the full harness at $B{=}20$K recovers it on all three seeds (\Cref{tab:scaling-curves}), which is why the headline reviewed rate is a strict $100\%$ (\Cref{tab:harness-headline}) while this leaner single-seed control caps at $14/15$.}
+\caption{Feedback-channel controls on 15 hard code tasks (Sonnet 4 proposer and reviewer), underlying \Cref{fig:typecontrol}. Each row is a single seed. ``SS'' is that seed's single-shot pass rate (it varies by row), and ``Reviewed'' is the ceiling after that seed's harness run. The three SS values (10/15 and 11/15) are draws from the same single-shot distribution behind the 3-run mean of $66.7 \pm 6.7$\% (\Cref{tab:heldout}; within $\pm 1$\,SD of 10/15). Since SS varies by row, the comparison that matters is the \emph{reviewed} ceiling: execution reaches 14/15, critique and critique+linter reach 13/15 ($+6.7$\,pp), \emph{and} execution is ${\sim}2.5\times$ more token-efficient ($2{,}643$ vs.\ ${\sim}7{,}100$ tokens/task, 1.53 vs.\ 2.07 iterations). The one task no control row recovers is \texttt{code\_011} (CJK text wrapping); the full harness at $B{=}20$K recovers it on all three seeds (\Cref{tab:scaling-curves}), which is why the headline reviewed rate is a strict $100\%$ while this leaner single-seed control caps at $14/15$.}
 \label{tab:type-controls}
 \small
 \begin{tabular}{lcccc}
@@ -109,7 +109,7 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
 \subsection{Cross-model replication (code)}
 \begin{table}[H]
 \centering
-\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:harness-headline}); underlying \Cref{fig:crossmodel-code}. The reviewed ceiling has zero seed variance for all three families, and the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
+\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:heldout}); underlying \Cref{fig:crossmodel-code}. The reviewed ceiling has zero seed variance for all three families, and the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
 \label{tab:crossmodel}
 \small
 \begin{tabular}{lccc}
@@ -328,26 +328,6 @@ Category & Task & seed 1 ($T{=}0$) & seed 2 ($T{=}0.7$) & seed 3 ($T{=}0.7$) & p
 & code\_h005 & $\checkmark$ & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
 \midrule
 \multicolumn{2}{r}{Total kept:} & 8/18 & 5/18 & 4/18 & \textbf{10/18 (56\%)} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\subsection{Original six-modality holistic overview (historical)}
-\begin{table}[H]
-\centering
-\caption{Single-shot vs.\ reviewed quality across six modalities, Claude Sonnet 4 ($3$ runs, mean $\pm$ SD; code is a binary pass rate, other rows continuous in $[0,1]$; $p$ is a one-sided paired sign test on per-task means; \textbf{bold} marks $p<0.05$). Code is scored by execution, video by the Gemini-native full-clip rubric, and the rest by a holistic screenshot judge. \emph{This table is historical.} For the visual modalities it is superseded by the grounded measurements of \Cref{sec:grounded_eval} (\Cref{tab:geometric}), whose deterministic instrument sees the geometric defects the holistic judge cannot; those rows also use earlier, smaller task sets ($15$ web, $15$ animation, $20$ generic slides), hence the different $N$. Research here uses the old holistic judge ($0.63\to0.69$), not the search-grounded factual rubric (single-shot $0.982$), so its gap reflects a change of instrument, not a contradiction; video uses the same rubric in both places ($0.70\to0.74$).}
-\label{tab:harness-headline}
-\small
-\begin{tabular}{lccccc}
-\toprule
-Modality & $N$ & Feedback channel & Single-shot & Reviewed & $\Delta$ (sign-test $p$) \\
-\midrule
-\textbf{Code}          & 15 & execution       & $66.7 \pm 6.7$\%   & $\mathbf{100.0 \pm 0.0}$\% & $\mathbf{+33.3}$\,pp (0.008) \\
-Video editing          & 15 & exec.+temporal  & $0.70 \pm 0.03$    & $0.74 \pm 0.05$   & $+0.04$ (0.64) \\
-Deep research          & 15 & external facts  & $0.63 \pm 0.06$    & $0.69 \pm 0.06$   & $+0.06$ (0.090) \\
-Web pages              & 15 & geometry        & $0.43 \pm 0.03$    & $0.56 \pm 0.01$   & $+0.13$ (0.073) \\
-Animations             & 15 & temporal        & $0.40 \pm 0.03$    & $0.55 \pm 0.01$   & $+0.15$ (0.073) \\
-Slide decks            & 20 & geometry        & $0.73 \pm 0.01$    & $0.79 \pm 0.01$   & $+0.06$ (0.090) \\
 \bottomrule
 \end{tabular}
 \end{table}
