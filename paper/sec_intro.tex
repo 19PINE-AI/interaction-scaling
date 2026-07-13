@@ -1,66 +1,107 @@
 \section{Introduction}
 \label{sec:intro}
 
-Scaling test-time compute has become the dominant lever for improving large models on artifact-producing tasks: code, web pages, slides, figures, animations, video edits, research reports. The literature has formalized two axes. \emph{Reasoning scaling} \citep{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling} spends more tokens thinking before committing to an answer. \emph{Sampling scaling} \citep{wang2023selfconsistency,brown2024large} draws more independent attempts and selects one. The two look different, but they share a property that this paper treats as fundamental: both are \textbf{internal}. Every additional token, whether spent on a longer chain of thought or another sample, is generated from the same frozen weights and the same fixed prompt. More internal compute reorganizes information the system already has; it imports none.
+The main way we improve large models on artifact-producing tasks (code, web pages, slides, figures, animations, video edits, research reports) is to spend more compute at test time. Prior work formalizes two ways to spend it. \emph{Reasoning scaling} \citep{wei2022chain,yao2023tree,deepseek2025r1,snell2024scaling} spends more tokens thinking before committing; \emph{sampling scaling} \citep{wang2023selfconsistency,brown2024large} draws more attempts and selects one. They look different, but share a property this paper treats as fundamental: both are \textbf{internal}. Every extra token, whether in a longer chain of thought or another sample, comes from the same frozen weights and the same fixed prompt. More internal compute reshuffles what the model already has; it imports nothing new.
+
+A third axis breaks out of this closed loop: \emph{interaction} with an external instrument that observes the artifact itself. The model runs the tests, renders the page and measures the layout, or issues the search query and reads the result. Such an observation is not a function of the weights; it reports how the artifact actually behaves, and can carry information the model never had. This axis is well established in practice \citep{shinn2023reflexion,yao2023react,gou2024critic,shen2025thinking}, but accounts of \emph{why} and \emph{when} it beats internal scaling remain informal and, we argue, only half-stated. Industry practice shows the stakes: in a controlled $900$-run deployment study at ByteDance, frontier coding models passed the functional-correctness bar yet fell short on delivery quality until a feedback ``harness'' was added, and the study had to invent a multi-axis quality metric before the gap was even visible \citep{hong2026aicoding}. That is a field sighting of exactly the two-sided problem we formalize below (\Cref{sec:related}).
+
+\paragraph{Grounding is the variable, on both sides of the loop.} Our thesis is that one variable governs interaction scaling: \textbf{grounding}. Feedback is \emph{grounded} when it comes from an instrument observing the artifact's actual form or behavior, not from a model voicing an opinion about it. And grounding must hold on \emph{both} sides of the proposer--reviewer loop (\Cref{fig:concept}):
+\begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
+\item \textbf{Grounded feedback} (the signal that drives revision): run the code and read the failing test, render the HTML and measure where each element lands, issue the query and read the result. Prior work focuses on this side; a short information argument (\Cref{sec:framework}) explains why it lets interaction break the internal ceiling.
+\item \textbf{Grounded evaluation} (the metric that \emph{measures} the gain): the same observation, used as the score. This side is almost always overlooked, and getting it wrong hides the effect entirely.
+\end{enumerate}
+The second point matters more than it may seem. The standard evaluator for visual artifacts is a vision--language model (VLM) reading a screenshot, and a screenshot \emph{drops the flaw before the judge ever sees it}: overflowing content is cropped off-frame, and small overlaps fall below the model's visual acuity. On dense academic figures this judge rates $14$ of $15$ single-shot renders ``perfect,'' where a direct measurement finds only $3$ actually clean (\Cref{sec:grounded_eval}); used as the \emph{reviewer}, the same VLM makes slide layouts worse (\Cref{sec:feedback}). Ungrounded on either side, the third axis either does not fire or cannot be seen.
+
+\paragraph{What the loop delivers, at a glance.} \Cref{fig:headline} summarizes what one frozen model in one harness achieves across the seven modalities we test. Grounded execution feedback lifts both hard code suites to a perfect $100\%$ pass rate; grounded geometry feedback removes $40$--$74\%$ of the measured layout defects on four visual modalities; and the two modalities that leave no single-shot \emph{headroom} (no room to improve before the metric's ceiling) are reported as honest negatives, not manufactured wins. \Cref{fig:beforeafter} makes this concrete on one dense-slide task: the defects the loop removes are exactly the ones the standard screenshot judge cannot see.
 
 \begin{figure}[t]
 \centering
 \resizebox{\linewidth}{!}{%
-\begin{tikzpicture}[font=\small,
-  box/.style={rounded corners=2pt,draw=cMut,thick,minimum height=8mm,align=center,fill=white,inner sep=4pt},
-  prop/.style={box,fill=cStu!8,draw=cStu!70},
-  env/.style={box,fill=black!4},
-  gnd/.style={box,fill=cGnd!10,draw=cGnd},
-  ung/.style={box,fill=cUng!8,draw=cUng},
-  ar/.style={-{Latex[length=2mm]},thick,cMut},
-  gar/.style={-{Latex[length=2mm]},very thick,cGnd},
-  uar/.style={-{Latex[length=2mm]},thick,cUng,dashed}]
-  \node[prop] (prop) {Proposer\\\footnotesize(frozen LLM)};
-  \node[env, right=14mm of prop] (art) {Artifact\\\footnotesize code / HTML / SVG};
-  % GROUNDED lane (top)
-  \node[gnd, right=15mm of art, yshift=9mm] (inst)
-     {Instrument\\\footnotesize\emph{execute / render / measure}};
-  \node[gnd, right=13mm of inst] (score) {\footnotesize\textbf{(2)} grounded\\\footnotesize evaluation};
-  \node[prop, below=7mm of inst, xshift=6mm] (rev) {Reviewer};
-  % UNGROUNDED lane (bottom)
-  \node[ung, below=15mm of art, xshift=3mm] (vlm) {VLM reads a \emph{screenshot}};
-  \node[ung, right=10mm of vlm] (uscore) {\footnotesize blind feedback\\\footnotesize \& blind score};
-  % loop arrows
-  \draw[ar] (prop) -- node[above,font=\footnotesize]{generate} (art);
-  \draw[ar] (art.east) -- (inst.west);
-  \draw[gar] (inst) -- (score);
-  \draw[gar] (inst.south) -- node[left,font=\footnotesize,cGnd,align=center,pos=0.45]{\textbf{(1)}\\defects} (rev.north);
-  \draw[ar] (rev.south) |- ([yshift=-9mm]art.south) -| node[pos=0.25,below,font=\footnotesize]{targeted revision} (prop);
-  % ungrounded branch
-  \draw[uar] (art.south) -- (vlm.north);
-  \draw[uar] (vlm) -- (uscore);
-  \begin{scope}[on background layer]
-    \node[draw=cGnd!60,dashed,rounded corners,fill=cGnd!4,fit=(inst)(score)(rev),inner sep=3mm,
-      label={[cGnd,font=\footnotesize\bfseries]above:GROUNDED: measure the rendered DOM / run \texttt{pytest}}] {};
-    \node[draw=cUng!60,dashed,rounded corners,fill=cUng!4,fit=(vlm)(uscore),inner sep=2.5mm,
-      label={[cUng!85!black,font=\footnotesize\bfseries]below:UNGROUNDED: overflow cropped off-frame, rates broken figures ``perfect''}] {};
-  \end{scope}
+\begin{tikzpicture}
+\begin{axis}[paperbar,name=axhcode,width=4.9cm,height=4.8cm,
+  ybar,bar width=9pt,ymin=0,ymax=118,
+  xlabel={\footnotesize (a) code: pass rate (\%)},
+  symbolic x coords={dev,deepspec},xtick=data,
+  xticklabels={hard suite,deep-spec},
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.45,ytick={0,25,50,75,100},ymajorgrids,
+  legend style={at={(0.5,1.02)},anchor=south,legend columns=2,
+    /tikz/every odd column/.append style={column sep=2pt}}]
+  \addplot[swatch,draw=none,fill=black!22]
+    coordinates {(dev,66.7) (deepspec,69.7)};
+    \addlegendentry{single-shot}
+  \addplot[swatch,draw=none,fill=cGnd!80]
+    coordinates {(dev,100) (deepspec,100)};
+    \addlegendentry{reviewed}
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:dev,101) {\hspace{11pt}100};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:deepspec,101) {\hspace{11pt}100};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:dev,67.5) {\hspace{-15pt}66.7};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:deepspec,70.5) {\hspace{-15pt}69.7};
+\end{axis}
+\begin{axis}[paperbar,at={($(axhcode.east)+(1.5cm,0)$)},anchor=west,
+  width=7.0cm,height=4.8cm,
+  ybar,bar width=11pt,ymin=0,ymax=100,
+  xlabel={\footnotesize (b) visual: layout defects removed (\%)},
+  symbolic x coords={Figures,Slides,Web,Anim.},xtick=data,
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.18,ytick={0,25,50,75,100},ymajorgrids]
+  \addplot[draw=none,fill=cGnd!80,bar shift=0pt]
+    coordinates {(Figures,74) (Slides,73) (Web,47) (Anim.,40)};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:Figures,75) {$-$74\%};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:Slides,74) {$-$73\%};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:Web,48) {$-$47\%};
+  \node[font=\scriptsize\bfseries,cInk,anchor=south] at (axis cs:Anim.,41) {$-$40\%};
+\end{axis}
+\begin{axis}[paperbar,at={($(axhcode.east)+(9.9cm,0)$)},anchor=west,
+  width=4.3cm,height=4.8cm,
+  ybar,bar width=9pt,ymin=0,ymax=1.18,clip=false,
+  xlabel={\footnotesize (c) saturated: score in $[0,1]$},
+  symbolic x coords={Video,Research},xtick=data,
+  x tick label style={font=\footnotesize,color=cMut},
+  enlarge x limits=0.45,ytick={0,0.25,0.5,0.75,1.0},ymajorgrids]
+  \draw[cMut,densely dotted] (rel axis cs:0,0.847)--(rel axis cs:1,0.847);
+  \node[font=\scriptsize\itshape,cMut,anchor=south west,inner sep=1pt] at (rel axis cs:0.02,0.85) {ceiling};
+  \addplot[draw=none,fill=black!22]
+    coordinates {(Video,0.70) (Research,0.98)};
+  \addplot[draw=none,fill=cGnd!80]
+    coordinates {(Video,0.74)};
+  \node[font=\scriptsize,cMut,anchor=south] at (axis cs:Video,0.75) {\hspace{11pt}0.74 (n.s.)};
+  \node[font=\scriptsize,cMut,anchor=south,fill=white,inner sep=1pt] at (axis cs:Research,0.99) {\hspace{-9pt}0.98};
+\end{axis}
 \end{tikzpicture}}
-\caption{\textbf{Grounding must hold on both sides of the interaction loop.} A proposer emits an artifact, and a grounded instrument \emph{executes, renders, or measures} it. That single observation does double duty. \textbf{(1)} As grounded \emph{feedback}, it becomes a defect list the reviewer turns into a targeted revision---the channel that lets interaction import information from outside the weights and escape the internal ceiling (\Cref{sec:framework}). \textbf{(2)} As grounded \emph{evaluation}, it is the score that makes the gain measurable. Substituting the default VLM-on-a-screenshot judge (orange lane) breaks \emph{both}: a screenshot drops off-canvas overflow and fine overlap before the model ever sees them, so it neither scores the defect nor---as a reviewer---fixes it.}
-\label{fig:concept}
+\caption{\textbf{Results at a glance: one grounded loop, seven modalities.} \textbf{(a)}~Execution feedback lifts both code suites to a strict $100\%$ pass rate, recovering every single-shot failure (3-seed means; \Cref{sec:interaction}). \textbf{(b)}~Grounded geometry feedback removes $40$--$74\%$ of the layout defects a deterministic DOM instrument measures, on all four visual modalities (every reduction statistically decisive; \Cref{sec:grounded_eval}). \textbf{(c)}~The two remaining modalities are scoped negatives: video editing is already strong single-shot (the reviewed lift is not significant), and deep research saturates at $0.98$ single-shot factual accuracy, leaving no headroom for feedback to claim (\Cref{sec:grounded_eval}).}
+\label{fig:headline}
 \end{figure}
 
-A third axis breaks this closure: \emph{interaction} with an external instrument that observes the artifact itself---run the tests, render the page and measure the layout, issue the search query. Such an observation is not a function of the weights. It reports how the artifact actually behaves, and it can carry information the model never had. This axis is well established empirically \citep{shinn2023reflexion,yao2023react,gou2024critic,shen2025thinking}, but accounts of \emph{why} and \emph{when} it should beat internal scaling remain informal and, we argue, half-stated. Practitioner reports at industrial scale sharpen the stakes: in a controlled $900$-run deployment study at ByteDance, frontier coding models pass the functional-correctness bar yet miss on delivery quality until a feedback ``harness'' is added---and that report had to invent a multi-axis quality metric before the gap was even visible \citep{hong2026aicoding}. That is a field observation of exactly the two-sided problem we formalize below (detailed in \Cref{sec:related}).
-
-\paragraph{Grounding is the variable, on both sides of the loop.} Our thesis is that one variable governs interaction scaling: \textbf{grounding}---the property that a feedback signal is produced by an instrument observing the artifact's actual form or behavior, rather than by a model rendering an opinion about it. And grounding must hold on \emph{both} sides of the proposer--reviewer loop (\Cref{fig:concept}):
-\begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
-\item \textbf{Grounded feedback} (the signal that drives revision): run the code and read the failing test, render the HTML and measure its bounding boxes, issue the query and read the result. This is the side prior work emphasizes, and a one-paragraph information argument (\Cref{sec:framework}) says it is exactly what lets interaction escape the ceiling that bounds reasoning and sampling.
-\item \textbf{Grounded evaluation} (the metric that \emph{measures} the gain): the same observation, used as the score. This side is almost always overlooked, and getting it wrong silently hides the effect.
-\end{enumerate}
-The second point is not a detail. The default evaluator for visual artifacts is a vision--language model (VLM) reading a screenshot, and a screenshot is an instrument whose channel \emph{drops the defect before the judge ever sees it}: content overflowing the canvas is cropped off-frame, and small overlaps fall below the model's visual acuity. On dense academic figures this judge rates $14$ of $15$ single-shot renders ``perfect'' when a deterministic measurement finds only $3$ actually clean (\Cref{sec:grounded_eval}). Worse, when the same VLM is used as the \emph{reviewer}, its edits make slide layouts worse (\Cref{sec:feedback}). Ungrounded on either side, the third axis either does not fire or cannot be seen.
-
+\begin{figure}[t]
+\centering
+\begin{subfigure}[b]{0.49\linewidth}
+\centering
+\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (img) {\includegraphics[width=\linewidth]{figures/rp_gan_slide_singleshot.png}};
+\draw[cUngDk,dashed,line width=0.9pt] ($(img.south west)!0.371!(img.north west)$) -- ($(img.south east)!0.371!(img.north east)$);
+\node[anchor=north east,font=\tiny\bfseries,text=cUngDk,fill=white,fill opacity=0.85,text opacity=1,inner sep=2pt]
+  at ($(img.south east)!0.371!(img.north east)$) {$16{:}9$ slide frame ends here};
+\end{tikzpicture}
+\caption{\textbf{Single-shot} ($6$ measured defects): the content overflows the $16{:}9$ slide frame (dashed line) by more than half the frame's height: exactly the defect class a screenshot judge never sees, because the capture crops at the frame.}
+\label{fig:ba-ss}
+\end{subfigure}\hfill
+\begin{subfigure}[b]{0.49\linewidth}
+\centering
+\includegraphics[width=\linewidth]{figures/rp_gan_slide_reviewed.png}
+\caption{\textbf{After grounded feedback} ($0$ defects): the same task after the propose$\to$measure$\to$revise loop: the sample grid is compacted and the panels rebalanced so every element sits inside the frame.}
+\label{fig:ba-rv}
+\end{subfigure}
+\caption{\textbf{A concrete example of what the loop fixes.} A dense real-paper slide task (the GAN paper), rendered full-page at equal width: single-shot (\subref{fig:ba-ss}) vs.\ reviewed (\subref{fig:ba-rv}). The deterministic geometry instrument counts $6$ defects single-shot and $0$ after review (the same $6\to0$ reduction replicates in a second seed), and a screenshot judge sees none of them (\Cref{sec:grounded_eval}).}
+\label{fig:beforeafter}
+\end{figure}
 
 \Needspace*{6\baselineskip}
 \paragraph{Contributions.}
 \begin{enumerate}[leftmargin=1.4em,itemsep=1pt,topsep=2pt]
-\item \textbf{A grounding framework (\Cref{sec:framework}).} A two-category feedback taxonomy---\emph{ungrounded} model opinion vs.\ \emph{grounded} instrument observation---together with a \emph{coverage} principle: grounded feedback helps exactly as far as the instrument's observational reach. A one-paragraph information argument (formal statement in \Cref{app:ceiling}) explains why internal scaling saturates, and a symmetric observation says an ungrounded \emph{metric} cannot measure the gain. Beyond the documented \emph{biases} of model-as-judge evaluation \citep{zheng2023judging}, we isolate a sharper failure: for artifacts whose quality is a measurable physical property, a screenshot judge is \emph{structurally blind}---not merely noisy---which silently hides a real interaction-scaling effect.
-\item \textbf{Interaction keeps scaling where internal compute stops (\Cref{sec:interaction}).} At a matched token budget, reasoning-only and best-of-$N$ saturate---the latter even with an oracle verifier---while every interaction strategy approaches a perfect pass rate, the proposer--reviewer harness doing so at the lowest token cost with zero seed variance.
-\item \textbf{The feedback instrument must observe the defect (\Cref{sec:feedback}).} Holding the task suite fixed and swapping only the reviewer's instrument: execution feedback converges far cheaper than critique on behavioral bugs; a linter (grounded, but observing only form) buys nothing on them; and a screenshot-reading VLM reviewer makes slide geometry \emph{worse} while a geometric reviewer repairs it.
-\item \textbf{So must the metric (\Cref{sec:grounded_eval}).} The standard VLM judge passes $14$ of $15$ broken figures; a deterministic DOM-geometry instrument instead reveals large, statistically decisive defect reductions under grounded feedback across four visual modalities measured identically---gains the standard metric cannot even see.
-\item \textbf{Robustness and internalization (\Cref{sec:robustness,sec:distill}).} The effects replicate across three model families (including the geometry result with Gemini~3.1~Pro as proposer), on a held-out suite, and across a budget-allocation sweep. The harness's behavior also partially distills into an $8$B student at ${\sim}10\times$ lower deployment cost.
+\item \textbf{A grounding framework (\Cref{sec:framework}).} We sort feedback into two kinds (\emph{ungrounded} model opinion vs.\ \emph{grounded} instrument observation) and add a \emph{coverage} principle: grounded feedback helps exactly as far as its instrument can observe. A short information argument (formalized in \Cref{app:ceiling}) explains why internal scaling saturates, and the same argument shows that an ungrounded \emph{metric} cannot measure the gain. Beyond the known \emph{biases} of model-as-judge evaluation \citep{zheng2023judging}, we pin down a sharper failure: where quality is a measurable physical property, a screenshot judge is \emph{structurally blind}, not merely noisy.
+\item \textbf{Interaction keeps scaling where internal compute stops (\Cref{sec:interaction}).} At the same token budget, reasoning-only and best-of-$N$ saturate (the latter even with an oracle verifier), while every interaction strategy climbs toward a perfect pass rate; the proposer--reviewer harness does so at the lowest token cost and with zero seed variance.
+\item \textbf{The feedback instrument must observe the defect (\Cref{sec:feedback}).} Swapping only the reviewer's instrument on a fixed suite: on behavioral bugs, execution feedback converges far more cheaply than critique; a linter (grounded, but observing only surface form) buys nothing; and a screenshot-reading VLM reviewer makes slide geometry \emph{worse}, where a geometry reviewer repairs it.
+\item \textbf{So must the metric (\Cref{sec:grounded_eval}).} The standard VLM judge passes $14$ of $15$ broken figures; a tool that measures the rendered layout instead reveals large, statistically decisive defect reductions across four visual modalities, gains the standard metric cannot see.
+\item \textbf{Robustness and internalization (\Cref{sec:robustness,sec:distill}).} The effects replicate across three model families (including the geometry result with Gemini~3.1~Pro as proposer), on a held-out suite, and across a budget-allocation sweep; and the harness's behavior partially distills into an $8$B student at roughly $10\times$ lower deployment cost.
 \end{enumerate}

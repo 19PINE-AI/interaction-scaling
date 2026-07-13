@@ -153,13 +153,13 @@ export function PicInteraction() {
 
 /* before/after slider with drag + side-by-side toggle */
 export function Compare({ ssImg, rvImg, ssLabel = 'single-shot', rvLabel = 'after the loop' }) {
-  const [mode, setMode] = useState('slide')
+  const [mode, setMode] = useState('sbs')
   const [x, setX] = useState(50)
   return (
     <div>
       <div className="cmp-toggle fig-tools" style={{ marginLeft: 0 }}>
-        <button className={mode === 'slide' ? 'on' : ''} onClick={() => setMode('slide')}>slider</button>
         <button className={mode === 'sbs' ? 'on' : ''} onClick={() => setMode('sbs')}>side by side</button>
+        <button className={mode === 'slide' ? 'on' : ''} onClick={() => setMode('slide')}>slider</button>
       </div>
       {mode === 'slide' ? (
         <div className="compare">

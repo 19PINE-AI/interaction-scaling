@@ -1,9 +1,9 @@
 \section{Internalizing the Harness into a Small Student}
 \label{sec:distill}
 
-Two things could carry the harness's gains: the grounded scaffolding, or behavior absorbed into the weights. This section asks how much is the latter---whether the loop's interaction quality can be \emph{internalized} so a small model emits high-quality artifacts in fewer passes. It is a complement to the thesis, not a substitute: the cheaper internalized proposer is still meant to run \emph{inside} the same grounded harness, so internalization and grounding compose. We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student via supervised fine-tuning.
+Two things could carry the harness's gains: the grounded scaffolding around the model, or behavior absorbed into the weights. This section asks how much is the latter: whether the loop's interaction quality can be \emph{internalized}, so a small model produces high-quality artifacts in fewer passes. This complements the thesis rather than replacing it, because the cheaper internalized proposer still runs \emph{inside} the same grounded harness. We distill judge-filtered teacher trajectories from the harness into an $8$B Qwen3-VL student by supervised fine-tuning.
 
-\paragraph{Result.} The student recovers about half the teacher's single-sample capability on an out-of-distribution suite, and a second sample closes much of the remaining gap (\Cref{fig:distill})---at roughly $10\times$ lower deployment cost than running the harness over a frontier model. On a harder held-out suite of the teacher's own pre-curated failures it passes a substantial fraction (\Cref{tab:distill-headline}), and run back inside the harness it recovers still more.
+\paragraph{Result.} On an out-of-distribution suite, the student recovers about half the teacher's single-sample capability, and a second sample closes much of the remaining gap (\Cref{fig:distill}), at roughly $10\times$ lower deployment cost. On a harder held-out suite of the teacher's own pre-curated failures it passes a substantial fraction (\Cref{tab:distill-headline}), and run back inside the harness it recovers still more.
 
 \begin{figure}[t]
 \centering
@@ -30,7 +30,7 @@ Two things could carry the harness's gains: the grounded scaffolding, or behavio
 \label{fig:distill}
 \end{figure}
 
-\paragraph{Variance is a budget (a cautionary finding).} Reinforcement fine-tuning (RFT) on top of SFT improves every per-turn consistency metric we measure \emph{and} regresses pass@$k$ (\Cref{fig:variance}). The two students start nearly tied on a single sample; as samples are added, the SFT student keeps converting draws into new solved tasks while the RFT student's curve goes flat. The reading is that for sampling-based deployment, output-distribution variance \emph{is} the inference-scaling lever, and any post-training that reduces it spends from the same budget best-of-$N$ draws on. Variance is not noise to minimize; it is the resource sampling converts into quality. The operational recipe is therefore: SFT to internalize interaction quality, keep the proposer's sampling temperature, and run it inside the grounded harness.
+\paragraph{Variance is a budget (a cautionary finding).} Reinforcement fine-tuning (RFT) on top of SFT improves every per-turn consistency metric we measure, \emph{and} it lowers pass@$k$ (\Cref{fig:variance}). The two students start nearly tied on a single sample; as samples are added, the SFT student keeps turning fresh draws into newly solved tasks, while the RFT student's curve goes flat. When you deploy by sampling, the variance in the output distribution \emph{is} the lever that inference scaling pulls, so post-training that reduces that variance spends from the very budget best-of-$N$ relies on. Variance here is not noise to minimize; it is the resource sampling converts into quality. The recipe, then: use SFT to internalize interaction quality, keep the sampling temperature, and run the student inside the grounded harness.
 
 \begin{figure}[t]
 \centering

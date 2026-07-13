@@ -5,6 +5,9 @@
 \usepackage[T1]{fontenc}
 \usepackage{hyperref}
 \usepackage{url}
+% allow long URLs (e.g. hyphenated blog slugs) to break in the bibliography
+\Urlmuskip=0mu plus 1mu\relax
+\def\UrlBreaks{\do\/\do\-\do\_\do\.\do\=\do\&}
 \usepackage{booktabs}
 \usepackage{amsfonts}
 \usepackage{amsmath}
@@ -18,7 +21,7 @@
 \usepackage{float}
 \usepackage{needspace}
 \usepackage{cleveref}
-\usepackage[numbers,sort&compress]{natbib}
+\usepackage[authoryear,round]{natbib}
 \usepackage{tikz}
 \usetikzlibrary{positioning,arrows.meta,shapes.geometric,fit,calc,backgrounds}
 \usepackage{pgfplots}
@@ -68,7 +71,7 @@
 % direct-label helper for line endpoints
 \newcommand{\serieslabel}[3]{\node[font=\scriptsize, anchor=west, text=#1, inner sep=1.5pt] at (axis cs:#2) {#3};}
 
-\title{Grounding the Loop on Both Sides:\texorpdfstring{\\}{ }Interaction as a Third Test-Time Compute Axis,\texorpdfstring{\\}{ }and Why Its Gains Are Invisible\texorpdfstring{\\}{ }Without Grounded Evaluation}
+\title{Interaction Scaling:\texorpdfstring{\\}{ }Grounding the Third Axis of Test-Time Compute}
 
 \author{%
   \begin{tabular}{@{}c@{\hspace{4em}}c@{}}
@@ -77,23 +80,66 @@
   \end{tabular}%
 }
 \date{}
-\runningtitle{Grounding the Loop on Both Sides}
+\runningtitle{Interaction Scaling: Grounding the Third Axis of Test-Time Compute}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Test-time compute is scaled today along two axes---longer \emph{reasoning} and more \emph{sampling}---that share a hidden property: both are \emph{internal}. Every additional token is generated from the same frozen weights and the same prompt, so neither axis can tell the model anything it does not already know. A third axis, \emph{interaction}---propose an artifact, observe it with an external instrument, revise---is not subject to that internal ceiling, because each cycle imports a real observation of the artifact's behavior.
+There are two standard ways to spend more compute at test time: let a model \emph{reason} longer, or \emph{sample} more attempts and keep one. Both share a hidden limit: they are \emph{internal}. Every extra token comes from the same frozen weights and the same prompt, so neither can tell the model anything it does not already know. We study a third way, \emph{interaction}: the model proposes an artifact, an external instrument observes how it actually behaves, and the model revises. Each cycle imports a real observation, so interaction breaks through the ceiling the other two hit.
 
-We argue that a single variable, \textbf{grounding}, governs this third axis, and that it must hold on \emph{both} sides of the loop: the feedback that drives revision must come from an instrument that actually observes the defect, and so must the metric that scores the result. We state the argument in one paragraph of information theory (formalized in the appendix) and then test it experimentally. On hard coding tasks at a matched token budget, reasoning-only and best-of-$N$ scaling saturate---the latter even with an \emph{oracle} verifier---while every interaction strategy keeps climbing, the proposer--reviewer harness reaching a strict $100\%$ pass rate with zero seed variance, an effect that replicates across three model families and a held-out suite. On rendered visual artifacts we show that the standard vision--language-model judge is \emph{structurally blind} to the defects the loop fixes---it rates $14$ of $15$ broken single-shot figures ``perfect''---while a deterministic DOM-geometry instrument reveals $40$--$74\%$ defect reductions across four modalities, every one statistically decisive. Swapping only the reviewer's instrument exposes the same asymmetry on the feedback side: a VLM reviewer makes slide layout \emph{worse}, while a geometric reviewer repairs it. Finally, the harness's behavior partially distills into an $8$B student. Interaction scaling is real, distinct from reasoning and sampling, and predictable---but its gains are visible only when both the feedback and the metric are grounded.
+We argue that a single variable governs this third axis, \textbf{grounding}, and that it must hold on \emph{both} sides of the loop. The feedback that drives revision must come from an instrument that actually observes the flaw, and so must the metric that scores the result. On hard coding tasks at a fixed token budget, reasoning-only and best-of-$N$ sampling both plateau (the latter even when an oracle picks the best sample), while every interaction strategy keeps improving; our proposer--reviewer harness reaches a perfect $100\%$ pass rate with no run-to-run variance, and the gain holds across three model families. On rendered visual artifacts, the usual judge (a vision--language model, or VLM, reading a screenshot) rates $14$ of $15$ visibly broken figures ``perfect,'' because the screenshot hides the flaws before the judge can see them. A tool that measures the real layout instead shows the loop removing $40$--$74\%$ of defects across four modalities; and that same VLM, used as the \emph{reviewer}, makes slide layouts worse where the measuring tool repairs them. Interaction scaling is real and distinct from reasoning and sampling, but only visible when both the feedback and the metric are grounded.
 \end{abstract}
 \begin{center}
-\small
-Code, task suites, prompts, and deterministic instruments: \url{https://github.com/19PINE-AI/interaction-scaling} \\[2pt]
-Website (with an interactive single-shot-vs-reviewed results browser): \url{https://01.me/research/interaction-scaling}
+\footnotesize
+Code: \url{https://github.com/19PINE-AI/interaction-scaling}\\[1pt]
+Website: \url{https://01.me/research/interaction-scaling}
 \end{center}
-\vspace{-0.6em}
+\vspace{-0.4em}
 
+\begin{figure}[H]
+\centering
+\resizebox{0.72\linewidth}{!}{%
+\begin{tikzpicture}[font=\small,
+  box/.style={rounded corners=2pt,draw=cMut,thick,minimum height=8mm,align=center,fill=white,inner sep=4pt},
+  prop/.style={box,fill=cStu!8,draw=cStu!70},
+  env/.style={box,fill=black!4},
+  gnd/.style={box,fill=cGnd!10,draw=cGnd},
+  ung/.style={box,fill=cUng!8,draw=cUng},
+  ar/.style={-{Latex[length=2mm]},thick,cMut},
+  gar/.style={-{Latex[length=2mm]},very thick,cGnd},
+  uar/.style={-{Latex[length=2mm]},thick,cUng,dashed}]
+  \node[prop] (prop) {Proposer\\\footnotesize(frozen LLM)};
+  \node[env, right=14mm of prop] (art) {Artifact\\\footnotesize code / HTML / SVG};
+  % GROUNDED lane (top)
+  \node[gnd, right=15mm of art, yshift=9mm] (inst)
+     {Instrument\\\footnotesize\emph{execute / render / measure}};
+  \node[gnd, right=13mm of inst] (score) {\footnotesize\textbf{(2)} grounded\\\footnotesize evaluation};
+  \node[prop, below=7mm of inst, xshift=6mm] (rev) {Reviewer};
+  % UNGROUNDED lane (bottom)
+  \node[ung, below=15mm of art, xshift=3mm] (vlm) {VLM reads a \emph{screenshot}};
+  \node[ung, right=10mm of vlm] (uscore) {\footnotesize blind feedback\\\footnotesize \& blind score};
+  % loop arrows
+  \draw[ar] (prop) -- node[above,font=\footnotesize]{generate} (art);
+  \draw[ar] (art.east) -- (inst.west);
+  \draw[gar] (inst) -- (score);
+  \draw[gar] (inst.south) -- node[left,font=\footnotesize,cGnd,align=center,pos=0.45]{\textbf{(1)}\\defects} (rev.north);
+  \draw[ar] (rev.south) |- ([yshift=-9mm]art.south) -| node[pos=0.25,below,font=\footnotesize]{targeted revision} (prop);
+  % ungrounded branch
+  \draw[uar] (art.south) -- (vlm.north);
+  \draw[uar] (vlm) -- (uscore);
+  \begin{scope}[on background layer]
+    \node[draw=cGnd!60,dashed,rounded corners,fill=cGnd!4,fit=(inst)(score)(rev),inner sep=3mm,
+      label={[cGnd,font=\footnotesize\bfseries]above:GROUNDED: measure the rendered DOM / run \texttt{pytest}}] {};
+    \node[draw=cUng!60,dashed,rounded corners,fill=cUng!4,fit=(vlm)(uscore),inner sep=2.5mm,
+      label={[cUng!85!black,font=\footnotesize\bfseries]below:UNGROUNDED: overflow cropped off-frame, rates broken figures ``perfect''}] {};
+  \end{scope}
+\end{tikzpicture}}
+\caption{\textbf{Grounding must hold on both sides of the interaction loop.} One instrument observation is both \textbf{(1)} grounded \emph{feedback} (the defect list that drives revision and escapes the internal ceiling) and \textbf{(2)} grounded \emph{evaluation}, the score that makes the gain measurable. The default VLM-on-a-screenshot judge (orange lane) breaks both: the screenshot drops the defects before the model sees them.}
+\label{fig:concept}
+\end{figure}
+
+\clearpage
 \input{sec_intro}
 \input{sec_framework}
 \input{sec_method}
@@ -107,7 +153,7 @@ Website (with an interactive single-shot-vs-reviewed results browser): \url{http
 
 \section*{Acknowledgements}
 
-This paper was produced using Pine Copilot's voice-directed \emph{whisper coding} workflow~\citep{pineai2026whispercoding}, in which the authors specify, discuss, and review the work by voice while a coding agent---Claude Code with Claude Opus 4.8---carries out the planning, coding, experiments, and paper writing.
+This paper was produced using Pine Copilot's voice-directed \emph{whisper coding} workflow~\citep{pineai2026whispercoding}, in which the authors specify, discuss, and review the work by voice while a coding agent (Claude Code with Claude Opus 4.8) carries out the planning, coding, experiments, and paper writing.
 We thank BSQL Networking for hosting the NVIDIA RTX PRO 6000 GPU.
 
 \bibliographystyle{plainnat}

@@ -1,9 +1,9 @@
 \section{Robustness}
 \label{sec:robustness}
 
-\paragraph{Cross-model, code.} The effect is architectural, not a Claude artifact. On the hard code suite, over three independent on-policy seeds per family, the harness lifts all three families we test---Sonnet~4, Qwen3-235B, and GPT-5, the last from a higher single-shot baseline (\Cref{fig:crossmodel}a). The signature detail is the variance: single-shot fluctuates seed-to-seed for every family, while the reviewed ceiling has \emph{zero} seed variance for all three. The grounded loop converges to the same ceiling regardless of the starting draw.
+\paragraph{Cross-model, code.} The effect is architectural, not something specific to Claude. On the hard code suite, over three seeds per family, the harness lifts all three families we test: Sonnet~4, Qwen3-235B, and GPT-5 (the last from a higher single-shot baseline; \Cref{fig:crossmodel}a). The telling detail is the variance: single-shot fluctuates seed-to-seed for every family, while the reviewed ceiling has \emph{zero} seed variance for all three. The grounded loop converges to the same ceiling regardless of the starting draw.
 
-\paragraph{Cross-model, grounded geometry.} To rule out a Claude-specific or prompt-specific explanation of the geometric effect, we run the same deterministic geometric-feedback harness with \textbf{Gemini~3.1~Pro} as the proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces and is in fact larger (\Cref{fig:crossmodel}b): Gemini's single-shot slides are more defect-prone than Sonnet's, and the grounded loop removes almost all of the excess. Since the instrument depends on no model, the effect is neither proposer- nor scorer-specific.
+\paragraph{Cross-model, grounded geometry.} To rule out a Claude- or prompt-specific explanation of the geometry effect, we run the same geometry-feedback harness with \textbf{Gemini~3.1~Pro} as proposer on the dense real-paper slide suite, scored by the identical model-free DOM instrument. The effect reproduces, and is larger (\Cref{fig:crossmodel}b): Gemini's single-shot slides have more defects than Sonnet's, and the grounded loop removes almost all of the excess. Since the instrument uses no model, the effect is neither proposer- nor scorer-specific.
 
 \begin{figure}[t]
 \centering
@@ -45,9 +45,9 @@
 \label{fig:crossmodel}
 \end{figure}
 
-\paragraph{Held-out generalization.} On a $32$-task held-out code suite constructed after the method was fixed, the harness again recovers every first-shot failure with zero regressions and reaches a perfect pass rate, with no tuning to the original tasks (\Cref{tab:heldout}). The absolute lift is smaller only because the held-out single-shot baseline is higher, leaving less headroom.
+\paragraph{Held-out generalization.} On a $32$-task held-out code suite built after the method was fixed, the harness again recovers every first-shot failure with no regressions and reaches a perfect pass rate (\Cref{tab:heldout}). The absolute lift is smaller only because the held-out single-shot baseline is higher, leaving less headroom.
 
-\paragraph{Budget allocation.} Sweeping how a fixed token budget is split between proposer, execution, and reviewer produces an enormous pass-rate spread (\Cref{fig:allocation}). The pattern is monotone in the proposer's share: review-heavy corners collapse almost to zero, while propose-heavy allocations plateau at the top. The optimum is \emph{propose-heavy}---allocate the majority to generation, reserving just enough for the reviewer to localize defects---and extra inference compute is better spent on additional samples than on deeper iteration past the early-stop point.
+\paragraph{Budget allocation.} Sweeping how a fixed token budget is split between proposer, execution, and reviewer produces an enormous spread in pass rate (\Cref{fig:allocation}), and it rises monotonically with the proposer's share: review-heavy corners collapse almost to zero, while propose-heavy splits plateau at the top. The best split is \emph{propose-heavy} (give most of the budget to generation, and reserve just enough for the reviewer to locate defects); extra compute is better spent on more samples than on deeper iteration past the early-stop point.
 
 \begin{figure}[t]
 \centering
@@ -71,6 +71,6 @@
     {propose-heavy plateau: 93.3\%};
 \end{axis}
 \end{tikzpicture}
-\caption{\textbf{Pass rate is monotone in the proposer's budget share.} Nine allocations of a fixed $10$K-token budget across proposer / execution / reviewer, on the hard code suite (open markers: second allocation with the same proposer share but a different execution/review split---the proposer share alone predicts the outcome). The spread across the sweep is $86.6$\,pp; full simplex in \Cref{tab:allocation}.}
+\caption{\textbf{Pass rate is monotone in the proposer's budget share.} Nine allocations of a fixed $10$K-token budget across proposer / execution / reviewer, on the hard code suite (open markers: a second allocation with the same proposer share but a different execution/review split, showing that the proposer share alone predicts the outcome). The spread across the sweep is $86.6$\,pp; full simplex in \Cref{tab:allocation}.}
 \label{fig:allocation}
 \end{figure}
