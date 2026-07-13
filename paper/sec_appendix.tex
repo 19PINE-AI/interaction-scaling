@@ -109,7 +109,7 @@ Animations (20)       & 60 & $16.9$ & $10.2$ & $-40\%$ & $[10,64]\%$ & $34/7$\;(
 \subsection{Cross-model replication (code)}
 \begin{table}[H]
 \centering
-\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:harness-headline}); underlying \Cref{fig:crossmodel}a. The reviewed ceiling has zero seed variance for all three families, and the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
+\caption{Cross-model replication on the same 15 hard code tasks, each family over \emph{three} independent on-policy seeds at $T{=}0.7$ (Claude is the multi-run reference from \Cref{tab:harness-headline}); underlying \Cref{fig:crossmodel-code}. The reviewed ceiling has zero seed variance for all three families, and the harness lift survives across Anthropic, Alibaba, and OpenAI. Single-shot per-seed pass rates: Qwen $66.7/73.3/73.3\%$, GPT-5 $86.7/80.0/73.3\%$.}
 \label{tab:crossmodel}
 \small
 \begin{tabular}{lccc}
@@ -140,6 +140,33 @@ Development (3-run mean) & 15 & $66.7 \pm 6.7$\% & $100.0 \pm 0.0$\% & $+33.3$\,
 \end{table}
 
 \subsection{Budget-allocation simplex}
+Sweeping how a fixed token budget is split between proposer, execution, and reviewer produces an enormous spread in pass rate (\Cref{fig:allocation}), rising monotonically with the proposer's share: review-heavy corners collapse almost to zero, while propose-heavy splits plateau at the top. The best split is \emph{propose-heavy} (give most of the budget to generation, reserving just enough for the reviewer to locate defects); extra compute is better spent on more samples than on deeper iteration past the early-stop point.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=0.7\linewidth,height=5.0cm,
+  xlabel={proposer share of the fixed budget},ylabel={code pass rate (\%)},
+  xmin=0.04,xmax=0.9,ymin=0,ymax=105,clip=false,
+  xtick={0.1,0.2,0.33,0.5,0.8},
+  xticklabels={0.10,0.20,0.33,0.50,0.80},
+  ytick={0,25,50,75,100},ymajorgrids,
+  axis x line*=bottom,axis y line*=left]
+  \addplot[cGnd,line width=1.4pt,mark=*,mark size=1.9,
+    mark options={fill=cGnd,draw=white,line width=0.5pt}]
+    coordinates {(0.10,6.7)(0.20,13.3)(0.25,40.0)(0.33,66.7)(0.40,80.0)(0.50,93.3)(0.80,93.3)};
+  \addplot[only marks,mark=o,mark size=2.1,cGnd!60,line width=0.9pt]
+    coordinates {(0.10,6.7)(0.40,80.0)};
+  \node[font=\scriptsize,cMut,anchor=west,align=left] at (axis cs:0.34,12)
+    {review- and execute-heavy corners collapse};
+  \node[font=\scriptsize\bfseries,cGnd,anchor=south east,align=right] at (axis cs:0.86,95.5)
+    {propose-heavy plateau: 93.3\%};
+\end{axis}
+\end{tikzpicture}
+\caption{\textbf{Pass rate is monotone in the proposer's budget share.} Nine allocations of a fixed $10$K-token budget across proposer / execution / reviewer, on the hard code suite (open markers: a second allocation with the same proposer share but a different execution/review split, showing that the proposer share alone predicts the outcome). The spread across the sweep is $86.6$\,pp; full simplex in \Cref{tab:allocation}.}
+\label{fig:allocation}
+\end{figure}
+
 \begin{table}[H]
 \centering
 \caption{Budget allocation simplex on 15 hard code tasks, $B = 10$K total; underlying \Cref{fig:allocation}. Pass rate is monotone in the proposer's per-call cap, and review-heavy corners (low $b_1$) collapse. The 9-point sweep yields an 86.6\,pp spread.}
