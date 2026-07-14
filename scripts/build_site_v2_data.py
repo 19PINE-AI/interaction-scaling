@@ -407,6 +407,7 @@ def main():
             "authors": [{"name": "Bojie Li", "affil": "Pine AI"},
                         {"name": "Noah Shi", "affil": "University of Washington"}],
             "repo": "https://github.com/19PINE-AI/interaction-scaling",
+            "arxiv": "https://arxiv.org/abs/2607.11598",
         },
         "scaling": scaling(),
         "geom_reduction": geom_reduction(),

@@ -45,6 +45,9 @@ export default function App() {
             <a href="#idea" className={active === 'idea' ? 'on' : ''}>The idea</a>
             <a href="#results" className={active === 'results' ? 'on' : ''}>Results</a>
             <a href="#explorer" className={active === 'explorer' ? 'on' : ''}>Explorer</a>
+            {site.meta.arxiv && (
+              <a href={site.meta.arxiv} target="_blank" rel="noreferrer" className="opt">Paper ↗</a>
+            )}
             <a href={site.meta.repo} target="_blank" rel="noreferrer" className="opt">Code ↗</a>
           </nav>
         </div>
@@ -78,6 +81,9 @@ function Hero({ site }) {
         <div className="cta">
           <a className="btn solid" href="#idea">Read the 3-minute version ↓</a>
           <a className="btn line" href="#explorer">Browse the real test cases</a>
+          {site.meta.arxiv && (
+            <a className="btn line" href={site.meta.arxiv} target="_blank" rel="noreferrer">Read the paper (arXiv) ↗</a>
+          )}
           <a className="btn line" href={site.meta.repo} target="_blank" rel="noreferrer">GitHub ↗</a>
         </div>
         <Reveal>
@@ -108,17 +114,26 @@ function Footer({ site }) {
               from the paper&rsquo;s raw experiment logs.
             </p>
             <p style={{ fontSize: 14.5 }}>
+              {site.meta.arxiv && (
+                <>
+                  <a href={site.meta.arxiv} target="_blank" rel="noreferrer">Read the paper on arXiv ↗</a>
+                  <br />
+                </>
+              )}
               <a href={site.meta.repo} target="_blank" rel="noreferrer">Code, task suites, prompts &amp; instruments ↗</a>
             </p>
           </div>
           <div>
             <h4>Cite</h4>
-            <pre>{`@article{li2026grounding,
+            <pre>{`@misc{li2026interactionscaling,
   title  = {Grounding the Loop on Both Sides:
             Interaction as a Third Test-Time
             Compute Axis},
   author = {Li, Bojie and Shi, Noah},
-  year   = {2026}
+  year   = {2026},
+  eprint = {2607.11598},
+  archivePrefix = {arXiv},
+  url    = {https://arxiv.org/abs/2607.11598}
 }`}</pre>
           </div>
         </div>
