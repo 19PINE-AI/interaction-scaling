@@ -17,6 +17,7 @@ tokens 4,575). At B=10K we are in the regime where the cap can bite.
 
 from __future__ import annotations
 
+import argparse
 import json
 import logging
 import sys
@@ -228,9 +229,25 @@ def run_sweep(tasks: list[dict]) -> list[dict]:
 
 
 def main():
-    with open(TASKS_PATH) as f:
+    global TOTAL_BUDGET, MAX_ITERATIONS, OUT_PATH
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--tasks", type=Path, default=TASKS_PATH,
+                        help="code task JSON to sweep (default: %(default)s)")
+    parser.add_argument("--out", type=Path, default=OUT_PATH,
+                        help="output JSON path (default: %(default)s)")
+    parser.add_argument("--budget", type=int, default=TOTAL_BUDGET,
+                        help="total output-token budget B per task (default: %(default)s)")
+    parser.add_argument("--max-iters", type=int, default=MAX_ITERATIONS,
+                        help="max proposer-reviewer iterations (default: %(default)s)")
+    args = parser.parse_args()
+    TOTAL_BUDGET = args.budget
+    MAX_ITERATIONS = args.max_iters
+    OUT_PATH = args.out
+
+    with open(args.tasks) as f:
         tasks = json.load(f)
-    logger.info("Loaded %d tasks from %s", len(tasks), TASKS_PATH)
+    logger.info("Loaded %d tasks from %s", len(tasks), args.tasks)
 
     cells = run_sweep(tasks)
 

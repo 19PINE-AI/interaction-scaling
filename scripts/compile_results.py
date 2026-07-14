@@ -14,10 +14,23 @@ logging.basicConfig(level=logging.INFO)
 RESULTS_DIR = Path("results/hard_benchmarks")
 
 
+#: Keys that mark an entry as carrying a usable single-shot-vs-reviewed metric.
+_METRIC_KEYS = ("ss_quality", "single_shot_passed", "reviewed_passed", "ss_accuracy")
+
+
+def _has_metric(entry: dict) -> bool:
+    return any(k in entry for k in _METRIC_KEYS)
+
+
 def load_all_results() -> dict[str, list[dict]]:
-    """Load and merge all result files by category."""
-    categories = defaultdict(list)
-    seen_ids = defaultdict(set)
+    """Load and merge all result files by category, one entry per task_id.
+
+    Result files use several schemas (main runs carry a metric; some rescore /
+    probe dumps do not). When a task appears in more than one file, keep a
+    metric-bearing entry over a metric-less one so a bare dump earlier in sort
+    order does not mask a real result.
+    """
+    picked: dict[str, dict[str, dict]] = defaultdict(dict)  # cat -> tid -> entry
 
     for f in sorted(RESULTS_DIR.glob("*.json")):
         with open(f) as fh:
@@ -45,42 +58,50 @@ def load_all_results() -> dict[str, list[dict]]:
             else:
                 continue
 
-            # Deduplicate (keep latest)
-            if tid not in seen_ids[cat]:
-                seen_ids[cat].add(tid)
-                categories[cat].append(entry)
+            existing = picked[cat].get(tid)
+            # Take the first entry seen, but upgrade a metric-less entry to a
+            # metric-bearing one for the same task.
+            if existing is None or (_has_metric(entry) and not _has_metric(existing)):
+                picked[cat][tid] = entry
 
-    return dict(categories)
+    return {cat: list(by_tid.values()) for cat, by_tid in picked.items()}
 
 
 def compute_summary(entries: list[dict], category: str) -> dict:
-    """Compute summary statistics for a category."""
-    n = len(entries)
-    if n == 0:
+    """Compute summary statistics for a category.
+
+    A category may hold entries from several result files with different key
+    conventions (main-benchmark vs rescore dumps). Detect the metric by scanning
+    all entries and aggregate over only those that actually carry its keys, so a
+    single odd-format entry cannot suppress or crash the summary.
+    """
+    if not entries:
         return {}
 
-    # Normalize key names across batches
+    # Normalize old-format key names across batches.
     normalized = []
     for e in entries:
         ne = dict(e)
-        # Handle old-format keys
         if "single_shot_quality" in ne and "ss_quality" not in ne:
             ne["ss_quality"] = ne["single_shot_quality"]
             ne["ss_meets"] = ne.get("single_shot_meets", False)
             ne["rv_quality"] = ne.get("reviewed_quality", 0)
             ne["rv_meets"] = ne.get("reviewed_meets", False)
-        if "single_shot_passed" in ne and "reviewed_passed" not in ne:
-            ne["reviewed_passed"] = ne.get("reviewed_passed", False)
         normalized.append(ne)
     entries = normalized
 
-    # Detect metric type from keys
-    if "single_shot_passed" in entries[0] or "reviewed_passed" in entries[0]:
-        ss_pass = sum(1 for e in entries if e.get("single_shot_passed", False))
-        rv_pass = sum(1 for e in entries if e.get("reviewed_passed", False))
+    def has(key: str) -> bool:
+        return any(key in e for e in entries)
+
+    # Detect metric type from whichever keys appear anywhere in the category.
+    if has("single_shot_passed") or has("reviewed_passed"):
+        rows = [e for e in entries if "single_shot_passed" in e or "reviewed_passed" in e]
+        n = len(rows)
+        ss_pass = sum(1 for e in rows if e.get("single_shot_passed", False))
+        rv_pass = sum(1 for e in rows if e.get("reviewed_passed", False))
         fixed = sum(
-            1 for e in entries
-            if not e["single_shot_passed"] and e["reviewed_passed"]
+            1 for e in rows
+            if not e.get("single_shot_passed", False) and e.get("reviewed_passed", False)
         )
         return {
             "category": category,
@@ -90,16 +111,18 @@ def compute_summary(entries: list[dict], category: str) -> dict:
             "reviewed": f"{rv_pass}/{n} ({rv_pass/n:.0%})",
             "ss_value": ss_pass / n,
             "rv_value": rv_pass / n,
-            "delta": f"+{(rv_pass-ss_pass)/n*100:.0f}pp",
+            "delta": f"{(rv_pass-ss_pass)/n*100:+.0f}pp",
             "delta_value": (rv_pass - ss_pass) / n,
             "fixed": fixed,
         }
-    elif "ss_quality" in entries[0]:
-        ss_avg = sum(e["ss_quality"] for e in entries) / n
-        rv_vals = [e["rv_quality"] for e in entries if e.get("rv_quality") is not None]
+    elif has("ss_quality"):
+        rows = [e for e in entries if "ss_quality" in e]
+        n = len(rows)
+        ss_avg = sum(e["ss_quality"] for e in rows) / n
+        rv_vals = [e["rv_quality"] for e in rows if e.get("rv_quality") is not None]
         rv_avg = sum(rv_vals) / len(rv_vals) if rv_vals else 0
-        ss_meets = sum(1 for e in entries if e.get("ss_meets"))
-        rv_meets = sum(1 for e in entries if e.get("rv_meets"))
+        ss_meets = sum(1 for e in rows if e.get("ss_meets"))
+        rv_meets = sum(1 for e in rows if e.get("rv_meets"))
         return {
             "category": category,
             "n": n,
@@ -108,12 +131,14 @@ def compute_summary(entries: list[dict], category: str) -> dict:
             "reviewed": f"{rv_avg:.2f} ({rv_meets}/{n} meets)",
             "ss_value": ss_avg,
             "rv_value": rv_avg,
-            "delta": f"+{rv_avg-ss_avg:.2f}",
+            "delta": f"{rv_avg-ss_avg:+.2f}",
             "delta_value": rv_avg - ss_avg,
         }
-    elif "ss_accuracy" in entries[0]:
-        ss_avg = sum(e["ss_accuracy"] for e in entries) / n
-        rv_avg = sum(e["rv_accuracy"] for e in entries) / n
+    elif has("ss_accuracy"):
+        rows = [e for e in entries if "ss_accuracy" in e]
+        n = len(rows)
+        ss_avg = sum(e["ss_accuracy"] for e in rows) / n
+        rv_avg = sum(e.get("rv_accuracy", e["ss_accuracy"]) for e in rows) / n
         return {
             "category": category,
             "n": n,
@@ -122,7 +147,7 @@ def compute_summary(entries: list[dict], category: str) -> dict:
             "reviewed": f"{rv_avg:.2f}",
             "ss_value": ss_avg,
             "rv_value": rv_avg,
-            "delta": f"+{rv_avg-ss_avg:.2f}",
+            "delta": f"{rv_avg-ss_avg:+.2f}",
             "delta_value": rv_avg - ss_avg,
         }
     return {}
@@ -158,6 +183,11 @@ def print_results():
             continue
 
         summary = compute_summary(categories[cat_key], cat_label)
+        if not summary:
+            # Data present but in an unrecognized format — show the row without stats.
+            n = len(categories[cat_key])
+            print(f"{cat_label:<22} {feedback:<22} {n:>4} {'?':>16} {'?':>16} {'?':>10}")
+            continue
         summaries.append(summary)
 
         print(
@@ -182,8 +212,8 @@ def print_results():
         for e in entries:
             tid = e.get("task_id", "?")
             if "single_shot_passed" in e:
-                ss = "PASS" if e["single_shot_passed"] else "FAIL"
-                rv = "PASS" if e["reviewed_passed"] else "FAIL"
+                ss = "PASS" if e.get("single_shot_passed") else "FAIL"
+                rv = "PASS" if e.get("reviewed_passed") else "FAIL"
                 status = "FIXED" if ss == "FAIL" and rv == "PASS" else (
                     "BOTH_PASS" if ss == "PASS" else "BOTH_FAIL"
                 )
@@ -191,12 +221,12 @@ def print_results():
             elif "ss_quality" in e:
                 ss = e["ss_quality"]
                 rv = e.get("rv_quality", "?")
-                delta = f"+{rv-ss:.2f}" if isinstance(rv, (int, float)) else "?"
+                delta = f"{rv-ss:+.2f}" if isinstance(rv, (int, float)) else "?"
                 print(f"  {tid}: ss={ss:.2f} rv={rv} ({delta})")
             elif "ss_accuracy" in e:
                 ss = e["ss_accuracy"]
                 rv = e["rv_accuracy"]
-                print(f"  {tid}: ss={ss:.2f} rv={rv:.2f} (+{rv-ss:.2f})")
+                print(f"  {tid}: ss={ss:.2f} rv={rv:.2f} ({rv-ss:+.2f})")
 
     # Save compiled results
     output = {

@@ -1,6 +1,7 @@
 """Quick probe: can Sonnet 4 single-shot draw real academic-paper architecture
 figures (Transformer, U-Net, ViT) cleanly, or do they overlap/clip? Renders +
 rubric-scores + saves screenshots for visual audit."""
+import argparse
 import base64, json
 from src.config import ModelConfig
 from src.evaluation.checklist_judge import checklist_score
@@ -49,8 +50,16 @@ TASKS = [
 ]
 
 def main():
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--model", default="claude-sonnet-4-20250514",
+                        help="model id that draws the figures (default: %(default)s)")
+    parser.add_argument("--out", default="/tmp/paper_figures_probe.json",
+                        help="output JSON path (default: %(default)s)")
+    args = parser.parse_args()
+
     cfg = ModelConfig(provider=ModelConfig.claude_sonnet().provider,
-                      model_id="claude-sonnet-4-20250514", max_tokens=8192, temperature=0.0)
+                      model_id=args.model, max_tokens=8192, temperature=0.0)
     judge = ModelConfig.claude_sonnet()
     r = BrowserRenderer(); client = get_client()
     out = []
@@ -67,7 +76,7 @@ def main():
         print(f"{t['task_id']}: rubric={res['score']:.2f} ({res['n_met']}/{res['n_total']}) violations:")
         for v in viol: print(f"    - req{v['index']}: {v['evidence'][:100]}")
         out.append({"task_id":t["task_id"],"score":res["score"],"html":html,"b64":b64,"verdicts":res["verdicts"]})
-    json.dump(out, open("/tmp/paper_figures_probe.json","w"))
+    json.dump(out, open(args.out, "w"))
 
 if __name__ == "__main__":
     main()

@@ -11,6 +11,7 @@ output supports the "the holistic metric was the masker" analysis:
 Usage: python -m scripts.rescore_slides_rubric
 """
 
+import argparse
 import base64
 import json
 import logging
@@ -23,10 +24,7 @@ logging.basicConfig(level=logging.WARNING)
 logger = logging.getLogger("rescore")
 logger.setLevel(logging.INFO)
 
-TASKS = {
-    t["task_id"]: t
-    for t in json.load(open("data/hard_benchmarks/slides/slide_tasks.json"))
-}
+TASKS_FILE = "data/hard_benchmarks/slides/slide_tasks.json"
 RUNS = [
     f"results/hard_benchmarks/slides_onpolicy_run{i}.json" for i in (1, 2, 3)
 ]
@@ -34,14 +32,25 @@ OUT = Path("results/hard_benchmarks/slides_rubric_rescore.json")
 
 
 def main():
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--tasks", default=TASKS_FILE,
+                        help="slide task JSON with per-requirement rubrics (default: %(default)s)")
+    parser.add_argument("--runs", nargs="+", default=RUNS,
+                        help="on-policy run result files to re-score (default: the 3 seed runs)")
+    parser.add_argument("--out", type=Path, default=OUT,
+                        help="output JSON path (default: %(default)s)")
+    args = parser.parse_args()
+
+    tasks = {t["task_id"]: t for t in json.load(open(args.tasks))}
     renderer = BrowserRenderer()
     records = []
-    for run_path in RUNS:
+    for run_path in args.runs:
         run_id = Path(run_path).stem
         data = json.load(open(run_path))
         for rec in data:
             tid = rec["task_id"]
-            reqs = TASKS[tid]["requirements"]
+            reqs = tasks[tid]["requirements"]
             row = {"task_id": tid, "run": run_id, "n_reqs": len(reqs)}
             for cond, code_key, hol_key in (
                 ("ss", "ss_final_code", "ss_quality"),
@@ -68,9 +77,9 @@ def main():
                 row["rv_holistic"] or 0, row.get("rv_rubric"),
             )
             records.append(row)
-            OUT.write_text(json.dumps(records, indent=2))  # checkpoint each task
+            args.out.write_text(json.dumps(records, indent=2))  # checkpoint each task
 
-    logger.info("Wrote %d records to %s", len(records), OUT)
+    logger.info("Wrote %d records to %s", len(records), args.out)
 
 
 if __name__ == "__main__":

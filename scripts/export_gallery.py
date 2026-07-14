@@ -5,6 +5,7 @@ Outputs:
   website/public/images/<category>/<task_id>_{ss,rv}.png
   website/public/data/manifest.json
 """
+import argparse
 import base64, io, json, logging
 from pathlib import Path
 from PIL import Image
@@ -49,6 +50,9 @@ def rubric_lookup(path, run):
 
 
 def main():
+    argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter).parse_args()
+
     rend = BrowserRenderer()
     items = []
     WEB_RUBRIC = rubric_lookup("results/hard_benchmarks/web_rubric_rescore.json",
