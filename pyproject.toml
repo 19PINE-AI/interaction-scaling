@@ -6,11 +6,13 @@ requires-python = ">=3.11"
 dependencies = [
     "anthropic>=0.95.0",
     "evalplus>=0.3.1",
+    "google-genai>=1.0.0",
     "matplotlib>=3.10.8",
     "moviepy>=2.2.1",
     "numpy>=2.4.4",
     "openai>=2.31.0",
     "pandas>=3.0.2",
+    "peft>=0.14.0",
     "playwright>=1.58.0",
     "pyyaml>=6.0.3",
     "seaborn>=0.13.2",
@@ -24,3 +26,13 @@ dev = [
     "pytest>=9.0.3",
     "ruff>=0.15.10",
 ]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+# The library lives in the top-level `src/` package; installing it (uv does this
+# automatically on `uv sync`) puts `src` on the path so `from src...` imports
+# resolve no matter which directory a script is launched from.
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

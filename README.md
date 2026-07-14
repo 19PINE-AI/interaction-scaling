@@ -146,7 +146,8 @@ paper source, and small summary results all work fine without LFS.
 The project uses [`uv`](https://github.com/astral-sh/uv) and Python ≥ 3.11.
 
 ```bash
-# Install dependencies
+# Install dependencies (also installs the local `src` package, so scripts can
+# `import src` regardless of which directory they are launched from)
 uv sync
 
 # Install the headless browser used for visual rendering
@@ -155,7 +156,7 @@ uv run playwright install chromium
 # Provide API keys for the model providers you intend to use
 export ANTHROPIC_API_KEY=...    # Claude proposers/reviewers
 export OPENAI_API_KEY=...       # GPT / cross-model baselines
-# (Gemini key as required by the video/visual judges)
+export GEMINI_API_KEY=...       # Gemini video / visual rubric judges
 ```
 
 A minimal end-to-end run of the proposer–reviewer code harness:
