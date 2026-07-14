@@ -3,19 +3,19 @@
 
 Usage:
     # Run all baselines on HumanEval+ (small test)
-    python run_experiments.py --experiment baselines --benchmark humaneval --num-problems 10
+    python scripts/run_experiments.py --experiment baselines --benchmark humaneval --num-problems 10
 
     # Run Experiment 1: Feedback ablation
-    python run_experiments.py --experiment exp1 --benchmark humaneval
+    python scripts/run_experiments.py --experiment exp1 --benchmark humaneval
 
     # Run Experiment 2: Scaling curves
-    python run_experiments.py --experiment exp2 --benchmark humaneval --num-problems 20
+    python scripts/run_experiments.py --experiment exp2 --benchmark humaneval --num-problems 20
 
     # Run Experiment 5: Verification gap
-    python run_experiments.py --experiment exp5 --benchmark humaneval --num-problems 20
+    python scripts/run_experiments.py --experiment exp5 --benchmark humaneval --num-problems 20
 
     # Run all experiments
-    python run_experiments.py --experiment all --benchmark humaneval --num-problems 20
+    python scripts/run_experiments.py --experiment all --benchmark humaneval --num-problems 20
 """
 
 import argparse

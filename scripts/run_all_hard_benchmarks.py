@@ -4,7 +4,7 @@ Runs each task in both single-shot and reviewed (proposer-reviewer) modes,
 saves per-category results, and compiles a summary table.
 
 Usage:
-    python run_all_hard_benchmarks.py [--categories code,slides,...] [--model sonnet|opus]
+    python scripts/run_all_hard_benchmarks.py [--categories code,slides,...] [--model sonnet|opus]
 """
 
 import argparse

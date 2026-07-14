@@ -4,8 +4,8 @@ Runs the same benchmark tasks multiple times with temperature > 0
 to generate diverse trajectories for SFT and GRPO training.
 
 Usage:
-    python3 run_augmentation.py --runs 3 --temperature 0.7
-    python3 run_augmentation.py --runs 3 --temperature 0.7 --categories code,video
+    python3 scripts/run_augmentation.py --runs 3 --temperature 0.7
+    python3 scripts/run_augmentation.py --runs 3 --temperature 0.7 --categories code,video
 """
 
 import argparse

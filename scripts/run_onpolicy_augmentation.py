@@ -4,9 +4,9 @@ Each task runs as a completely separate OS process to avoid
 Playwright async conflicts and maximize parallelism.
 
 Usage:
-    python3 run_onpolicy_augmentation.py --runs 3 --workers 16
-    python3 run_onpolicy_augmentation.py --runs 3 --categories code,slides
-    python3 run_onpolicy_augmentation.py --model claude-sonnet-thinking --runs 3
+    python3 scripts/run_onpolicy_augmentation.py --runs 3 --workers 16
+    python3 scripts/run_onpolicy_augmentation.py --runs 3 --categories code,slides
+    python3 scripts/run_onpolicy_augmentation.py --model claude-sonnet-thinking --runs 3
 """
 
 import argparse

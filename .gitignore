@@ -53,3 +53,14 @@ study/artifacts/
 study/manifest.js
 study/key.json
 study/responses_*.csv
+
+# LaTeX build intermediates (main.pdf and main.bbl are tracked on purpose;
+# main.bbl is kept so the arXiv source builds without a .bib run)
+paper/*.aux
+paper/*.blg
+paper/*.out
+paper/*.toc
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/arxiv-submission.tar.gz

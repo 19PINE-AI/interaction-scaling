@@ -2,9 +2,9 @@
 """Analyze and summarize all experiment results.
 
 Usage:
-    python analyze_results.py                    # Print summary tables
-    python analyze_results.py --plots            # Also generate plots
-    python analyze_results.py --save             # Save analysis to files
+    python scripts/analyze_results.py                    # Print summary tables
+    python scripts/analyze_results.py --plots            # Also generate plots
+    python scripts/analyze_results.py --save             # Save analysis to files
 """
 
 import argparse

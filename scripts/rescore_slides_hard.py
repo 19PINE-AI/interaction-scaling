@@ -11,7 +11,7 @@ its single-shot vs reviewed artifacts two ways:
                (`geometric_defects`); the reliable fixed-canvas instrument
 
 Requires the artifacts produced by:
-  python3 run_onpolicy_augmentation.py --categories slides_hard --runs 3
+  python3 scripts/run_onpolicy_augmentation.py --categories slides_hard --runs 3
 
 Usage: python -m scripts.rescore_slides_hard
 """

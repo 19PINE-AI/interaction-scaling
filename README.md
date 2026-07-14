@@ -106,8 +106,10 @@ interaction-scaling/
 > rendered result images) are stored via **Git LFS** — see [Getting the data](#getting-the-data-git-lfs).
 
 See [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) for a deeper tour of the modules and the
-proposer–reviewer loop, and [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) for how to
-reproduce the main results.
+proposer–reviewer loop, [`docs/EXPERIMENTS.md`](docs/EXPERIMENTS.md) for how to reproduce the
+main results, and [`docs/RESEARCH_PLAN.md`](docs/RESEARCH_PLAN.md) for the original research
+plan the study grew out of. The running research record — one file per phase — lives in
+[`notes/`](notes/) (see [`notes/README.md`](notes/README.md) for an index).
 
 ---
 
@@ -199,4 +201,5 @@ latexmk -pdf main.tex     # or: pdflatex main && bibtex main && pdflatex main &&
 
 ## License
 
-Internal Pine AI research. All rights reserved unless stated otherwise.
+Released under the [MIT License](LICENSE). The paper text and figures in
+[`paper/`](paper/) are © 2026 the authors.

@@ -3,7 +3,7 @@ v2 code tasks. Uses the same model / harness as the in-distribution Phase 1
 runs (`run_onpolicy_augmentation.py`), pointed at a different task file.
 
 Usage:
-    python3 run_heldout_phase1.py --runs 1 --workers 16
+    python3 scripts/run_heldout_phase1.py --runs 1 --workers 16
 
 Writes per-task JSON list to `results/heldout_phase1/code_heldout_harness.json`.
 """
